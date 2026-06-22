@@ -370,6 +370,103 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 .gap-3 { gap: 12px; }
 .w100 { width: 100%; }
 
+/* DRAFT INTELLIGENCE PANELS */
+.insight-card {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(16, 185, 129, 0.08));
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.insight-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-l);
+  margin-bottom: 8px;
+}
+.insight-text { font-size: 1rem; line-height: 1.55; color: var(--text); font-weight: 600; }
+.quick-grid, .stat-grid, .record-grid, .photo-grid, .template-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.quick-card, .stat-tile, .record-card, .template-card {
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.quick-label, .stat-label {
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.quick-value, .stat-value { font-size: 1.35rem; font-weight: 900; color: var(--text); line-height: 1; }
+.quick-sub, .stat-sub { font-size: 0.76rem; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+.alert-list, .week-grid { display: grid; gap: 10px; }
+.week-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.alert-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  background: var(--card);
+}
+.alert-item.good { border-color: rgba(16, 185, 129, 0.22); background: rgba(16, 185, 129, 0.06); }
+.alert-item.warn { border-color: rgba(245, 158, 11, 0.24); background: rgba(245, 158, 11, 0.07); }
+.alert-item.danger { border-color: rgba(239, 68, 68, 0.22); background: rgba(239, 68, 68, 0.06); }
+.alert-title { font-weight: 800; font-size: 0.86rem; color: var(--text); margin-bottom: 3px; }
+.alert-copy { color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+.day-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  min-height: 132px;
+}
+.day-name { font-size: 0.7rem; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.day-date { font-size: 1rem; font-weight: 900; color: var(--text); margin: 4px 0 10px; }
+.day-line { display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+.status-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+.status-btn {
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  color: var(--muted);
+  border-radius: var(--radius-pill);
+  padding: 6px 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+}
+.status-btn.active.done { background: rgba(16, 185, 129, 0.12); color: var(--green); border-color: rgba(16, 185, 129, 0.28); }
+.status-btn.active.pending { background: var(--accent-dim); color: var(--accent-l); border-color: rgba(37, 99, 235, 0.22); }
+.status-btn.active.missed { background: rgba(239, 68, 68, 0.1); color: var(--red); border-color: rgba(239, 68, 68, 0.2); }
+.photo-thumb {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--elevated);
+}
+.photo-thumb img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
+.photo-body { padding: 12px; }
+.compare-list { display: grid; gap: 10px; }
+.compare-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(90px, auto) minmax(90px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.compare-row:last-child { border-bottom: 0; }
+.mini-muted { color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+
 /* MOBILE RESPONSIVE NAV */
 #bottom-nav { display: none; }
 @media (max-width: 768px) {
@@ -380,6 +477,9 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
   .g4 { grid-template-columns: 1fr 1fr; }
   .g3 { grid-template-columns: 1fr 1fr; }
   .fg3, .fg4 { grid-template-columns: 1fr 1fr; }
+  .g2, .quick-grid, .stat-grid, .record-grid, .photo-grid, .template-grid { grid-template-columns: 1fr; }
+  .week-grid { grid-template-columns: 1fr; }
+  .compare-row { grid-template-columns: 1fr; }
   .routine-ex-head,
   .session-set-head { display: none; }
   .routine-ex-row,
@@ -479,12 +579,15 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
   <nav>
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="go('today')">Hoy</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Entrenamiento</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutrición</button>
+    <button class="nav-btn" onclick="go('calendar')">Calendario</button>
     <div class="nav-label">Análisis</div>
     <button class="nav-btn" onclick="go('goals')">Objetivos</button>
     <button class="nav-btn" onclick="go('stats')">Estadísticas</button>
+    <button class="nav-btn" onclick="go('progress')">Progreso</button>
     <button class="nav-btn" onclick="go('notes')">Notas</button>
     <button class="nav-btn" onclick="go('checking')">Cheking</button>
   </nav>
@@ -556,6 +659,16 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
         </div>
       </div>
       <div class="g2 mb">
+        <div class="insight-card">
+          <div class="insight-title">Lectura inteligente</div>
+          <div class="insight-text" id="d-insight">Calculando el foco de hoy...</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Alertas de seguimiento</div>
+          <div id="d-alerts"><div class="empty">Sin alertas por ahora</div></div>
+        </div>
+      </div>
+      <div class="g2 mb">
         <div class="card">
           <div class="card-title">Macros hoy</div>
           <div id="d-macros">
@@ -581,6 +694,54 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
       <div class="card">
         <div class="card-title">Últimas sesiones</div>
         <div id="d-sessions-list"><div class="empty">Sin entrenamientos aún</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOY -->
+  <div id="page-today" class="page">
+    <div class="page-head flex jb ai-c">
+      <div><h1>Hoy</h1><p>Resumen directo para entrenar, comer y cerrar el día con intención</p></div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" onclick="showModal('modal-meal')">+ Comida</button>
+        <button class="btn btn-primary btn-sm" onclick="showModal('modal-session')">Entrenar</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="insight-card mb">
+        <div class="insight-title">Lectura del día</div>
+        <div class="insight-text" id="today-insight">Preparando tu resumen...</div>
+      </div>
+      <div class="quick-grid mb">
+        <div class="quick-card">
+          <div class="quick-label">Entreno</div>
+          <div class="quick-value" id="today-training-count">0</div>
+          <div class="quick-sub" id="today-training-sub">sesiones hoy</div>
+        </div>
+        <div class="quick-card">
+          <div class="quick-label">Nutrición</div>
+          <div class="quick-value" id="today-calories">0</div>
+          <div class="quick-sub" id="today-calories-sub">kcal registradas</div>
+        </div>
+        <div class="quick-card">
+          <div class="quick-label">Racha</div>
+          <div class="quick-value" id="today-streak">0</div>
+          <div class="quick-sub">días con registro</div>
+        </div>
+      </div>
+      <div class="g2 mb">
+        <div class="card">
+          <div class="card-title">Próxima acción</div>
+          <div id="today-next-action"><div class="empty">Sin acción pendiente</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Alertas visuales</div>
+          <div id="today-alerts"><div class="empty">Sin alertas</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cheking de la semana</div>
+        <div id="today-checking"><div class="empty">Sin objetivos semanales</div></div>
       </div>
     </div>
   </div>
@@ -633,6 +794,10 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
       </div>
     </div>
     <div class="content">
+      <div class="card mb">
+        <div class="card-title">Progreso de rutina</div>
+        <div id="training-progress"><div class="empty">Registra sesiones para ver avances por ejercicio.</div></div>
+      </div>
       <div class="tabs">
         <button class="tab active" onclick="switchTab(this,'t-sessions')">Sesiones</button>
         <button class="tab" onclick="switchTab(this,'t-routines')">Rutinas</button>
@@ -705,6 +870,29 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
         </div>
         <div id="meals-list"><div class="empty">Sin alimentos registrados hoy</div></div>
       </div>
+      <div class="card mt-3">
+        <div class="flex jb ai-c" style="margin-bottom:14px">
+          <div class="card-title" style="margin:0">Plantillas de comida</div>
+          <button class="btn btn-ghost btn-sm" onclick="saveMealTemplate()">Guardar alimento actual</button>
+        </div>
+        <div id="meal-templates"><div class="empty">Guarda alimentos frecuentes para cargarlos rápido.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDARIO -->
+  <div id="page-calendar" class="page">
+    <div class="page-head flex jb ai-c">
+      <div><h1>Calendario</h1><p>Vista semanal de entrenamiento, nutrición, cuerpo y notas</p></div>
+      <input type="week" id="calendar-week" style="width:auto" onchange="loadCalendar()">
+    </div>
+    <div class="content">
+      <div class="g3 mb" id="calendar-summary">
+        <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">0</div><div class="stat-sub">esta semana</div></div>
+        <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">0</div><div class="stat-sub">promedio diario</div></div>
+        <div class="stat-tile"><div class="stat-label">Cheking</div><div class="stat-value">0%</div><div class="stat-sub">cumplimiento semanal</div></div>
+      </div>
+      <div class="week-grid" id="calendar-grid"></div>
     </div>
   </div>
 
@@ -737,6 +925,51 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
         <div class="card-title">Volumen de entrenamiento — últimas 4 semanas</div>
         <div class="chart-wrap"><canvas id="stats-vol-chart"></canvas></div>
       </div>
+      <div class="card mt-3">
+        <div class="card-title">Historial semanal</div>
+        <div id="stats-weekly-history"><div class="empty">Aún no hay historial suficiente</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESO -->
+  <div id="page-progress" class="page">
+    <div class="page-head flex jb ai-c">
+      <div><h1>Progreso</h1><p>Fotos, récords, rachas, historial semanal y respaldo de datos</p></div>
+      <button class="btn btn-primary btn-sm" onclick="exportAllData()">Exportar datos</button>
+    </div>
+    <div class="content">
+      <div class="g3 mb" id="progress-streaks"></div>
+      <div class="g2 mb">
+        <div class="card">
+          <div class="card-title">Foto de progreso</div>
+          <div class="form-grid fg2">
+            <div class="form-row"><label class="form-label">Fecha</label><input type="date" id="photo-date"></div>
+            <div class="form-row"><label class="form-label">Vista</label><select id="photo-type"><option>Frente</option><option>Lado</option><option>Espalda</option><option>Libre</option></select></div>
+            <div class="form-row" style="grid-column:1/-1"><label class="form-label">Foto</label><input type="file" id="photo-file" accept="image/*"></div>
+            <div class="form-row" style="grid-column:1/-1"><label class="form-label">Nota</label><input id="photo-note" placeholder="Luz, peso, sensación o contexto..."></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary" onclick="saveProgressPhoto()">Guardar foto</button></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Comparación semanal</div>
+          <div id="progress-weekly-summary"><div class="empty">Aún no hay suficiente historial</div></div>
+        </div>
+      </div>
+      <div class="g2 mb">
+        <div class="card">
+          <div class="card-title">Récords destacados</div>
+          <div id="progress-records"><div class="empty">Tus PR aparecerán aquí</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Historial semanal</div>
+          <div id="progress-history"><div class="empty">Registra algunos días para ver el historial</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Fotos guardadas</div>
+        <div id="progress-photos"><div class="empty">Sin fotos de progreso</div></div>
+      </div>
     </div>
   </div>
 
@@ -767,6 +1000,11 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
         </div>
         <div class="btn-row"><button class="btn btn-primary" onclick="saveCheckingGoal()">Agregar objetivo</button></div>
       </div>
+      <div class="g3 mb" id="checking-summary">
+        <div class="stat-tile"><div class="stat-label">Pendientes</div><div class="stat-value">0</div><div class="stat-sub">por cerrar</div></div>
+        <div class="stat-tile"><div class="stat-label">Cumplidos</div><div class="stat-value">0</div><div class="stat-sub">objetivos logrados</div></div>
+        <div class="stat-tile"><div class="stat-label">Fallados</div><div class="stat-value">0</div><div class="stat-sub">para revisar</div></div>
+      </div>
       <div class="card">
         <div class="card-title">Objetivos de la semana</div>
         <div id="checking-list"><div class="empty">Agrega tus objetivos semanales.</div></div>
@@ -779,10 +1017,10 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 <!-- BOTTOM NAV (mobile) -->
 <nav id="bottom-nav">
   <button class="bnav-btn active" onclick="go('dashboard')">Inicio</button>
-  <button class="bnav-btn" onclick="go('body')">Cuerpo</button>
+  <button class="bnav-btn" onclick="go('today')">Hoy</button>
   <button class="bnav-btn" onclick="go('training')">Gym</button>
   <button class="bnav-btn" onclick="go('nutrition')">Dieta</button>
-  <button class="bnav-btn" onclick="go('notes')">Notas</button>
+  <button class="bnav-btn" onclick="go('progress')">Progreso</button>
   <button class="bnav-btn" onclick="go('checking')">Check</button>
 </nav>
 
@@ -877,6 +1115,10 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
     </div>
     <div class="form-grid fg2" style="margin-bottom:16px">
       <div class="form-row" style="grid-column: 1 / -1">
+        <label class="form-label">Usar plantilla</label>
+        <select id="m-template" onchange="applyMealTemplate()"><option value="">Selecciona una plantilla...</option></select>
+      </div>
+      <div class="form-row" style="grid-column: 1 / -1">
         <label class="form-label">Comida</label>
         <select id="m-meal"><option>Desayuno</option><option>Almuerzo</option><option>Merienda</option><option>Cena</option><option>Pre-entreno</option><option>Post-entreno</option><option>Snack</option></select>
       </div>
@@ -891,6 +1133,7 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" style="flex: 1" onclick="hideModal('modal-meal')">Cancelar</button>
+      <button class="btn btn-ghost" style="flex: 1" onclick="saveMealTemplate()">Guardar plantilla</button>
       <button class="btn btn-primary" style="flex: 1" onclick="saveMeal()">Añadir</button>
     </div>
   </div>
@@ -968,7 +1211,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, body: loadBody, training: loadTraining, nutrition: loadNutrition, goals: loadGoals, stats: loadStats, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[page]?.();
 }
 
@@ -999,6 +1242,7 @@ function showModal(id) {
     setCount = 0;
     fillSessionRoutines();
   }
+  if (id === 'modal-meal') fillMealTemplates();
 }
 function hideModal(id) { document.getElementById(id).classList.remove('show'); }
 
@@ -1014,6 +1258,195 @@ function toast(msg, type = 'ok') {
   t.textContent = msg;
   document.getElementById('toast').appendChild(t);
   setTimeout(() => t.remove(), 3000);
+}
+
+// ═══════════════════════════════════════════════════
+// DRAFT INTELLIGENCE HELPERS
+// ═══════════════════════════════════════════════════
+const dayNamesShort = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+function localDate(dateStr = today()) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function dateKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function addDays(dateStr, days) {
+  const d = localDate(dateStr);
+  d.setDate(d.getDate() + days);
+  return dateKey(d);
+}
+
+function weekValueFromDate(dateStr = today()) {
+  const d = localDate(dateStr);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
+  const week1 = new Date(d.getFullYear(), 0, 4);
+  const week = 1 + Math.round(((d - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+  return `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
+function getWeekDates(weekValue = weekValueFromDate()) {
+  const match = /^(\d{4})-W(\d{2})$/.exec(weekValue || weekValueFromDate());
+  const year = match ? +match[1] : +today().slice(0, 4);
+  const week = match ? +match[2] : +weekValueFromDate().slice(6);
+  const simple = new Date(year, 0, 1 + (week - 1) * 7);
+  const dow = simple.getDay();
+  const monday = new Date(simple);
+  if (dow <= 4) monday.setDate(simple.getDate() - simple.getDay() + 1);
+  else monday.setDate(simple.getDate() + 8 - simple.getDay());
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return dateKey(d);
+  });
+}
+
+function nutritionForDate(date = today()) {
+  const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const meals = (DB.get('meals') || []).filter(m => m.date === date);
+  const totals = meals.reduce((a, m) => ({
+    cal: a.cal + (+m.calories || 0),
+    p: a.p + (+m.protein || 0),
+    c: a.c + (+m.carbs || 0),
+    f: a.f + (+m.fat || 0)
+  }), { cal: 0, p: 0, c: 0, f: 0 });
+  return { cfg, meals, totals };
+}
+
+function sessionsForDate(date = today()) {
+  return (DB.get('sessions') || []).filter(s => s.date === date);
+}
+
+function checkingStatus(goal) {
+  if (goal.status) return goal.status;
+  return goal.done ? 'done' : 'pending';
+}
+
+function checkingStats(week = weekValueFromDate()) {
+  const goals = (DB.get('checking_goals') || []).filter(g => g.week === week);
+  const stats = { pending: 0, done: 0, missed: 0, total: goals.length, goals };
+  goals.forEach(g => { stats[checkingStatus(g)] = (stats[checkingStatus(g)] || 0) + 1; });
+  stats.rate = stats.total ? Math.round((stats.done / stats.total) * 100) : 0;
+  return stats;
+}
+
+function activityOnDate(date) {
+  const hasMeals = (DB.get('meals') || []).some(m => m.date === date);
+  const hasSessions = (DB.get('sessions') || []).some(s => s.date === date);
+  const hasBody = (DB.get('bodylogs') || []).some(b => b.date === date);
+  const hasNotes = (DB.get('notes') || []).some(n => n.date === date);
+  return hasMeals || hasSessions || hasBody || hasNotes;
+}
+
+function activityStreak() {
+  let count = 0;
+  for (let i = 0; i < 365; i++) {
+    const d = addDays(today(), -i);
+    if (!activityOnDate(d)) break;
+    count++;
+  }
+  return count;
+}
+
+function trainingWeekStreak() {
+  let streak = 0;
+  for (let i = 0; i < 52; i++) {
+    const d = addDays(today(), -i * 7);
+    const dates = getWeekDates(weekValueFromDate(d));
+    const count = (DB.get('sessions') || []).filter(s => dates.includes(s.date)).length;
+    if (!count) break;
+    streak++;
+  }
+  return streak;
+}
+
+function weekSummary(week = weekValueFromDate()) {
+  const dates = getWeekDates(week);
+  const sessions = (DB.get('sessions') || []).filter(s => dates.includes(s.date));
+  const meals = (DB.get('meals') || []).filter(m => dates.includes(m.date));
+  const bodylogs = (DB.get('bodylogs') || []).filter(b => dates.includes(b.date));
+  const notes = (DB.get('notes') || []).filter(n => dates.includes(n.date));
+  const calories = meals.reduce((a, m) => a + (+m.calories || 0), 0);
+  const volume = sessions.reduce((a, s) => a + (s.sets || []).reduce((b, x) => b + ((+x.weight || 0) * (+x.reps || 0)), 0), 0);
+  return { week, dates, sessions, meals, bodylogs, notes, calories, avgCalories: Math.round(calories / 7), volume, checking: checkingStats(week) };
+}
+
+function weeklyHistory(limit = 6) {
+  const weeks = [];
+  for (let i = 0; i < limit; i++) {
+    weeks.push(weekSummary(weekValueFromDate(addDays(today(), -i * 7))));
+  }
+  return weeks;
+}
+
+function dailyAlerts(date = today()) {
+  const { cfg, totals } = nutritionForDate(date);
+  const sessions = sessionsForDate(date);
+  const check = checkingStats(weekValueFromDate(date));
+  const alerts = [];
+  if (!sessions.length) alerts.push({ type: 'warn', title: 'Entrenamiento pendiente', copy: 'Aún no registraste una sesión hoy. Si toca entrenar, abre Entrenar y carga tu rutina.' });
+  else alerts.push({ type: 'good', title: 'Entreno registrado', copy: `${sessions.length} sesión guardada hoy. Buen material para medir progreso.` });
+  if (totals.cal < cfg.calories * 0.55) alerts.push({ type: 'warn', title: 'Calorías bajas', copy: `Vas en ${totals.cal} kcal de ${cfg.calories}. Puede faltar energía para cerrar el día.` });
+  if (totals.p < cfg.protein * 0.5) alerts.push({ type: 'warn', title: 'Proteína por completar', copy: `Llevas ${Math.round(totals.p)}g de ${cfg.protein}g. Conviene asegurar una comida fuerte en proteína.` });
+  if (check.total && check.pending) alerts.push({ type: 'warn', title: 'Cheking abierto', copy: `${check.pending} objetivo semanal sigue pendiente.` });
+  if (!alerts.length) alerts.push({ type: 'good', title: 'Día en control', copy: 'No hay señales urgentes. Sigue registrando para mantener el mapa claro.' });
+  return alerts.slice(0, 4);
+}
+
+function renderAlerts(targetId, alerts) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.innerHTML = `<div class="alert-list">${alerts.map(a => `
+    <div class="alert-item ${a.type}">
+      <div class="alert-title">${esc(a.title)}</div>
+      <div class="alert-copy">${esc(a.copy)}</div>
+    </div>`).join('')}</div>`;
+}
+
+function smartInsight(date = today()) {
+  const { cfg, totals } = nutritionForDate(date);
+  const sessionsToday = sessionsForDate(date).length;
+  const week = weekSummary(weekValueFromDate(date));
+  const check = checkingStats(weekValueFromDate(date));
+  if (!sessionsToday && totals.cal < cfg.calories * 0.35) return 'Hoy todavía está muy abierto: faltan comida registrada y entrenamiento. Prioridad simple: registra una comida real y deja lista la sesión si toca entrenar.';
+  if (!sessionsToday) return `La nutrición ya tiene ${totals.cal} kcal registradas. El siguiente movimiento útil es entrenar o dejar claro el descanso.`;
+  if (totals.p < cfg.protein * 0.65) return `Entreno registrado. Ahora protege recuperación: vas en ${Math.round(totals.p)}g de proteína de ${cfg.protein}g.`;
+  if (check.total && check.pending) return `Buen ritmo. Te quedan ${check.pending} objetivo(s) semanales por cerrar en Cheking.`;
+  return `Semana sólida: ${week.sessions.length} entreno(s), ${week.avgCalories} kcal promedio y ${activityStreak()} día(s) seguidos con registro.`;
+}
+
+function exerciseProgress() {
+  const map = {};
+  (DB.get('sessions') || []).forEach(session => {
+    (session.sets || []).forEach(set => {
+      const name = set.exercise_name;
+      if (!name) return;
+      if (!map[name]) map[name] = [];
+      map[name].push({ date: session.date, weight: +set.weight || 0, reps: +set.reps || 0, target: +set.target_reps || 0 });
+    });
+  });
+  return Object.entries(map).map(([name, sets]) => {
+    const sorted = sets.sort((a, b) => a.date.localeCompare(b.date));
+    const latest = sorted[sorted.length - 1];
+    const best = sorted.reduce((a, x) => (x.weight > a.weight ? x : a), sorted[0]);
+    const previous = [...sorted].reverse().find(x => x.date < latest.date);
+    const delta = previous ? latest.weight - previous.weight : 0;
+    return { name, latest, best, delta, totalSets: sets.length };
+  }).sort((a, b) => b.best.weight - a.best.weight);
+}
+
+function fillMealTemplates() {
+  const sel = document.getElementById('m-template');
+  if (!sel) return;
+  const templates = DB.get('meal_templates') || [];
+  sel.innerHTML = '<option value="">Selecciona una plantilla...</option>' + templates.map(t => `<option value="${t.id}">${esc(t.food_item)} - ${t.calories} kcal</option>`).join('');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1077,6 +1510,182 @@ function loadDashboard() {
       <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%; background: ${pct >= 100 ? 'var(--green)' : 'var(--accent)'}"></div></div>
     </div>`;
   }).join('') : '<div class="empty" style="padding:16px 0">Sin objetivos</div>';
+
+  document.getElementById('d-insight').textContent = smartInsight();
+  renderAlerts('d-alerts', dailyAlerts());
+}
+
+function loadToday() {
+  const { cfg, totals } = nutritionForDate();
+  const sessions = sessionsForDate();
+  const check = checkingStats();
+  document.getElementById('today-insight').textContent = smartInsight();
+  document.getElementById('today-training-count').textContent = sessions.length;
+  document.getElementById('today-training-sub').textContent = sessions.length === 1 ? 'sesión hoy' : 'sesiones hoy';
+  document.getElementById('today-calories').textContent = totals.cal;
+  document.getElementById('today-calories-sub').textContent = `de ${cfg.calories} kcal`;
+  document.getElementById('today-streak').textContent = activityStreak();
+
+  const next = document.getElementById('today-next-action');
+  const routines = DB.get('routines') || [];
+  const actionTitle = !sessions.length ? 'Entrenamiento' : totals.p < cfg.protein ? 'Recuperación' : 'Cierre del día';
+  const actionCopy = !sessions.length
+    ? (routines.length ? 'Abre Entrenar, elige tu rutina y registra lo logrado junto al peso.' : 'Crea una rutina para que tus objetivos se carguen solos al registrar entreno.')
+    : totals.p < cfg.protein ? `Suma proteína. Faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)}g para tu objetivo.` : 'Revisa Cheking y deja observaciones de cómo va la semana.';
+  next.innerHTML = `
+    <div class="alert-item ${!sessions.length ? 'warn' : 'good'}">
+      <div class="alert-title">${actionTitle}</div>
+      <div class="alert-copy">${actionCopy}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" onclick="${!sessions.length ? "showModal('modal-session')" : "go('checking')"}">${!sessions.length ? 'Registrar entreno' : 'Abrir Cheking'}</button>
+      </div>
+    </div>`;
+
+  renderAlerts('today-alerts', dailyAlerts());
+  const checkingEl = document.getElementById('today-checking');
+  checkingEl.innerHTML = check.goals.length ? `<div class="alert-list">${check.goals.map(g => `
+    <div class="alert-item ${checkingStatus(g) === 'done' ? 'good' : checkingStatus(g) === 'missed' ? 'danger' : 'warn'}">
+      <div class="flex jb ai-c gap-2">
+        <div>
+          <div class="alert-title">${esc(g.title)}</div>
+          <div class="alert-copy">${checkingStatus(g) === 'done' ? 'Cumplido' : checkingStatus(g) === 'missed' ? 'Fallado' : 'Pendiente'}</div>
+        </div>
+        <span class="badge ${checkingStatus(g) === 'done' ? 'b-green' : checkingStatus(g) === 'missed' ? 'b-red' : 'b-amber'}">${checkLabel(g)}</span>
+      </div>
+    </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
+}
+
+function checkLabel(goal) {
+  const status = checkingStatus(goal);
+  return status === 'done' ? 'Cumplido' : status === 'missed' ? 'Fallado' : 'Pendiente';
+}
+
+function loadCalendar() {
+  const input = document.getElementById('calendar-week');
+  if (!input.value) input.value = weekValueFromDate();
+  const summary = weekSummary(input.value);
+  document.getElementById('calendar-summary').innerHTML = `
+    <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">${summary.sessions.length}</div><div class="stat-sub">esta semana</div></div>
+    <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">${summary.avgCalories}</div><div class="stat-sub">promedio diario</div></div>
+    <div class="stat-tile"><div class="stat-label">Cheking</div><div class="stat-value">${summary.checking.rate}%</div><div class="stat-sub">${summary.checking.done}/${summary.checking.total || 0} cumplidos</div></div>`;
+
+  document.getElementById('calendar-grid').innerHTML = summary.dates.map((date, i) => {
+    const nut = nutritionForDate(date);
+    const sessions = sessionsForDate(date);
+    const body = (DB.get('bodylogs') || []).find(b => b.date === date);
+    const notes = (DB.get('notes') || []).filter(n => n.date === date);
+    return `<div class="day-card">
+      <div class="day-name">${dayNamesShort[i]}</div>
+      <div class="day-date">${date.slice(5)}</div>
+      <div class="day-line"><span>Entreno</span><strong>${sessions.length}</strong></div>
+      <div class="day-line"><span>Kcal</span><strong>${nut.totals.cal}</strong></div>
+      <div class="day-line"><span>Peso</span><strong>${body?.weight ? body.weight + ' kg' : '-'}</strong></div>
+      <div class="day-line"><span>Notas</span><strong>${notes.length}</strong></div>
+    </div>`;
+  }).join('');
+}
+
+function loadProgress() {
+  const history = weeklyHistory(6);
+  const current = history[0];
+  const previous = history[1];
+  document.getElementById('progress-streaks').innerHTML = `
+    <div class="stat-tile"><div class="stat-label">Racha diaria</div><div class="stat-value">${activityStreak()}</div><div class="stat-sub">días con registro</div></div>
+    <div class="stat-tile"><div class="stat-label">Racha entreno</div><div class="stat-value">${trainingWeekStreak()}</div><div class="stat-sub">semanas con sesión</div></div>
+    <div class="stat-tile"><div class="stat-label">Cheking</div><div class="stat-value">${checkingStats().rate}%</div><div class="stat-sub">cumplimiento actual</div></div>`;
+
+  const diffSessions = previous ? current.sessions.length - previous.sessions.length : 0;
+  const diffCalories = previous ? current.avgCalories - previous.avgCalories : 0;
+  const diffVolume = previous ? current.volume - previous.volume : 0;
+  document.getElementById('progress-weekly-summary').innerHTML = previous ? `
+    <div class="compare-list">
+      <div class="compare-row"><strong>Entrenos</strong><span>${current.sessions.length}</span><span>${diffSessions >= 0 ? '+' : ''}${diffSessions}</span></div>
+      <div class="compare-row"><strong>Kcal promedio</strong><span>${current.avgCalories}</span><span>${diffCalories >= 0 ? '+' : ''}${diffCalories}</span></div>
+      <div class="compare-row"><strong>Volumen</strong><span>${Math.round(current.volume)} kg</span><span>${diffVolume >= 0 ? '+' : ''}${Math.round(diffVolume)} kg</span></div>
+    </div>` : '<div class="empty">Aún no hay suficiente historial</div>';
+
+  renderProgressRecords();
+  renderWeeklyHistory('progress-history');
+  renderProgressPhotos();
+}
+
+function renderProgressRecords() {
+  const el = document.getElementById('progress-records');
+  if (!el) return;
+  const rows = Object.values(DB.get('records') || {}).sort((a, b) => (+b.weight || 0) - (+a.weight || 0)).slice(0, 6);
+  if (!rows.length) {
+    el.innerHTML = '<div class="empty">Tus PR aparecerán aquí</div>';
+    return;
+  }
+  el.innerHTML = `<div class="record-grid">${rows.map(r => `
+    <div class="record-card">
+      <div style="font-weight:800; color:var(--text)">${esc(r.exercise_name)}</div>
+      <div class="quick-value">${r.weight}<span class="metric-unit">kg</span></div>
+      <div class="quick-sub">${r.reps} reps · ${r.date}</div>
+    </div>`).join('')}</div>`;
+}
+
+function saveProgressPhoto() {
+  const file = document.getElementById('photo-file').files?.[0];
+  if (!file) return toast('Selecciona una foto', 'err');
+  const reader = new FileReader();
+  reader.onload = () => {
+    const photos = DB.get('progress_photos') || [];
+    photos.unshift({
+      id: uid(),
+      date: document.getElementById('photo-date').value || today(),
+      type: document.getElementById('photo-type').value,
+      note: document.getElementById('photo-note').value.trim(),
+      src: reader.result
+    });
+    DB.set('progress_photos', photos);
+    document.getElementById('photo-file').value = '';
+    document.getElementById('photo-note').value = '';
+    toast('Foto guardada');
+    renderProgressPhotos();
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderProgressPhotos() {
+  const el = document.getElementById('progress-photos');
+  if (!el) return;
+  const photos = DB.get('progress_photos') || [];
+  if (!photos.length) {
+    el.innerHTML = '<div class="empty">Sin fotos de progreso</div>';
+    return;
+  }
+  el.innerHTML = `<div class="photo-grid">${photos.map(p => `
+    <div class="photo-thumb">
+      <img src="${p.src}" alt="Foto de progreso ${esc(p.type)}">
+      <div class="photo-body">
+        <div style="font-weight:800; color:var(--text)">${esc(p.type)} · ${p.date}</div>
+        ${p.note ? `<div class="mini-muted mt-2">${esc(p.note)}</div>` : ''}
+        <div class="btn-row"><button class="btn btn-danger btn-sm" onclick="deleteProgressPhoto('${p.id}')">Eliminar</button></div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function deleteProgressPhoto(id) {
+  DB.del('progress_photos', id);
+  toast('Foto eliminada');
+  renderProgressPhotos();
+}
+
+function exportAllData() {
+  const data = {};
+  Object.keys(localStorage).filter(k => k.startsWith('ft_')).forEach(k => {
+    data[k.replace(/^ft_/, '')] = JSON.parse(localStorage.getItem(k) || 'null');
+  });
+  const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), app: 'AA Follow App', data }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `aa-follow-backup-${today()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+  toast('Backup descargado');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1167,6 +1776,7 @@ function renderBodyChart() {
 function loadTraining() {
   renderSessionsList();
   renderRoutinesList();
+  renderTrainingProgress();
 }
 
 // ── Rutinas ──
@@ -1436,6 +2046,25 @@ function renderSessionsList() {
     </div>`).join('');
 }
 
+function renderTrainingProgress() {
+  const el = document.getElementById('training-progress');
+  if (!el) return;
+  const progress = exerciseProgress().slice(0, 6);
+  if (!progress.length) {
+    el.innerHTML = '<div class="empty">Registra sesiones para ver avances por ejercicio.</div>';
+    return;
+  }
+  el.innerHTML = `<div class="record-grid">${progress.map(p => `
+    <div class="record-card">
+      <div style="font-weight:800; color:var(--text); margin-bottom:8px">${esc(p.name)}</div>
+      <div class="quick-value">${p.best.weight || 0}<span class="metric-unit">kg</span></div>
+      <div class="quick-sub">Mejor marca: ${p.best.reps || 0} reps el ${p.best.date}</div>
+      <div class="mt-2">
+        <span class="badge ${p.delta > 0 ? 'b-green' : p.delta < 0 ? 'b-red' : 'b-accent'}">${p.delta > 0 ? '+' : ''}${p.delta} kg último cambio</span>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
 function deleteSession(id) {
   if (!confirm('¿Eliminar esta sesión?')) return;
   DB.del('sessions', id);
@@ -1462,6 +2091,7 @@ function loadRecords() {
 function loadNutrition() {
   document.getElementById('nut-date').value = today();
   loadMeals();
+  renderMealTemplates();
 }
 
 function setNutToday() {
@@ -1498,6 +2128,76 @@ function saveMeal() {
   hideModal('modal-meal');
   ['m-food','m-cal','m-prot','m-carbs','m-fat'].forEach(id => document.getElementById(id).value = '');
   loadMeals();
+  renderMealTemplates();
+}
+
+function currentMealForm() {
+  return {
+    meal_name: document.getElementById('m-meal').value,
+    food_item: document.getElementById('m-food').value.trim(),
+    calories: +document.getElementById('m-cal').value || 0,
+    protein: +document.getElementById('m-prot').value || 0,
+    carbs: +document.getElementById('m-carbs').value || 0,
+    fat: +document.getElementById('m-fat').value || 0
+  };
+}
+
+function saveMealTemplate() {
+  const data = currentMealForm();
+  if (!data.food_item) return toast('Escribe el alimento para guardarlo como plantilla', 'err');
+  const templates = DB.get('meal_templates') || [];
+  const existing = templates.find(t => t.food_item.toLowerCase() === data.food_item.toLowerCase());
+  if (existing) Object.assign(existing, data);
+  else templates.unshift({ id: uid(), ...data, created: today() });
+  DB.set('meal_templates', templates);
+  toast(existing ? 'Plantilla actualizada' : 'Plantilla guardada');
+  fillMealTemplates();
+  renderMealTemplates();
+}
+
+function applyMealTemplate() {
+  const id = document.getElementById('m-template').value;
+  if (!id) return;
+  const t = (DB.get('meal_templates') || []).find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('m-meal').value = t.meal_name || 'Desayuno';
+  document.getElementById('m-food').value = t.food_item || '';
+  document.getElementById('m-cal').value = t.calories || 0;
+  document.getElementById('m-prot').value = t.protein || 0;
+  document.getElementById('m-carbs').value = t.carbs || 0;
+  document.getElementById('m-fat').value = t.fat || 0;
+}
+
+function useMealTemplate(id) {
+  showModal('modal-meal');
+  document.getElementById('m-template').value = id;
+  applyMealTemplate();
+}
+
+function deleteMealTemplate(id) {
+  DB.del('meal_templates', id);
+  toast('Plantilla eliminada');
+  fillMealTemplates();
+  renderMealTemplates();
+}
+
+function renderMealTemplates() {
+  const el = document.getElementById('meal-templates');
+  if (!el) return;
+  const templates = DB.get('meal_templates') || [];
+  if (!templates.length) {
+    el.innerHTML = '<div class="empty">Guarda alimentos frecuentes para cargarlos rápido.</div>';
+    return;
+  }
+  el.innerHTML = `<div class="template-grid">${templates.map(t => `
+    <div class="template-card">
+      <div style="font-weight:800; color:var(--text)">${esc(t.food_item)}</div>
+      <div class="mini-muted mt-2">${esc(t.meal_name || 'Comida')} · ${t.calories || 0} kcal · P:${t.protein || 0} C:${t.carbs || 0} G:${t.fat || 0}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-sm" onclick="useMealTemplate('${t.id}')">Usar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMealTemplate('${t.id}')">Eliminar</button>
+      </div>
+    </div>`).join('')}</div>`;
 }
 
 function loadMeals() {
@@ -1628,6 +2328,27 @@ function loadStats() {
   });
   const volDates = Object.keys(volMap).sort().slice(-20);
   renderStatChart('stats-vol-chart', 'vol-c', volDates.map(d => d.slice(5)), volDates.map(d => volMap[d]), '#10b981', 'Volumen (kg)', 'bar');
+  renderWeeklyHistory('stats-weekly-history');
+}
+
+function renderWeeklyHistory(targetId) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  const history = weeklyHistory(6);
+  const useful = history.filter(w => w.sessions.length || w.meals.length || w.bodylogs.length || w.checking.total);
+  if (!useful.length) {
+    el.innerHTML = '<div class="empty">Registra algunos días para ver el historial semanal.</div>';
+    return;
+  }
+  el.innerHTML = `<div class="compare-list">${useful.map(w => `
+    <div class="compare-row">
+      <div>
+        <strong>${w.week}</strong>
+        <div class="mini-muted">${w.dates[0].slice(5)} a ${w.dates[6].slice(5)}</div>
+      </div>
+      <div><span class="badge b-accent">${w.sessions.length} entrenos</span></div>
+      <div><span class="badge ${w.checking.rate >= 70 ? 'b-green' : w.checking.rate ? 'b-amber' : 'b-accent'}">${w.checking.rate}% check</span></div>
+    </div>`).join('')}</div>`;
 }
 
 function renderStatChart(canvasId, key, labels, data, color, label, type) {
@@ -1716,11 +2437,7 @@ function deleteNote(id) {
 
 // ══ Cheking semanal
 function currentCheckingWeek() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const days = Math.floor((now - start) / 86400000);
-  const week = Math.ceil((days + start.getDay() + 1) / 7);
-  return now.getFullYear() + '-W' + String(week).padStart(2, '0');
+  return weekValueFromDate();
 }
 
 function getCheckingWeek() {
@@ -1742,6 +2459,8 @@ function saveCheckingGoal() {
     week: getCheckingWeek(),
     title,
     observations: document.getElementById('c-goal-observations').value.trim(),
+    reflection: '',
+    status: 'pending',
     done: false,
     created: today()
   });
@@ -1755,25 +2474,45 @@ function renderCheckingGoals() {
   const week = getCheckingWeek();
   const goals = (DB.get('checking_goals') || []).filter(g => g.week === week);
   const el = document.getElementById('checking-list');
+  renderCheckingSummary(goals);
   if (!goals.length) { el.innerHTML = '<div class="empty">Agrega tus objetivos semanales.</div>'; return; }
   el.innerHTML = `<div class="flex-col gap-3">${goals.map(g => `
     <div class="card" style="padding:14px">
       <div class="flex jb ai-c gap-2">
         <div>
-          <div style="font-weight:700; color:var(--text); text-decoration:${g.done ? 'line-through' : 'none'}">${esc(g.title)}</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px">${g.week}</div>
+          <div style="font-weight:700; color:var(--text); text-decoration:${checkingStatus(g) === 'done' ? 'line-through' : 'none'}">${esc(g.title)}</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px">${g.week} · ${checkLabel(g)}</div>
         </div>
         <div class="flex gap-2">
-          <button class="btn ${g.done ? 'btn-primary' : 'btn-ghost'} btn-sm" onclick="toggleCheckingGoal('${g.id}')">${g.done ? 'Cumplido' : 'Check'}</button>
           <button class="btn btn-danger btn-sm" onclick="deleteCheckingGoal('${g.id}')">✕</button>
         </div>
+      </div>
+      <div class="status-row">
+        <button class="status-btn pending ${checkingStatus(g) === 'pending' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','pending')">Pendiente</button>
+        <button class="status-btn done ${checkingStatus(g) === 'done' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','done')">Cumplido</button>
+        <button class="status-btn missed ${checkingStatus(g) === 'missed' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','missed')">Fallado</button>
       </div>
       <div class="form-row" style="margin-top:12px">
         <label class="form-label">Observaciones</label>
         <textarea data-checking-observation="${g.id}" placeholder="Escribe aqui observaciones de este objetivo durante la semana...">${esc(g.observations || '')}</textarea>
       </div>
+      <div class="form-row" style="margin-top:12px">
+        <label class="form-label">Reflexión final</label>
+        <textarea data-checking-reflection="${g.id}" placeholder="Qué funcionó, qué falló y qué ajustarás la próxima semana...">${esc(g.reflection || '')}</textarea>
+      </div>
       <div class="btn-row"><button class="btn btn-ghost btn-sm" onclick="saveCheckingGoalObservation('${g.id}')">Guardar observaciones</button></div>
     </div>`).join('')}</div>`;
+}
+
+function renderCheckingSummary(goals) {
+  const el = document.getElementById('checking-summary');
+  if (!el) return;
+  const counts = { pending: 0, done: 0, missed: 0 };
+  goals.forEach(g => counts[checkingStatus(g)] = (counts[checkingStatus(g)] || 0) + 1);
+  el.innerHTML = `
+    <div class="stat-tile"><div class="stat-label">Pendientes</div><div class="stat-value">${counts.pending}</div><div class="stat-sub">por cerrar</div></div>
+    <div class="stat-tile"><div class="stat-label">Cumplidos</div><div class="stat-value">${counts.done}</div><div class="stat-sub">objetivos logrados</div></div>
+    <div class="stat-tile"><div class="stat-label">Fallados</div><div class="stat-value">${counts.missed}</div><div class="stat-sub">para revisar</div></div>`;
 }
 
 function toggleCheckingGoal(id) {
@@ -1781,6 +2520,17 @@ function toggleCheckingGoal(id) {
   const goal = goals.find(g => g.id === id);
   if (!goal) return;
   goal.done = !goal.done;
+  goal.status = goal.done ? 'done' : 'pending';
+  DB.set('checking_goals', goals);
+  renderCheckingGoals();
+}
+
+function setCheckingGoalStatus(id, status) {
+  const goals = DB.get('checking_goals') || [];
+  const goal = goals.find(g => g.id === id);
+  if (!goal) return;
+  goal.status = status;
+  goal.done = status === 'done';
   DB.set('checking_goals', goals);
   renderCheckingGoals();
 }
@@ -1796,8 +2546,10 @@ function saveCheckingGoalObservation(id) {
   const goals = DB.get('checking_goals') || [];
   const goal = goals.find(g => g.id === id);
   const textarea = document.querySelector(`[data-checking-observation="${id}"]`);
+  const reflection = document.querySelector(`[data-checking-reflection="${id}"]`);
   if (!goal || !textarea) return;
   goal.observations = textarea.value;
+  if (reflection) goal.reflection = reflection.value;
   DB.set('checking_goals', goals);
   toast('Observaciones guardadas');
 }
@@ -1806,6 +2558,8 @@ function saveCheckingGoalObservation(id) {
 document.getElementById('b-date').value = today();
 document.getElementById('s-date').value = today();
 document.getElementById('nut-date').value = today();
+document.getElementById('photo-date').value = today();
+document.getElementById('calendar-week').value = weekValueFromDate();
 
 // ════ AUTH / LOGIN ════════════════════════════════════════════════════
 function initAuth() {
