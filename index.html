@@ -527,6 +527,22 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
   letter-spacing:.08em;
   text-transform:uppercase;
 }
+.mood-buttons { display:flex; gap:10px; flex-wrap:wrap; }
+.mood-btn {
+  flex:1;
+  min-width:110px;
+  border-radius:var(--radius-pill);
+  padding:11px 14px;
+  border:1px solid var(--border);
+  font-size:.85rem;
+  font-weight:800;
+  font-family:inherit;
+  cursor:pointer;
+}
+.mood-btn.bad { background:rgba(239,68,68,.12); color:var(--red); border-color:rgba(239,68,68,.24); }
+.mood-btn.regular { background:rgba(245,158,11,.14); color:#b45309; border-color:rgba(245,158,11,.28); }
+.mood-btn.good { background:rgba(16,185,129,.12); color:var(--green); border-color:rgba(16,185,129,.24); }
+.mood-btn.active { box-shadow:0 0 0 3px var(--accent-dim); background:var(--card); }
 .login-card {
   background:white; border-radius:var(--radius-lg); padding:40px 32px;
   width:100%; max-width:420px; box-shadow:0 24px 80px rgba(0,0,0,.25);
@@ -677,6 +693,14 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
         <div class="card">
           <div class="card-title">Alertas de seguimiento</div>
           <div id="d-alerts"><div class="empty">Sin alertas por ahora</div></div>
+        </div>
+      </div>
+      <div class="card mb">
+        <div class="card-title">Cómo te sientes hoy</div>
+        <div class="mood-buttons" id="dashboard-mood">
+          <button class="mood-btn bad" onclick="saveDashboardMood('Mal')">Mal</button>
+          <button class="mood-btn regular" onclick="saveDashboardMood('Regular')">Regular</button>
+          <button class="mood-btn good" onclick="saveDashboardMood('Bien')">Bien</button>
         </div>
       </div>
       <div class="g2 mb">
@@ -1468,6 +1492,21 @@ function fillMealTemplates() {
   sel.innerHTML = '<option value="">Selecciona una plantilla...</option>' + templates.map(t => `<option value="${t.id}">${esc(t.food_item)} - ${t.calories} kcal</option>`).join('');
 }
 
+function saveDashboardMood(value) {
+  const moods = DB.get('dashboard_moods') || {};
+  moods[today()] = value;
+  DB.set('dashboard_moods', moods);
+  renderDashboardMood();
+  toast('Estado guardado');
+}
+
+function renderDashboardMood() {
+  const el = document.getElementById('dashboard-mood');
+  if (!el) return;
+  const value = (DB.get('dashboard_moods') || {})[today()];
+  el.querySelectorAll('.mood-btn').forEach(btn => btn.classList.toggle('active', btn.textContent.trim() === value));
+}
+
 // ═══════════════════════════════════════════════════
 // DASHBOARD LOGIC
 // ═══════════════════════════════════════════════════
@@ -1532,6 +1571,7 @@ function loadDashboard() {
 
   document.getElementById('d-insight').textContent = smartInsight();
   renderAlerts('d-alerts', dailyAlerts());
+  renderDashboardMood();
 }
 
 function loadToday() {
