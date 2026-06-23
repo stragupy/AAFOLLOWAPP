@@ -1283,7 +1283,7 @@ function preserveV1DataSnapshot() {
 }
 
 const uid = () => Date.now() + Math.random().toString(36).slice(2);
-const today = () => new Date().toISOString().split('T')[0];
+const today = () => dateKey(new Date());
 const clamp = (v, max) => Math.min((v / max) * 100, 100).toFixed(1);
 const fmt = v => v != null && v !== '' ? v : '—';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
