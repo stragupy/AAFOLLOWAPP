@@ -3100,7 +3100,8 @@ async function initAuth() {
   const user = await cloudCurrentUser();
   if (user?.email) {
     saveProfile(user.email);
-    enterApp(user.email, false);
+    document.getElementById('login-email-input').value = user.email;
+    setLoginStatus('Cuenta recordada. Aprieta Entrar para continuar.');
     return;
   }
   const active = DB.get('activeUser');
@@ -3207,8 +3208,9 @@ function enterApp(name, animate) {
 }
 
 async function logoutUser() {
+  const active = DB.get('activeUser');
   if (cloudClient) await cloudClient.auth.signOut();
-  DB.set('activeUser', null);
+  DB.set('activeUser', active);
   location.reload();
 }
 
