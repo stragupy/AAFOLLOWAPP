@@ -1621,24 +1621,35 @@ function renderWaterToday() {
   if (bar) bar.style.width = clamp(value, goal) + '%';
 }
 
+function isWeightGoal(g) {
+  const text = `${g.type || ''} ${g.unit || ''} ${g.title || ''}`.toLowerCase();
+  return text.includes('weight') || text.includes('peso') || text.includes('kg');
+}
+
+function latestBodyWeight() {
+  return [...(DB.get('bodylogs') || [])]
+    .filter(l => l.weight && l.date <= today())
+    .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
+}
+
 function goalProgress(g) {
   const start = +g.current || 0;
   const target = +g.target || 0;
   let actual = start;
-  if (g.type === 'weight') {
-    const latestWeight = [...(DB.get('bodylogs') || [])]
-      .filter(l => l.weight && l.date <= today())
-      .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
+  if (isWeightGoal(g)) {
+    const latestWeight = latestBodyWeight();
     actual = latestWeight != null ? +latestWeight : start;
   }
   if (!start || !target || start === target) {
-    return { pct: target && actual === target ? 100 : 0, done: target && actual === target, actual, direction: 'neutral' };
+    return { pct: target && actual === target ? 100 : 0, done: target && actual === target, actual, direction: 'neutral', moved: 0, remaining: Math.abs(actual - target) };
   }
   const isLosing = target < start;
   const raw = isLosing ? ((start - actual) / (start - target)) * 100 : ((actual - start) / (target - start)) * 100;
   const pct = Math.max(0, Math.min(raw, 100));
   const done = isLosing ? actual <= target : actual >= target;
-  return { pct, done, actual, direction: isLosing ? 'bajar' : 'subir' };
+  const moved = isLosing ? start - actual : actual - start;
+  const remaining = isLosing ? actual - target : target - actual;
+  return { pct, done, actual, direction: isLosing ? 'bajar' : 'subir', moved, remaining: Math.max(remaining, 0) };
 }
 
 // ═══════════════════════════════════════════════════
@@ -2471,6 +2482,7 @@ function loadGoals() {
         <span>Actual: <strong style="color:var(--text)">${gp.actual} ${g.unit}</strong></span>
         <span>Meta: <strong style="color:var(--text)">${g.target} ${g.unit}</strong></span>
       </div>
+      <div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px">${gp.moved > 0 ? `Avanzaste ${gp.moved.toFixed(1)} ${g.unit || ''}` : gp.moved < 0 ? `Te alejaste ${Math.abs(gp.moved).toFixed(1)} ${g.unit || ''}` : 'Aún no hay avance registrado'} · Faltan ${gp.remaining.toFixed(1)} ${g.unit || ''}</div>
       <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%; background:${done ? 'var(--green)' : 'var(--accent)'}"></div></div>
     </div>`;
   }).join('')}</div>`;
