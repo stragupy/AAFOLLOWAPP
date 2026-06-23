@@ -913,7 +913,7 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
     </div>
     <div class="content">
       <div class="flex ai-c gap-2 mb" style="margin-bottom:16px">
-        <input type="date" id="nut-date" style="width:auto" onchange="loadMeals()">
+        <input type="date" id="nut-date" style="width:auto" onchange="loadMeals(); renderSupplements()">
         <button class="btn btn-ghost btn-sm" onclick="setNutToday()">Hoy</button>
       </div>
       <div class="g2 mb">
@@ -948,6 +948,15 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
           <button class="btn btn-primary btn-sm" onclick="showModal('modal-meal')">+ Registrar Alimento</button>
         </div>
         <div id="meals-list"><div class="empty">Sin alimentos registrados hoy</div></div>
+      </div>
+      <div class="card mt-3">
+        <div class="card-title">Suplementación</div>
+        <div class="form-grid fg2" style="margin-bottom:14px">
+          <div class="form-row"><label class="form-label">Nombre</label><input id="sup-name" placeholder="Creatina, Omega 3..."></div>
+          <div class="form-row"><label class="form-label">Dosis diaria</label><input id="sup-dose" placeholder="5g, 2 cápsulas..."></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveSupplement()">Agregar suplemento</button></div>
+        <div id="supplements-list" class="mt-3"><div class="empty">Agrega tu suplementación diaria.</div></div>
       </div>
       <div class="card mt-3">
         <div class="flex jb ai-c" style="margin-bottom:14px">
@@ -2301,11 +2310,65 @@ function loadNutrition() {
   document.getElementById('nut-date').value = today();
   loadMeals();
   renderMealTemplates();
+  renderSupplements();
 }
 
 function setNutToday() {
   document.getElementById('nut-date').value = today();
   loadMeals();
+  renderSupplements();
+}
+
+function getSupplementDate() {
+  return document.getElementById('nut-date')?.value || today();
+}
+
+function saveSupplement() {
+  const name = document.getElementById('sup-name').value.trim();
+  const dose = document.getElementById('sup-dose').value.trim();
+  if (!name || !dose) return toast('Completa nombre y dosis del suplemento', 'err');
+  DB.push('supplements', { id: uid(), name, dose, created: today() });
+  document.getElementById('sup-name').value = '';
+  document.getElementById('sup-dose').value = '';
+  toast('Suplemento agregado');
+  renderSupplements();
+}
+
+function toggleSupplementCheck(id) {
+  const date = getSupplementDate();
+  const checks = DB.get('supplement_checks') || {};
+  if (!checks[date]) checks[date] = {};
+  checks[date][id] = !checks[date][id];
+  DB.set('supplement_checks', checks);
+  renderSupplements();
+}
+
+function deleteSupplement(id) {
+  DB.del('supplements', id);
+  toast('Suplemento eliminado');
+  renderSupplements();
+}
+
+function renderSupplements() {
+  const el = document.getElementById('supplements-list');
+  if (!el) return;
+  const supplements = DB.get('supplements') || [];
+  const checks = (DB.get('supplement_checks') || {})[getSupplementDate()] || {};
+  if (!supplements.length) {
+    el.innerHTML = '<div class="empty">Agrega tu suplementación diaria.</div>';
+    return;
+  }
+  el.innerHTML = supplements.map(s => `
+    <div class="flex jb ai-c" style="padding:10px 14px; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px">
+      <div>
+        <div style="font-size:0.9rem; font-weight:700; color:var(--text)">${esc(s.name)}</div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-top:2px">${esc(s.dose)}</div>
+      </div>
+      <div class="flex ai-c gap-2">
+        <button class="btn ${checks[s.id] ? 'btn-primary' : 'btn-ghost'} btn-sm" onclick="toggleSupplementCheck('${s.id}')">${checks[s.id] ? 'Cumplido' : 'Check'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSupplement('${s.id}')">✕</button>
+      </div>
+    </div>`).join('');
 }
 
 function saveNutConfig() {
