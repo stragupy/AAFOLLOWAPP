@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AA Follow App</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -696,6 +697,21 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
           <div class="metric-sub">Esta semana</div>
         </div>
       </div>
+      <div class="card mb">
+        <div class="card-title">Nube - borrador</div>
+        <div class="form-grid fg2">
+          <div class="form-row"><label class="form-label">Correo</label><input type="email" id="cloud-email" placeholder="tu@email.com"></div>
+          <div class="form-row"><label class="form-label">Contraseña</label><input type="password" id="cloud-password" placeholder="••••••••"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" onclick="cloudSignUp()">Crear cuenta</button>
+          <button class="btn btn-primary btn-sm" onclick="cloudSignIn()">Entrar</button>
+          <button class="btn btn-ghost btn-sm" onclick="cloudUploadData()">Subir datos del PC</button>
+          <button class="btn btn-ghost btn-sm" onclick="cloudDownloadData()">Descargar datos</button>
+          <button class="btn btn-danger btn-sm" onclick="cloudSignOut()">Salir</button>
+        </div>
+        <div class="mini-muted mt-3" id="cloud-status">Sin sesión en la nube.</div>
+      </div>
       <div class="g2 mb">
         <div class="insight-card">
           <div class="insight-title">Lectura inteligente</div>
@@ -873,6 +889,31 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
       </div>
     </div>
     <div class="content">
+      <div class="card mb">
+        <div class="card-title">Entreno en vivo - borrador</div>
+        <div class="form-grid fg3" style="margin-bottom:14px">
+          <div class="form-row"><label class="form-label">Fecha</label><input type="date" id="live-date"></div>
+          <div class="form-row"><label class="form-label">Rutina</label><select id="live-routine" onchange="fillLiveDays()"><option value="">Sin rutina</option></select></div>
+          <div class="form-row"><label class="form-label">Día</label><select id="live-day" onchange="loadLiveDay()"><option value="">—</option></select></div>
+        </div>
+        <div class="form-grid fg2" style="margin-bottom:14px">
+          <div class="form-row"><label class="form-label">Duración (min)</label><input type="number" id="live-duration" placeholder="60"></div>
+          <div class="form-row"><label class="form-label">Notas</label><input id="live-notes" placeholder="Sensaciones del entreno..."></div>
+        </div>
+        <div style="font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:10px" id="live-label">Series en vivo</div>
+        <div class="session-set-head">
+          <span class="head-cell">Ejercicio</span>
+          <span class="head-cell center">Objetivo</span>
+          <span class="head-cell center">Reps logradas</span>
+          <span class="head-cell center">Peso</span>
+          <span></span>
+        </div>
+        <div id="live-sets" style="margin-bottom:12px"></div>
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" onclick="addLiveSet()">+ Añadir serie</button>
+          <button class="btn btn-primary btn-sm" onclick="saveLiveWorkout()">Guardar entreno en vivo</button>
+        </div>
+      </div>
       <div class="card mb">
         <div class="card-title">Progreso de rutina</div>
         <div id="training-progress"><div class="empty">Registra sesiones para ver avances por ejercicio.</div></div>
@@ -1283,6 +1324,10 @@ const DB = {
   del: (k, id) => { const a = (DB.get(k) || []).filter(x => x.id !== id); DB.set(k, a); return a; },
 };
 
+const SUPABASE_URL = 'https://fqydbdssmmfvkrzefspq.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_HigCZOqLwj1zwO6mNiDwZg_uN9Y2MTt';
+const cloudClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 const V1_DATA_KEYS = ['profiles','activeUser','bodylogs','routines','sessions','records','nutconfig','meals','goals','notes','checking_goals'];
 function preserveV1DataSnapshot() {
   if (DB.get('v1_data_snapshot')) return;
@@ -1545,6 +1590,92 @@ function fillMealTemplates() {
   sel.innerHTML = '<option value="">Selecciona una plantilla...</option>' + templates.map(t => `<option value="${t.id}">${esc(t.food_item)} - ${t.calories} kcal</option>`).join('');
 }
 
+function cloudSetStatus(message) {
+  const el = document.getElementById('cloud-status');
+  if (el) el.textContent = message;
+}
+
+function cloudLocalData() {
+  const data = {};
+  Object.keys(localStorage).filter(k => k.startsWith('ft_')).forEach(k => {
+    data[k.replace(/^ft_/, '')] = JSON.parse(localStorage.getItem(k) || 'null');
+  });
+  return data;
+}
+
+function cloudRestoreData(data) {
+  Object.entries(data || {}).forEach(([key, value]) => DB.set(key, value));
+}
+
+async function cloudCurrentUser() {
+  if (!cloudClient) return null;
+  const { data } = await cloudClient.auth.getUser();
+  return data?.user || null;
+}
+
+async function refreshCloudStatus() {
+  if (!cloudClient) return cloudSetStatus('Supabase no cargó. Revisa conexión.');
+  const user = await cloudCurrentUser();
+  cloudSetStatus(user ? `Conectado: ${user.email}` : 'Sin sesión en la nube.');
+}
+
+async function cloudSignUp() {
+  if (!cloudClient) return toast('Supabase no está disponible', 'err');
+  const email = document.getElementById('cloud-email').value.trim();
+  const password = document.getElementById('cloud-password').value;
+  if (!email || !password) return toast('Completa correo y contraseña', 'err');
+  const { error } = await cloudClient.auth.signUp({ email, password });
+  if (error) return toast(error.message, 'err');
+  toast('Cuenta creada. Si Supabase lo pide, confirma el correo.');
+  refreshCloudStatus();
+}
+
+async function cloudSignIn() {
+  if (!cloudClient) return toast('Supabase no está disponible', 'err');
+  const email = document.getElementById('cloud-email').value.trim();
+  const password = document.getElementById('cloud-password').value;
+  if (!email || !password) return toast('Completa correo y contraseña', 'err');
+  const { error } = await cloudClient.auth.signInWithPassword({ email, password });
+  if (error) return toast(error.message, 'err');
+  toast('Sesión de nube iniciada');
+  refreshCloudStatus();
+}
+
+async function cloudSignOut() {
+  if (!cloudClient) return;
+  await cloudClient.auth.signOut();
+  toast('Sesión de nube cerrada');
+  refreshCloudStatus();
+}
+
+async function cloudUploadData() {
+  if (!cloudClient) return toast('Supabase no está disponible', 'err');
+  const user = await cloudCurrentUser();
+  if (!user) return toast('Primero entra a tu cuenta de nube', 'err');
+  const payload = cloudLocalData();
+  const existing = await cloudClient.from('aa_follow_data').select('id').eq('user_id', user.id).limit(1).maybeSingle();
+  const result = existing.data?.id
+    ? await cloudClient.from('aa_follow_data').update({ data: payload, updated_at: new Date().toISOString() }).eq('id', existing.data.id)
+    : await cloudClient.from('aa_follow_data').insert({ user_id: user.id, data: payload });
+  if (result.error) return toast(result.error.message, 'err');
+  toast('Datos subidos a la nube');
+  cloudSetStatus(`Conectado: ${user.email} · última subida lista`);
+}
+
+async function cloudDownloadData() {
+  if (!cloudClient) return toast('Supabase no está disponible', 'err');
+  const user = await cloudCurrentUser();
+  if (!user) return toast('Primero entra a tu cuenta de nube', 'err');
+  const { data, error } = await cloudClient.from('aa_follow_data').select('data, updated_at').eq('user_id', user.id).order('updated_at', { ascending: false }).limit(1).maybeSingle();
+  if (error) return toast(error.message, 'err');
+  if (!data?.data) return toast('No hay datos en la nube todavía', 'err');
+  if (!confirm('Esto reemplazará los datos locales de este dispositivo por los de la nube. ¿Continuar?')) return;
+  cloudRestoreData(data.data);
+  toast('Datos descargados desde la nube');
+  cloudSetStatus(`Conectado: ${user.email} · datos descargados`);
+  loadDashboard();
+}
+
 function saveDashboardMood(value) {
   const moods = DB.get('dashboard_moods') || {};
   moods[today()] = value;
@@ -1728,6 +1859,7 @@ function loadDashboard() {
   renderDashboardMood();
   renderWellnessToday();
   renderWaterToday();
+  refreshCloudStatus();
 }
 
 function loadToday() {
@@ -1991,6 +2123,8 @@ function renderBodyChart() {
 // ENTRENAMIENTO PERFORMANCE
 // ═══════════════════════════════════════════════════
 function loadTraining() {
+  document.getElementById('live-date').value = today();
+  fillLiveRoutines();
   renderSessionsList();
   renderRoutinesList();
   renderTrainingProgress();
@@ -2060,6 +2194,7 @@ function saveRoutine() {
   document.getElementById('r-days').innerHTML = '';
   routineDayCount = 0;
   renderRoutinesList();
+  fillLiveRoutines();
 }
 
 function renderRoutinesList() {
@@ -2085,6 +2220,127 @@ function deleteRoutine(id) {
   DB.del('routines', id);
   toast('Rutina eliminada');
   renderRoutinesList();
+  fillLiveRoutines();
+}
+
+// ── Entreno en vivo borrador ──
+let liveSetCount = 0;
+
+function fillLiveRoutines() {
+  const sel = document.getElementById('live-routine');
+  if (!sel) return;
+  const current = sel.value;
+  const routines = DB.get('routines') || [];
+  sel.innerHTML = '<option value="">Sin rutina</option>' + routines.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
+  if (current) sel.value = current;
+  fillLiveDays();
+}
+
+function fillLiveDays() {
+  const routineId = document.getElementById('live-routine')?.value;
+  const daySel = document.getElementById('live-day');
+  if (!daySel) return;
+  const routine = (DB.get('routines') || []).find(r => r.id === routineId);
+  if (!routine) {
+    daySel.innerHTML = '<option value="">—</option>';
+    daySel.disabled = true;
+    return;
+  }
+  daySel.disabled = false;
+  daySel.innerHTML = '<option value="">Selecciona un día...</option>' + (routine.days || []).map(d => `<option value="${d.id}">${esc(d.name)}</option>`).join('');
+  if ((routine.days || []).length === 1) {
+    daySel.value = routine.days[0].id;
+    loadLiveDay();
+  }
+}
+
+function loadLiveDay() {
+  const routineId = document.getElementById('live-routine')?.value;
+  const dayId = document.getElementById('live-day')?.value;
+  const routine = (DB.get('routines') || []).find(r => r.id === routineId);
+  const day = routine?.days?.find(d => d.id === dayId);
+  const list = document.getElementById('live-sets');
+  if (!list) return;
+  list.innerHTML = '';
+  liveSetCount = 0;
+  if (!day) return;
+  (day.exercises || []).forEach(ex => {
+    const targetSets = Math.max(+(ex.target_sets || ex.sets || 1), 1);
+    const targetReps = Math.max(+(ex.reps || ex.target_reps || 1), 1);
+    for (let setNumber = 1; setNumber <= targetSets; setNumber++) {
+      addLiveSet({ exercise: ex.name, setNumber, targetSets, targetReps, achievedReps: targetReps });
+    }
+  });
+  document.getElementById('live-label').textContent = day.name + ' - objetivos cargados';
+}
+
+function addLiveSet(prefill = {}) {
+  const list = document.getElementById('live-sets');
+  if (!list) return;
+  const i = liveSetCount++;
+  const div = document.createElement('div');
+  div.className = 'session-set-row';
+  div.style.cssText = 'margin-bottom:8px; align-items:center';
+  const targetText = prefill.targetReps ? `${prefill.setNumber || 1}/${prefill.targetSets || '?'} x ${prefill.targetReps}` : 'Libre';
+  div.innerHTML = `
+    <input placeholder="Ejercicio..." class="live-ex" value="${esc(prefill.exercise || '')}">
+    <div class="target-pill">${targetText}</div>
+    <input type="hidden" class="live-sn" value="${prefill.setNumber || i + 1}">
+    <input type="hidden" class="live-target-sets" value="${prefill.targetSets || ''}">
+    <input type="hidden" class="live-target-reps" value="${prefill.targetReps || ''}">
+    <input type="number" placeholder="Reps" class="live-reps" value="${prefill.achievedReps ?? ''}" min="0" style="text-align:center">
+    <input type="number" placeholder="Peso kg" class="live-kg" min="0" step="0.5" style="text-align:center">
+    <button class="btn btn-ghost btn-sm" onclick="this.parentNode.remove()">✕</button>`;
+  list.appendChild(div);
+}
+
+function saveLiveWorkout() {
+  const date = document.getElementById('live-date').value || today();
+  const routineId = document.getElementById('live-routine').value;
+  const dayId = document.getElementById('live-day').value;
+  const routine = (DB.get('routines') || []).find(r => r.id === routineId);
+  const day = routine?.days?.find(d => d.id === dayId);
+  const sets = [];
+  document.querySelectorAll('#live-sets > div').forEach(row => {
+    const ex = row.querySelector('.live-ex')?.value.trim();
+    if (!ex) return;
+    sets.push({
+      exercise_name: ex,
+      set_number: +row.querySelector('.live-sn')?.value || 1,
+      target_sets: +row.querySelector('.live-target-sets')?.value || null,
+      target_reps: +row.querySelector('.live-target-reps')?.value || null,
+      reps: +row.querySelector('.live-reps')?.value || 0,
+      weight: +row.querySelector('.live-kg')?.value || 0
+    });
+  });
+  if (!sets.length) return toast('Añade al menos una serie', 'err');
+
+  const prs = DB.get('records') || {};
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+    }
+  });
+  DB.set('records', prs);
+  DB.push('sessions', {
+    id: uid(),
+    date,
+    routine_name: routine?.name || '',
+    day_name: day?.name || '',
+    duration: +document.getElementById('live-duration').value || null,
+    notes: document.getElementById('live-notes').value,
+    sets
+  });
+  toast('Entreno en vivo guardado');
+  document.getElementById('live-sets').innerHTML = '';
+  document.getElementById('live-notes').value = '';
+  document.getElementById('live-duration').value = '';
+  liveSetCount = 0;
+  renderSessionsList();
+  renderTrainingProgress();
+  loadToday();
+  loadDashboard();
 }
 
 // ── Sesiones de Entrenamiento ──
@@ -2836,6 +3092,7 @@ document.getElementById('s-date').value = today();
 document.getElementById('nut-date').value = today();
 document.getElementById('photo-date').value = today();
 document.getElementById('calendar-week').value = weekValueFromDate();
+refreshCloudStatus();
 
 // ════ AUTH / LOGIN ════════════════════════════════════════════════════
 function initAuth() {
