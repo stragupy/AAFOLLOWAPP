@@ -469,6 +469,9 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 .mt-3 { margin-top: 12px; }
 
 /* MOBILE RESPONSIVE NAV */
+#mobile-topbar,
+#mobile-menu-backdrop,
+#mobile-menu-panel { display: none; }
 #bottom-nav { display: none; }
 @media (max-width: 768px) {
   html, body {
@@ -481,36 +484,133 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
     background: #f8fafc;
   }
   #sidebar { display: none; }
+  #mobile-topbar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    height: 54px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(248, 250, 252, 0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .mobile-menu-btn {
+    width: 42px;
+    height: 38px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .mobile-menu-btn span {
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--text);
+  }
+  .mobile-top-title {
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+  #mobile-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(5px);
+  }
+  #mobile-menu-backdrop.show { display: block; }
+  #mobile-menu-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 301;
+    width: min(84vw, 310px);
+    padding: 18px 14px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    box-shadow: 18px 0 40px rgba(15, 23, 42, 0.16);
+    overflow-y: auto;
+    transform: translateX(-105%);
+    transition: transform 0.18s ease;
+  }
+  #mobile-menu-panel.show {
+    display: block;
+    transform: translateX(0);
+  }
+  .mobile-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .mobile-menu-title {
+    font-size: 1rem;
+    font-weight: 900;
+  }
+  .mobile-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--elevated);
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+  #mobile-menu-panel nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+  }
+  #mobile-menu-panel .nav-btn {
+    min-height: 42px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    padding: 10px 12px;
+  }
   #main {
     width: 100%;
     min-width: 0;
     margin-left: 0;
-    padding-bottom: calc(98px + env(safe-area-inset-bottom));
+    padding-bottom: 32px;
     background: #f8fafc;
   }
-  .content { padding: 0 14px 42px; }
-  .page-head { padding: 22px 16px 0; margin-bottom: 16px; }
-  .page-head h1 { font-size: 1.55rem; letter-spacing: 0; line-height: 1.15; }
-  .page-head p { font-size: 0.82rem; line-height: 1.45; }
+  .content { padding: 0 10px 32px; }
+  .page-head { padding: 16px 12px 0; margin-bottom: 12px; }
+  .page-head h1 { font-size: 1.34rem; letter-spacing: 0; line-height: 1.15; }
+  .page-head p { font-size: 0.78rem; line-height: 1.4; }
   .card,
   .metric,
   .insight-card {
-    border-radius: 22px;
-    padding: 18px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    border-radius: 18px;
+    padding: 13px;
+    box-shadow: none;
   }
-  .card-title { font-size: 0.68rem; letter-spacing: 0.08em; margin-bottom: 14px; }
+  .card-title { font-size: 0.64rem; letter-spacing: 0.08em; margin-bottom: 11px; }
   .g4 { grid-template-columns: 1fr 1fr; }
   .g3 { grid-template-columns: 1fr 1fr; }
   .fg3, .fg4 { grid-template-columns: 1fr 1fr; }
   .g2, .quick-grid, .stat-grid, .record-grid, .photo-grid, .template-grid { grid-template-columns: 1fr; }
-  .g2, .g3, .g4, .form-grid, .quick-grid, .stat-grid, .record-grid, .photo-grid, .template-grid { gap: 12px; }
+  .g2, .g3, .g4, .form-grid, .quick-grid, .stat-grid, .record-grid, .photo-grid, .template-grid { gap: 9px; }
   .week-grid { grid-template-columns: 1fr; }
   .compare-row { grid-template-columns: 1fr; }
-  .metric { min-height: 128px; }
-  .metric-val { font-size: 1.85rem; line-height: 1; overflow-wrap: anywhere; }
-  .metric-label { font-size: 0.64rem; letter-spacing: 0.08em; }
-  .metric-sub { font-size: 0.72rem; line-height: 1.35; }
+  .metric { min-height: 96px; }
+  .metric-val { font-size: 1.45rem; line-height: 1; overflow-wrap: anywhere; }
+  .metric-label { font-size: 0.6rem; letter-spacing: 0.06em; }
+  .metric-sub { font-size: 0.68rem; line-height: 1.3; }
   input, select, textarea {
     min-height: 46px;
     font-size: 16px;
@@ -563,18 +663,12 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
   #toast {
     left: 12px;
     right: 12px;
-    bottom: calc(88px + env(safe-area-inset-bottom));
+    bottom: 12px;
   }
   .toast { min-width: 0; width: 100%; }
   
   #bottom-nav {
-    display: flex; position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface); border-top: 1px solid var(--border);
-    z-index: 100; padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-    overflow-x: auto;
-    gap: 4px;
-    scrollbar-width: none;
-    box-shadow: 0 -10px 26px rgba(15, 23, 42, 0.08);
+    display: none;
   }
   #bottom-nav::-webkit-scrollbar { display: none; }
   .bnav-btn { 
@@ -603,19 +697,20 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 @media (max-width: 430px) {
   .content { padding-left: 10px; padding-right: 10px; }
   .page-head { padding-left: 12px; padding-right: 12px; }
-  .page-head h1 { font-size: 1.38rem; }
+  .page-head h1 { font-size: 1.26rem; }
   .card,
   .metric,
   .insight-card {
-    padding: 15px;
-    border-radius: 20px;
+    padding: 11px;
+    border-radius: 17px;
   }
-  .g3, .g4, .fg2, .fg3, .fg4 {
+  .g3, .fg2, .fg3, .fg4 {
     grid-template-columns: 1fr;
   }
+  .g4 { grid-template-columns: 1fr 1fr; }
   .metric { min-height: auto; }
-  .metric-val { font-size: 1.68rem; }
-  .quick-card, .stat-tile, .record-card, .template-card { padding: 12px; border-radius: 18px; }
+  .metric-val { font-size: 1.32rem; }
+  .quick-card, .stat-tile, .record-card, .template-card { padding: 10px; border-radius: 16px; }
   .quick-value, .stat-value { font-size: 1.12rem; }
   .mood-btn { flex: 1 1 100%; min-height: 44px; }
   .energy-btn { width: 42px; height: 42px; }
@@ -733,6 +828,36 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 </style>
 </head>
 <body>
+
+<div id="mobile-topbar">
+  <button class="mobile-menu-btn" onclick="openMobileMenu()" aria-label="Abrir menu" type="button">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mobile-top-title">AA Follow</div>
+  <div style="width:42px"></div>
+</div>
+<div id="mobile-menu-backdrop" onclick="closeMobileMenu()"></div>
+<div id="mobile-menu-panel">
+  <div class="mobile-menu-head">
+    <div class="mobile-menu-title">Menu</div>
+    <button class="mobile-close-btn" onclick="closeMobileMenu()" type="button">X</button>
+  </div>
+  <nav>
+    <div class="nav-label">Principal</div>
+    <button class="nav-btn active" onclick="go('dashboard')">Inicio</button>
+    <button class="nav-btn" onclick="go('today')">Hoy</button>
+    <button class="nav-btn" onclick="go('body')">Cuerpo</button>
+    <button class="nav-btn" onclick="go('training')">Gym</button>
+    <button class="nav-btn" onclick="go('nutrition')">Nutricion</button>
+    <button class="nav-btn" onclick="go('calendar')">Calendario</button>
+    <div class="nav-label">Analisis</div>
+    <button class="nav-btn" onclick="go('goals')">Objetivos</button>
+    <button class="nav-btn" onclick="go('stats')">Estadisticas</button>
+    <button class="nav-btn" onclick="go('progress')">Progreso</button>
+    <button class="nav-btn" onclick="go('notes')">Notas</button>
+    <button class="nav-btn" onclick="go('checking')">Cheking</button>
+  </nav>
+</div>
 
 <!-- SIDEBAR -->
 <div id="sidebar">
@@ -1486,6 +1611,17 @@ function go(page) {
 
   const loaders = { dashboard: loadDashboard, today: loadToday, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[page]?.();
+  closeMobileMenu();
+}
+
+function openMobileMenu() {
+  document.getElementById('mobile-menu-backdrop')?.classList.add('show');
+  document.getElementById('mobile-menu-panel')?.classList.add('show');
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobile-menu-backdrop')?.classList.remove('show');
+  document.getElementById('mobile-menu-panel')?.classList.remove('show');
 }
 
 function switchTab(btn, id) {
