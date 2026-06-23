@@ -594,6 +594,9 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
 .profile-name { font-size:.9rem; font-weight:700; color:#0f172a; }
 .profile-last { font-size:.7rem; color:#64748b; margin-top:2px; }
 .profile-arrow { color:#94a3b8; font-size:1.1rem; }
+.saved-login-area { width:100%; margin:-6px 0 8px; display:none; }
+.saved-login-title { font-size:.68rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.1em; color:#94a3b8; margin-bottom:8px; text-align:left; }
 .login-footer { margin-top:20px; font-size:.7rem; color:#94a3b8; }
 #sidebar-user-area {
   padding:12px 16px; border-top:1px solid rgba(15,23,42,.08);
@@ -660,6 +663,16 @@ tr:hover td { background: rgba(15, 23, 42, 0.02); }
       autocomplete="current-password">
     <button class="login-btn" onclick="doLogin()">Entrar con mi cuenta</button>
     <button class="login-btn" style="background:#0f172a;margin-top:-8px" onclick="createLoginAccount()">Crear cuenta</button>
+    <div id="saved-login-area" class="saved-login-area">
+      <div class="saved-login-title">Cuenta guardada</div>
+      <button class="profile-chip" onclick="quickEnterSavedAccount()" type="button">
+        <span>
+          <span class="profile-name" id="saved-login-email"></span>
+          <span class="profile-last">Toca para entrar rapido</span>
+        </span>
+        <span class="profile-arrow">></span>
+      </button>
+    </div>
     <div id="login-cloud-status" class="login-footer" style="margin-top:4px">
       Usa la misma cuenta en PC y celular.
     </div>
@@ -1612,6 +1625,8 @@ async function cloudCurrentUser() {
 
 async function refreshCloudStatus() {
   if (!cloudClient) return cloudSetStatus('Supabase no cargó. Revisa conexión.');
+  const active = DB.get('activeUser');
+  renderSavedLogin(active);
   const user = await cloudCurrentUser();
   cloudSetStatus(user ? `Conectado: ${user.email}` : 'Sin sesión en la nube.');
 }
@@ -3097,14 +3112,16 @@ async function initAuth() {
     setLoginStatus('No se pudo cargar Supabase. Revisa conexión.');
     return;
   }
+  const active = DB.get('activeUser');
+  renderSavedLogin(active);
   const user = await cloudCurrentUser();
   if (user?.email) {
     saveProfile(user.email);
     document.getElementById('login-email-input').value = user.email;
+    renderSavedLogin(user.email);
     setLoginStatus('Cuenta recordada. Aprieta Entrar para continuar.');
     return;
   }
-  const active = DB.get('activeUser');
   if (active && String(active).includes('@')) {
     document.getElementById('login-email-input').value = active;
   }
@@ -3116,6 +3133,15 @@ function formatDateEs(iso) {
   var months = ['enero','febrero','marzo','abril','mayo','junio',
     'julio','agosto','septiembre','octubre','noviembre','diciembre'];
   return d.getDate() + ' de ' + months[d.getMonth()] + ' de ' + d.getFullYear();
+}
+
+function renderSavedLogin(email) {
+  const area = document.getElementById('saved-login-area');
+  const label = document.getElementById('saved-login-email');
+  if (!area || !label) return;
+  const saved = email && String(email).includes('@') ? String(email) : '';
+  area.style.display = saved ? 'block' : 'none';
+  label.textContent = saved;
 }
 
 function setLoginStatus(message) {
@@ -3155,6 +3181,7 @@ async function doLogin() {
   }
   const account = data.user?.email || email;
   saveProfile(account);
+  renderSavedLogin(account);
   enterApp(account, true);
 }
 
@@ -3176,7 +3203,24 @@ async function createLoginAccount() {
   const account = data.user?.email || email;
   saveProfile(account);
   setLoginStatus('Cuenta creada. Si Supabase pide confirmar correo, revísalo.');
+  renderSavedLogin(account);
   if (data.session) enterApp(account, true);
+}
+
+async function quickEnterSavedAccount() {
+  const saved = DB.get('activeUser');
+  if (saved && String(saved).includes('@')) {
+    document.getElementById('login-email-input').value = saved;
+  }
+  const user = await cloudCurrentUser();
+  if (user?.email && (!saved || user.email.toLowerCase() === String(saved).toLowerCase())) {
+    saveProfile(user.email);
+    enterApp(user.email, true);
+    return;
+  }
+  const password = document.getElementById('login-password-input');
+  if (password) password.focus();
+  setLoginStatus('Cuenta recordada. Escribe tu contrasena y aprieta Entrar.');
 }
 
 function saveProfile(name) {
