@@ -1627,7 +1627,7 @@ function goalProgress(g) {
   let actual = start;
   if (g.type === 'weight') {
     const latestWeight = [...(DB.get('bodylogs') || [])]
-      .filter(l => l.weight)
+      .filter(l => l.weight && l.date <= today())
       .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
     actual = latestWeight != null ? +latestWeight : start;
   }
@@ -1906,6 +1906,8 @@ function saveBodyLog() {
   toast('Registro guardado');
   ['b-weight','b-fat','b-arm','b-chest','b-waist','b-thigh','b-calf','b-notes'].forEach(id => document.getElementById(id).value = '');
   renderBodyTable(); renderBodyChart();
+  loadGoals();
+  loadDashboard();
 }
 
 function renderBodyTable() {
