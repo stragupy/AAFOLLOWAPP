@@ -1621,6 +1621,26 @@ function renderWaterToday() {
   if (bar) bar.style.width = clamp(value, goal) + '%';
 }
 
+function goalProgress(g) {
+  const start = +g.current || 0;
+  const target = +g.target || 0;
+  let actual = start;
+  if (g.type === 'weight') {
+    const latestWeight = [...(DB.get('bodylogs') || [])]
+      .filter(l => l.weight)
+      .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
+    actual = latestWeight != null ? +latestWeight : start;
+  }
+  if (!start || !target || start === target) {
+    return { pct: target && actual === target ? 100 : 0, done: target && actual === target, actual, direction: 'neutral' };
+  }
+  const isLosing = target < start;
+  const raw = isLosing ? ((start - actual) / (start - target)) * 100 : ((actual - start) / (target - start)) * 100;
+  const pct = Math.max(0, Math.min(raw, 100));
+  const done = isLosing ? actual <= target : actual >= target;
+  return { pct, done, actual, direction: isLosing ? 'bajar' : 'subir' };
+}
+
 // ═══════════════════════════════════════════════════
 // DASHBOARD LOGIC
 // ═══════════════════════════════════════════════════
@@ -1676,10 +1696,10 @@ function loadDashboard() {
   const goals = (DB.get('goals') || []).filter(g => g.status === 'active').slice(0, 3);
   const gl = document.getElementById('d-goals-list');
   gl.innerHTML = goals.length ? goals.map(g => {
-    const pct = g.target ? clamp(g.current, g.target) : 0;
+    const gp = goalProgress(g);
     return `<div style="margin-bottom:14px">
-      <div class="flex jb" style="margin-bottom:6px; font-size:0.85rem"><span style="font-weight:600; color:var(--text)">${g.title}</span><span style="color:var(--muted)">${g.current}/${g.target} ${g.unit}</span></div>
-      <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%; background: ${pct >= 100 ? 'var(--green)' : 'var(--accent)'}"></div></div>
+      <div class="flex jb" style="margin-bottom:6px; font-size:0.85rem"><span style="font-weight:600; color:var(--text)">${g.title}</span><span style="color:var(--muted)">${gp.actual}/${g.target} ${g.unit}</span></div>
+      <div class="prog-wrap"><div class="prog-fill" style="width:${gp.pct}%; background: ${gp.done ? 'var(--green)' : 'var(--accent)'}"></div></div>
     </div>`;
   }).join('') : '<div class="empty" style="padding:16px 0">Sin objetivos</div>';
 
@@ -2430,13 +2450,14 @@ function loadGoals() {
   const el = document.getElementById('goals-list');
   if (!goals.length) { el.innerHTML = '<div class="empty">Establece tu primer objetivo de rendimiento.</div>'; return; }
   el.innerHTML = `<div class="flex-col gap-3">${goals.map(g => {
-    const pct = g.target ? clamp(g.current, g.target) : 0;
-    const done = +pct >= 100;
+    const gp = goalProgress(g);
+    const pct = gp.pct;
+    const done = gp.done;
     return `<div class="card">
       <div class="flex jb ai-c" style="margin-bottom:12px">
         <div>
           <div style="font-weight:700; font-size:1.05rem; color:var(--text)">${g.title}</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:4px">${g.type} ${g.date ? '· Límite: ' + g.date : ''}</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:4px">${g.type}${g.type === 'weight' && gp.direction !== 'neutral' ? ' · objetivo de ' + gp.direction + ' peso' : ''} ${g.date ? '· Límite: ' + g.date : ''}</div>
         </div>
         <div class="flex ai-c gap-2">
           ${done ? '<span class="badge b-green">Logrado</span>' : `<span class="badge b-accent">${Math.round(pct)}%</span>`}
@@ -2444,7 +2465,8 @@ function loadGoals() {
         </div>
       </div>
       <div class="flex jb" style="font-size:0.85rem; margin-bottom:8px">
-        <span>Actual: <strong style="color:var(--text)">${g.current} ${g.unit}</strong></span>
+        <span>Inicio: <strong style="color:var(--text)">${g.current} ${g.unit}</strong></span>
+        <span>Actual: <strong style="color:var(--text)">${gp.actual} ${g.unit}</strong></span>
         <span>Meta: <strong style="color:var(--text)">${g.target} ${g.unit}</strong></span>
       </div>
       <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%; background:${done ? 'var(--green)' : 'var(--accent)'}"></div></div>
