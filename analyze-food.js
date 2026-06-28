@@ -68,9 +68,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY || process.env.openai_api_key;
   if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta OPENAI_API_KEY en Vercel' });
+    return sendJson(res, 500, { error: 'Falta OPENAI_API_KEY u openai_api_key en Vercel' });
   }
 
   try {
