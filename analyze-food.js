@@ -64,6 +64,15 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 200, { ok: true });
   }
 
+  if (req.method === 'GET') {
+    return sendJson(res, 200, {
+      ok: true,
+      route: '/api/analyze-food',
+      has_key: Boolean(process.env.OPENAI_API_KEY || process.env.openai_api_key),
+      message: 'API lista. Usa la app para enviar una foto por POST.'
+    });
+  }
+
   if (req.method !== 'POST') {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
