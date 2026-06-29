@@ -1,4 +1,4 @@
-const MAX_IMAGE_CHARS = 7_000_000;
+const MAX_TOTAL_IMAGE_CHARS = 9_000_000;
 
 function sendJson(res, status, data) {
   res.statusCode = status;
@@ -14,8 +14,8 @@ function parseBody(req) {
     let raw = '';
     req.on('data', chunk => {
       raw += chunk;
-      if (raw.length > MAX_IMAGE_CHARS + 50_000) {
-        reject(new Error('Imagen demasiado grande'));
+      if (raw.length > MAX_TOTAL_IMAGE_CHARS + 50_000) {
+        reject(new Error('Imagenes demasiado grandes'));
         req.destroy();
       }
     });
@@ -30,16 +30,18 @@ function parseBody(req) {
   });
 }
 
-function extractText(payload) {
-  if (payload.output_text) return payload.output_text;
-  const parts = [];
-  for (const item of payload.output || []) {
-    for (const content of item.content || []) {
-      if (content.type === 'output_text' && content.text) parts.push(content.text);
-      if (typeof content.text === 'string') parts.push(content.text);
-    }
-  }
-  return parts.join('\n').trim();
+function parseDataUrl(dataUrl) {
+  const match = String(dataUrl || '').match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return null;
+  return { mimeType: match[1], data: match[2] };
+}
+
+function extractGeminiText(payload) {
+  return (payload.candidates || [])
+    .flatMap(candidate => candidate.content?.parts || [])
+    .map(part => part.text || '')
+    .join('\n')
+    .trim();
 }
 
 function parseModelJson(text) {
@@ -47,7 +49,7 @@ function parseModelJson(text) {
     return JSON.parse(text);
   } catch {
     const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('La IA no devolvio datos validos');
+    if (!match) throw new Error('Gemini no devolvio datos validos');
     return JSON.parse(match[0]);
   }
 }
@@ -64,12 +66,15 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 200, { ok: true });
   }
 
+  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
+
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
+      provider: 'gemini',
       route: '/api/analyze-food',
-      has_key: Boolean(process.env.OPENAI_API_KEY || process.env.openai_api_key),
-      message: 'API lista. Usa la app para enviar una foto por POST.'
+      has_key: Boolean(apiKey),
+      message: 'API lista. Usa la app para enviar una o varias fotos por POST.'
     });
   }
 
@@ -77,63 +82,59 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY || process.env.openai_api_key;
   if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta OPENAI_API_KEY u openai_api_key en Vercel' });
+    return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
   }
 
   try {
     const body = await parseBody(req);
-    const image = String(body.image || '');
+    const images = Array.isArray(body.images) ? body.images : [body.image].filter(Boolean);
     const notes = String(body.notes || '').slice(0, 500);
+    const parsedImages = images.slice(0, 4).map(parseDataUrl).filter(Boolean);
 
-    if (!image.startsWith('data:image/')) {
-      return sendJson(res, 400, { error: 'Debes enviar una imagen valida' });
-    }
-    if (image.length > MAX_IMAGE_CHARS) {
-      return sendJson(res, 413, { error: 'La imagen es demasiado grande' });
+    if (!parsedImages.length) {
+      return sendJson(res, 400, { error: 'Debes enviar al menos una imagen valida' });
     }
 
-    const openaiRes = await fetch('https://api.openai.com/v1/responses', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+    const totalChars = parsedImages.reduce((sum, img) => sum + img.data.length, 0);
+    if (totalChars > MAX_TOTAL_IMAGE_CHARS) {
+      return sendJson(res, 413, { error: 'Las imagenes son demasiado grandes' });
+    }
+
+    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    const parts = [
+      {
+        text: `Analiza esta comida desde una o varias fotos y estima macros. Si hay varias imagenes, usalas juntas como referencia del mismo plato o comida. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nDevuelve solo JSON valido, sin markdown, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
       },
+      ...parsedImages.map(img => ({
+        inline_data: {
+          mime_type: img.mimeType,
+          data: img.data
+        }
+      }))
+    ];
+
+    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: process.env.OPENAI_FOOD_MODEL || 'gpt-4o-mini',
-        input: [
-          {
-            role: 'system',
-            content: 'Eres un nutricionista deportivo. Estima macros desde fotos de comida. Devuelve solo JSON valido, sin markdown. Se conservador y explica incertidumbres brevemente.'
-          },
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'input_text',
-                text: `Analiza esta comida y estima macros. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nJSON requerido: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
-              },
-              {
-                type: 'input_image',
-                image_url: image,
-                detail: 'low'
-              }
-            ]
-          }
-        ],
-        max_output_tokens: 600
+        contents: [{ role: 'user', parts }],
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 600,
+          responseMimeType: 'application/json'
+        }
       })
     });
 
-    const payload = await openaiRes.json().catch(() => ({}));
-    if (!openaiRes.ok) {
-      return sendJson(res, openaiRes.status, {
-        error: payload.error?.message || 'OpenAI no pudo analizar la imagen'
+    const payload = await geminiRes.json().catch(() => ({}));
+    if (!geminiRes.ok) {
+      return sendJson(res, geminiRes.status, {
+        error: payload.error?.message || 'Gemini no pudo analizar la imagen'
       });
     }
 
-    const parsed = parseModelJson(extractText(payload));
+    const parsed = parseModelJson(extractGeminiText(payload));
     return sendJson(res, 200, {
       meal_name: parsed.meal_name || 'Almuerzo',
       food_item: parsed.food_item || 'Comida estimada',
@@ -146,6 +147,6 @@ module.exports = async function handler(req, res) {
       notes: parsed.notes || 'Estimacion aproximada. Confirma porciones antes de guardar.'
     });
   } catch (err) {
-    return sendJson(res, 500, { error: err.message || 'Error analizando comida' });
+    return sendJson(res, 500, { error: err.message || 'Error analizando comida con Gemini' });
   }
 };
