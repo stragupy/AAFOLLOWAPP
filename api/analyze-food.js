@@ -45,13 +45,47 @@ function extractGeminiText(payload) {
 }
 
 function parseModelJson(text) {
+  const cleaned = String(text || '')
+    .replace(/```json/gi, '')
+    .replace(/```/g, '')
+    .trim();
+
   try {
-    return JSON.parse(text);
+    return JSON.parse(cleaned);
   } catch {
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Gemini no devolvio datos validos');
-    return JSON.parse(match[0]);
+    const jsonText = firstJsonObject(cleaned);
+    if (!jsonText) throw new Error('Gemini no devolvio datos validos');
+    return JSON.parse(jsonText);
   }
+}
+
+function firstJsonObject(text) {
+  const start = text.indexOf('{');
+  if (start < 0) return '';
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === '\\') escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+
+    if (ch === '"') inString = true;
+    else if (ch === '{') depth++;
+    else if (ch === '}') {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+
+  return '';
 }
 
 function numberValue(value) {
@@ -104,7 +138,7 @@ module.exports = async function handler(req, res) {
     const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
     const parts = [
       {
-        text: `Analiza esta comida desde una o varias fotos y estima macros. Si hay varias imagenes, usalas juntas como referencia del mismo plato o comida. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nDevuelve solo JSON valido, sin markdown, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
+        text: `Analiza esta comida desde una o varias fotos y estima macros. Si hay varias imagenes, usalas juntas como referencia del mismo plato o comida. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nDevuelve un unico objeto JSON valido, sin markdown, sin explicaciones antes ni despues, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
       },
       ...parsedImages.map(img => ({
         inline_data: {
@@ -129,8 +163,14 @@ module.exports = async function handler(req, res) {
 
     const payload = await geminiRes.json().catch(() => ({}));
     if (!geminiRes.ok) {
+      const message = payload.error?.message || 'Gemini no pudo analizar la imagen';
+      if (/quota|rate.?limit|exceeded/i.test(message)) {
+        return sendJson(res, 429, {
+          error: `Cuota de Gemini agotada para el modelo ${model}. Prueba mas tarde o cambia GEMINI_MODEL en Vercel. Detalle: ${message}`
+        });
+      }
       return sendJson(res, geminiRes.status, {
-        error: payload.error?.message || 'Gemini no pudo analizar la imagen'
+        error: message
       });
     }
 
