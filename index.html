@@ -2738,8 +2738,7 @@ function loadDashboard() {
   document.getElementById('dp-fat').style.width = clamp(totals.f, cfg.fat) + '%';
 
   // Sesiones semana
-  const sevenDaysAgo = addDays(selectedDate(), -6);
-  const sessions = (DB.get('sessions') || []).filter(s => s.date >= sevenDaysAgo && s.date <= selectedDate());
+  const sessions = weekSummary(weekValueFromDate(selectedDate())).sessions;
   document.getElementById('d-sessions').textContent = sessions.length;
 
   // Últimas sesiones
