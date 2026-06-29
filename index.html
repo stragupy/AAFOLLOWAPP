@@ -542,6 +542,16 @@ tr:hover td { background: var(--accent-dim); }
   border-radius: var(--radius-sm);
   object-fit: cover;
 }
+.food-ai-thumb-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.food-ai-thumb-grid img {
+  width: 76px;
+  height: 76px;
+}
 .food-ai-result-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -1593,8 +1603,8 @@ tr:hover td { background: var(--accent-dim); }
         </div>
         <div class="form-grid fg2">
           <div class="form-row">
-            <label class="form-label">Foto del plato</label>
-            <input type="file" id="food-ai-file" accept="image/*" capture="environment" onchange="previewFoodAiImage()">
+            <label class="form-label">Fotos del plato</label>
+            <input type="file" id="food-ai-file" accept="image/*" capture="environment" multiple onchange="previewFoodAiImage()">
           </div>
           <div class="form-row">
             <label class="form-label">Ayuda opcional</label>
@@ -1606,7 +1616,7 @@ tr:hover td { background: var(--accent-dim); }
           <button class="btn btn-primary btn-sm" onclick="analyzeFoodPhoto()">Analizar con IA</button>
           <button class="btn btn-ghost btn-sm" onclick="useFoodAiEstimate()">Usar estimacion</button>
         </div>
-        <div id="food-ai-result" class="mt-3"><div class="empty">Sube una foto y la IA estimara macros para que los confirmes antes de guardar.</div></div>
+        <div id="food-ai-result" class="mt-3"><div class="empty">Sube una o varias fotos y la IA estimara macros para que los confirmes antes de guardar.</div></div>
       </div>
       <div class="g2 mb">
         <div class="card">
@@ -3742,20 +3752,22 @@ function resizeFoodImage(file, maxSide = 900, quality = 0.68) {
 }
 
 async function previewFoodAiImage() {
-  const file = document.getElementById('food-ai-file')?.files?.[0];
+  const files = Array.from(document.getElementById('food-ai-file')?.files || []).slice(0, 4);
   const preview = document.getElementById('food-ai-preview');
   if (!preview) return;
-  if (!file) {
+  if (!files.length) {
     preview.innerHTML = '';
     return;
   }
-  const url = await readFileAsDataUrl(file);
+  const items = await Promise.all(files.map(async file => ({ file, url: await readFileAsDataUrl(file) })));
   preview.innerHTML = `
     <div class="food-ai-preview">
-      <img src="${url}" alt="Foto de comida">
+      <div class="food-ai-thumb-grid">
+        ${items.map(item => `<img src="${item.url}" alt="Foto de comida">`).join('')}
+      </div>
       <div>
-        <div style="font-weight:800;color:var(--text)">Foto lista para analizar</div>
-        <div class="mini-muted mt-2">${esc(file.name || 'imagen')} - ${Math.round(file.size / 1024)} KB</div>
+        <div style="font-weight:800;color:var(--text)">${files.length} foto(s) listas para analizar</div>
+        <div class="mini-muted mt-2">${files.map(file => esc(file.name || 'imagen')).join(' · ')}</div>
       </div>
     </div>`;
 }
@@ -3764,7 +3776,7 @@ function renderFoodAiResult(data) {
   const el = document.getElementById('food-ai-result');
   if (!el) return;
   if (!data) {
-    el.innerHTML = '<div class="empty">Sube una foto y la IA estimara macros para que los confirmes antes de guardar.</div>';
+    el.innerHTML = '<div class="empty">Sube una o varias fotos y la IA estimara macros para que los confirmes antes de guardar.</div>';
     return;
   }
   const confidence = data.confidence > 1 ? Math.round(data.confidence) : Math.round((data.confidence || 0) * 100);
@@ -3783,20 +3795,20 @@ function renderFoodAiResult(data) {
 }
 
 async function analyzeFoodPhoto() {
-  const file = document.getElementById('food-ai-file')?.files?.[0];
-  if (!file) return toast('Selecciona una foto de tu comida', 'err');
+  const files = Array.from(document.getElementById('food-ai-file')?.files || []).slice(0, 4);
+  if (!files.length) return toast('Selecciona una foto de tu comida', 'err');
   if (location.protocol === 'file:') {
     return toast('El analisis con IA funciona cuando la app esta subida a Vercel', 'err');
   }
   const result = document.getElementById('food-ai-result');
   if (result) result.innerHTML = '<div class="empty">Analizando foto...</div>';
   try {
-    const image = await resizeFoodImage(file);
+    const images = await Promise.all(files.map(file => resizeFoodImage(file)));
     const res = await fetch('/api/analyze-food', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        image,
+        images,
         notes: document.getElementById('food-ai-notes')?.value || ''
       })
     });
