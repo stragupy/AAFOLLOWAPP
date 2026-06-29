@@ -101,7 +101,7 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 413, { error: 'Las imagenes son demasiado grandes' });
     }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
     const parts = [
       {
         text: `Analiza esta comida desde una o varias fotos y estima macros. Si hay varias imagenes, usalas juntas como referencia del mismo plato o comida. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nDevuelve solo JSON valido, sin markdown, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
