@@ -57,65 +57,6 @@ body {
   -webkit-font-smoothing: antialiased; 
 }
 
-body.dark-mode {
-  --bg: #090b10;
-  --surface: #0f1117;
-  --card: #151a23;
-  --elevated: #1e2531;
-  --border: rgba(226, 232, 240, 0.12);
-  --accent: #1683ff;
-  --accent-l: #6db6ff;
-  --accent-dim: rgba(22, 131, 255, 0.18);
-  --text: #f8fafc;
-  --muted: #a7b0c0;
-  --dim: #748094;
-  --shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
-  --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.22);
-  --grid: rgba(226, 232, 240, 0.08);
-}
-
-body.dark-mode .global-date-bar {
-  background: rgba(15, 17, 23, 0.94);
-}
-
-body.dark-mode #sidebar,
-body.dark-mode #mobile-menu-panel {
-  box-shadow: 18px 0 40px rgba(0, 0, 0, 0.28);
-}
-
-body.dark-mode #mobile-topbar {
-  background: rgba(15, 17, 23, 0.94);
-}
-
-body.dark-mode .logo {
-  background: var(--bg);
-  color: #fff;
-  border-bottom: 1px solid var(--border);
-}
-
-body.dark-mode .logo-icon {
-  background: var(--bg);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: none;
-}
-
-body.dark-mode .card,
-body.dark-mode .metric,
-body.dark-mode .quick-card,
-body.dark-mode .stat-tile,
-body.dark-mode .record-card,
-body.dark-mode .template-card,
-body.dark-mode .day-card,
-body.dark-mode .month-cell,
-body.dark-mode .alert-item {
-  box-shadow: none;
-}
-
-body.dark-mode .login-card {
-  color: #0f1117;
-}
-
 /* SIDEBAR */
 #sidebar {
   width: 252px; min-height: 100vh; background: var(--surface);
@@ -181,13 +122,6 @@ body.dark-mode .login-card {
 .logo .brand-wordmark {
   width: 100%;
 }
-body.dark-mode .brand-wordmark {
-  color: #fff;
-}
-body.dark-mode .brand-app {
-  color: var(--accent-l);
-}
-
 nav { flex: 1; padding: 18px 14px; display: flex; flex-direction: column; gap: 5px; }
 .nav-label { 
   font-size: 0.65rem; 
@@ -751,11 +685,6 @@ tr:hover td { background: var(--accent-dim); }
 .status-dot.body { background: var(--green); }
 .status-dot.cardio { background: #06b6d4; }
 .status-dot.check { background: var(--red); }
-.mode-toggle {
-  width: auto;
-  min-width: 116px;
-  justify-content: center;
-}
 .gym-focus-card {
   border: 1px solid var(--border);
   background: var(--ink);
@@ -1102,6 +1031,7 @@ tr:hover td { background: var(--accent-dim); }
 .mood-btn.active { box-shadow:0 0 0 3px var(--accent-dim); background:var(--card); }
 .mood-history { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:16px; }
 .mood-day { border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 6px; text-align:center; background:var(--elevated); }
+.mood-day.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 .mood-day span { display:block; font-size:.65rem; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:6px; }
 .mood-dot { width:14px; height:14px; border-radius:50%; margin:0 auto; background:var(--dim); }
 .mood-dot.Mal { background:var(--red); }
@@ -1273,7 +1203,6 @@ tr:hover td { background: var(--accent-dim); }
   <div class="global-date-bar">
     <label for="global-date">Día seleccionado</label>
     <input type="date" id="global-date" onchange="changeGlobalDate(this.value)">
-    <button class="btn btn-ghost btn-sm mode-toggle" id="theme-toggle" onclick="toggleTheme()">Modo oscuro</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -1781,11 +1710,11 @@ tr:hover td { background: var(--accent-dim); }
   <!-- NOTAS -->
   <div id="page-notes" class="page">
     <div class="page-head flex jb ai-c">
-      <div><h1>Notas</h1><p>Diario de rendimiento y observaciones personales</p></div>
+      <div><h1>Notas</h1><p>Bitacora permanente y observaciones personales</p></div>
       <button class="btn btn-primary btn-sm" onclick="showModal('modal-note')">+ Nueva Nota</button>
     </div>
     <div class="content">
-      <div id="notes-list"><div class="empty">Registra tus observaciones de entrenamiento o estado diario.</div></div>
+      <div id="notes-list"><div class="empty">Registra tus observaciones permanentes.</div></div>
     </div>
   </div>
 
@@ -2110,24 +2039,6 @@ function toast(msg, type = 'ok') {
   setTimeout(() => t.remove(), 3000);
 }
 
-function applyTheme() {
-  const theme = DB.get('theme_mode') || 'light';
-  document.body.classList.toggle('dark-mode', theme === 'dark');
-  const btn = document.getElementById('theme-toggle');
-  if (btn) btn.textContent = theme === 'dark' ? 'Modo claro' : 'Modo oscuro';
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1117' : '#1a7fff');
-}
-
-function toggleTheme() {
-  const next = DB.get('theme_mode') === 'dark' ? 'light' : 'dark';
-  DB.set('theme_mode', next);
-  applyTheme();
-  const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  if (activePage === 'body') renderBodyChart();
-  if (activePage === 'stats') loadStats();
-}
-
 // ═══════════════════════════════════════════════════
 // DRAFT INTELLIGENCE HELPERS
 // ═══════════════════════════════════════════════════
@@ -2151,24 +2062,31 @@ function addDays(dateStr, days) {
   return dateKey(d);
 }
 
-function weekValueFromDate(dateStr = selectedDate()) {
+function mondayOfDate(dateStr = selectedDate()) {
   const d = localDate(dateStr);
   d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
-  const week1 = new Date(d.getFullYear(), 0, 4);
-  const week = 1 + Math.round(((d - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
-  return `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+  const mondayOffset = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - mondayOffset);
+  return d;
+}
+
+function weekValueFromDate(dateStr = selectedDate()) {
+  const monday = mondayOfDate(dateStr);
+  const thursday = new Date(monday);
+  thursday.setDate(monday.getDate() + 3);
+  const weekYear = thursday.getFullYear();
+  const weekOneMonday = mondayOfDate(`${weekYear}-01-04`);
+  const week = 1 + Math.round((monday - weekOneMonday) / 604800000);
+  return `${weekYear}-W${String(week).padStart(2, '0')}`;
 }
 
 function getWeekDates(weekValue = weekValueFromDate()) {
   const match = /^(\d{4})-W(\d{2})$/.exec(weekValue || weekValueFromDate());
   const year = match ? +match[1] : +selectedDate().slice(0, 4);
   const week = match ? +match[2] : +weekValueFromDate().slice(6);
-  const simple = new Date(year, 0, 1 + (week - 1) * 7);
-  const dow = simple.getDay();
-  const monday = new Date(simple);
-  if (dow <= 4) monday.setDate(simple.getDate() - simple.getDay() + 1);
-  else monday.setDate(simple.getDate() + 8 - simple.getDay());
+  const weekOneMonday = mondayOfDate(`${year}-01-04`);
+  const monday = new Date(weekOneMonday);
+  monday.setDate(weekOneMonday.getDate() + (week - 1) * 7);
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
@@ -2209,9 +2127,8 @@ function activityOnDate(date) {
   const hasMeals = (DB.get('meals') || []).some(m => m.date === date);
   const hasSessions = (DB.get('sessions') || []).some(s => s.date === date);
   const hasBody = (DB.get('bodylogs') || []).some(b => b.date === date);
-  const hasNotes = (DB.get('notes') || []).some(n => n.date === date);
   const hasCardio = (DB.get('checking_cardio') || []).some(c => c.date === date);
-  return hasMeals || hasSessions || hasBody || hasNotes || hasCardio;
+  return hasMeals || hasSessions || hasBody || hasCardio;
 }
 
 function activityStreak() {
@@ -2241,7 +2158,7 @@ function weekSummary(week = weekValueFromDate()) {
   const sessions = (DB.get('sessions') || []).filter(s => dates.includes(s.date));
   const meals = (DB.get('meals') || []).filter(m => dates.includes(m.date));
   const bodylogs = (DB.get('bodylogs') || []).filter(b => dates.includes(b.date));
-  const notes = (DB.get('notes') || []).filter(n => dates.includes(n.date));
+  const notes = [];
   const cardio = (DB.get('checking_cardio') || []).filter(c => dates.includes(c.date));
   const calories = meals.reduce((a, m) => a + (+m.calories || 0), 0);
   const volume = sessions.reduce((a, s) => a + (s.sets || []).reduce((b, x) => b + ((+x.weight || 0) * (+x.reps || 0)), 0), 0);
@@ -2659,10 +2576,10 @@ function renderMoodHistory() {
   const el = document.getElementById('mood-history');
   if (!el) return;
   const moods = DB.get('dashboard_moods') || {};
-  el.innerHTML = Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(selectedDate(), i - 6);
+  const dates = getWeekDates(weekValueFromDate(selectedDate()));
+  el.innerHTML = dates.map(date => {
     const value = moods[date] || '';
-    return `<div class="mood-day"><span>${date.slice(5)}</span><div class="mood-dot ${value}" title="${value || 'Sin registro'}"></div></div>`;
+    return `<div class="mood-day ${date === selectedDate() ? 'active' : ''}"><span>${date.slice(5)}</span><div class="mood-dot ${value}" title="${value || 'Sin registro'}"></div></div>`;
   }).join('');
 }
 
@@ -2916,7 +2833,7 @@ function loadCalendar() {
     const nut = nutritionForDate(date);
     const sessions = sessionsForDate(date);
     const body = (DB.get('bodylogs') || []).find(b => b.date === date);
-    const notes = (DB.get('notes') || []).filter(n => n.date === date);
+    const notes = [];
     return `<div class="day-card">
       <div class="day-name">${dayNamesShort[i]}</div>
       <div class="day-date">${date.slice(5)}</div>
@@ -4152,9 +4069,9 @@ function renderStatChart(canvasId, key, labels, data, color, label, type) {
 const MOODS = { 5:'Excelente', 4:'Bien', 3:'Normal', 2:'Bajo', 1:'Mal' };
 
 function loadNotes() {
-  const notes = (DB.get('notes') || []).filter(n => n.date === selectedDate());
+  const notes = [...(DB.get('notes') || [])].sort((a, b) => (b.created_at || b.date || '').localeCompare(a.created_at || a.date || ''));
   const el = document.getElementById('notes-list');
-  if (!notes.length) { el.innerHTML = '<div class="empty">Registra tus observaciones de entrenamiento o estado diario.</div>'; return; }
+  if (!notes.length) { el.innerHTML = '<div class="empty">Registra tus observaciones permanentes.</div>'; return; }
   el.innerHTML = `<div class="flex-col gap-3">${notes.map(n => `
     <div class="card">
       <div class="flex jb ai-c" style="margin-bottom:12px">
@@ -4162,7 +4079,7 @@ function loadNotes() {
           <span class="badge b-green">${MOODS[n.mood] || 'Excelente'}</span>
           <div>
             <div style="font-weight:700; color:var(--text); font-size:1rem">${n.title || 'Observación Científica'}</div>
-            <div style="font-size:0.75rem; color:var(--muted); margin-top:2px">${n.date}</div>
+            <div style="font-size:0.75rem; color:var(--muted); margin-top:2px">Creada: ${n.date || (n.created_at || '').slice(0, 10)}</div>
           </div>
         </div>
         <button class="btn btn-danger btn-sm" onclick="deleteNote('${n.id}')">✕</button>
@@ -4174,8 +4091,11 @@ function loadNotes() {
 function saveNote() {
   const content = document.getElementById('n-content').value.trim();
   if (!content) return toast('El contenido es requerido', 'err');
+  const createdAt = new Date().toISOString();
   DB.push('notes', {
-    id: uid(), date: selectedDate(),
+    id: uid(),
+    date: today(),
+    created_at: createdAt,
     title: document.getElementById('n-title').value.trim(),
     content,
     mood: +document.getElementById('n-mood').value
@@ -4363,7 +4283,6 @@ function saveCheckingGoalObservation(id) {
 preserveV1DataSnapshot();
 document.getElementById('global-date').value = today();
 syncDateControls(today());
-applyTheme();
 refreshCloudStatus();
 
 // ════ AUTH / LOGIN ════════════════════════════════════════════════════
