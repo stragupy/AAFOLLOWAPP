@@ -3251,6 +3251,7 @@ tr:hover td {
   <div class="global-date-bar">
     <label for="global-date">Día seleccionado</label>
     <input type="date" id="global-date" onchange="changeGlobalDate(this.value)">
+    <button class="btn btn-ghost btn-sm" onclick="exportDayPdf()">PDF del día</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -3970,9 +3971,17 @@ tr:hover td {
 // ═══════════════════════════════════════════════════
 // STORAGE — todo persiste en localStorage
 // ═══════════════════════════════════════════════════
+let cloudAutoSyncReady = false;
+let cloudAutoSyncTimer = null;
+let cloudAutoSyncBusy = false;
+let cloudRestoreActive = false;
+
 const DB = {
   get: k => JSON.parse(localStorage.getItem('ft_' + k) || 'null'),
-  set: (k, v) => localStorage.setItem('ft_' + k, JSON.stringify(v)),
+  set: (k, v) => {
+    localStorage.setItem('ft_' + k, JSON.stringify(v));
+    scheduleCloudAutoUpload(k);
+  },
   push: (k, v) => { const a = DB.get(k) || []; a.unshift(v); DB.set(k, a); return a; },
   del: (k, id) => { const a = (DB.get(k) || []).filter(x => x.id !== id); DB.set(k, a); return a; },
 };
@@ -4521,6 +4530,12 @@ function cloudSetStatus(message) {
   if (el) el.textContent = message;
 }
 
+function scheduleCloudAutoUpload(key) {
+  if (!cloudAutoSyncReady || cloudRestoreActive || key === 'v1_data_snapshot') return;
+  clearTimeout(cloudAutoSyncTimer);
+  cloudAutoSyncTimer = setTimeout(() => cloudAutoUploadData(), 900);
+}
+
 function cloudLocalData() {
   const data = {};
   Object.keys(localStorage).filter(k => k.startsWith('ft_')).forEach(k => {
@@ -4530,7 +4545,9 @@ function cloudLocalData() {
 }
 
 function cloudRestoreData(data) {
+  cloudRestoreActive = true;
   Object.entries(data || {}).forEach(([key, value]) => DB.set(key, value));
+  cloudRestoreActive = false;
 }
 
 async function cloudCurrentUser() {
@@ -4544,7 +4561,7 @@ async function refreshCloudStatus() {
   const active = DB.get('activeUser');
   renderSavedLogin(active);
   const user = await cloudCurrentUser();
-  cloudSetStatus(user ? `Conectado: ${user.email}` : 'Sin sesión en la nube.');
+  cloudSetStatus(user ? `Conectado: ${user.email} · sync automático activo` : 'Sin sesión en la nube.');
 }
 
 async function cloudSignUp() {
@@ -4590,18 +4607,49 @@ async function cloudUploadData() {
   cloudSetStatus(`Conectado: ${user.email} · última subida lista`);
 }
 
-async function cloudDownloadData() {
-  if (!cloudClient) return toast('Supabase no está disponible', 'err');
+async function cloudAutoUploadData() {
+  if (cloudAutoSyncBusy || !cloudClient) return;
   const user = await cloudCurrentUser();
-  if (!user) return toast('Primero entra a tu cuenta de nube', 'err');
+  if (!user) return;
+  cloudAutoSyncBusy = true;
+  const payload = cloudLocalData();
+  const existing = await cloudClient.from('aa_follow_data').select('id').eq('user_id', user.id).limit(1).maybeSingle();
+  const result = existing.data?.id
+    ? await cloudClient.from('aa_follow_data').update({ data: payload, updated_at: new Date().toISOString() }).eq('id', existing.data.id)
+    : await cloudClient.from('aa_follow_data').insert({ user_id: user.id, data: payload });
+  cloudAutoSyncBusy = false;
+  if (result.error) {
+    cloudSetStatus(`Conectado: ${user.email} · error de sync`);
+    return;
+  }
+  cloudSetStatus(`Conectado: ${user.email} · guardado automático`);
+}
+
+async function cloudDownloadData(options = {}) {
+  if (!cloudClient) {
+    if (!options.silent) toast('Supabase no está disponible', 'err');
+    return false;
+  }
+  const user = await cloudCurrentUser();
+  if (!user) {
+    if (!options.silent) toast('Primero entra a tu cuenta de nube', 'err');
+    return false;
+  }
   const { data, error } = await cloudClient.from('aa_follow_data').select('data, updated_at').eq('user_id', user.id).order('updated_at', { ascending: false }).limit(1).maybeSingle();
-  if (error) return toast(error.message, 'err');
-  if (!data?.data) return toast('No hay datos en la nube todavía', 'err');
-  if (!confirm('Esto reemplazará los datos locales de este dispositivo por los de la nube. ¿Continuar?')) return;
+  if (error) {
+    if (!options.silent) toast(error.message, 'err');
+    return false;
+  }
+  if (!data?.data) {
+    if (!options.silent) toast('No hay datos en la nube todavía', 'err');
+    return false;
+  }
+  if (!options.silent && !confirm('Esto reemplazará los datos locales de este dispositivo por los de la nube. ¿Continuar?')) return false;
   cloudRestoreData(data.data);
-  toast('Datos descargados desde la nube');
-  cloudSetStatus(`Conectado: ${user.email} · datos descargados`);
+  if (!options.silent) toast('Datos descargados desde la nube');
+  cloudSetStatus(`Conectado: ${user.email} · datos sincronizados`);
   loadDashboard();
+  return true;
 }
 
 function saveDashboardMood(value) {
@@ -5022,6 +5070,79 @@ function exportCsvData() {
   const csv = rows.map(r => r.map(csvEscape).join(';')).join('\n');
   downloadTextFile(`aa-follow-registros-${today()}.csv`, csv, 'text/csv;charset=utf-8');
   toast('CSV descargado');
+}
+
+function reportRows(items, emptyText) {
+  return items.length ? items.join('') : `<tr><td colspan="4" class="empty-row">${emptyText}</td></tr>`;
+}
+
+function exportDayPdf() {
+  const date = selectedDate();
+  const logo = document.querySelector('.logo img, .login-logo img')?.src || '';
+  const meals = (DB.get('meals') || []).filter(m => m.date === date);
+  const sessions = (DB.get('sessions') || []).filter(s => s.date === date);
+  const cardio = (DB.get('checking_cardio') || []).filter(c => c.date === date);
+  const supplements = DB.get('supplements') || [];
+  const checks = (DB.get('supplement_checks') || {})[date] || {};
+  const nutrition = nutritionForDate(date);
+  const body = (DB.get('bodylogs') || []).find(b => b.date === date);
+  const mealRows = meals.map(m => `
+    <tr>
+      <td>${esc(m.meal_name || m.meal || 'Comida')}</td>
+      <td>${esc(m.food_item || m.name || 'Alimento')}</td>
+      <td>${+m.calories || 0} kcal</td>
+      <td>${+m.protein || 0}P / ${+m.carbs || 0}C / ${+m.fat || 0}G</td>
+    </tr>`);
+  const suppRows = supplements.map(s => `
+    <tr>
+      <td>${esc(s.name)}</td>
+      <td>${esc(s.dose || '-')}</td>
+      <td colspan="2">${checks[s.id] ? 'Cumplido' : 'Pendiente'}</td>
+    </tr>`);
+  const sessionRows = sessions.flatMap(s => (s.sets || []).map(set => `
+    <tr>
+      <td>${esc(s.routine_name || s.day_name || 'Entreno')}</td>
+      <td>${esc(set.exercise_name || set.exercise || set.name || '-')}</td>
+      <td>${+set.reps || 0} reps</td>
+      <td>${+set.weight || 0} kg</td>
+    </tr>`));
+  const cardioRows = cardio.map(c => `
+    <tr>
+      <td>${c.type === 'steps' ? 'Pasos' : 'Min de cardio'}</td>
+      <td colspan="3">${Number(c.value || 0).toLocaleString('es-CL')} ${c.type === 'steps' ? 'pasos' : 'min'}</td>
+    </tr>`);
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>AA Follow ${date}</title>
+  <style>
+    *{box-sizing:border-box} body{font-family:Inter,Arial,sans-serif;color:#0f172a;margin:0;background:#f4f7fb}
+    .page{max-width:900px;margin:0 auto;background:#fff;min-height:100vh;padding:34px}
+    .head{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #e5eaf1;padding-bottom:20px;margin-bottom:24px}
+    .head img{width:132px;height:auto}.date{text-align:right;color:#64748b;font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.1em}
+    h1{font-size:30px;margin:8px 0 0;letter-spacing:-.04em} h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;margin:26px 0 10px;color:#075fcf;border-bottom:1px solid #e5eaf1;padding-bottom:8px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.box{border:1px solid #e5eaf1;border-radius:12px;padding:12px;background:#f8fafc}
+    .label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#64748b;font-weight:900}.value{font-size:20px;font-weight:900;margin-top:6px}
+    table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:#64748b;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:9px;border-bottom:1px solid #e5eaf1}td{padding:10px 9px;border-bottom:1px solid #eef2f7}
+    .empty-row{text-align:center;color:#94a3b8;padding:18px}.notes{color:#64748b;font-size:13px;line-height:1.5}.footer{margin-top:30px;color:#94a3b8;font-size:11px;text-align:center}
+    @media print{body{background:#fff}.page{padding:22px;max-width:none}}
+  </style></head><body><div class="page">
+    <div class="head"><div>${logo ? `<img src="${logo}" alt="AA Follow App">` : ''}<h1>Reporte diario</h1></div><div class="date">Día<br>${date}</div></div>
+    <div class="summary">
+      <div class="box"><div class="label">Calorías</div><div class="value">${nutrition.totals.cal}</div></div>
+      <div class="box"><div class="label">Proteína</div><div class="value">${Math.round(nutrition.totals.p)}g</div></div>
+      <div class="box"><div class="label">Entrenos</div><div class="value">${sessions.length}</div></div>
+      <div class="box"><div class="label">Peso</div><div class="value">${body?.weight ? body.weight + 'kg' : '-'}</div></div>
+    </div>
+    <h2>Alimentación</h2><table><thead><tr><th>Tipo</th><th>Alimento</th><th>Kcal</th><th>Macros</th></tr></thead><tbody>${reportRows(mealRows, 'Sin alimentación registrada')}</tbody></table>
+    <h2>Suplementación</h2><table><thead><tr><th>Nombre</th><th>Dosis</th><th colspan="2">Estado</th></tr></thead><tbody>${reportRows(suppRows, 'Sin suplementos creados')}</tbody></table>
+    <h2>Entrenamiento</h2><table><thead><tr><th>Rutina</th><th>Ejercicio</th><th>Reps</th><th>Peso</th></tr></thead><tbody>${reportRows(sessionRows, 'Sin entreno registrado')}</tbody></table>
+    <h2>Cardio</h2><table><thead><tr><th>Tipo</th><th colspan="3">Registro</th></tr></thead><tbody>${reportRows(cardioRows, 'Sin cardio registrado')}</tbody></table>
+    ${body?.notes ? `<h2>Notas cuerpo</h2><div class="notes">${esc(body.notes)}</div>` : ''}
+    <div class="footer">AA Follow App</div>
+  </div><script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script></body></html>`;
+  const win = window.open('', '_blank');
+  if (!win) return toast('Permite ventanas emergentes para generar el PDF', 'err');
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
 }
 
 // ═══════════════════════════════════════════════════
@@ -6459,6 +6580,13 @@ function saveProfile(name) {
   DB.set('activeUser', name);
 }
 
+async function startCloudAutoSync() {
+  cloudAutoSyncReady = false;
+  await cloudDownloadData({ silent: true });
+  cloudAutoSyncReady = true;
+  refreshCloudStatus();
+}
+
 function enterApp(name, animate) {
   // Actualizar sidebar
   var nameEl = document.getElementById('sidebar-user-name');
@@ -6475,6 +6603,7 @@ function enterApp(name, animate) {
     ls.classList.remove('show');
   }
   loadDashboard();
+  startCloudAutoSync();
 }
 
 async function logoutUser() {
