@@ -3166,6 +3166,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Inicio</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
+    <button class="nav-btn" onclick="go('dayai')">IA Día</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Gym</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutricion</button>
@@ -3188,6 +3189,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Dashboard</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
+    <button class="nav-btn" onclick="go('dayai')">IA Día</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Entrenamiento</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutrición</button>
@@ -3427,6 +3429,38 @@ tr:hover td {
       <div class="card">
         <div class="card-title">Check-in de la semana</div>
         <div id="today-checking"><div class="empty">Sin objetivos semanales</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA DEL DIA -->
+  <div id="page-dayai" class="page">
+    <div class="page-head">
+      <h1>IA Día</h1>
+      <p>Describe tu día y revisa un borrador antes de cargarlo en tus registros</p>
+    </div>
+    <div class="content">
+      <div class="card mb">
+        <div class="form-grid fg2">
+          <div class="form-row">
+            <label class="form-label">Fecha</label>
+            <input type="date" id="ai-day-date">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Acción</label>
+            <div class="btn-row" style="margin-top:0">
+              <button class="btn btn-primary btn-sm" onclick="analyzeDayDescription()">Analizar día</button>
+              <button class="btn btn-ghost btn-sm" onclick="clearDayAiDraft()">Limpiar</button>
+            </div>
+          </div>
+          <div class="form-row" style="grid-column:1 / -1">
+            <label class="form-label">Describe tu día</label>
+            <textarea id="ai-day-description" placeholder="Ej: Dormí 7 horas, desayuné café con tostadas, almorcé pollo con arroz, entrené pecho 4 series de press banca 10 reps con 60kg, hice 8000 pasos, tomé creatina y terminé con buena energía."></textarea>
+          </div>
+        </div>
+      </div>
+      <div id="ai-day-result" class="card">
+        <div class="empty">Tu borrador aparecerá acá antes de guardar cualquier dato.</div>
       </div>
     </div>
   </div>
@@ -3801,6 +3835,7 @@ tr:hover td {
 <nav id="bottom-nav">
   <button class="bnav-btn active" onclick="go('dashboard')">Inicio</button>
   <button class="bnav-btn" onclick="go('today')">Hoy</button>
+  <button class="bnav-btn" onclick="go('dayai')">IA</button>
   <button class="bnav-btn" onclick="go('training')">Gym</button>
   <button class="bnav-btn" onclick="go('nutrition')">Dieta</button>
   <button class="bnav-btn" onclick="go('progress')">Progreso</button>
@@ -4015,7 +4050,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[page]?.();
   closeMobileMenu();
 }
@@ -4031,7 +4066,7 @@ function closeMobileMenu() {
 }
 
 function syncDateControls(date = selectedDate()) {
-  ['b-date','s-date','live-date','nut-date','photo-date'].forEach(id => {
+  ['b-date','s-date','live-date','nut-date','photo-date','ai-day-date'].forEach(id => {
     const input = document.getElementById(id);
     if (input) input.value = date;
   });
@@ -4047,7 +4082,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[activePage]?.();
 }
 
@@ -4908,6 +4943,329 @@ function loadToday() {
         <span class="badge ${checkingStatus(g) === 'done' ? 'b-green' : checkingStatus(g) === 'missed' ? 'b-red' : 'b-amber'}">${checkLabel(g)}</span>
       </div>
     </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
+}
+
+// ═══════════════════════════════════════════════════
+// IA DEL DIA
+// ═══════════════════════════════════════════════════
+let dayAiDraft = null;
+
+function loadDayAi() {
+  const date = document.getElementById('ai-day-date');
+  if (date && !date.value) date.value = selectedDate();
+  renderDayAiDraft(dayAiDraft);
+}
+
+function dayAiContext() {
+  return {
+    nutrition_goal: DB.get('nutconfig') || null,
+    routines: (DB.get('routines') || []).slice(0, 12).map(r => ({
+      name: r.name,
+      days: (r.days || []).map(d => ({
+        name: d.name,
+        exercises: (d.exercises || []).map(e => e.name)
+      }))
+    })),
+    supplements: (DB.get('supplements') || []).map(s => ({ name: s.name, dose: s.dose }))
+  };
+}
+
+async function analyzeDayDescription() {
+  const description = document.getElementById('ai-day-description')?.value.trim() || '';
+  const date = document.getElementById('ai-day-date')?.value || selectedDate();
+  const result = document.getElementById('ai-day-result');
+  if (!description || description.length < 12) return toast('Describe un poco mas tu dia', 'err');
+  if (location.protocol === 'file:') {
+    return toast('La IA del dia funciona cuando la app esta subida a Vercel', 'err');
+  }
+  if (result) result.innerHTML = '<div class="empty">Analizando tu dia...</div>';
+  try {
+    const res = await fetch('/api/analyze-day', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, description, context: dayAiContext() })
+    });
+    const raw = await res.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch {}
+    if (!res.ok) {
+      const cleanText = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220);
+      throw new Error(data.error || cleanText || `Error ${res.status} en /api/analyze-day`);
+    }
+    dayAiDraft = data;
+    renderDayAiDraft(dayAiDraft);
+    toast('Borrador listo para revisar');
+  } catch (err) {
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo analizar el dia')}</div>`;
+    toast(err.message || 'No se pudo analizar el dia', 'err');
+  }
+}
+
+function clearDayAiDraft() {
+  dayAiDraft = null;
+  const description = document.getElementById('ai-day-description');
+  if (description) description.value = '';
+  renderDayAiDraft(null);
+}
+
+function dayAiCount(draft) {
+  if (!draft) return 0;
+  return (draft.meals || []).length +
+    (draft.sessions || []).length +
+    (draft.cardio || []).length +
+    (draft.supplements || []).length +
+    (aiHasBodyData(draft.bodylog) ? 1 : 0) +
+    (aiHasWellnessData(draft.wellness) ? 1 : 0) +
+    (draft.water_ml ? 1 : 0) +
+    (draft.note ? 1 : 0);
+}
+
+function renderDayAiDraft(draft) {
+  const el = document.getElementById('ai-day-result');
+  if (!el) return;
+  if (!draft) {
+    el.innerHTML = '<div class="empty">Tu borrador aparecerá acá antes de guardar cualquier dato.</div>';
+    return;
+  }
+  const meals = draft.meals || [];
+  const sessions = draft.sessions || [];
+  const cardio = draft.cardio || [];
+  const supplements = draft.supplements || [];
+  const bodylog = draft.bodylog || null;
+  const wellness = draft.wellness || null;
+  const hasBodylog = aiHasBodyData(bodylog);
+  const hasWellness = aiHasWellnessData(wellness);
+  const totalItems = dayAiCount(draft);
+
+  el.innerHTML = `
+    <div class="flex jb ai-c gap-2" style="margin-bottom:16px">
+      <div>
+        <div class="card-title" style="margin-bottom:6px">Borrador de ${esc(draft.date || selectedDate())}</div>
+        <div class="mini-muted">${esc(draft.summary || 'Revisa antes de aplicar.')}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="applyDayAiDraft()">Aplicar borrador</button>
+    </div>
+    <div class="quick-grid mb">
+      <div class="quick-card"><div class="quick-label">Comidas</div><div class="quick-value">${meals.length}</div><div class="quick-sub">registros</div></div>
+      <div class="quick-card"><div class="quick-label">Entrenos</div><div class="quick-value">${sessions.length}</div><div class="quick-sub">sesiones</div></div>
+      <div class="quick-card"><div class="quick-label">Total</div><div class="quick-value">${totalItems}</div><div class="quick-sub">items detectados</div></div>
+    </div>
+    <div class="g2 mb">
+      <div class="card">
+        <div class="card-title">Nutrición</div>
+        ${meals.length ? `<div class="compare-list">${meals.map(m => `
+          <div class="compare-row">
+            <div><strong>${esc(m.food_item)}</strong><div class="mini-muted">${esc(m.meal_name || 'Comida')}</div></div>
+            <span class="badge b-accent">${Math.round(+m.calories || 0)} kcal</span>
+            <span class="mini-muted">P:${Math.round(+m.protein || 0)} C:${Math.round(+m.carbs || 0)} G:${Math.round(+m.fat || 0)}</span>
+          </div>`).join('')}</div>` : '<div class="empty">Sin comidas detectadas.</div>'}
+      </div>
+      <div class="card">
+        <div class="card-title">Entrenamiento</div>
+        ${sessions.length ? `<div class="compare-list">${sessions.map(s => `
+          <div class="compare-row">
+            <div><strong>${esc(s.routine_name || s.day_name || 'Entreno')}</strong><div class="mini-muted">${esc(s.notes || '')}</div></div>
+            <span class="badge b-accent">${(s.sets || []).length} series</span>
+            <span class="mini-muted">${s.duration ? Math.round(+s.duration) + ' min' : ''}</span>
+          </div>`).join('')}</div>` : '<div class="empty">Sin entrenos detectados.</div>'}
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Cuerpo y bienestar</div>
+        <div class="compare-list">
+          ${hasBodylog ? `<div class="compare-row"><strong>Cuerpo</strong><span>${bodylog.weight ? esc(bodylog.weight) + ' kg' : '-'}</span><span>${bodylog.notes ? esc(bodylog.notes) : 'Sin notas'}</span></div>` : ''}
+          ${hasWellness ? `<div class="compare-row"><strong>Bienestar</strong><span>${wellness.sleep ? esc(wellness.sleep) + 'h' : '-'}</span><span>${wellness.energy ? 'Energia ' + esc(wellness.energy) + '/5' : esc(wellness.mood || '')}</span></div>` : ''}
+          ${draft.water_ml ? `<div class="compare-row"><strong>Agua</strong><span>${Math.round(+draft.water_ml || 0)} ml</span><span></span></div>` : ''}
+          ${!hasBodylog && !hasWellness && !draft.water_ml ? '<div class="empty">Sin datos de cuerpo o bienestar.</div>' : ''}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Extras</div>
+        <div class="compare-list">
+          ${cardio.map(c => `<div class="compare-row"><strong>${c.type === 'steps' ? 'Pasos' : 'Cardio'}</strong><span>${Number(c.value || 0).toLocaleString('es-CL')}</span><span>${c.type === 'steps' ? 'pasos' : 'min'}</span></div>`).join('')}
+          ${supplements.map(s => `<div class="compare-row"><strong>${esc(s.name)}</strong><span>${esc(s.dose || '')}</span><span>${s.taken === false ? 'Pendiente' : 'Tomado'}</span></div>`).join('')}
+          ${draft.note ? `<div class="compare-row"><strong>${esc(draft.note.title || 'Nota')}</strong><span>${esc(String(draft.note.content || '').slice(0, 80))}</span><span></span></div>` : ''}
+          ${!cardio.length && !supplements.length && !draft.note ? '<div class="empty">Sin extras detectados.</div>' : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function aiHasBodyData(bodylog) {
+  if (!bodylog) return false;
+  return ['weight','body_fat','arm','chest','waist','thigh','calf'].some(k => bodylog[k] != null && bodylog[k] !== '') || Boolean(bodylog.notes);
+}
+
+function aiHasWellnessData(wellness) {
+  if (!wellness) return false;
+  return wellness.sleep != null || wellness.energy != null || Boolean(wellness.mood);
+}
+
+function applyAiBodylog(date, bodylog) {
+  if (!aiHasBodyData(bodylog)) return 0;
+  const logs = DB.get('bodylogs') || [];
+  const idx = logs.findIndex(l => l.date === date);
+  const base = idx >= 0 ? logs[idx] : { id: uid(), date };
+  const merged = { ...base, date };
+  ['weight','body_fat','arm','chest','waist','thigh','calf'].forEach(key => {
+    if (bodylog[key] != null && bodylog[key] !== '') merged[key] = +bodylog[key] || null;
+  });
+  if (bodylog.notes) merged.notes = bodylog.notes;
+  if (idx >= 0) logs[idx] = merged; else logs.unshift(merged);
+  logs.sort((a, b) => b.date.localeCompare(a.date));
+  DB.set('bodylogs', logs);
+  return 1;
+}
+
+function applyAiSession(date, source) {
+  const sets = (source.sets || []).filter(s => s.exercise_name).map((s, i) => ({
+    exercise_name: String(s.exercise_name || '').trim(),
+    set_number: +s.set_number || i + 1,
+    target_sets: +s.target_sets || null,
+    target_reps: +s.target_reps || null,
+    reps: +s.reps || 0,
+    weight: +s.weight || 0
+  })).filter(s => s.exercise_name);
+  if (!sets.length) return 0;
+
+  const prs = DB.get('records') || {};
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+    }
+  });
+  DB.set('records', prs);
+
+  const session = {
+    id: uid(),
+    date,
+    routine_name: source.routine_name || '',
+    day_name: source.day_name || '',
+    duration: +source.duration || null,
+    notes: source.notes || 'Cargado desde IA Día',
+    sets
+  };
+  session.comparison = compareWorkoutSession(session);
+  DB.push('sessions', session);
+  return 1;
+}
+
+function normalizeDashboardMood(mood, energy) {
+  const text = String(mood || '').toLowerCase();
+  if (/mal|bajo|cans|estres|pesad/.test(text)) return 'Mal';
+  if (/bien|genial|excel|fuerte|buena/.test(text)) return 'Bien';
+  if (+energy >= 4) return 'Bien';
+  if (+energy > 0 && +energy <= 2) return 'Mal';
+  return text ? 'Regular' : '';
+}
+
+function applyAiWellness(date, wellness) {
+  if (!aiHasWellnessData(wellness)) return 0;
+  const all = DB.get('daily_wellness') || {};
+  all[date] = { ...(all[date] || {}) };
+  if (wellness.sleep != null && wellness.sleep !== '') all[date].sleep = +wellness.sleep || 0;
+  if (wellness.energy != null && wellness.energy !== '') all[date].energy = Math.max(1, Math.min(5, Math.round(+wellness.energy || 0)));
+  DB.set('daily_wellness', all);
+
+  const mood = normalizeDashboardMood(wellness.mood, wellness.energy);
+  if (mood) {
+    const moods = DB.get('dashboard_moods') || {};
+    moods[date] = mood;
+    DB.set('dashboard_moods', moods);
+  }
+  return 1;
+}
+
+function applyAiWater(date, waterMl) {
+  const value = Math.round(+waterMl || 0);
+  if (value <= 0) return 0;
+  const water = DB.get('daily_water') || {};
+  water[date] = Math.max(water[date] || 0, value);
+  DB.set('daily_water', water);
+  return 1;
+}
+
+function applyAiSupplements(date, supplements) {
+  const items = (supplements || []).filter(s => s.name && s.taken !== false);
+  if (!items.length) return 0;
+  const saved = DB.get('supplements') || [];
+  const checks = DB.get('supplement_checks') || {};
+  if (!checks[date]) checks[date] = {};
+  let count = 0;
+
+  items.forEach(item => {
+    const name = String(item.name || '').trim();
+    if (!name) return;
+    let supplement = saved.find(s => s.name.toLowerCase() === name.toLowerCase());
+    if (!supplement) {
+      supplement = { id: uid(), name, dose: item.dose || '', created: today() };
+      saved.unshift(supplement);
+    }
+    checks[date][supplement.id] = true;
+    count++;
+  });
+
+  DB.set('supplements', saved);
+  DB.set('supplement_checks', checks);
+  return count;
+}
+
+function applyDayAiDraft() {
+  if (!dayAiDraft) return toast('Primero genera un borrador', 'err');
+  const date = dayAiDraft.date || document.getElementById('ai-day-date')?.value || selectedDate();
+  let count = 0;
+
+  (dayAiDraft.meals || []).forEach(m => {
+    if (!m.food_item) return;
+    DB.push('meals', {
+      id: uid(),
+      date,
+      meal_name: m.meal_name || 'Comida',
+      food_item: m.food_item,
+      calories: +m.calories || 0,
+      protein: +m.protein || 0,
+      carbs: +m.carbs || 0,
+      fat: +m.fat || 0
+    });
+    count++;
+  });
+
+  count += applyAiBodylog(date, dayAiDraft.bodylog);
+  (dayAiDraft.sessions || []).forEach(session => { count += applyAiSession(date, session); });
+  (dayAiDraft.cardio || []).forEach(c => {
+    const value = Math.round(+c.value || 0);
+    if (!value) return;
+    DB.push('checking_cardio', {
+      id: uid(),
+      week: weekValueFromDate(date),
+      date,
+      type: c.type === 'minutes' ? 'minutes' : 'steps',
+      value
+    });
+    count++;
+  });
+  count += applyAiSupplements(date, dayAiDraft.supplements);
+  count += applyAiWellness(date, dayAiDraft.wellness);
+  count += applyAiWater(date, dayAiDraft.water_ml);
+
+  if (dayAiDraft.note?.content || dayAiDraft.note?.title) {
+    DB.push('notes', {
+      id: uid(),
+      date,
+      created_at: new Date().toISOString(),
+      title: dayAiDraft.note.title || 'Resumen del dia',
+      content: dayAiDraft.note.content || dayAiDraft.summary || 'Cargado desde IA Día',
+      mood: +dayAiDraft.note.mood || 3
+    });
+    count++;
+  }
+
+  dayAiDraft = null;
+  renderDayAiDraft(null);
+  changeGlobalDate(date);
+  toast(count ? `Borrador aplicado: ${count} item(s)` : 'No habia datos claros para aplicar');
 }
 
 function checkLabel(goal) {
