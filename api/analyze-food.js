@@ -1,4 +1,12 @@
 const MAX_TOTAL_IMAGE_CHARS = 9_000_000;
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+
+class HttpError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
 
 function sendJson(res, status, data) {
   res.statusCode = status;
@@ -8,14 +16,20 @@ function sendJson(res, status, data) {
 
 function parseBody(req) {
   if (req.body && typeof req.body === 'object') return Promise.resolve(req.body);
-  if (typeof req.body === 'string') return Promise.resolve(JSON.parse(req.body));
+  if (typeof req.body === 'string') {
+    try {
+      return Promise.resolve(JSON.parse(req.body));
+    } catch {
+      return Promise.reject(new HttpError(400, 'JSON invalido'));
+    }
+  }
 
   return new Promise((resolve, reject) => {
     let raw = '';
     req.on('data', chunk => {
       raw += chunk;
       if (raw.length > MAX_TOTAL_IMAGE_CHARS + 50_000) {
-        reject(new Error('Imagenes demasiado grandes'));
+        reject(new HttpError(413, 'Imagenes demasiado grandes'));
         req.destroy();
       }
     });
@@ -23,7 +37,7 @@ function parseBody(req) {
       try {
         resolve(raw ? JSON.parse(raw) : {});
       } catch (err) {
-        reject(err);
+        reject(new HttpError(400, 'JSON invalido'));
       }
     });
     req.on('error', reject);
@@ -33,7 +47,9 @@ function parseBody(req) {
 function parseDataUrl(dataUrl) {
   const match = String(dataUrl || '').match(/^data:([^;]+);base64,(.+)$/);
   if (!match) return null;
-  return { mimeType: match[1], data: match[2] };
+  const mimeType = match[1].toLowerCase();
+  if (!ALLOWED_IMAGE_TYPES.has(mimeType)) return null;
+  return { mimeType, data: match[2] };
 }
 
 function extractGeminiText(payload) {
@@ -187,6 +203,6 @@ module.exports = async function handler(req, res) {
       notes: parsed.notes || 'Estimacion aproximada. Confirma porciones antes de guardar.'
     });
   } catch (err) {
-    return sendJson(res, 500, { error: err.message || 'Error analizando comida con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando comida con Gemini' });
   }
 };
