@@ -4846,7 +4846,7 @@ function loadDashboard() {
         <span style="font-weight:600; font-size:0.875rem; color:var(--text)">${s.date}</span>
         <span class="badge b-accent">${s.sets?.length || 0} series</span>
       </div>
-      ${s.notes ? `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-style:italic">"${s.notes}"</div>` : ''}
+      ${s.notes ? `<div style="font-size:0.8rem; color:var(--muted); margin-top:4px; font-style:italic">"${esc(s.notes)}"</div>` : ''}
     </div>`).join('') : '<div class="empty">Sin entrenamientos aún</div>';
 
   // Objetivos
@@ -4855,7 +4855,7 @@ function loadDashboard() {
   gl.innerHTML = goals.length ? goals.map(g => {
     const gp = goalProgress(g);
     return `<div style="margin-bottom:14px">
-      <div class="flex jb" style="margin-bottom:6px; font-size:0.85rem"><span style="font-weight:600; color:var(--text)">${g.title}</span><span style="color:var(--muted)">${gp.actual}/${g.target} ${g.unit}</span></div>
+      <div class="flex jb" style="margin-bottom:6px; font-size:0.85rem"><span style="font-weight:600; color:var(--text)">${esc(g.title)}</span><span style="color:var(--muted)">${esc(gp.actual)}/${esc(g.target)} ${esc(g.unit)}</span></div>
       <div class="prog-wrap"><div class="prog-fill" style="width:${gp.pct}%; background: ${gp.done ? 'var(--green)' : 'var(--accent)'}"></div></div>
     </div>`;
   }).join('') : '<div class="empty" style="padding:16px 0">Sin objetivos</div>';
@@ -5181,7 +5181,7 @@ function renderBodyTable() {
       <td>${fmt(l.weight)} kg</td>
       <td>${fmt(l.body_fat)} %</td>
       <td>${fmt(l.waist)} cm</td>
-      <td style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${l.notes || '—'}</td>
+      <td style="max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${esc(l.notes || '—')}</td>
       <td><button class="btn btn-danger btn-sm" onclick="deleteBodyLog('${l.id}')">✕</button></td>
     </tr>`).join('') : '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:32px">Sin registros corporales creados</td></tr>';
 }
@@ -5728,7 +5728,7 @@ function loadRecords() {
   const rows = Object.values(prs);
   tb.innerHTML = rows.length ? rows.map(r => `
     <tr>
-      <td style="font-weight:700; color:var(--text)">${r.exercise_name}</td>
+      <td style="font-weight:700; color:var(--text)">${esc(r.exercise_name)}</td>
       <td><span style="color:var(--accent-l); font-weight:700">${r.weight} kg</span></td>
       <td>${r.reps}</td>
       <td style="color:var(--muted)">${r.date}</td>
@@ -6066,7 +6066,7 @@ function loadMeals() {
       ${grouped[mealName].map(item => `
         <div class="flex jb ai-c" style="padding:10px 14px; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px">
           <div>
-            <div style="font-size:0.9rem; font-weight:600; color:var(--text)">${item.food_item}</div>
+            <div style="font-size:0.9rem; font-weight:600; color:var(--text)">${esc(item.food_item)}</div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top: 2px">P:${item.protein}g   C:${item.carbs}g   G:${item.fat}g</div>
           </div>
           <div class="flex ai-c gap-3">
@@ -6098,8 +6098,8 @@ function loadGoals() {
     return `<div class="card">
       <div class="flex jb ai-c" style="margin-bottom:12px">
         <div>
-          <div style="font-weight:700; font-size:1.05rem; color:var(--text)">${g.title}</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:4px">${g.type}${g.type === 'weight' && gp.direction !== 'neutral' ? ' · objetivo de ' + gp.direction + ' peso' : ''} ${g.date ? '· Límite: ' + g.date : ''}</div>
+          <div style="font-weight:700; font-size:1.05rem; color:var(--text)">${esc(g.title)}</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:4px">${esc(g.type)}${g.type === 'weight' && gp.direction !== 'neutral' ? ' · objetivo de ' + esc(gp.direction) + ' peso' : ''} ${g.date ? '· Límite: ' + esc(g.date) : ''}</div>
         </div>
         <div class="flex ai-c gap-2">
           ${done ? '<span class="badge b-green">Logrado</span>' : `<span class="badge b-accent">${Math.round(pct)}%</span>`}
@@ -6107,11 +6107,11 @@ function loadGoals() {
         </div>
       </div>
       <div class="flex jb" style="font-size:0.85rem; margin-bottom:8px">
-        <span>Inicio: <strong style="color:var(--text)">${g.current} ${g.unit}</strong></span>
-        <span>Actual: <strong style="color:var(--text)">${gp.actual} ${g.unit}</strong></span>
-        <span>Meta: <strong style="color:var(--text)">${g.target} ${g.unit}</strong></span>
+        <span>Inicio: <strong style="color:var(--text)">${esc(g.current)} ${esc(g.unit)}</strong></span>
+        <span>Actual: <strong style="color:var(--text)">${esc(gp.actual)} ${esc(g.unit)}</strong></span>
+        <span>Meta: <strong style="color:var(--text)">${esc(g.target)} ${esc(g.unit)}</strong></span>
       </div>
-      <div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px">${gp.moved > 0 ? `Avanzaste ${gp.moved.toFixed(1)} ${g.unit || ''}` : gp.moved < 0 ? `Te alejaste ${Math.abs(gp.moved).toFixed(1)} ${g.unit || ''}` : 'Aún no hay avance registrado'} · Faltan ${gp.remaining.toFixed(1)} ${g.unit || ''}</div>
+      <div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px">${gp.moved > 0 ? `Avanzaste ${esc(gp.moved.toFixed(1))} ${esc(g.unit || '')}` : gp.moved < 0 ? `Te alejaste ${esc(Math.abs(gp.moved).toFixed(1))} ${esc(g.unit || '')}` : 'Aún no hay avance registrado'} · Faltan ${esc(gp.remaining.toFixed(1))} ${esc(g.unit || '')}</div>
       <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%; background:${done ? 'var(--green)' : 'var(--accent)'}"></div></div>
     </div>`;
   }).join('')}</div>`;
@@ -6201,6 +6201,8 @@ function renderStatChart(canvasId, key, labels, data, color, label, type) {
   const ctx = canvasElement.getContext('2d');
   
   const accentColorDim = getComputedStyle(document.documentElement).getPropertyValue('--accent-dim').trim() || 'rgba(26, 127, 255, 0.14)';
+  const mutedColor = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#64748b';
+  const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || 'rgba(15, 23, 42, 0.08)';
 
   if (sCharts[key]) sCharts[key].destroy();
   sCharts[key] = new Chart(ctx, {
@@ -6246,13 +6248,13 @@ function loadNotes() {
         <div class="flex ai-c gap-2">
           <span class="badge b-green">${MOODS[n.mood] || 'Excelente'}</span>
           <div>
-            <div style="font-weight:700; color:var(--text); font-size:1rem">${n.title || 'Observación Científica'}</div>
+            <div style="font-weight:700; color:var(--text); font-size:1rem">${esc(n.title || 'Observación Científica')}</div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top:2px">Creada: ${n.date || (n.created_at || '').slice(0, 10)}</div>
           </div>
         </div>
         <button class="btn btn-danger btn-sm" onclick="deleteNote('${n.id}')">✕</button>
       </div>
-      <p style="font-size:0.9rem; color:var(--text); line-height:1.6">${n.content}</p>
+      <p style="font-size:0.9rem; color:var(--text); line-height:1.6">${esc(n.content)}</p>
     </div>`).join('')}</div>`;
 }
 
