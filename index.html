@@ -3167,6 +3167,7 @@ tr:hover td {
     <button class="nav-btn active" onclick="go('dashboard')">Inicio</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
     <button class="nav-btn" onclick="go('dayai')">IA Día</button>
+    <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Gym</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutricion</button>
@@ -3190,6 +3191,7 @@ tr:hover td {
     <button class="nav-btn active" onclick="go('dashboard')">Dashboard</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
     <button class="nav-btn" onclick="go('dayai')">IA Día</button>
+    <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Entrenamiento</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutrición</button>
@@ -3465,6 +3467,48 @@ tr:hover td {
       </div>
       <div id="ai-day-result" class="card">
         <div class="empty">Tu borrador aparecerá acá antes de guardar cualquier dato.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COACH SEMANAL IA -->
+  <div id="page-weekcoach" class="page">
+    <div class="page-head">
+      <h1>Coach IA</h1>
+      <p>Analiza la semana seleccionada y prepara el foco de la próxima</p>
+    </div>
+    <div class="content">
+      <div class="card mb">
+        <div class="form-grid fg2">
+          <div class="form-row">
+            <label class="form-label">Semana</label>
+            <input type="week" id="ai-week-week" onchange="loadWeekCoach()">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Acción</label>
+            <div class="btn-row" style="margin-top:0">
+              <button class="btn btn-primary btn-sm" onclick="analyzeWeekCoach()">Analizar semana</button>
+              <button class="btn btn-ghost btn-sm" onclick="clearWeekCoach()">Limpiar</button>
+            </div>
+          </div>
+          <div class="form-row" style="grid-column:1 / -1">
+            <label class="form-label">Nota para el coach</label>
+            <textarea id="ai-week-note" placeholder="Ej: Esta semana me costó dormir, entrené menos por trabajo y quiero enfocarme en recomposición."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="g2 mb">
+        <div class="card">
+          <div class="card-title">Datos que se van a analizar</div>
+          <div id="ai-week-local-summary"><div class="empty">Elegí una semana para ver el resumen.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Último reporte guardado</div>
+          <div id="ai-week-saved-summary"><div class="empty">Todavía no hay reporte para esta semana.</div></div>
+        </div>
+      </div>
+      <div id="ai-week-result" class="card">
+        <div class="empty">El análisis del coach aparecerá acá sin modificar tus registros.</div>
       </div>
     </div>
   </div>
@@ -3840,6 +3884,7 @@ tr:hover td {
   <button class="bnav-btn active" onclick="go('dashboard')">Inicio</button>
   <button class="bnav-btn" onclick="go('today')">Hoy</button>
   <button class="bnav-btn" onclick="go('dayai')">IA</button>
+  <button class="bnav-btn" onclick="go('weekcoach')">Coach</button>
   <button class="bnav-btn" onclick="go('training')">Gym</button>
   <button class="bnav-btn" onclick="go('nutrition')">Dieta</button>
   <button class="bnav-btn" onclick="go('progress')">Progreso</button>
@@ -4054,7 +4099,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, weekcoach: loadWeekCoach, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[page]?.();
   closeMobileMenu();
 }
@@ -4077,8 +4122,10 @@ function syncDateControls(date = selectedDate()) {
   const week = weekValueFromDate(date);
   const calendarWeek = document.getElementById('calendar-week');
   const checkingWeek = document.getElementById('c-week');
+  const aiWeek = document.getElementById('ai-week-week');
   if (calendarWeek) calendarWeek.value = week;
   if (checkingWeek) checkingWeek.value = week;
+  if (aiWeek) aiWeek.value = week;
 }
 
 function changeGlobalDate(date) {
@@ -4086,7 +4133,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, weekcoach: loadWeekCoach, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
   loaders[activePage]?.();
 }
 
@@ -5528,6 +5575,259 @@ function applyDayAiDraft() {
   renderDayAiDraft(null);
   changeGlobalDate(date);
   toast(count ? `Borrador aplicado: ${count} item(s)` : 'No habia datos claros para aplicar');
+}
+
+// ═══════════════════════════════════════════════════
+// COACH SEMANAL IA
+// ═══════════════════════════════════════════════════
+let weekCoachReport = null;
+
+function getWeekCoachWeek() {
+  const input = document.getElementById('ai-week-week');
+  if (input && !input.value) input.value = weekValueFromDate(selectedDate());
+  return input?.value || weekValueFromDate(selectedDate());
+}
+
+function weekCoachReports() {
+  return DB.get('week_coach_reports') || {};
+}
+
+function loadWeekCoach() {
+  const input = document.getElementById('ai-week-week');
+  if (input && !input.value) input.value = weekValueFromDate(selectedDate());
+  const week = getWeekCoachWeek();
+  renderWeekCoachLocalSummary(week);
+  const saved = weekCoachReports()[week] || null;
+  weekCoachReport = saved;
+  renderWeekCoachSavedSummary(saved);
+  renderWeekCoachReport(saved);
+}
+
+function dayCoachSummary(date) {
+  const nut = nutritionForDate(date);
+  const sessions = sessionsForDate(date);
+  const cardio = (DB.get('checking_cardio') || []).filter(c => c.date === date);
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const water = (DB.get('daily_water') || {})[date] || 0;
+  const body = (DB.get('bodylogs') || []).find(b => b.date === date) || null;
+  return {
+    date,
+    calories: nut.totals.cal,
+    protein: Math.round(nut.totals.p),
+    meals: nut.meals.length,
+    sessions: sessions.length,
+    training_volume: Math.round(sessions.reduce((sum, s) => sum + workoutStats(s.sets || []).volume, 0)),
+    steps: cardio.filter(c => c.type === 'steps').reduce((sum, c) => sum + (+c.value || 0), 0),
+    cardio_minutes: cardio.filter(c => c.type === 'minutes').reduce((sum, c) => sum + (+c.value || 0), 0),
+    sleep: wellness.sleep || null,
+    energy: wellness.energy || null,
+    water_ml: water || 0,
+    weight: body?.weight || null
+  };
+}
+
+function weekCoachData(week = getWeekCoachWeek()) {
+  const current = weekSummary(week);
+  const previousWeek = weekValueFromDate(addDays(current.dates[0], -7));
+  const previous = weekSummary(previousWeek);
+  const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const days = current.dates.map(dayCoachSummary);
+  const activeGoals = (DB.get('goals') || []).filter(g => g.status === 'active').slice(0, 8);
+  const notes = (DB.get('notes') || []).filter(n => current.dates.includes(n.date)).slice(0, 8);
+  const bodyWithWeight = days.filter(d => d.weight);
+  const avg = (items, key) => {
+    const values = items.map(item => +item[key] || 0).filter(Boolean);
+    return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
+  };
+  const protein = current.meals.reduce((a, m) => a + (+m.protein || 0), 0);
+
+  return {
+    week,
+    dates: current.dates,
+    nutrition_goal: cfg,
+    totals: {
+      sessions: current.sessions.length,
+      training_volume: Math.round(current.volume),
+      meals: current.meals.length,
+      avg_calories: current.avgCalories,
+      avg_protein: Math.round(protein / 7),
+      steps: current.steps,
+      cardio_minutes: current.cardioMinutes,
+      check_rate: current.checking.rate,
+      check_done: current.checking.done,
+      check_total: current.checking.total,
+      avg_sleep: avg(days, 'sleep'),
+      avg_energy: avg(days, 'energy'),
+      avg_water_ml: avg(days, 'water_ml'),
+      weight_start: bodyWithWeight[0]?.weight || null,
+      weight_end: bodyWithWeight[bodyWithWeight.length - 1]?.weight || null
+    },
+    previous: {
+      week: previous.week,
+      sessions: previous.sessions.length,
+      avg_calories: previous.avgCalories,
+      training_volume: Math.round(previous.volume),
+      check_rate: previous.checking.rate
+    },
+    days,
+    sessions: current.sessions.slice(0, 12).map(s => ({
+      date: s.date,
+      name: s.routine_name || s.day_name || 'Sesion',
+      duration: s.duration || null,
+      sets: (s.sets || []).length,
+      volume: Math.round(workoutStats(s.sets || []).volume),
+      notes: s.notes || ''
+    })),
+    active_goals: activeGoals.map(g => ({
+      title: g.title,
+      type: g.type,
+      current: g.current,
+      target: g.target,
+      unit: g.unit,
+      deadline: g.date
+    })),
+    weekly_checking: current.checking.goals.map(g => ({
+      title: g.title,
+      status: checkingStatus(g)
+    })),
+    notes: notes.map(n => ({ title: n.title, content: String(n.content || '').slice(0, 240), mood: n.mood }))
+  };
+}
+
+function renderWeekCoachLocalSummary(week = getWeekCoachWeek()) {
+  const el = document.getElementById('ai-week-local-summary');
+  if (!el) return;
+  const data = weekCoachData(week);
+  const t = data.totals;
+  el.innerHTML = `
+    <div class="quick-grid">
+      <div class="quick-card"><div class="quick-label">Entrenos</div><div class="quick-value">${t.sessions}</div><div class="quick-sub">sesiones</div></div>
+      <div class="quick-card"><div class="quick-label">Kcal</div><div class="quick-value">${t.avg_calories}</div><div class="quick-sub">promedio</div></div>
+      <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${t.avg_protein}</div><div class="quick-sub">g/día</div></div>
+      <div class="quick-card"><div class="quick-label">Check</div><div class="quick-value">${t.check_rate}%</div><div class="quick-sub">${t.check_done}/${t.check_total || 0}</div></div>
+    </div>
+    <div class="compare-list mt-3">
+      <div class="compare-row"><strong>Rango</strong><span>${esc(data.dates[0])}</span><span>${esc(data.dates[6])}</span></div>
+      <div class="compare-row"><strong>Volumen</strong><span>${t.training_volume.toLocaleString('es-CL')} kg</span><span></span></div>
+      <div class="compare-row"><strong>Pasos/Cardio</strong><span>${t.steps.toLocaleString('es-CL')} pasos</span><span>${t.cardio_minutes} min</span></div>
+      <div class="compare-row"><strong>Agua/Sueño</strong><span>${t.avg_water_ml} ml</span><span>${t.avg_sleep ? t.avg_sleep + 'h' : '-'}</span></div>
+    </div>`;
+}
+
+function renderWeekCoachSavedSummary(report) {
+  const el = document.getElementById('ai-week-saved-summary');
+  if (!el) return;
+  if (!report) {
+    el.innerHTML = '<div class="empty">Todavía no hay reporte para esta semana.</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="compare-list">
+      <div class="compare-row"><strong>${esc(report.week)}</strong><span>${report.score != null ? esc(report.score) + '/100' : '-'}</span><span>${esc(String(report.generated_at || '').slice(0, 10))}</span></div>
+      <div class="compare-row"><strong>Lectura</strong><span>${esc(report.headline || '')}</span><span></span></div>
+    </div>`;
+}
+
+function renderWeekCoachReport(report) {
+  const el = document.getElementById('ai-week-result');
+  if (!el) return;
+  if (!report) {
+    el.innerHTML = '<div class="empty">El análisis del coach aparecerá acá sin modificar tus registros.</div>';
+    return;
+  }
+
+  const plan = report.next_week_plan || {};
+  const planRows = [
+    ['Entreno', plan.training],
+    ['Nutrición', plan.nutrition],
+    ['Recuperación', plan.recovery],
+    ['Registro', plan.tracking]
+  ].filter(row => row[1]);
+  const listBlock = (title, items, cls = 'b-accent') => `
+    <div>
+      <div class="card-title">${title}</div>
+      ${items?.length ? `<div class="compare-list">${items.map(item => `
+        <div class="compare-row"><strong>${esc(item)}</strong><span></span><span class="badge ${cls}">coach</span></div>`).join('')}</div>` : '<div class="empty">Sin datos suficientes.</div>'}
+    </div>`;
+
+  el.innerHTML = `
+    <div class="flex jb ai-c gap-2" style="margin-bottom:16px">
+      <div>
+        <div class="card-title" style="margin-bottom:6px">Reporte ${esc(report.week || getWeekCoachWeek())}</div>
+        <div class="mini-muted">${esc(report.headline || 'Lectura semanal lista.')}</div>
+      </div>
+      ${report.score != null ? `<span class="badge b-green">${esc(report.score)}/100</span>` : ''}
+    </div>
+    <div class="g2 mb">
+      ${listBlock('Lo que funcionó', report.wins || [], 'b-green')}
+      ${listBlock('Riesgos o huecos', report.risks || [], 'b-amber')}
+    </div>
+    <div class="mb">
+      <div class="card-title">Prioridades</div>
+      ${report.priorities?.length ? `<div class="alert-list">${report.priorities.map(p => `
+        <div class="alert-item warn">
+          <div class="alert-title">${esc(p.title)}</div>
+          <div class="alert-copy">${esc(p.detail)}</div>
+        </div>`).join('')}</div>` : '<div class="empty">Sin prioridades detectadas.</div>'}
+    </div>
+    <div class="mb">
+      <div class="card-title">Plan de la próxima semana</div>
+      ${planRows.length ? `<div class="compare-list">${planRows.map(row => `
+        <div class="compare-row"><strong>${esc(row[0])}</strong><span>${esc(row[1])}</span><span></span></div>`).join('')}</div>` : '<div class="empty">Sin plan generado.</div>'}
+    </div>
+    <div class="mb">
+      <div class="card-title">Objetivos sugeridos</div>
+      ${report.suggested_goals?.length ? `<div class="compare-list">${report.suggested_goals.map(g => `
+        <div class="compare-row">
+          <strong>${esc(g.title)}</strong>
+          <span>${esc(g.target || '')} ${esc(g.unit || '')}</span>
+          <span class="badge b-accent">${esc(g.type || 'other')}</span>
+        </div>`).join('')}</div>` : '<div class="empty">Sin objetivos sugeridos.</div>'}
+    </div>
+    ${report.closing_note ? `<div class="insight-card"><div class="insight-title">Cierre</div><div class="insight-text">${esc(report.closing_note)}</div></div>` : ''}`;
+}
+
+async function analyzeWeekCoach() {
+  const week = getWeekCoachWeek();
+  const note = document.getElementById('ai-week-note')?.value.trim() || '';
+  const result = document.getElementById('ai-week-result');
+  if (location.protocol === 'file:') {
+    return toast('El coach semanal funciona cuando la app esta subida a Vercel', 'err');
+  }
+  const summary = weekCoachData(week);
+  if (result) result.innerHTML = '<div class="empty">Analizando la semana...</div>';
+
+  try {
+    const res = await fetch('/api/analyze-week', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ week, summary, user_note: note })
+    });
+    const raw = await res.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch {}
+    if (!res.ok) {
+      const cleanText = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220);
+      throw new Error(data.error || cleanText || `Error ${res.status} en /api/analyze-week`);
+    }
+    const reports = weekCoachReports();
+    reports[week] = data;
+    DB.set('week_coach_reports', reports);
+    weekCoachReport = data;
+    renderWeekCoachSavedSummary(data);
+    renderWeekCoachReport(data);
+    toast('Coach semanal listo');
+  } catch (err) {
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo analizar la semana')}</div>`;
+    toast(err.message || 'No se pudo analizar la semana', 'err');
+  }
+}
+
+function clearWeekCoach() {
+  weekCoachReport = null;
+  const note = document.getElementById('ai-week-note');
+  if (note) note.value = '';
+  renderWeekCoachReport(null);
 }
 
 function checkLabel(goal) {
