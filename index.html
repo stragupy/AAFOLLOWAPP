@@ -3255,6 +3255,7 @@ tr:hover td {
   <div class="global-date-bar">
     <label for="global-date">Día seleccionado</label>
     <input type="date" id="global-date" onchange="changeGlobalDate(this.value)">
+    <button class="btn btn-ghost btn-sm" id="global-free-day-toggle" onclick="toggleFreeDay()">Día libre</button>
     <button class="btn btn-ghost btn-sm" onclick="exportDayPdf()">PDF del día</button>
   </div>
 
@@ -3400,6 +3401,15 @@ tr:hover td {
       <div class="insight-card mb">
         <div class="insight-title">Lectura del día</div>
         <div class="insight-text" id="today-insight">Preparando tu resumen...</div>
+      </div>
+      <div class="card mb">
+        <div class="flex jb ai-c gap-2">
+          <div>
+            <div class="card-title" style="margin-bottom:6px">Día libre</div>
+            <div class="mini-muted" id="free-day-status">Este día cuenta normalmente en tus análisis.</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="free-day-toggle" onclick="toggleFreeDay()">Marcar día libre</button>
+        </div>
       </div>
       <div class="quick-grid mb">
         <div class="quick-card">
@@ -4126,6 +4136,7 @@ function syncDateControls(date = selectedDate()) {
   if (calendarWeek) calendarWeek.value = week;
   if (checkingWeek) checkingWeek.value = week;
   if (aiWeek) aiWeek.value = week;
+  renderFreeDayStatus(date);
 }
 
 function changeGlobalDate(date) {
@@ -4245,6 +4256,45 @@ function getWeekDates(weekValue = weekValueFromDate()) {
   });
 }
 
+function freeDaysMap() {
+  return DB.get('free_days') || {};
+}
+
+function isFreeDay(date = selectedDate()) {
+  return Boolean(freeDaysMap()[date]);
+}
+
+function countedWeekDates(weekValue = weekValueFromDate()) {
+  return getWeekDates(weekValue).filter(date => !isFreeDay(date));
+}
+
+function toggleFreeDay(date = selectedDate()) {
+  const days = freeDaysMap();
+  if (days[date]) delete days[date];
+  else days[date] = { date, created_at: new Date().toISOString() };
+  DB.set('free_days', days);
+  changeGlobalDate(date);
+  toast(days[date] ? 'Día libre activado: no contará en análisis' : 'Día libre desactivado');
+}
+
+function renderFreeDayStatus(date = selectedDate()) {
+  const active = isFreeDay(date);
+  const status = document.getElementById('free-day-status');
+  const btn = document.getElementById('free-day-toggle');
+  const globalBtn = document.getElementById('global-free-day-toggle');
+  if (status) status.textContent = active
+    ? 'Día libre activo: sus comidas, peso, cardio y entrenos no cuentan en análisis.'
+    : 'Este día cuenta normalmente en tus análisis.';
+  if (btn) {
+    btn.textContent = active ? 'Quitar día libre' : 'Marcar día libre';
+    btn.className = active ? 'btn btn-danger btn-sm' : 'btn btn-ghost btn-sm';
+  }
+  if (globalBtn) {
+    globalBtn.textContent = active ? 'Quitar día libre' : 'Día libre';
+    globalBtn.className = active ? 'btn btn-danger btn-sm' : 'btn btn-ghost btn-sm';
+  }
+}
+
 function nutritionForDate(date = selectedDate()) {
   const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
   const meals = (DB.get('meals') || []).filter(m => m.date === date);
@@ -4275,6 +4325,7 @@ function checkingStats(week = weekValueFromDate()) {
 }
 
 function activityOnDate(date) {
+  if (isFreeDay(date)) return false;
   const hasMeals = (DB.get('meals') || []).some(m => m.date === date);
   const hasSessions = (DB.get('sessions') || []).some(s => s.date === date);
   const hasBody = (DB.get('bodylogs') || []).some(b => b.date === date);
@@ -4286,6 +4337,7 @@ function activityStreak() {
   let count = 0;
   for (let i = 0; i < 365; i++) {
     const d = addDays(selectedDate(), -i);
+    if (isFreeDay(d)) continue;
     if (!activityOnDate(d)) break;
     count++;
   }
@@ -4296,7 +4348,7 @@ function trainingWeekStreak() {
   let streak = 0;
   for (let i = 0; i < 52; i++) {
     const d = addDays(selectedDate(), -i * 7);
-    const dates = getWeekDates(weekValueFromDate(d));
+    const dates = countedWeekDates(weekValueFromDate(d));
     const count = (DB.get('sessions') || []).filter(s => dates.includes(s.date)).length;
     if (!count) break;
     streak++;
@@ -4306,16 +4358,19 @@ function trainingWeekStreak() {
 
 function weekSummary(week = weekValueFromDate()) {
   const dates = getWeekDates(week);
-  const sessions = (DB.get('sessions') || []).filter(s => dates.includes(s.date));
-  const meals = (DB.get('meals') || []).filter(m => dates.includes(m.date));
-  const bodylogs = (DB.get('bodylogs') || []).filter(b => dates.includes(b.date));
+  const countedDates = dates.filter(date => !isFreeDay(date));
+  const freeDates = dates.filter(date => isFreeDay(date));
+  const divisor = Math.max(countedDates.length, 1);
+  const sessions = (DB.get('sessions') || []).filter(s => countedDates.includes(s.date));
+  const meals = (DB.get('meals') || []).filter(m => countedDates.includes(m.date));
+  const bodylogs = (DB.get('bodylogs') || []).filter(b => countedDates.includes(b.date));
   const notes = [];
-  const cardio = (DB.get('checking_cardio') || []).filter(c => dates.includes(c.date));
+  const cardio = (DB.get('checking_cardio') || []).filter(c => countedDates.includes(c.date));
   const calories = meals.reduce((a, m) => a + (+m.calories || 0), 0);
   const volume = sessions.reduce((a, s) => a + (s.sets || []).reduce((b, x) => b + ((+x.weight || 0) * (+x.reps || 0)), 0), 0);
   const steps = cardio.filter(c => c.type === 'steps').reduce((a, c) => a + (+c.value || 0), 0);
   const cardioMinutes = cardio.filter(c => c.type === 'minutes').reduce((a, c) => a + (+c.value || 0), 0);
-  return { week, dates, sessions, meals, bodylogs, notes, cardio, steps, cardioMinutes, calories, avgCalories: Math.round(calories / 7), volume, checking: checkingStats(week) };
+  return { week, dates, countedDates, freeDates, sessions, meals, bodylogs, notes, cardio, steps, cardioMinutes, calories, avgCalories: Math.round(calories / divisor), volume, checking: checkingStats(week) };
 }
 
 function weeklyHistory(limit = 6) {
@@ -4327,6 +4382,9 @@ function weeklyHistory(limit = 6) {
 }
 
 function dailyAlerts(date = selectedDate()) {
+  if (isFreeDay(date)) {
+    return [{ type: 'good', title: 'Día libre activo', copy: 'Este día queda fuera de los análisis y promedios. Puedes registrar cosas igual sin afectar la semana.' }];
+  }
   const { cfg, totals } = nutritionForDate(date);
   const sessions = sessionsForDate(date);
   const check = checkingStats(weekValueFromDate(date));
@@ -4351,6 +4409,7 @@ function renderAlerts(targetId, alerts) {
 }
 
 function smartInsight(date = selectedDate()) {
+  if (isFreeDay(date)) return 'Día libre activo: lo que registres hoy queda guardado, pero no afecta promedios, gráficos ni el coach semanal.';
   const { cfg, totals } = nutritionForDate(date);
   const sessionsToday = sessionsForDate(date).length;
   const week = weekSummary(weekValueFromDate(date));
@@ -4367,18 +4426,21 @@ function renderWeeklyDraftSummary() {
   if (!el) return;
   const week = weekSummary(weekValueFromDate(selectedDate()));
   const protein = week.meals.reduce((a, m) => a + (+m.protein || 0), 0);
+  const divisor = Math.max(week.countedDates?.length || 0, 1);
   el.innerHTML = `
     <div class="quick-grid">
       <div class="quick-card"><div class="quick-label">Entrenos</div><div class="quick-value">${week.sessions.length}</div><div class="quick-sub">sesiones</div></div>
       <div class="quick-card"><div class="quick-label">Kcal promedio</div><div class="quick-value">${week.avgCalories}</div><div class="quick-sub">por día</div></div>
-      <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${Math.round(protein)}</div><div class="quick-sub">g semanal</div></div>
+      <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${Math.round(protein / divisor)}</div><div class="quick-sub">g/día</div></div>
       <div class="quick-card"><div class="quick-label">Pasos</div><div class="quick-value">${week.steps.toLocaleString('es-CL')}</div><div class="quick-sub">total</div></div>
       <div class="quick-card"><div class="quick-label">Cardio</div><div class="quick-value">${week.cardioMinutes}</div><div class="quick-sub">minutos</div></div>
       <div class="quick-card"><div class="quick-label">Check-in</div><div class="quick-value">${week.checking.rate}%</div><div class="quick-sub">${week.checking.done}/${week.checking.total || 0}</div></div>
-    </div>`;
+    </div>
+    ${week.freeDates.length ? `<div class="mini-muted mt-3">${week.freeDates.length} día(s) libre(s) excluidos: ${week.freeDates.map(d => d.slice(5)).join(', ')}</div>` : ''}`;
 }
 
 function internalReminderItems(date = selectedDate()) {
+  if (isFreeDay(date)) return [{ type: 'good', title: 'Día libre', copy: 'No se generan recordatorios de dieta para este día.' }];
   const reminders = [];
   const { cfg, totals } = nutritionForDate(date);
   const week = weekSummary(weekValueFromDate(date));
@@ -4463,6 +4525,7 @@ function findPreviousRoutineSession(session) {
     .filter(s =>
       s.id !== session.id &&
       s.date < session.date &&
+      !isFreeDay(s.date) &&
       s.routine_name === session.routine_name &&
       (session.day_name ? s.day_name === session.day_name : true)
     )
@@ -4525,14 +4588,16 @@ function renderCalendarMonthDraft() {
     d.setDate(start.getDate() + i);
     const key = dateKey(d);
     const sameMonth = d.getMonth() === base.getMonth();
-    const hasTraining = sessionsForDate(key).length;
-    const hasNutrition = nutritionForDate(key).meals.length;
-    const hasBody = (DB.get('bodylogs') || []).some(b => b.date === key);
-    const hasCardio = (DB.get('checking_cardio') || []).some(c => c.date === key);
+    const free = isFreeDay(key);
+    const hasTraining = !free && sessionsForDate(key).length;
+    const hasNutrition = !free && nutritionForDate(key).meals.length;
+    const hasBody = !free && (DB.get('bodylogs') || []).some(b => b.date === key);
+    const hasCardio = !free && (DB.get('checking_cardio') || []).some(c => c.date === key);
     const check = checkingStats(weekValueFromDate(key));
     cells.push(`<div class="month-cell ${sameMonth ? '' : 'muted'}">
       <div class="month-day">${d.getDate()}</div>
       <div class="dot-row">
+        ${free ? '<span class="badge b-amber" style="font-size:.62rem;padding:2px 5px">Libre</span>' : ''}
         ${hasTraining ? '<span class="status-dot train"></span>' : ''}
         ${hasNutrition ? '<span class="status-dot nut"></span>' : ''}
         ${hasBody ? '<span class="status-dot body"></span>' : ''}
@@ -4542,7 +4607,7 @@ function renderCalendarMonthDraft() {
     </div>`);
   }
   el.innerHTML = `
-    <div class="mini-muted mb">Azul: entreno · Amarillo: nutrición · Verde: cuerpo · Celeste: cardio · Rojo: check-in completo</div>
+    <div class="mini-muted mb">Azul: entreno · Amarillo: nutrición · Verde: cuerpo · Celeste: cardio · Rojo: check-in completo · Libre: excluido de análisis</div>
     <div class="month-grid">${cells.join('')}</div>`;
 }
 
@@ -4569,7 +4634,7 @@ function personalRankingItems() {
   const bestTraining = [...history].sort((a, b) => b.sessions.length - a.sessions.length)[0];
   const bestVolume = [...history].sort((a, b) => b.volume - a.volume)[0];
   const bestCheck = [...history].sort((a, b) => b.checking.rate - a.checking.rate)[0];
-  const records = Object.values(DB.get('records') || {});
+  const records = Object.values(effectiveRecords());
   const bestRecord = records.sort((a, b) => (+b.weight || 0) - (+a.weight || 0))[0];
   return [
     { title: 'Mejor semana de entreno', value: `${bestTraining?.sessions.length || 0} sesiones`, sub: bestTraining?.week || '-' },
@@ -4594,7 +4659,7 @@ function renderPersonalRanking() {
 
 function exerciseProgress() {
   const map = {};
-  (DB.get('sessions') || []).filter(session => session.date <= selectedDate()).forEach(session => {
+  (DB.get('sessions') || []).filter(session => session.date <= selectedDate() && !isFreeDay(session.date)).forEach(session => {
     (session.sets || []).forEach(set => {
       const name = set.exercise_name;
       if (!name) return;
@@ -4610,6 +4675,23 @@ function exerciseProgress() {
     const delta = previous ? latest.weight - previous.weight : 0;
     return { name, latest, best, delta, totalSets: sets.length };
   }).sort((a, b) => b.best.weight - a.best.weight);
+}
+
+function effectiveRecords() {
+  const records = {};
+  (DB.get('sessions') || [])
+    .filter(session => session.date <= selectedDate() && !isFreeDay(session.date))
+    .forEach(session => {
+      (session.sets || []).forEach(set => {
+        const name = set.exercise_name;
+        const weight = +set.weight || 0;
+        if (!name || weight <= 0) return;
+        if (!records[name] || weight > (+records[name].weight || 0)) {
+          records[name] = { exercise_name: name, weight, reps: +set.reps || 0, date: session.date };
+        }
+      });
+    });
+  return records;
 }
 
 function fillMealTemplates() {
@@ -4838,13 +4920,13 @@ function isWeightGoal(g) {
 
 function latestBodyWeight() {
   return [...(DB.get('bodylogs') || [])]
-    .filter(l => l.weight && l.date <= selectedDate())
+    .filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date))
     .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
 }
 
 function latestBodyFat() {
   return [...(DB.get('bodylogs') || [])]
-    .filter(l => l.body_fat && l.date <= selectedDate())
+    .filter(l => l.body_fat && l.date <= selectedDate() && !isFreeDay(l.date))
     .sort((a, b) => b.date.localeCompare(a.date))[0]?.body_fat;
 }
 
@@ -4869,7 +4951,7 @@ function goalProgress(g) {
     actual = checkingStats(weekValueFromDate(selectedDate())).rate;
   } else if (type === 'strength') {
     const title = String(g.title || '').toLowerCase();
-    const records = Object.values(DB.get('records') || {});
+    const records = Object.values(effectiveRecords());
     const matched = records.find(r => title.includes(String(r.exercise_name || '').toLowerCase()));
     const best = matched || records.sort((a, b) => (+b.weight || 0) - (+a.weight || 0))[0];
     actual = best ? +best.weight || start : start;
@@ -4902,7 +4984,7 @@ function loadDashboard() {
   document.getElementById('dash-date').textContent = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]}`;
 
   // Peso
-  const logs = (DB.get('bodylogs') || []).filter(l => l.date <= selectedDate());
+  const logs = (DB.get('bodylogs') || []).filter(l => l.date <= selectedDate() && !isFreeDay(l.date));
   const latest = logs.find(l => l.weight);
   const weekAgoDate = addDays(selectedDate(), -7);
   const weekAgo = [...logs].filter(l => l.weight && l.date <= weekAgoDate).sort((a, b) => b.date.localeCompare(a.date))[0];
@@ -4919,7 +5001,7 @@ function loadDashboard() {
   const meals = (DB.get('meals') || []).filter(m => m.date === selectedDate());
   const totals = meals.reduce((a, m) => ({ cal: a.cal + +m.calories, p: a.p + +m.protein, c: a.c + +m.carbs, f: a.f + +m.fat }), { cal: 0, p: 0, c: 0, f: 0 });
   document.getElementById('d-cals').innerHTML = `${totals.cal}<span class="metric-unit">kcal</span>`;
-  document.getElementById('d-cals-sub').textContent = `de ${cfg.calories} objetivo`;
+  document.getElementById('d-cals-sub').textContent = isFreeDay() ? 'día libre: no cuenta' : `de ${cfg.calories} objetivo`;
   document.getElementById('d-prot').textContent = `${totals.p.toFixed(0)}g / ${cfg.protein}g`;
   document.getElementById('d-carbs').textContent = `${totals.c.toFixed(0)}g / ${cfg.carbs}g`;
   document.getElementById('d-fat-m').textContent = `${totals.f.toFixed(0)}g / ${cfg.fat}g`;
@@ -4932,7 +5014,7 @@ function loadDashboard() {
   document.getElementById('d-sessions').textContent = sessions.length;
 
   // Últimas sesiones
-  const allSessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate()).slice(0, 3);
+  const allSessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate() && !isFreeDay(s.date)).slice(0, 3);
   const sl = document.getElementById('d-sessions-list');
   sl.innerHTML = allSessions.length ? allSessions.map(s => `
     <div style="padding:14px 0; border-bottom:1px solid var(--border); last-child:border-none">
@@ -4968,25 +5050,29 @@ function loadToday() {
   const { cfg, totals } = nutritionForDate();
   const sessions = sessionsForDate();
   const check = checkingStats(weekValueFromDate(selectedDate()));
+  const free = isFreeDay();
   document.getElementById('today-insight').textContent = smartInsight();
   document.getElementById('today-training-count').textContent = sessions.length;
   document.getElementById('today-training-sub').textContent = sessions.length === 1 ? 'sesión hoy' : 'sesiones hoy';
   document.getElementById('today-calories').textContent = totals.cal;
-  document.getElementById('today-calories-sub').textContent = `de ${cfg.calories} kcal`;
+  document.getElementById('today-calories-sub').textContent = free ? 'día libre: no cuenta' : `de ${cfg.calories} kcal`;
   document.getElementById('today-streak').textContent = activityStreak();
+  renderFreeDayStatus();
 
   const next = document.getElementById('today-next-action');
   const routines = DB.get('routines') || [];
-  const actionTitle = !sessions.length ? 'Entrenamiento' : totals.p < cfg.protein ? 'Recuperación' : 'Cierre del día';
-  const actionCopy = !sessions.length
+  const actionTitle = free ? 'Día libre activo' : !sessions.length ? 'Entrenamiento' : totals.p < cfg.protein ? 'Recuperación' : 'Cierre del día';
+  const actionCopy = free
+    ? 'Puedes registrar comidas o notas igual, pero este día no entra en análisis, promedios ni coach semanal.'
+    : !sessions.length
     ? (routines.length ? 'Abre Entrenar, elige tu rutina y registra lo logrado junto al peso.' : 'Crea una rutina para que tus objetivos se carguen solos al registrar entreno.')
     : totals.p < cfg.protein ? `Suma proteína. Faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)}g para tu objetivo.` : 'Revisa Check-in y deja observaciones de cómo va la semana.';
   next.innerHTML = `
-    <div class="alert-item ${!sessions.length ? 'warn' : 'good'}">
+    <div class="alert-item ${free || sessions.length ? 'good' : 'warn'}">
       <div class="alert-title">${actionTitle}</div>
       <div class="alert-copy">${actionCopy}</div>
       <div class="btn-row">
-        <button class="btn btn-primary btn-sm" onclick="${!sessions.length ? "showModal('modal-session')" : "go('checking')"}">${!sessions.length ? 'Registrar entreno' : 'Abrir Check-in'}</button>
+        <button class="btn btn-primary btn-sm" onclick="${free ? "toggleFreeDay()" : !sessions.length ? "showModal('modal-session')" : "go('checking')"}">${free ? 'Quitar día libre' : !sessions.length ? 'Registrar entreno' : 'Abrir Check-in'}</button>
       </div>
     </div>`;
 
@@ -5438,14 +5524,16 @@ function applyAiSession(date, source) {
   })).filter(s => s.exercise_name);
   if (!sets.length) return 0;
 
-  const prs = DB.get('records') || {};
-  sets.forEach(s => {
-    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-      s.is_pr = true;
-    }
-  });
-  DB.set('records', prs);
+  if (!isFreeDay(date)) {
+    const prs = DB.get('records') || {};
+    sets.forEach(s => {
+      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+        s.is_pr = true;
+      }
+    });
+    DB.set('records', prs);
+  }
 
   const session = {
     id: uid(),
@@ -5604,6 +5692,13 @@ function loadWeekCoach() {
 }
 
 function dayCoachSummary(date) {
+  if (isFreeDay(date)) {
+    return {
+      date,
+      free_day: true,
+      note: 'Dia libre excluido de analisis'
+    };
+  }
   const nut = nutritionForDate(date);
   const sessions = sessionsForDate(date);
   const cardio = (DB.get('checking_cardio') || []).filter(c => c.date === date);
@@ -5633,24 +5728,27 @@ function weekCoachData(week = getWeekCoachWeek()) {
   const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
   const days = current.dates.map(dayCoachSummary);
   const activeGoals = (DB.get('goals') || []).filter(g => g.status === 'active').slice(0, 8);
-  const notes = (DB.get('notes') || []).filter(n => current.dates.includes(n.date)).slice(0, 8);
+  const notes = (DB.get('notes') || []).filter(n => current.countedDates.includes(n.date)).slice(0, 8);
   const bodyWithWeight = days.filter(d => d.weight);
   const avg = (items, key) => {
     const values = items.map(item => +item[key] || 0).filter(Boolean);
     return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
   };
   const protein = current.meals.reduce((a, m) => a + (+m.protein || 0), 0);
+  const divisor = Math.max(current.countedDates.length, 1);
 
   return {
     week,
     dates: current.dates,
+    counted_dates: current.countedDates,
+    free_dates: current.freeDates,
     nutrition_goal: cfg,
     totals: {
       sessions: current.sessions.length,
       training_volume: Math.round(current.volume),
       meals: current.meals.length,
       avg_calories: current.avgCalories,
-      avg_protein: Math.round(protein / 7),
+      avg_protein: Math.round(protein / divisor),
       steps: current.steps,
       cardio_minutes: current.cardioMinutes,
       check_rate: current.checking.rate,
@@ -5706,6 +5804,7 @@ function renderWeekCoachLocalSummary(week = getWeekCoachWeek()) {
       <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${t.avg_protein}</div><div class="quick-sub">g/día</div></div>
       <div class="quick-card"><div class="quick-label">Check</div><div class="quick-value">${t.check_rate}%</div><div class="quick-sub">${t.check_done}/${t.check_total || 0}</div></div>
     </div>
+    ${data.free_dates.length ? `<div class="mini-muted mt-3">${data.free_dates.length} día(s) libre(s) excluidos del coach: ${data.free_dates.map(d => d.slice(5)).join(', ')}</div>` : ''}
     <div class="compare-list mt-3">
       <div class="compare-row"><strong>Rango</strong><span>${esc(data.dates[0])}</span><span>${esc(data.dates[6])}</span></div>
       <div class="compare-row"><strong>Volumen</strong><span>${t.training_volume.toLocaleString('es-CL')} kg</span><span></span></div>
@@ -5845,6 +5944,7 @@ function loadCalendar() {
     <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">${summary.checking.rate}%</div><div class="stat-sub">${summary.checking.done}/${summary.checking.total || 0} cumplidos</div></div>`;
 
   document.getElementById('calendar-grid').innerHTML = summary.dates.map((date, i) => {
+    const free = isFreeDay(date);
     const nut = nutritionForDate(date);
     const sessions = sessionsForDate(date);
     const body = (DB.get('bodylogs') || []).find(b => b.date === date);
@@ -5852,9 +5952,10 @@ function loadCalendar() {
     return `<div class="day-card">
       <div class="day-name">${dayNamesShort[i]}</div>
       <div class="day-date">${date.slice(5)}</div>
-      <div class="day-line"><span>Entreno</span><strong>${sessions.length}</strong></div>
-      <div class="day-line"><span>Kcal</span><strong>${nut.totals.cal}</strong></div>
-      <div class="day-line"><span>Peso</span><strong>${body?.weight ? body.weight + ' kg' : '-'}</strong></div>
+      ${free ? '<div class="day-line"><span>Estado</span><strong>Día libre</strong></div>' : ''}
+      <div class="day-line"><span>Entreno</span><strong>${free ? '-' : sessions.length}</strong></div>
+      <div class="day-line"><span>Kcal</span><strong>${free ? 'Libre' : nut.totals.cal}</strong></div>
+      <div class="day-line"><span>Peso</span><strong>${free ? '-' : body?.weight ? body.weight + ' kg' : '-'}</strong></div>
       <div class="day-line"><span>Notas</span><strong>${notes.length}</strong></div>
     </div>`;
   }).join('');
@@ -5888,7 +5989,7 @@ function loadProgress() {
 function renderProgressRecords() {
   const el = document.getElementById('progress-records');
   if (!el) return;
-  const rows = Object.values(DB.get('records') || {}).sort((a, b) => (+b.weight || 0) - (+a.weight || 0)).slice(0, 6);
+  const rows = Object.values(effectiveRecords()).sort((a, b) => (+b.weight || 0) - (+a.weight || 0)).slice(0, 6);
   if (!rows.length) {
     el.innerHTML = '<div class="empty">Tus PR aparecerán aquí</div>';
     return;
@@ -6117,7 +6218,7 @@ function deleteBodyLog(id) {
 }
 
 function renderBodyChart() {
-  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate()).slice(-30);
+  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date)).slice(-30);
   const canvasElement = document.getElementById('body-chart');
   if (!canvasElement) return;
   const ctx = canvasElement.getContext('2d');
@@ -6386,14 +6487,16 @@ function saveLiveWorkout() {
   });
   if (!sets.length) return toast('Añade al menos una serie', 'err');
 
-  const prs = DB.get('records') || {};
-  sets.forEach(s => {
-    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-      s.is_pr = true;
-    }
-  });
-  DB.set('records', prs);
+  if (!isFreeDay(date)) {
+    const prs = DB.get('records') || {};
+    sets.forEach(s => {
+      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+        s.is_pr = true;
+      }
+    });
+    DB.set('records', prs);
+  }
   const session = {
     id: uid(),
     date,
@@ -6539,14 +6642,16 @@ function saveSession() {
   if (!sets.length) return toast('Añade al menos una serie', 'err');
 
   // Auto-PR detection
-  const prs = DB.get('records') || {};
-  sets.forEach(s => {
-    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-      s.is_pr = true;
-    }
-  });
-  DB.set('records', prs);
+  if (!isFreeDay(date)) {
+    const prs = DB.get('records') || {};
+    sets.forEach(s => {
+      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+        s.is_pr = true;
+      }
+    });
+    DB.set('records', prs);
+  }
 
   const session = {
     id: uid(), date,
@@ -6646,9 +6751,8 @@ function deleteSession(id) {
 }
 
 function loadRecords() {
-  const prs = DB.get('records') || {};
   const tb = document.getElementById('records-table');
-  const rows = Object.values(prs);
+  const rows = Object.values(effectiveRecords());
   tb.innerHTML = rows.length ? rows.map(r => `
     <tr>
       <td style="font-weight:700; color:var(--text)">${esc(r.exercise_name)}</td>
@@ -6972,13 +7076,14 @@ function renderMealTemplates() {
 
 function loadMeals() {
   const date = document.getElementById('nut-date').value || selectedDate();
+  const free = isFreeDay(date);
   const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
   const meals = (DB.get('meals') || []).filter(m => m.date === date);
   const t = meals.reduce((a, m) => ({ cal: a.cal + +m.calories, p: a.p + +m.protein, c: a.c + +m.carbs, f: a.f + +m.fat }), { cal: 0, p: 0, c: 0, f: 0 });
 
   document.getElementById('nut-cals-num').textContent = t.cal;
-  document.getElementById('nut-cals-sub').textContent = `de ${cfg.calories} kcal`;
-  document.getElementById('nut-remaining').textContent = `${Math.max(cfg.calories - t.cal, 0)} kcal restantes`;
+  document.getElementById('nut-cals-sub').textContent = free ? 'día libre: no cuenta' : `de ${cfg.calories} kcal`;
+  document.getElementById('nut-remaining').textContent = free ? 'No afecta análisis ni promedios' : `${Math.max(cfg.calories - t.cal, 0)} kcal restantes`;
   document.getElementById('nut-cal-bar').style.width = clamp(t.cal, cfg.calories) + '%';
   document.getElementById('nut-prot-text').textContent = `${t.p.toFixed(0)}g / ${cfg.protein}g`;
   document.getElementById('nut-prot-bar').style.width = clamp(t.p, cfg.protein) + '%';
@@ -7088,18 +7193,18 @@ function loadStats() {
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1a7fff';
 
   // Peso
-  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate()).slice(-30);
+  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date)).slice(-30);
   renderStatChart('stats-weight-chart', 'weight-c', logs.map(l => l.date.slice(5)), logs.map(l => l.weight), accentColor, 'Peso (kg)', 'line');
 
   // Calorías
-  const meals = (DB.get('meals') || []).filter(m => m.date <= selectedDate());
+  const meals = (DB.get('meals') || []).filter(m => m.date <= selectedDate() && !isFreeDay(m.date));
   const calMap = {};
   meals.forEach(m => { calMap[m.date] = (calMap[m.date] || 0) + +m.calories; });
   const calDates = Object.keys(calMap).sort().slice(-14);
   renderStatChart('stats-cal-chart', 'cal-c', calDates.map(d => d.slice(5)), calDates.map(d => calMap[d]), '#f59e0b', 'Calorías', 'bar');
 
   // Volumen
-  const sessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate());
+  const sessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate() && !isFreeDay(s.date));
   const volMap = {};
   sessions.forEach(s => {
     const vol = (s.sets || []).reduce((a, x) => a + x.weight * x.reps, 0);
