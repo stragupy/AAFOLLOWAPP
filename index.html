@@ -3430,6 +3430,10 @@ tr:hover td {
         <div class="card-title">Check-in de la semana</div>
         <div id="today-checking"><div class="empty">Sin objetivos semanales</div></div>
       </div>
+      <div class="card mt-3">
+        <div class="card-title">Editor rápido del día</div>
+        <div id="day-editor"><div class="empty">Los registros del día aparecerán acá para editarlos sin rehacerlos.</div></div>
+      </div>
     </div>
   </div>
 
@@ -3928,7 +3932,7 @@ tr:hover td {
 <div id="modal-meal" class="overlay">
   <div class="modal">
     <div class="modal-head">
-      <h3>Añadir alimento</h3>
+      <h3 id="meal-modal-title">Añadir alimento</h3>
       <button class="btn btn-ghost btn-sm" onclick="hideModal('modal-meal')">✕</button>
     </div>
     <div class="form-grid fg2" style="margin-bottom:16px">
@@ -3952,7 +3956,7 @@ tr:hover td {
     <div class="btn-row">
       <button class="btn btn-ghost" style="flex: 1" onclick="hideModal('modal-meal')">Cancelar</button>
       <button class="btn btn-ghost" style="flex: 1" onclick="saveMealTemplate()">Guardar plantilla</button>
-      <button class="btn btn-primary" style="flex: 1" onclick="saveMeal()">Añadir</button>
+      <button class="btn btn-primary" id="meal-save-btn" style="flex: 1" onclick="saveMeal()">Añadir</button>
     </div>
   </div>
 </div>
@@ -3985,7 +3989,7 @@ tr:hover td {
 <div id="modal-note" class="overlay">
   <div class="modal">
     <div class="modal-head">
-      <h3>Nueva nota</h3>
+      <h3 id="note-modal-title">Nueva nota</h3>
       <button class="btn btn-ghost btn-sm" onclick="hideModal('modal-note')">✕</button>
     </div>
     <div class="form-grid" style="margin-bottom:16px; gap:14px">
@@ -3997,7 +4001,7 @@ tr:hover td {
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" style="flex: 1" onclick="hideModal('modal-note')">Cancelar</button>
-      <button class="btn btn-primary" style="flex: 1" onclick="saveNote()">Guardar nota</button>
+      <button class="btn btn-primary" id="note-save-btn" style="flex: 1" onclick="saveNote()">Guardar nota</button>
     </div>
   </div>
 </div>
@@ -4113,9 +4117,17 @@ function showModal(id) {
     setCount = 0;
     fillSessionRoutines();
   }
-  if (id === 'modal-meal') fillMealTemplates();
+  if (id === 'modal-meal') {
+    if (!editingMealId) resetMealEditMode();
+    fillMealTemplates();
+  }
+  if (id === 'modal-note' && !editingNoteId) resetNoteEditMode();
 }
-function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+function hideModal(id) {
+  document.getElementById(id).classList.remove('show');
+  if (id === 'modal-meal') resetMealEditMode();
+  if (id === 'modal-note') resetNoteEditMode();
+}
 
 // Cerrar modal al click fuera
 document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); }));
@@ -4943,6 +4955,256 @@ function loadToday() {
         <span class="badge ${checkingStatus(g) === 'done' ? 'b-green' : checkingStatus(g) === 'missed' ? 'b-red' : 'b-amber'}">${checkLabel(g)}</span>
       </div>
     </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
+  renderDayEditor();
+}
+
+// ═══════════════════════════════════════════════════
+// EDITOR RAPIDO DEL DIA
+// ═══════════════════════════════════════════════════
+let editingMealId = null;
+let editingNoteId = null;
+
+function compactList(items) {
+  return items.length ? `<div class="compare-list">${items.join('')}</div>` : '<div class="empty">Sin registros en esta sección.</div>';
+}
+
+function renderDayEditor() {
+  const el = document.getElementById('day-editor');
+  if (!el) return;
+  const date = selectedDate();
+  const meals = (DB.get('meals') || []).filter(m => m.date === date);
+  const body = (DB.get('bodylogs') || []).find(b => b.date === date);
+  const sessions = (DB.get('sessions') || []).filter(s => s.date === date);
+  const cardio = (DB.get('checking_cardio') || []).filter(c => c.date === date);
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const water = (DB.get('daily_water') || {})[date] || 0;
+  const notes = (DB.get('notes') || []).filter(n => n.date === date);
+  const hasWellness = wellness.sleep != null || wellness.energy != null;
+  const hasAny = meals.length || body || sessions.length || cardio.length || hasWellness || water || notes.length;
+
+  if (!hasAny) {
+    el.innerHTML = '<div class="empty">Los registros del día aparecerán acá para editarlos sin rehacerlos.</div>';
+    return;
+  }
+
+  const mealRows = meals.map(m => `
+    <div class="compare-row">
+      <div><strong>${esc(m.food_item)}</strong><div class="mini-muted">${esc(m.meal_name || 'Comida')} · ${m.calories || 0} kcal · P:${m.protein || 0} C:${m.carbs || 0} G:${m.fat || 0}</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="editMeal('${m.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteMeal('${m.id}')">Eliminar</button>
+    </div>`);
+
+  const bodyRows = body ? [`
+    <div class="compare-row">
+      <div><strong>Cuerpo</strong><div class="mini-muted">Peso ${fmt(body.weight)} kg · Grasa ${fmt(body.body_fat)}% · Cintura ${fmt(body.waist)} cm</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="editBodyLog('${body.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBodyLog('${body.id}')">Eliminar</button>
+    </div>`] : [];
+
+  const sessionRows = sessions.flatMap(s => [
+    `<div class="compare-row">
+      <div><strong>${esc(s.routine_name || s.day_name || 'Entreno')}</strong><div class="mini-muted">${s.duration || 0} min · ${(s.sets || []).length} series · ${esc(s.notes || '')}</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="editSessionQuick('${s.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteSession('${s.id}')">Eliminar</button>
+    </div>`,
+    ...(s.sets || []).map((set, i) => `
+      <div class="compare-row">
+        <div><strong>${esc(set.exercise_name)}</strong><div class="mini-muted">Serie ${set.set_number || i + 1}</div></div>
+        <span>${set.reps || 0} reps</span>
+        <button class="btn btn-ghost btn-sm" onclick="editSessionSet('${s.id}', ${i})">${set.weight || 0} kg</button>
+      </div>`)
+  ]);
+
+  const cardioRows = cardio.map(c => `
+    <div class="compare-row">
+      <div><strong>${c.type === 'steps' ? 'Pasos' : 'Cardio'}</strong><div class="mini-muted">${c.date}</div></div>
+      <span>${Number(c.value || 0).toLocaleString('es-CL')} ${c.type === 'steps' ? 'pasos' : 'min'}</span>
+      <button class="btn btn-ghost btn-sm" onclick="editCheckinCardio('${c.id}')">Editar</button>
+    </div>`);
+
+  const wellnessRows = [];
+  if (hasWellness) wellnessRows.push(`
+    <div class="compare-row">
+      <div><strong>Sueño y energía</strong><div class="mini-muted">${wellness.sleep || 0}h · energía ${wellness.energy || '-'}/5</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="editWellnessToday()">Editar</button>
+      <span></span>
+    </div>`);
+  if (water) wellnessRows.push(`
+    <div class="compare-row">
+      <div><strong>Agua</strong><div class="mini-muted">Objetivo diario: 2500ml</div></div>
+      <span>${Number(water || 0).toLocaleString('es-CL')} ml</span>
+      <button class="btn btn-ghost btn-sm" onclick="editWaterToday()">Editar</button>
+    </div>`);
+
+  const noteRows = notes.map(n => `
+    <div class="compare-row">
+      <div><strong>${esc(n.title || 'Nota')}</strong><div class="mini-muted">${esc(String(n.content || '').slice(0, 90))}</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="editNote('${n.id}')">Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteNote('${n.id}')">Eliminar</button>
+    </div>`);
+
+  el.innerHTML = `
+    <div class="g2 mb">
+      <div>${compactList(mealRows)}</div>
+      <div>${compactList(bodyRows.concat(wellnessRows))}</div>
+    </div>
+    <div class="g2">
+      <div>${compactList(sessionRows)}</div>
+      <div>${compactList(cardioRows.concat(noteRows))}</div>
+    </div>`;
+}
+
+function resetMealEditMode() {
+  editingMealId = null;
+  const title = document.getElementById('meal-modal-title');
+  const button = document.getElementById('meal-save-btn');
+  if (title) title.textContent = 'Añadir alimento';
+  if (button) button.textContent = 'Añadir';
+}
+
+function editMeal(id) {
+  const meal = (DB.get('meals') || []).find(m => m.id === id);
+  if (!meal) return toast('No encontré ese alimento', 'err');
+  editingMealId = id;
+  document.getElementById('nut-date').value = meal.date || selectedDate();
+  document.getElementById('m-meal').value = meal.meal_name || 'Desayuno';
+  document.getElementById('m-food').value = meal.food_item || '';
+  document.getElementById('m-cal').value = meal.calories || 0;
+  document.getElementById('m-prot').value = meal.protein || 0;
+  document.getElementById('m-carbs').value = meal.carbs || 0;
+  document.getElementById('m-fat').value = meal.fat || 0;
+  document.getElementById('meal-modal-title').textContent = 'Editar alimento';
+  document.getElementById('meal-save-btn').textContent = 'Guardar cambios';
+  showModal('modal-meal');
+}
+
+function editBodyLog(id) {
+  const log = (DB.get('bodylogs') || []).find(b => b.id === id);
+  if (!log) return toast('No encontré ese registro corporal', 'err');
+  changeGlobalDate(log.date || selectedDate());
+  go('body');
+  document.getElementById('b-date').value = log.date || selectedDate();
+  document.getElementById('b-weight').value = log.weight || '';
+  document.getElementById('b-fat').value = log.body_fat || '';
+  document.getElementById('b-arm').value = log.arm || '';
+  document.getElementById('b-chest').value = log.chest || '';
+  document.getElementById('b-waist').value = log.waist || '';
+  document.getElementById('b-thigh').value = log.thigh || '';
+  document.getElementById('b-calf').value = log.calf || '';
+  document.getElementById('b-notes').value = log.notes || '';
+  toast('Registro corporal listo para editar');
+}
+
+function editCheckinCardio(id) {
+  const records = DB.get('checking_cardio') || [];
+  const record = records.find(r => r.id === id);
+  if (!record) return toast('No encontré ese cardio', 'err');
+  const value = prompt(record.type === 'steps' ? 'Pasos' : 'Minutos de cardio', record.value || '');
+  if (value == null) return;
+  const next = Math.round(Number(value));
+  if (!Number.isFinite(next) || next <= 0) return toast('Valor inválido', 'err');
+  record.value = next;
+  DB.set('checking_cardio', records);
+  renderDayEditor();
+  renderCheckinCardio();
+  loadDashboard();
+  loadGoals();
+  toast('Cardio actualizado');
+}
+
+function editWellnessToday() {
+  const date = selectedDate();
+  const all = DB.get('daily_wellness') || {};
+  const current = all[date] || {};
+  const sleep = prompt('Horas de sueño', current.sleep ?? '');
+  if (sleep == null) return;
+  const energy = prompt('Energía 1 a 5', current.energy ?? '');
+  if (energy == null) return;
+  all[date] = {
+    ...current,
+    sleep: Math.max(0, Number(sleep) || 0),
+    energy: Math.max(1, Math.min(5, Math.round(Number(energy) || 1)))
+  };
+  DB.set('daily_wellness', all);
+  renderWellnessToday();
+  renderDayEditor();
+  loadDashboard();
+  toast('Sueño y energía actualizados');
+}
+
+function editWaterToday() {
+  const date = selectedDate();
+  const water = DB.get('daily_water') || {};
+  const value = prompt('Agua total del día en ml', water[date] || 0);
+  if (value == null) return;
+  const next = Math.max(0, Math.round(Number(value) || 0));
+  water[date] = next;
+  DB.set('daily_water', water);
+  renderWaterToday();
+  renderDayEditor();
+  loadDashboard();
+  toast('Agua actualizada');
+}
+
+function editSessionQuick(id) {
+  const sessions = DB.get('sessions') || [];
+  const session = sessions.find(s => s.id === id);
+  if (!session) return toast('No encontré esa sesión', 'err');
+  const duration = prompt('Duración en minutos', session.duration || '');
+  if (duration == null) return;
+  const notes = prompt('Notas del entreno', session.notes || '');
+  if (notes == null) return;
+  session.duration = Number(duration) || null;
+  session.notes = notes;
+  session.comparison = compareWorkoutSession(session);
+  DB.set('sessions', sessions);
+  renderSessionsList();
+  renderTrainingProgress();
+  renderExerciseHistoryDraft();
+  renderDayEditor();
+  loadDashboard();
+  toast('Sesión actualizada');
+}
+
+function editSessionSet(sessionId, setIndex) {
+  const sessions = DB.get('sessions') || [];
+  const session = sessions.find(s => s.id === sessionId);
+  const set = session?.sets?.[setIndex];
+  if (!set) return toast('No encontré esa serie', 'err');
+  const reps = prompt(`Reps para ${set.exercise_name}`, set.reps || 0);
+  if (reps == null) return;
+  const weight = prompt(`Peso kg para ${set.exercise_name}`, set.weight || 0);
+  if (weight == null) return;
+  set.reps = Math.max(0, Math.round(Number(reps) || 0));
+  set.weight = Math.max(0, Number(weight) || 0);
+  session.comparison = compareWorkoutSession(session);
+  DB.set('sessions', sessions);
+  renderSessionsList();
+  renderTrainingProgress();
+  renderExerciseHistoryDraft();
+  renderDayEditor();
+  loadDashboard();
+  toast('Serie actualizada');
+}
+
+function resetNoteEditMode() {
+  editingNoteId = null;
+  const title = document.getElementById('note-modal-title');
+  const button = document.getElementById('note-save-btn');
+  if (title) title.textContent = 'Nueva nota';
+  if (button) button.textContent = 'Guardar nota';
+}
+
+function editNote(id) {
+  const note = (DB.get('notes') || []).find(n => n.id === id);
+  if (!note) return toast('No encontré esa nota', 'err');
+  editingNoteId = id;
+  document.getElementById('n-title').value = note.title || '';
+  document.getElementById('n-content').value = note.content || '';
+  document.getElementById('n-mood').value = note.mood || 3;
+  document.getElementById('note-modal-title').textContent = 'Editar nota';
+  document.getElementById('note-save-btn').textContent = 'Guardar cambios';
+  showModal('modal-note');
 }
 
 // ═══════════════════════════════════════════════════
@@ -5519,7 +5781,7 @@ function saveBodyLog() {
   if (!d('b-date')) return toast('Indica la fecha', 'err');
   const logs = DB.get('bodylogs') || [];
   const idx = logs.findIndex(l => l.date === d('b-date'));
-  const entry = { id: uid(), date: d('b-date'), weight: +d('b-weight') || null, body_fat: +d('b-fat') || null, arm: +d('b-arm') || null, chest: +d('b-chest') || null, waist: +d('b-waist') || null, thigh: +d('b-thigh') || null, calf: +d('b-calf') || null, notes: d('b-notes') };
+  const entry = { id: idx >= 0 ? logs[idx].id : uid(), date: d('b-date'), weight: +d('b-weight') || null, body_fat: +d('b-fat') || null, arm: +d('b-arm') || null, chest: +d('b-chest') || null, waist: +d('b-waist') || null, thigh: +d('b-thigh') || null, calf: +d('b-calf') || null, notes: d('b-notes') };
   if (idx >= 0) logs[idx] = entry; else logs.unshift(entry);
   logs.sort((a, b) => b.date.localeCompare(a.date));
   DB.set('bodylogs', logs);
@@ -5528,6 +5790,7 @@ function saveBodyLog() {
   renderBodyTable(); renderBodyChart();
   loadGoals();
   loadDashboard();
+  renderDayEditor();
 }
 
 function renderBodyTable() {
@@ -5550,6 +5813,7 @@ function deleteBodyLog(id) {
   renderBodyTable(); renderBodyChart();
   loadGoals();
   loadDashboard();
+  renderDayEditor();
 }
 
 function renderBodyChart() {
@@ -6078,6 +6342,7 @@ function deleteSession(id) {
   renderExerciseHistoryDraft();
   loadDashboard();
   loadGoals();
+  renderDayEditor();
 }
 
 function loadRecords() {
@@ -6310,20 +6575,30 @@ function saveMeal() {
   const food = document.getElementById('m-food').value.trim();
   if (!food) return toast('Ingresa el alimento', 'err');
   const date = document.getElementById('nut-date').value || selectedDate();
-  DB.push('meals', {
-    id: uid(), date,
+  const entry = {
+    id: editingMealId || uid(), date,
     meal_name: document.getElementById('m-meal').value,
     food_item: food,
     calories: +document.getElementById('m-cal').value || 0,
     protein: +document.getElementById('m-prot').value || 0,
     carbs: +document.getElementById('m-carbs').value || 0,
     fat: +document.getElementById('m-fat').value || 0
-  });
-  toast('Alimento guardado');
+  };
+  if (editingMealId) {
+    const meals = DB.get('meals') || [];
+    const idx = meals.findIndex(m => m.id === editingMealId);
+    if (idx >= 0) meals[idx] = entry; else meals.unshift(entry);
+    DB.set('meals', meals);
+  } else {
+    DB.push('meals', entry);
+  }
+  toast(editingMealId ? 'Alimento actualizado' : 'Alimento guardado');
   hideModal('modal-meal');
   ['m-food','m-cal','m-prot','m-carbs','m-fat'].forEach(id => document.getElementById(id).value = '');
   loadMeals();
   renderMealTemplates();
+  renderDayEditor();
+  loadDashboard();
 }
 
 function currentMealForm() {
@@ -6429,6 +6704,7 @@ function loadMeals() {
           </div>
           <div class="flex ai-c gap-3">
             <span style="font-weight:700; color:var(--accent-l); font-size:0.95rem">${item.calories} kcal</span>
+            <button class="btn btn-ghost btn-sm" onclick="editMeal('${item.id}')">Editar</button>
             <button class="btn btn-ghost btn-sm" onclick="deleteMeal('${item.id}')">✕</button>
           </div>
         </div>`).join('')}
@@ -6439,6 +6715,8 @@ function deleteMeal(id) {
   DB.del('meals', id);
   toast('Item eliminado');
   loadMeals();
+  renderDayEditor();
+  loadDashboard();
 }
 
 // ═══════════════════════════════════════════════════
@@ -6620,19 +6898,29 @@ function saveNote() {
   const content = document.getElementById('n-content').value.trim();
   if (!content) return toast('El contenido es requerido', 'err');
   const createdAt = new Date().toISOString();
-  DB.push('notes', {
-    id: uid(),
-    date: today(),
+  const entry = {
+    id: editingNoteId || uid(),
+    date: editingNoteId ? ((DB.get('notes') || []).find(n => n.id === editingNoteId)?.date || selectedDate()) : today(),
     created_at: createdAt,
     title: document.getElementById('n-title').value.trim(),
     content,
     mood: +document.getElementById('n-mood').value
-  });
-  toast('Nota archivada');
+  };
+  if (editingNoteId) {
+    const notes = DB.get('notes') || [];
+    const idx = notes.findIndex(n => n.id === editingNoteId);
+    if (idx >= 0) notes[idx] = { ...notes[idx], ...entry, created_at: notes[idx].created_at || createdAt };
+    else notes.unshift(entry);
+    DB.set('notes', notes);
+  } else {
+    DB.push('notes', entry);
+  }
+  toast(editingNoteId ? 'Nota actualizada' : 'Nota archivada');
   hideModal('modal-note');
   document.getElementById('n-title').value = '';
   document.getElementById('n-content').value = '';
   loadNotes();
+  renderDayEditor();
 }
 
 function deleteNote(id) {
@@ -6640,6 +6928,7 @@ function deleteNote(id) {
   DB.del('notes', id);
   toast('Nota eliminada permanentemente');
   loadNotes();
+  renderDayEditor();
 }
 
 // ══ Check-in semanal
@@ -6672,6 +6961,7 @@ function saveCheckinCardio() {
   document.getElementById('checkin-cardio-value').value = '';
   toast('Cardio guardado');
   renderCheckinCardio();
+  renderDayEditor();
   loadDashboard();
   loadGoals();
 }
@@ -6700,6 +6990,7 @@ function deleteCheckinCardio(id) {
   DB.del('checking_cardio', id);
   toast('Registro de cardio eliminado');
   renderCheckinCardio();
+  renderDayEditor();
   loadDashboard();
   loadGoals();
 }
