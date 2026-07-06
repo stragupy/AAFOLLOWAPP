@@ -4169,11 +4169,14 @@ function showModal(id) {
     document.getElementById('nc-fat').value = cfg.fat || 70;
   }
   if (id === 'modal-session') {
-    document.getElementById('s-date').value = selectedDate();
-    document.getElementById('s-sets').innerHTML = '';
-    document.getElementById('s-sets-label').textContent = 'Series';
-    setCount = 0;
-    fillSessionRoutines();
+    sessionWorkoutDraftActive = true;
+    if (!restoreSessionWorkoutDraft()) {
+      document.getElementById('s-date').value = selectedDate();
+      document.getElementById('s-sets').innerHTML = '';
+      document.getElementById('s-sets-label').textContent = 'Series';
+      setCount = 0;
+      fillSessionRoutines();
+    }
   }
   if (id === 'modal-meal') {
     if (!editingMealId) resetMealEditMode();
@@ -4265,7 +4268,7 @@ function isFreeDay(date = selectedDate()) {
 }
 
 function countedWeekDates(weekValue = weekValueFromDate()) {
-  return getWeekDates(weekValue).filter(date => !isFreeDay(date));
+  return getWeekDates(weekValue);
 }
 
 function toggleFreeDay(date = selectedDate()) {
@@ -4274,7 +4277,7 @@ function toggleFreeDay(date = selectedDate()) {
   else days[date] = { date, created_at: new Date().toISOString() };
   DB.set('free_days', days);
   changeGlobalDate(date);
-  toast(days[date] ? 'Día libre activado: no contará en análisis' : 'Día libre desactivado');
+  toast(days[date] ? 'Día libre activado: se evaluará solo lo cargado' : 'Día libre desactivado');
 }
 
 function renderFreeDayStatus(date = selectedDate()) {
@@ -4283,7 +4286,7 @@ function renderFreeDayStatus(date = selectedDate()) {
   const btn = document.getElementById('free-day-toggle');
   const globalBtn = document.getElementById('global-free-day-toggle');
   if (status) status.textContent = active
-    ? 'Día libre activo: sus comidas, peso, cardio y entrenos no cuentan en análisis.'
+    ? 'Día libre activo: solo se evalúa lo que cargues; lo que falte no cuenta en contra.'
     : 'Este día cuenta normalmente en tus análisis.';
   if (btn) {
     btn.textContent = active ? 'Quitar día libre' : 'Marcar día libre';
@@ -4325,7 +4328,6 @@ function checkingStats(week = weekValueFromDate()) {
 }
 
 function activityOnDate(date) {
-  if (isFreeDay(date)) return false;
   const hasMeals = (DB.get('meals') || []).some(m => m.date === date);
   const hasSessions = (DB.get('sessions') || []).some(s => s.date === date);
   const hasBody = (DB.get('bodylogs') || []).some(b => b.date === date);
@@ -4348,7 +4350,7 @@ function trainingWeekStreak() {
   let streak = 0;
   for (let i = 0; i < 52; i++) {
     const d = addDays(selectedDate(), -i * 7);
-    const dates = countedWeekDates(weekValueFromDate(d));
+    const dates = getWeekDates(weekValueFromDate(d));
     const count = (DB.get('sessions') || []).filter(s => dates.includes(s.date)).length;
     if (!count) break;
     streak++;
@@ -4358,19 +4360,20 @@ function trainingWeekStreak() {
 
 function weekSummary(week = weekValueFromDate()) {
   const dates = getWeekDates(week);
-  const countedDates = dates.filter(date => !isFreeDay(date));
+  const countedDates = dates;
   const freeDates = dates.filter(date => isFreeDay(date));
-  const divisor = Math.max(countedDates.length, 1);
-  const sessions = (DB.get('sessions') || []).filter(s => countedDates.includes(s.date));
-  const meals = (DB.get('meals') || []).filter(m => countedDates.includes(m.date));
-  const bodylogs = (DB.get('bodylogs') || []).filter(b => countedDates.includes(b.date));
+  const sessions = (DB.get('sessions') || []).filter(s => dates.includes(s.date));
+  const meals = (DB.get('meals') || []).filter(m => dates.includes(m.date));
+  const bodylogs = (DB.get('bodylogs') || []).filter(b => dates.includes(b.date));
   const notes = [];
-  const cardio = (DB.get('checking_cardio') || []).filter(c => countedDates.includes(c.date));
+  const cardio = (DB.get('checking_cardio') || []).filter(c => dates.includes(c.date));
+  const mealDates = new Set(meals.map(m => m.date));
+  const nutritionDivisor = dates.filter(date => !isFreeDay(date) || mealDates.has(date)).length || 1;
   const calories = meals.reduce((a, m) => a + (+m.calories || 0), 0);
   const volume = sessions.reduce((a, s) => a + (s.sets || []).reduce((b, x) => b + ((+x.weight || 0) * (+x.reps || 0)), 0), 0);
   const steps = cardio.filter(c => c.type === 'steps').reduce((a, c) => a + (+c.value || 0), 0);
   const cardioMinutes = cardio.filter(c => c.type === 'minutes').reduce((a, c) => a + (+c.value || 0), 0);
-  return { week, dates, countedDates, freeDates, sessions, meals, bodylogs, notes, cardio, steps, cardioMinutes, calories, avgCalories: Math.round(calories / divisor), volume, checking: checkingStats(week) };
+  return { week, dates, countedDates, freeDates, nutritionDivisor, sessions, meals, bodylogs, notes, cardio, steps, cardioMinutes, calories, avgCalories: Math.round(calories / nutritionDivisor), volume, checking: checkingStats(week) };
 }
 
 function weeklyHistory(limit = 6) {
@@ -4382,12 +4385,19 @@ function weeklyHistory(limit = 6) {
 }
 
 function dailyAlerts(date = selectedDate()) {
-  if (isFreeDay(date)) {
-    return [{ type: 'good', title: 'Día libre activo', copy: 'Este día queda fuera de los análisis y promedios. Puedes registrar cosas igual sin afectar la semana.' }];
-  }
   const { cfg, totals } = nutritionForDate(date);
   const sessions = sessionsForDate(date);
   const check = checkingStats(weekValueFromDate(date));
+  const cardioToday = (DB.get('checking_cardio') || []).filter(c => c.date === date);
+  const steps = cardioToday.filter(c => c.type === 'steps').reduce((a, c) => a + (+c.value || 0), 0);
+  const minutes = cardioToday.filter(c => c.type === 'minutes').reduce((a, c) => a + (+c.value || 0), 0);
+  if (isFreeDay(date)) {
+    const alerts = [{ type: 'good', title: 'Día libre activo', copy: 'Se evalúa solo lo que cargues; lo que falte no cuenta en contra.' }];
+    if (totals.cal || totals.p) alerts.push({ type: 'good', title: 'Comida registrada', copy: `${totals.cal} kcal y ${Math.round(totals.p)}g de proteína cargados para este día libre.` });
+    if (sessions.length) alerts.push({ type: 'good', title: 'Entreno registrado', copy: `${sessions.length} sesión(es) guardada(s) también cuentan como actividad real.` });
+    if (steps || minutes) alerts.push({ type: 'good', title: 'Actividad registrada', copy: `${steps ? steps.toLocaleString('es-CL') + ' pasos' : ''}${steps && minutes ? ' · ' : ''}${minutes ? minutes + ' min cardio' : ''}.` });
+    return alerts.slice(0, 4);
+  }
   const alerts = [];
   if (!sessions.length) alerts.push({ type: 'warn', title: 'Entrenamiento pendiente', copy: 'Aún no registraste una sesión hoy. Si toca entrenar, abre Entrenar y carga tu rutina.' });
   else alerts.push({ type: 'good', title: 'Entreno registrado', copy: `${sessions.length} sesión guardada hoy. Buen material para medir progreso.` });
@@ -4409,9 +4419,14 @@ function renderAlerts(targetId, alerts) {
 }
 
 function smartInsight(date = selectedDate()) {
-  if (isFreeDay(date)) return 'Día libre activo: lo que registres hoy queda guardado, pero no afecta promedios, gráficos ni el coach semanal.';
   const { cfg, totals } = nutritionForDate(date);
   const sessionsToday = sessionsForDate(date).length;
+  if (isFreeDay(date)) {
+    const cardioToday = (DB.get('checking_cardio') || []).filter(c => c.date === date);
+    const steps = cardioToday.filter(c => c.type === 'steps').reduce((a, c) => a + (+c.value || 0), 0);
+    if (totals.cal || sessionsToday || steps) return `Día libre activo: se está evaluando solo lo cargado (${totals.cal} kcal, ${sessionsToday} entreno(s), ${steps.toLocaleString('es-CL')} pasos).`;
+    return 'Día libre activo: no se exige comida, entreno ni cardio. Si cargas algo, sí entrará en la lectura.';
+  }
   const week = weekSummary(weekValueFromDate(date));
   const check = checkingStats(weekValueFromDate(date));
   if (!sessionsToday && totals.cal < cfg.calories * 0.35) return 'Hoy todavía está muy abierto: faltan comida registrada y entrenamiento. Prioridad simple: registra una comida real y deja lista la sesión si toca entrenar.';
@@ -4426,7 +4441,7 @@ function renderWeeklyDraftSummary() {
   if (!el) return;
   const week = weekSummary(weekValueFromDate(selectedDate()));
   const protein = week.meals.reduce((a, m) => a + (+m.protein || 0), 0);
-  const divisor = Math.max(week.countedDates?.length || 0, 1);
+  const divisor = Math.max(week.nutritionDivisor || 0, 1);
   el.innerHTML = `
     <div class="quick-grid">
       <div class="quick-card"><div class="quick-label">Entrenos</div><div class="quick-value">${week.sessions.length}</div><div class="quick-sub">sesiones</div></div>
@@ -4436,11 +4451,11 @@ function renderWeeklyDraftSummary() {
       <div class="quick-card"><div class="quick-label">Cardio</div><div class="quick-value">${week.cardioMinutes}</div><div class="quick-sub">minutos</div></div>
       <div class="quick-card"><div class="quick-label">Check-in</div><div class="quick-value">${week.checking.rate}%</div><div class="quick-sub">${week.checking.done}/${week.checking.total || 0}</div></div>
     </div>
-    ${week.freeDates.length ? `<div class="mini-muted mt-3">${week.freeDates.length} día(s) libre(s) excluidos: ${week.freeDates.map(d => d.slice(5)).join(', ')}</div>` : ''}`;
+    ${week.freeDates.length ? `<div class="mini-muted mt-3">${week.freeDates.length} día(s) libre(s): se evalúa solo lo registrado (${week.freeDates.map(d => d.slice(5)).join(', ')}).</div>` : ''}`;
 }
 
 function internalReminderItems(date = selectedDate()) {
-  if (isFreeDay(date)) return [{ type: 'good', title: 'Día libre', copy: 'No se generan recordatorios de dieta para este día.' }];
+  if (isFreeDay(date)) return dailyAlerts(date);
   const reminders = [];
   const { cfg, totals } = nutritionForDate(date);
   const week = weekSummary(weekValueFromDate(date));
@@ -4525,7 +4540,6 @@ function findPreviousRoutineSession(session) {
     .filter(s =>
       s.id !== session.id &&
       s.date < session.date &&
-      !isFreeDay(s.date) &&
       s.routine_name === session.routine_name &&
       (session.day_name ? s.day_name === session.day_name : true)
     )
@@ -4589,10 +4603,10 @@ function renderCalendarMonthDraft() {
     const key = dateKey(d);
     const sameMonth = d.getMonth() === base.getMonth();
     const free = isFreeDay(key);
-    const hasTraining = !free && sessionsForDate(key).length;
-    const hasNutrition = !free && nutritionForDate(key).meals.length;
-    const hasBody = !free && (DB.get('bodylogs') || []).some(b => b.date === key);
-    const hasCardio = !free && (DB.get('checking_cardio') || []).some(c => c.date === key);
+    const hasTraining = sessionsForDate(key).length;
+    const hasNutrition = nutritionForDate(key).meals.length;
+    const hasBody = (DB.get('bodylogs') || []).some(b => b.date === key);
+    const hasCardio = (DB.get('checking_cardio') || []).some(c => c.date === key);
     const check = checkingStats(weekValueFromDate(key));
     cells.push(`<div class="month-cell ${sameMonth ? '' : 'muted'}">
       <div class="month-day">${d.getDate()}</div>
@@ -4607,7 +4621,7 @@ function renderCalendarMonthDraft() {
     </div>`);
   }
   el.innerHTML = `
-    <div class="mini-muted mb">Azul: entreno · Amarillo: nutrición · Verde: cuerpo · Celeste: cardio · Rojo: check-in completo · Libre: excluido de análisis</div>
+    <div class="mini-muted mb">Azul: entreno · Amarillo: nutrición · Verde: cuerpo · Celeste: cardio · Rojo: check-in completo · Libre: solo evalúa lo cargado</div>
     <div class="month-grid">${cells.join('')}</div>`;
 }
 
@@ -4659,7 +4673,7 @@ function renderPersonalRanking() {
 
 function exerciseProgress() {
   const map = {};
-  (DB.get('sessions') || []).filter(session => session.date <= selectedDate() && !isFreeDay(session.date)).forEach(session => {
+  (DB.get('sessions') || []).filter(session => session.date <= selectedDate()).forEach(session => {
     (session.sets || []).forEach(set => {
       const name = set.exercise_name;
       if (!name) return;
@@ -4680,7 +4694,7 @@ function exerciseProgress() {
 function effectiveRecords() {
   const records = {};
   (DB.get('sessions') || [])
-    .filter(session => session.date <= selectedDate() && !isFreeDay(session.date))
+    .filter(session => session.date <= selectedDate())
     .forEach(session => {
       (session.sets || []).forEach(set => {
         const name = set.exercise_name;
@@ -4920,13 +4934,13 @@ function isWeightGoal(g) {
 
 function latestBodyWeight() {
   return [...(DB.get('bodylogs') || [])]
-    .filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date))
+    .filter(l => l.weight && l.date <= selectedDate())
     .sort((a, b) => b.date.localeCompare(a.date))[0]?.weight;
 }
 
 function latestBodyFat() {
   return [...(DB.get('bodylogs') || [])]
-    .filter(l => l.body_fat && l.date <= selectedDate() && !isFreeDay(l.date))
+    .filter(l => l.body_fat && l.date <= selectedDate())
     .sort((a, b) => b.date.localeCompare(a.date))[0]?.body_fat;
 }
 
@@ -4984,7 +4998,7 @@ function loadDashboard() {
   document.getElementById('dash-date').textContent = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]}`;
 
   // Peso
-  const logs = (DB.get('bodylogs') || []).filter(l => l.date <= selectedDate() && !isFreeDay(l.date));
+  const logs = (DB.get('bodylogs') || []).filter(l => l.date <= selectedDate());
   const latest = logs.find(l => l.weight);
   const weekAgoDate = addDays(selectedDate(), -7);
   const weekAgo = [...logs].filter(l => l.weight && l.date <= weekAgoDate).sort((a, b) => b.date.localeCompare(a.date))[0];
@@ -5001,7 +5015,7 @@ function loadDashboard() {
   const meals = (DB.get('meals') || []).filter(m => m.date === selectedDate());
   const totals = meals.reduce((a, m) => ({ cal: a.cal + +m.calories, p: a.p + +m.protein, c: a.c + +m.carbs, f: a.f + +m.fat }), { cal: 0, p: 0, c: 0, f: 0 });
   document.getElementById('d-cals').innerHTML = `${totals.cal}<span class="metric-unit">kcal</span>`;
-  document.getElementById('d-cals-sub').textContent = isFreeDay() ? 'día libre: no cuenta' : `de ${cfg.calories} objetivo`;
+  document.getElementById('d-cals-sub').textContent = isFreeDay() ? 'día libre: solo cuenta lo cargado' : `de ${cfg.calories} objetivo`;
   document.getElementById('d-prot').textContent = `${totals.p.toFixed(0)}g / ${cfg.protein}g`;
   document.getElementById('d-carbs').textContent = `${totals.c.toFixed(0)}g / ${cfg.carbs}g`;
   document.getElementById('d-fat-m').textContent = `${totals.f.toFixed(0)}g / ${cfg.fat}g`;
@@ -5014,7 +5028,7 @@ function loadDashboard() {
   document.getElementById('d-sessions').textContent = sessions.length;
 
   // Últimas sesiones
-  const allSessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate() && !isFreeDay(s.date)).slice(0, 3);
+  const allSessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate()).slice(0, 3);
   const sl = document.getElementById('d-sessions-list');
   sl.innerHTML = allSessions.length ? allSessions.map(s => `
     <div style="padding:14px 0; border-bottom:1px solid var(--border); last-child:border-none">
@@ -5055,7 +5069,7 @@ function loadToday() {
   document.getElementById('today-training-count').textContent = sessions.length;
   document.getElementById('today-training-sub').textContent = sessions.length === 1 ? 'sesión hoy' : 'sesiones hoy';
   document.getElementById('today-calories').textContent = totals.cal;
-  document.getElementById('today-calories-sub').textContent = free ? 'día libre: no cuenta' : `de ${cfg.calories} kcal`;
+  document.getElementById('today-calories-sub').textContent = free ? 'día libre: solo cuenta lo cargado' : `de ${cfg.calories} kcal`;
   document.getElementById('today-streak').textContent = activityStreak();
   renderFreeDayStatus();
 
@@ -5524,16 +5538,14 @@ function applyAiSession(date, source) {
   })).filter(s => s.exercise_name);
   if (!sets.length) return 0;
 
-  if (!isFreeDay(date)) {
-    const prs = DB.get('records') || {};
-    sets.forEach(s => {
-      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-        s.is_pr = true;
-      }
-    });
-    DB.set('records', prs);
-  }
+  const prs = DB.get('records') || {};
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+    }
+  });
+  DB.set('records', prs);
 
   const session = {
     id: uid(),
@@ -5692,13 +5704,6 @@ function loadWeekCoach() {
 }
 
 function dayCoachSummary(date) {
-  if (isFreeDay(date)) {
-    return {
-      date,
-      free_day: true,
-      note: 'Dia libre excluido de analisis'
-    };
-  }
   const nut = nutritionForDate(date);
   const sessions = sessionsForDate(date);
   const cardio = (DB.get('checking_cardio') || []).filter(c => c.date === date);
@@ -5707,6 +5712,7 @@ function dayCoachSummary(date) {
   const body = (DB.get('bodylogs') || []).find(b => b.date === date) || null;
   return {
     date,
+    free_day: isFreeDay(date),
     calories: nut.totals.cal,
     protein: Math.round(nut.totals.p),
     meals: nut.meals.length,
@@ -5735,7 +5741,7 @@ function weekCoachData(week = getWeekCoachWeek()) {
     return values.length ? Math.round(values.reduce((a, b) => a + b, 0) / values.length) : 0;
   };
   const protein = current.meals.reduce((a, m) => a + (+m.protein || 0), 0);
-  const divisor = Math.max(current.countedDates.length, 1);
+  const divisor = Math.max(current.nutritionDivisor || 0, 1);
 
   return {
     week,
@@ -5804,7 +5810,7 @@ function renderWeekCoachLocalSummary(week = getWeekCoachWeek()) {
       <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${t.avg_protein}</div><div class="quick-sub">g/día</div></div>
       <div class="quick-card"><div class="quick-label">Check</div><div class="quick-value">${t.check_rate}%</div><div class="quick-sub">${t.check_done}/${t.check_total || 0}</div></div>
     </div>
-    ${data.free_dates.length ? `<div class="mini-muted mt-3">${data.free_dates.length} día(s) libre(s) excluidos del coach: ${data.free_dates.map(d => d.slice(5)).join(', ')}</div>` : ''}
+    ${data.free_dates.length ? `<div class="mini-muted mt-3">${data.free_dates.length} día(s) libre(s): el coach evalúa solo lo cargado (${data.free_dates.map(d => d.slice(5)).join(', ')}).</div>` : ''}
     <div class="compare-list mt-3">
       <div class="compare-row"><strong>Rango</strong><span>${esc(data.dates[0])}</span><span>${esc(data.dates[6])}</span></div>
       <div class="compare-row"><strong>Volumen</strong><span>${t.training_volume.toLocaleString('es-CL')} kg</span><span></span></div>
@@ -5953,9 +5959,9 @@ function loadCalendar() {
       <div class="day-name">${dayNamesShort[i]}</div>
       <div class="day-date">${date.slice(5)}</div>
       ${free ? '<div class="day-line"><span>Estado</span><strong>Día libre</strong></div>' : ''}
-      <div class="day-line"><span>Entreno</span><strong>${free ? '-' : sessions.length}</strong></div>
-      <div class="day-line"><span>Kcal</span><strong>${free ? 'Libre' : nut.totals.cal}</strong></div>
-      <div class="day-line"><span>Peso</span><strong>${free ? '-' : body?.weight ? body.weight + ' kg' : '-'}</strong></div>
+      <div class="day-line"><span>Entreno</span><strong>${sessions.length}</strong></div>
+      <div class="day-line"><span>Kcal</span><strong>${nut.totals.cal}</strong></div>
+      <div class="day-line"><span>Peso</span><strong>${body?.weight ? body.weight + ' kg' : '-'}</strong></div>
       <div class="day-line"><span>Notas</span><strong>${notes.length}</strong></div>
     </div>`;
   }).join('');
@@ -6218,7 +6224,7 @@ function deleteBodyLog(id) {
 }
 
 function renderBodyChart() {
-  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date)).slice(-30);
+  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate()).slice(-30);
   const canvasElement = document.getElementById('body-chart');
   if (!canvasElement) return;
   const ctx = canvasElement.getContext('2d');
@@ -6260,9 +6266,11 @@ function renderBodyChart() {
 // ENTRENAMIENTO PERFORMANCE
 // ═══════════════════════════════════════════════════
 function loadTraining() {
+  liveWorkoutDraftActive = true;
   document.getElementById('live-date').value = selectedDate();
   document.getElementById('s-date').value = selectedDate();
   fillLiveRoutines();
+  restoreLiveWorkoutDraft();
   renderSessionsList();
   renderRoutinesList();
   renderTrainingProgress();
@@ -6366,6 +6374,206 @@ function deleteRoutine(id) {
 
 // ── Entreno en vivo borrador ──
 let liveSetCount = 0;
+let workoutDraftSaveTimer = null;
+const pendingWorkoutDraftKinds = new Set();
+let restoringWorkoutDraft = false;
+let liveWorkoutDraftActive = false;
+let sessionWorkoutDraftActive = false;
+const LIVE_WORKOUT_DRAFT_KEY = 'live_workout_draft';
+const SESSION_WORKOUT_DRAFT_KEY = 'session_workout_draft';
+
+function workoutDraftHasContent(draft) {
+  if (!draft) return false;
+  const groups = Array.isArray(draft.groups) ? draft.groups : [];
+  const hasSets = groups.some(group => {
+    if (String(group.exercise || '').trim()) return true;
+    return (group.sets || []).some(set => (+set.reps || +set.weight || String(set.exercise || '').trim()));
+  });
+  return hasSets || Boolean(draft.routineId || draft.dayId || draft.duration || draft.notes);
+}
+
+function clearWorkoutDraft(key) {
+  DB.set(key, null);
+  if (key === LIVE_WORKOUT_DRAFT_KEY) liveWorkoutDraftActive = false;
+  if (key === SESSION_WORKOUT_DRAFT_KEY) sessionWorkoutDraftActive = false;
+}
+
+function draftRowsFrom(containerSelector, exerciseClass, classes) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return [];
+  return Array.from(container.querySelectorAll('.exercise-group')).map(group => ({
+    exercise: group.querySelector(`.${exerciseClass}`)?.value.trim() || '',
+    sets: Array.from(group.querySelectorAll('.exercise-series-row')).map(row => ({
+      setNumber: +row.querySelector(`.${classes.sn}`)?.value || 1,
+      targetSets: +row.querySelector(`.${classes.targetSets}`)?.value || null,
+      targetReps: +row.querySelector(`.${classes.targetReps}`)?.value || null,
+      reps: +row.querySelector(`.${classes.reps}`)?.value || 0,
+      weight: +row.querySelector(`.${classes.kg}`)?.value || 0
+    }))
+  })).filter(group => group.exercise || group.sets.length);
+}
+
+function collectLiveWorkoutDraft() {
+  const date = document.getElementById('live-date')?.value || selectedDate();
+  const draft = {
+    version: 1,
+    updated_at: new Date().toISOString(),
+    date,
+    routineId: document.getElementById('live-routine')?.value || '',
+    dayId: document.getElementById('live-day')?.value || '',
+    duration: document.getElementById('live-duration')?.value || '',
+    notes: document.getElementById('live-notes')?.value || '',
+    label: document.getElementById('live-label')?.textContent || 'Series en vivo',
+    groups: draftRowsFrom('#live-sets', 'live-ex', {
+      sn: 'live-sn',
+      targetSets: 'live-target-sets',
+      targetReps: 'live-target-reps',
+      reps: 'live-reps',
+      kg: 'live-kg'
+    })
+  };
+  return workoutDraftHasContent(draft) ? draft : null;
+}
+
+function collectSessionWorkoutDraft() {
+  const draft = {
+    version: 1,
+    updated_at: new Date().toISOString(),
+    date: document.getElementById('s-date')?.value || selectedDate(),
+    routineId: document.getElementById('s-routine')?.value || '',
+    dayId: document.getElementById('s-day')?.value || '',
+    duration: document.getElementById('s-dur')?.value || '',
+    notes: document.getElementById('s-notes')?.value || '',
+    label: document.getElementById('s-sets-label')?.textContent || 'Series',
+    groups: draftRowsFrom('#s-sets', 'set-ex', {
+      sn: 'set-sn',
+      targetSets: 'set-target-sets',
+      targetReps: 'set-target-reps',
+      reps: 'set-reps',
+      kg: 'set-kg'
+    })
+  };
+  return workoutDraftHasContent(draft) ? draft : null;
+}
+
+function saveWorkoutDraftsNow(kind = 'both') {
+  if (restoringWorkoutDraft) return;
+  if ((kind === 'both' || kind === 'live') && liveWorkoutDraftActive) {
+    const liveDraft = collectLiveWorkoutDraft();
+    DB.set(LIVE_WORKOUT_DRAFT_KEY, liveDraft);
+  }
+  if ((kind === 'both' || kind === 'session') && sessionWorkoutDraftActive) {
+    const sessionDraft = collectSessionWorkoutDraft();
+    DB.set(SESSION_WORKOUT_DRAFT_KEY, sessionDraft);
+  }
+}
+
+function scheduleWorkoutDraftSave(kind = 'both') {
+  if (restoringWorkoutDraft) return;
+  if (kind === 'both') {
+    pendingWorkoutDraftKinds.add('live');
+    pendingWorkoutDraftKinds.add('session');
+  } else {
+    pendingWorkoutDraftKinds.add(kind);
+  }
+  if (kind === 'both' || kind === 'live') liveWorkoutDraftActive = true;
+  if (kind === 'both' || kind === 'session') sessionWorkoutDraftActive = true;
+  clearTimeout(workoutDraftSaveTimer);
+  workoutDraftSaveTimer = setTimeout(() => {
+    const kinds = Array.from(pendingWorkoutDraftKinds);
+    pendingWorkoutDraftKinds.clear();
+    kinds.forEach(k => saveWorkoutDraftsNow(k));
+  }, 450);
+}
+
+function restoreLiveWorkoutDraft() {
+  const draft = DB.get(LIVE_WORKOUT_DRAFT_KEY);
+  if (!workoutDraftHasContent(draft)) return false;
+  const list = document.getElementById('live-sets');
+  if (!list) return false;
+  liveWorkoutDraftActive = true;
+  restoringWorkoutDraft = true;
+  document.getElementById('live-date').value = draft.date || selectedDate();
+  fillLiveRoutines();
+  document.getElementById('live-routine').value = draft.routineId || '';
+  fillLiveDays();
+  document.getElementById('live-day').value = draft.dayId || '';
+  document.getElementById('live-duration').value = draft.duration || '';
+  document.getElementById('live-notes').value = draft.notes || '';
+  document.getElementById('live-label').textContent = draft.label || 'Borrador restaurado';
+  list.innerHTML = '';
+  liveSetCount = 0;
+  (draft.groups || []).forEach(group => {
+    (group.sets || []).forEach(set => addLiveSet({
+      exercise: group.exercise,
+      setNumber: set.setNumber,
+      targetSets: set.targetSets,
+      targetReps: set.targetReps,
+      achievedReps: set.reps,
+      weight: set.weight
+    }));
+  });
+  restoringWorkoutDraft = false;
+  renderMobileGymDraft();
+  return true;
+}
+
+function restoreSessionWorkoutDraft() {
+  const draft = DB.get(SESSION_WORKOUT_DRAFT_KEY);
+  if (!workoutDraftHasContent(draft)) return false;
+  const list = document.getElementById('s-sets');
+  if (!list) return false;
+  sessionWorkoutDraftActive = true;
+  restoringWorkoutDraft = true;
+  document.getElementById('s-date').value = draft.date || selectedDate();
+  fillSessionRoutines();
+  document.getElementById('s-routine').value = draft.routineId || '';
+  fillSessionDays();
+  document.getElementById('s-day').value = draft.dayId || '';
+  document.getElementById('s-dur').value = draft.duration || '';
+  document.getElementById('s-notes').value = draft.notes || '';
+  document.getElementById('s-sets-label').textContent = draft.label || 'Borrador restaurado';
+  list.innerHTML = '';
+  setCount = 0;
+  (draft.groups || []).forEach(group => {
+    (group.sets || []).forEach(set => addSet({
+      exercise: group.exercise,
+      setNumber: set.setNumber,
+      targetSets: set.targetSets,
+      targetReps: set.targetReps,
+      achievedReps: set.reps,
+      weight: set.weight
+    }));
+  });
+  restoringWorkoutDraft = false;
+  return true;
+}
+
+function installWorkoutDraftAutosave() {
+  const watchedIds = new Set(['live-date','live-routine','live-day','live-duration','live-notes','s-date','s-routine','s-day','s-dur','s-notes']);
+  const workoutTargetKind = target => {
+    if (!target) return '';
+    if (target.closest?.('#live-sets') || String(target.id || '').startsWith('live-')) return 'live';
+    if (target.closest?.('#s-sets') || ['s-date','s-routine','s-day','s-dur','s-notes'].includes(target.id)) return 'session';
+    return watchedIds.has(target.id) ? 'both' : '';
+  };
+  ['input', 'change'].forEach(evt => document.addEventListener(evt, e => {
+    const kind = workoutTargetKind(e.target);
+    if (kind) scheduleWorkoutDraftSave(kind);
+  }));
+  document.addEventListener('click', e => {
+    if (e.target.closest?.('#live-sets .set-remove')) {
+      setTimeout(() => scheduleWorkoutDraftSave('live'), 0);
+    }
+    if (e.target.closest?.('#s-sets .set-remove')) {
+      setTimeout(() => scheduleWorkoutDraftSave('session'), 0);
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') saveWorkoutDraftsNow('both');
+  });
+  window.addEventListener('pagehide', () => saveWorkoutDraftsNow('both'));
+}
 
 function fillLiveRoutines() {
   const sel = document.getElementById('live-routine');
@@ -6386,6 +6594,7 @@ function fillLiveDays() {
     daySel.innerHTML = '<option value="">—</option>';
     daySel.disabled = true;
     renderMobileGymDraft();
+    scheduleWorkoutDraftSave('live');
     return;
   }
   daySel.disabled = false;
@@ -6395,6 +6604,7 @@ function fillLiveDays() {
     loadLiveDay();
   }
   renderMobileGymDraft();
+  scheduleWorkoutDraftSave('live');
 }
 
 function loadLiveDay() {
@@ -6416,6 +6626,7 @@ function loadLiveDay() {
   });
   document.getElementById('live-label').textContent = day.name + ' - objetivos cargados';
   renderMobileGymDraft();
+  scheduleWorkoutDraftSave('live');
 }
 
 function exerciseGroupKey(name) {
@@ -6435,11 +6646,14 @@ function getOrCreateExerciseGroup(list, exerciseName, mode) {
   group.innerHTML = `
     <div class="exercise-group-head">
       <label class="set-field" style="flex:1"><span>Ejercicio</span><input placeholder="Ejercicio..." class="${inputClass}" value="${esc(exerciseName || '')}"></label>
-      <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-group').remove(); ${removeAction}">x</button>
+      <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-group').remove(); ${removeAction}; scheduleWorkoutDraftSave('${mode}')">x</button>
     </div>
     <div class="exercise-series-list"></div>`;
   list.appendChild(group);
-  if (mode === 'live') group.querySelector(`.${inputClass}`)?.addEventListener('input', renderMobileGymDraft);
+  if (mode === 'live') group.querySelector(`.${inputClass}`)?.addEventListener('input', () => {
+    renderMobileGymDraft();
+    scheduleWorkoutDraftSave('live');
+  });
   return group;
 }
 
@@ -6458,11 +6672,15 @@ function addLiveSet(prefill = {}) {
     <input type="hidden" class="live-target-sets" value="${prefill.targetSets || ''}">
     <input type="hidden" class="live-target-reps" value="${prefill.targetReps || ''}">
     <label class="set-field"><span>Reps</span><input type="number" placeholder="0" class="live-reps" value="${prefill.achievedReps ?? ''}" min="0" style="text-align:center"></label>
-    <label class="set-field"><span>Peso kg</span><input type="number" placeholder="0" class="live-kg" min="0" step="0.5" style="text-align:center"></label>
-    <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-series-row').remove(); renderMobileGymDraft()">x</button>`;
+    <label class="set-field"><span>Peso kg</span><input type="number" placeholder="0" class="live-kg" value="${prefill.weight ?? ''}" min="0" step="0.5" style="text-align:center"></label>
+    <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-series-row').remove(); renderMobileGymDraft(); scheduleWorkoutDraftSave('live')">x</button>`;
   group.querySelector('.exercise-series-list').appendChild(div);
-  ['input', 'change'].forEach(evt => div.addEventListener(evt, renderMobileGymDraft));
+  ['input', 'change'].forEach(evt => div.addEventListener(evt, () => {
+    renderMobileGymDraft();
+    scheduleWorkoutDraftSave('live');
+  }));
   renderMobileGymDraft();
+  scheduleWorkoutDraftSave('live');
 }
 
 function saveLiveWorkout() {
@@ -6487,16 +6705,14 @@ function saveLiveWorkout() {
   });
   if (!sets.length) return toast('Añade al menos una serie', 'err');
 
-  if (!isFreeDay(date)) {
-    const prs = DB.get('records') || {};
-    sets.forEach(s => {
-      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-        s.is_pr = true;
-      }
-    });
-    DB.set('records', prs);
-  }
+  const prs = DB.get('records') || {};
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+    }
+  });
+  DB.set('records', prs);
   const session = {
     id: uid(),
     date,
@@ -6509,6 +6725,7 @@ function saveLiveWorkout() {
   const comparison = compareWorkoutSession(session);
   session.comparison = comparison;
   DB.push('sessions', session);
+  clearWorkoutDraft(LIVE_WORKOUT_DRAFT_KEY);
   toast('Entreno en vivo guardado');
   renderWorkoutComparison(comparison);
   document.getElementById('live-sets').innerHTML = '';
@@ -6519,6 +6736,7 @@ function saveLiveWorkout() {
   renderTrainingProgress();
   renderExerciseHistoryDraft();
   renderMobileGymDraft();
+  scheduleWorkoutDraftSave('live');
   loadToday();
   loadDashboard();
   loadGoals();
@@ -6543,6 +6761,7 @@ function fillSessionDays() {
     document.getElementById('s-sets').innerHTML = '';
     document.getElementById('s-sets-label').textContent = 'Series';
     setCount = 0;
+    scheduleWorkoutDraftSave('session');
     return;
   }
   daySel.disabled = false;
@@ -6556,6 +6775,7 @@ function fillSessionDays() {
     document.getElementById('s-sets-label').textContent = 'Elige un día para cargar los objetivos';
     setCount = 0;
   }
+  scheduleWorkoutDraftSave('session');
 }
 
 // Carga la rutina como objetivo: una fila por cada serie planificada.
@@ -6584,6 +6804,7 @@ function loadDayIntoSession() {
     }
   });
   document.getElementById('s-sets-label').textContent = day.name + ' — objetivos cargados';
+  scheduleWorkoutDraftSave('session');
 }
 
 let setCount = 0;
@@ -6599,6 +6820,7 @@ function addSet(prefill = {}) {
   const targetRepsVal = prefill.targetReps || '';
   const targetText = targetRepsVal ? `${snVal}/${targetSetsVal || '?'} x ${targetRepsVal}` : 'Extra';
   const achievedReps = prefill.achievedReps ?? '';
+  const weight = prefill.weight ?? '';
   div.innerHTML = `
     <div class="set-field"><span>Serie</span><div class="series-index">${snVal}</div></div>
     <div class="set-field"><span>Objetivo</span><div class="target-pill">${targetText}</div></div>
@@ -6606,9 +6828,11 @@ function addSet(prefill = {}) {
     <input type="hidden" class="set-target-sets" value="${targetSetsVal}">
     <input type="hidden" class="set-target-reps" value="${targetRepsVal}">
     <label class="set-field"><span>Reps</span><input type="number" placeholder="0" class="set-reps" value="${achievedReps}" min="0" style="text-align:center"></label>
-    <label class="set-field"><span>Peso kg</span><input type="number" placeholder="0" class="set-kg" min="0" step="0.5" style="text-align:center"></label>
-    <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-series-row').remove()">x</button>`;
+    <label class="set-field"><span>Peso kg</span><input type="number" placeholder="0" class="set-kg" value="${weight}" min="0" step="0.5" style="text-align:center"></label>
+    <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-series-row').remove(); scheduleWorkoutDraftSave('session')">x</button>`;
   group.querySelector('.exercise-series-list').appendChild(div);
+  ['input', 'change'].forEach(evt => div.addEventListener(evt, () => scheduleWorkoutDraftSave('session')));
+  scheduleWorkoutDraftSave('session');
 }
 
 function saveSession() {
@@ -6642,16 +6866,14 @@ function saveSession() {
   if (!sets.length) return toast('Añade al menos una serie', 'err');
 
   // Auto-PR detection
-  if (!isFreeDay(date)) {
-    const prs = DB.get('records') || {};
-    sets.forEach(s => {
-      if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
-        prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
-        s.is_pr = true;
-      }
-    });
-    DB.set('records', prs);
-  }
+  const prs = DB.get('records') || {};
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+    }
+  });
+  DB.set('records', prs);
 
   const session = {
     id: uid(), date,
@@ -6664,6 +6886,7 @@ function saveSession() {
   const comparison = compareWorkoutSession(session);
   session.comparison = comparison;
   DB.push('sessions', session);
+  clearWorkoutDraft(SESSION_WORKOUT_DRAFT_KEY);
   const newPRs = sets.filter(s => s.is_pr);
   toast(`Sesión registrada correctamente ${newPRs.length ? ` · Récord ${newPRs.length} PR maximo superado!` : ''}`);
   hideModal('modal-session');
@@ -7082,8 +7305,8 @@ function loadMeals() {
   const t = meals.reduce((a, m) => ({ cal: a.cal + +m.calories, p: a.p + +m.protein, c: a.c + +m.carbs, f: a.f + +m.fat }), { cal: 0, p: 0, c: 0, f: 0 });
 
   document.getElementById('nut-cals-num').textContent = t.cal;
-  document.getElementById('nut-cals-sub').textContent = free ? 'día libre: no cuenta' : `de ${cfg.calories} kcal`;
-  document.getElementById('nut-remaining').textContent = free ? 'No afecta análisis ni promedios' : `${Math.max(cfg.calories - t.cal, 0)} kcal restantes`;
+  document.getElementById('nut-cals-sub').textContent = free ? 'día libre: solo cuenta lo cargado' : `de ${cfg.calories} kcal`;
+  document.getElementById('nut-remaining').textContent = free ? 'No se exige lo que falte' : `${Math.max(cfg.calories - t.cal, 0)} kcal restantes`;
   document.getElementById('nut-cal-bar').style.width = clamp(t.cal, cfg.calories) + '%';
   document.getElementById('nut-prot-text').textContent = `${t.p.toFixed(0)}g / ${cfg.protein}g`;
   document.getElementById('nut-prot-bar').style.width = clamp(t.p, cfg.protein) + '%';
@@ -7193,18 +7416,18 @@ function loadStats() {
   const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1a7fff';
 
   // Peso
-  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate() && !isFreeDay(l.date)).slice(-30);
+  const logs = [...(DB.get('bodylogs') || [])].reverse().filter(l => l.weight && l.date <= selectedDate()).slice(-30);
   renderStatChart('stats-weight-chart', 'weight-c', logs.map(l => l.date.slice(5)), logs.map(l => l.weight), accentColor, 'Peso (kg)', 'line');
 
   // Calorías
-  const meals = (DB.get('meals') || []).filter(m => m.date <= selectedDate() && !isFreeDay(m.date));
+  const meals = (DB.get('meals') || []).filter(m => m.date <= selectedDate());
   const calMap = {};
   meals.forEach(m => { calMap[m.date] = (calMap[m.date] || 0) + +m.calories; });
   const calDates = Object.keys(calMap).sort().slice(-14);
   renderStatChart('stats-cal-chart', 'cal-c', calDates.map(d => d.slice(5)), calDates.map(d => calMap[d]), '#f59e0b', 'Calorías', 'bar');
 
   // Volumen
-  const sessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate() && !isFreeDay(s.date));
+  const sessions = (DB.get('sessions') || []).filter(s => s.date <= selectedDate());
   const volMap = {};
   sessions.forEach(s => {
     const vol = (s.sets || []).reduce((a, x) => a + x.weight * x.reps, 0);
@@ -7505,6 +7728,7 @@ function saveCheckingGoalObservation(id) {
 
 // ── INITIALIZATION ─────────────────────────────────
 preserveV1DataSnapshot();
+installWorkoutDraftAutosave();
 document.getElementById('global-date').value = today();
 syncDateControls(today());
 refreshCloudStatus();
