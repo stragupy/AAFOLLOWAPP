@@ -3668,17 +3668,17 @@ tr:hover td {
       </div>
       <div class="card mb">
         <div class="flex jb ai-c" style="margin-bottom:14px">
-          <div class="card-title" style="margin:0">Analizar comida con foto</div>
+          <div class="card-title" style="margin:0">Analizar comida con IA</div>
           <button class="btn btn-ghost btn-sm" onclick="clearFoodAiAnalysis()">Limpiar</button>
         </div>
         <div class="form-grid fg2">
           <div class="form-row">
-            <label class="form-label">Fotos del plato</label>
+            <label class="form-label">Fotos del plato opcionales</label>
             <input type="file" id="food-ai-file" accept="image/*" capture="environment" multiple onchange="previewFoodAiImage()">
           </div>
           <div class="form-row">
-            <label class="form-label">Ayuda opcional</label>
-            <input id="food-ai-notes" placeholder="Ej: arroz, pollo, palta...">
+            <label class="form-label">Descripción de la comida</label>
+            <textarea id="food-ai-notes" placeholder="Ej: 2 huevos revueltos, 2 tostadas con palta y un café con leche. O: plato de arroz con pollo y verduras, porción grande."></textarea>
           </div>
         </div>
         <div id="food-ai-preview" class="mt-3"></div>
@@ -3686,7 +3686,35 @@ tr:hover td {
           <button class="btn btn-primary btn-sm" onclick="analyzeFoodPhoto()">Analizar con IA</button>
           <button class="btn btn-ghost btn-sm" onclick="useFoodAiEstimate()">Usar estimacion</button>
         </div>
-        <div id="food-ai-result" class="mt-3"><div class="empty">Sube una o varias fotos y la IA estimara macros para que los confirmes antes de guardar.</div></div>
+        <div id="food-ai-result" class="mt-3"><div class="empty">Sube fotos, describe la comida, o usa ambas cosas para estimar macros antes de guardar.</div></div>
+      </div>
+      <div class="card mb">
+        <div class="flex jb ai-c" style="margin-bottom:14px">
+          <div class="card-title" style="margin:0">Qué puedo comer</div>
+          <button class="btn btn-ghost btn-sm" onclick="clearMealSuggestions()">Limpiar</button>
+        </div>
+        <div class="form-grid fg2">
+          <div class="form-row">
+            <label class="form-label">Tipo de comida</label>
+            <select id="meal-suggest-type">
+              <option>Desayuno</option>
+              <option selected>Almuerzo</option>
+              <option>Merienda</option>
+              <option>Cena</option>
+              <option>Pre-entreno</option>
+              <option>Post-entreno</option>
+              <option>Snack</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Preferencias</label>
+            <input id="meal-suggest-preferences" placeholder="Ej: rápido, con pollo, sin lácteos, tengo arroz y huevos...">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary btn-sm" onclick="suggestMealOptions()">Sugerir comidas</button>
+        </div>
+        <div id="meal-suggest-result" class="mt-3"><div class="empty">La IA usará tus objetivos y lo que ya comiste hoy para sugerir opciones.</div></div>
       </div>
       <div class="g2 mb">
         <div class="card">
@@ -7054,6 +7082,7 @@ function renderSupplements() {
 }
 
 let foodAiEstimate = null;
+let mealSuggestionOptions = [];
 
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -7111,7 +7140,7 @@ function renderFoodAiResult(data) {
   const el = document.getElementById('food-ai-result');
   if (!el) return;
   if (!data) {
-    el.innerHTML = '<div class="empty">Sube una o varias fotos y la IA estimara macros para que los confirmes antes de guardar.</div>';
+    el.innerHTML = '<div class="empty">Sube fotos, describe la comida, o usa ambas cosas para estimar macros antes de guardar.</div>';
     return;
   }
   const confidence = data.confidence > 1 ? Math.round(data.confidence) : Math.round((data.confidence || 0) * 100);
@@ -7131,12 +7160,13 @@ function renderFoodAiResult(data) {
 
 async function analyzeFoodPhoto() {
   const files = Array.from(document.getElementById('food-ai-file')?.files || []).slice(0, 4);
-  if (!files.length) return toast('Selecciona una foto de tu comida', 'err');
+  const notes = document.getElementById('food-ai-notes')?.value.trim() || '';
+  if (!files.length && notes.length < 3) return toast('Describe la comida o selecciona una foto', 'err');
   if (location.protocol === 'file:') {
     return toast('El analisis con IA funciona cuando la app esta subida a Vercel', 'err');
   }
   const result = document.getElementById('food-ai-result');
-  if (result) result.innerHTML = '<div class="empty">Analizando foto...</div>';
+  if (result) result.innerHTML = `<div class="empty">Analizando ${files.length ? 'comida' : 'descripcion'}...</div>`;
   try {
     const images = await Promise.all(files.map(file => resizeFoodImage(file)));
     const res = await fetch('/api/analyze-food', {
@@ -7144,7 +7174,7 @@ async function analyzeFoodPhoto() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         images,
-        notes: document.getElementById('food-ai-notes')?.value || ''
+        notes
       })
     });
     const raw = await res.text();
@@ -7159,13 +7189,13 @@ async function analyzeFoodPhoto() {
     renderFoodAiResult(data);
     toast('Estimacion lista');
   } catch (err) {
-    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo analizar la foto')}</div>`;
-    toast(err.message || 'No se pudo analizar la foto', 'err');
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo analizar la comida')}</div>`;
+    toast(err.message || 'No se pudo analizar la comida', 'err');
   }
 }
 
 function useFoodAiEstimate() {
-  if (!foodAiEstimate) return toast('Primero analiza una foto', 'err');
+  if (!foodAiEstimate) return toast('Primero analiza una comida', 'err');
   showModal('modal-meal');
   document.getElementById('m-meal').value = foodAiEstimate.meal_name || 'Almuerzo';
   document.getElementById('m-food').value = foodAiEstimate.food_item || '';
@@ -7184,6 +7214,121 @@ function clearFoodAiAnalysis() {
   const preview = document.getElementById('food-ai-preview');
   if (preview) preview.innerHTML = '';
   renderFoodAiResult(null);
+}
+
+function mealSuggestionContext() {
+  const date = document.getElementById('nut-date')?.value || selectedDate();
+  const nutrition = nutritionForDate(date);
+  const cfg = nutrition.cfg || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const totals = nutrition.totals || { cal: 0, p: 0, c: 0, f: 0 };
+  return {
+    date,
+    free_day: isFreeDay(date),
+    goals: cfg,
+    consumed: {
+      calories: Math.round(totals.cal || 0),
+      protein: Math.round(totals.p || 0),
+      carbs: Math.round(totals.c || 0),
+      fat: Math.round(totals.f || 0)
+    },
+    remaining: {
+      calories: Math.max(Math.round((+cfg.calories || 0) - (+totals.cal || 0)), 0),
+      protein: Math.max(Math.round((+cfg.protein || 0) - (+totals.p || 0)), 0),
+      carbs: Math.max(Math.round((+cfg.carbs || 0) - (+totals.c || 0)), 0),
+      fat: Math.max(Math.round((+cfg.fat || 0) - (+totals.f || 0)), 0)
+    },
+    meals_today: nutrition.meals.map(m => ({
+      meal_name: m.meal_name,
+      food_item: m.food_item,
+      calories: +m.calories || 0,
+      protein: +m.protein || 0,
+      carbs: +m.carbs || 0,
+      fat: +m.fat || 0
+    })).slice(0, 16)
+  };
+}
+
+function renderMealSuggestions(data) {
+  const el = document.getElementById('meal-suggest-result');
+  if (!el) return;
+  if (!data) {
+    el.innerHTML = '<div class="empty">La IA usará tus objetivos y lo que ya comiste hoy para sugerir opciones.</div>';
+    return;
+  }
+  const suggestions = data.suggestions || [];
+  if (!suggestions.length) {
+    el.innerHTML = '<div class="empty">No hubo opciones claras. Ajusta preferencias e intenta de nuevo.</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="mini-muted mb">${esc(data.summary || 'Opciones ajustadas a tus objetivos.')}</div>
+    <div class="compare-list">${suggestions.map((item, index) => `
+      <div class="compare-row">
+        <div>
+          <strong>${esc(item.title || item.food_item)}</strong>
+          <div class="mini-muted">${esc(item.portion || '')}</div>
+          ${item.reason ? `<div class="mini-muted mt-2">${esc(item.reason)}</div>` : ''}
+          ${item.prep ? `<div class="mini-muted mt-2">${esc(item.prep)}</div>` : ''}
+        </div>
+        <div>
+          <span class="badge b-accent">${Math.round(+item.calories || 0)} kcal</span>
+          <div class="mini-muted mt-2">P:${Math.round(+item.protein || 0)} C:${Math.round(+item.carbs || 0)} G:${Math.round(+item.fat || 0)}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="useMealSuggestion(${index})">Usar</button>
+      </div>`).join('')}</div>`;
+}
+
+async function suggestMealOptions() {
+  const mealName = document.getElementById('meal-suggest-type')?.value || 'Almuerzo';
+  const preferences = document.getElementById('meal-suggest-preferences')?.value.trim() || '';
+  const result = document.getElementById('meal-suggest-result');
+  if (location.protocol === 'file:') {
+    return toast('Las sugerencias con IA funcionan cuando la app esta subida a Vercel', 'err');
+  }
+  if (result) result.innerHTML = '<div class="empty">Pensando opciones ajustadas a tus macros...</div>';
+  try {
+    const res = await fetch('/api/suggest-meal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        meal_name: mealName,
+        preferences,
+        context: mealSuggestionContext()
+      })
+    });
+    const raw = await res.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch {}
+    if (!res.ok) {
+      const cleanText = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220);
+      throw new Error(data.error || cleanText || `Error ${res.status} en /api/suggest-meal`);
+    }
+    mealSuggestionOptions = data.suggestions || [];
+    renderMealSuggestions(data);
+    toast('Opciones listas');
+  } catch (err) {
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudieron sugerir comidas')}</div>`;
+    toast(err.message || 'No se pudieron sugerir comidas', 'err');
+  }
+}
+
+function useMealSuggestion(index) {
+  const item = mealSuggestionOptions[index];
+  if (!item) return toast('Primero genera una sugerencia', 'err');
+  showModal('modal-meal');
+  document.getElementById('m-meal').value = item.meal_name || document.getElementById('meal-suggest-type')?.value || 'Almuerzo';
+  document.getElementById('m-food').value = item.food_item || item.title || '';
+  document.getElementById('m-cal').value = Math.round(+item.calories || 0);
+  document.getElementById('m-prot').value = Math.round(+item.protein || 0);
+  document.getElementById('m-carbs').value = Math.round(+item.carbs || 0);
+  document.getElementById('m-fat').value = Math.round(+item.fat || 0);
+}
+
+function clearMealSuggestions() {
+  mealSuggestionOptions = [];
+  const preferences = document.getElementById('meal-suggest-preferences');
+  if (preferences) preferences.value = '';
+  renderMealSuggestions(null);
 }
 
 function saveNutConfig() {
