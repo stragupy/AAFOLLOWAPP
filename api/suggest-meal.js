@@ -1,4 +1,4 @@
-const MAX_BODY_CHARS = 36_000;
+const MAX_BODY_CHARS = 18_000;
 
 class HttpError extends Error {
   constructor(status, message) {
@@ -28,7 +28,7 @@ function parseBody(req) {
     req.on('data', chunk => {
       raw += chunk;
       if (raw.length > MAX_BODY_CHARS) {
-        reject(new HttpError(413, 'Resumen semanal demasiado largo'));
+        reject(new HttpError(413, 'Pedido demasiado largo'));
         req.destroy();
       }
     });
@@ -95,63 +95,43 @@ function parseModelJson(text) {
   }
 }
 
-function cleanString(value, max = 260) {
+function numberValue(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) && n >= 0 ? n : fallback;
+}
+
+function cleanString(value, max = 220) {
   return String(value || '').trim().slice(0, max);
 }
 
-function stringList(value, maxItems = 5, maxChars = 220) {
-  return (Array.isArray(value) ? value : [])
-    .map(item => cleanString(item, maxChars))
-    .filter(Boolean)
-    .slice(0, maxItems);
-}
-
-function normalizePriority(item) {
+function normalizeSuggestion(item) {
   if (!item || typeof item !== 'object') return null;
-  const title = cleanString(item.title, 80);
-  const detail = cleanString(item.detail, 240);
-  if (!title && !detail) return null;
-  return { title: title || 'Prioridad', detail };
-}
-
-function normalizeGoal(item) {
-  if (!item || typeof item !== 'object') return null;
-  const title = cleanString(item.title, 90);
+  const title = cleanString(item.title || item.food_item || item.name, 120);
   if (!title) return null;
   return {
     title,
-    type: cleanString(item.type || 'other', 40),
-    target: cleanString(item.target, 40),
-    unit: cleanString(item.unit, 30)
+    meal_name: cleanString(item.meal_name, 40),
+    food_item: cleanString(item.food_item || title, 180),
+    portion: cleanString(item.portion, 140),
+    calories: Math.round(numberValue(item.calories)),
+    protein: Math.round(numberValue(item.protein)),
+    carbs: Math.round(numberValue(item.carbs)),
+    fat: Math.round(numberValue(item.fat)),
+    reason: cleanString(item.reason, 280),
+    prep: cleanString(item.prep, 280)
   };
 }
 
-function normalizeReport(parsed, week) {
-  const plan = parsed.next_week_plan && typeof parsed.next_week_plan === 'object' ? parsed.next_week_plan : {};
-  const score = Math.round(Number(parsed.score));
+function normalizeResponse(parsed, fallbackMeal) {
+  const suggestions = (Array.isArray(parsed.suggestions) ? parsed.suggestions : [])
+    .map(normalizeSuggestion)
+    .filter(Boolean)
+    .slice(0, 4)
+    .map(item => ({ ...item, meal_name: item.meal_name || fallbackMeal || 'Comida' }));
 
   return {
-    week,
-    headline: cleanString(parsed.headline || 'Lectura semanal lista.', 180),
-    score: Number.isFinite(score) ? Math.max(0, Math.min(100, score)) : null,
-    wins: stringList(parsed.wins, 5),
-    risks: stringList(parsed.risks, 5),
-    priorities: (Array.isArray(parsed.priorities) ? parsed.priorities : [])
-      .map(normalizePriority)
-      .filter(Boolean)
-      .slice(0, 4),
-    next_week_plan: {
-      training: cleanString(plan.training, 260),
-      nutrition: cleanString(plan.nutrition, 260),
-      recovery: cleanString(plan.recovery, 260),
-      tracking: cleanString(plan.tracking, 260)
-    },
-    suggested_goals: (Array.isArray(parsed.suggested_goals) ? parsed.suggested_goals : [])
-      .map(normalizeGoal)
-      .filter(Boolean)
-      .slice(0, 4),
-    closing_note: cleanString(parsed.closing_note, 260),
-    generated_at: new Date().toISOString()
+    summary: cleanString(parsed.summary || 'Opciones ajustadas a tus objetivos del dia.', 260),
+    suggestions
   };
 }
 
@@ -168,9 +148,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
-      route: '/api/analyze-week',
+      route: '/api/suggest-meal',
       has_key: Boolean(apiKey),
-      message: 'API lista. Envia un resumen semanal por POST.'
+      message: 'API lista. Envia objetivos, comida del dia y tipo de comida por POST.'
     });
   }
 
@@ -184,19 +164,15 @@ module.exports = async function handler(req, res) {
 
   try {
     const body = await parseBody(req);
-    const week = /^\d{4}-W\d{2}$/.test(body.week || '') ? body.week : 'semana actual';
-    const summary = JSON.stringify(body.summary || {}).slice(0, 24_000);
-    const note = cleanString(body.user_note, 1200);
-
-    if (summary.length < 80) {
-      return sendJson(res, 400, { error: 'Faltan datos de la semana para analizar' });
-    }
+    const mealName = cleanString(body.meal_name || body.mealName || 'Almuerzo', 40) || 'Almuerzo';
+    const preferences = cleanString(body.preferences, 1000);
+    const context = JSON.stringify(body.context || {}).slice(0, 9000);
 
     const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
-    const prompt = `Actua como coach semanal de una app fitness. Analiza la semana seleccionada con tono directo, claro y practico. No diagnostiques salud, no inventes datos no presentes y si hay poca informacion dilo. Tu objetivo es ayudar al usuario a decidir que repetir, que corregir y que hacer la proxima semana. Si un dia viene con free_day:true o aparece en free_dates, tratalo como dia libre: evalua solo los datos que esten cargados y no lo marques como fallo por comida, entreno, cardio, peso, agua o descanso faltantes. Semana: ${week}. Nota opcional del usuario: ${note || 'sin nota'}. Datos locales resumidos: ${summary}
+    const prompt = `Recomienda comidas practicas para una app fitness. El usuario pide ideas para: ${mealName}. Ajusta las opciones a sus objetivos y a lo que ya comio hoy. Si faltan muchas calorias o proteina, prioriza eso. Si ya esta cerca del objetivo, sugiere opciones mas livianas. Si es dia libre, no lo marques como fallo: igual intenta que la opcion sea razonable. Preferencias o restricciones del usuario: ${preferences || 'sin preferencias'}. Contexto nutricional local: ${context}.
 
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
-{"headline":"lectura principal en una frase","score":0,"wins":["logro concreto"],"risks":["riesgo o hueco de seguimiento"],"priorities":[{"title":"prioridad","detail":"accion concreta"}],"next_week_plan":{"training":"plan de entrenamiento","nutrition":"plan de nutricion","recovery":"plan de recuperacion","tracking":"que registrar mejor"},"suggested_goals":[{"title":"objetivo semanal sugerido","type":"training_count","target":"4","unit":"sesiones"}],"closing_note":"cierre breve"}`;
+{"summary":"lectura breve","suggestions":[{"title":"nombre de la opcion","meal_name":"${mealName}","food_item":"descripcion breve para guardar","portion":"porcion sugerida","calories":0,"protein":0,"carbs":0,"fat":0,"reason":"por que encaja con los objetivos","prep":"preparacion corta"}]}`;
 
     const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
@@ -204,8 +180,8 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
       body: JSON.stringify({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
-          temperature: 0.25,
-          maxOutputTokens: 1800,
+          temperature: 0.35,
+          maxOutputTokens: 1600,
           responseMimeType: 'application/json'
         }
       })
@@ -213,7 +189,7 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
 
     const payload = await geminiRes.json().catch(() => ({}));
     if (!geminiRes.ok) {
-      const message = payload.error?.message || 'Gemini no pudo analizar la semana';
+      const message = payload.error?.message || 'Gemini no pudo sugerir comidas';
       if (/quota|rate.?limit|exceeded/i.test(message)) {
         return sendJson(res, 429, {
           error: `Cuota de Gemini agotada para el modelo ${model}. Prueba mas tarde o cambia GEMINI_MODEL en Vercel. Detalle: ${message}`
@@ -223,8 +199,12 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
     }
 
     const parsed = parseModelJson(extractGeminiText(payload));
-    return sendJson(res, 200, normalizeReport(parsed, week));
+    const data = normalizeResponse(parsed, mealName);
+    if (!data.suggestions.length) {
+      return sendJson(res, 500, { error: 'Gemini no devolvio opciones validas' });
+    }
+    return sendJson(res, 200, data);
   } catch (err) {
-    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando la semana con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error sugiriendo comidas con Gemini' });
   }
 };

@@ -225,7 +225,7 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 400, { error: 'Describe un poco mas tu dia para poder cargar datos' });
     }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+    const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
     const prompt = `Convierte esta descripcion diaria en datos para una app de seguimiento fitness. Usa solo informacion mencionada o inferencias prudentes. Si no hay dato claro, usa arrays vacios o null. Si estima macros de comidas sin cantidades exactas, usa porciones razonables y confidence implicita conservadora. Fecha objetivo: ${date}. Contexto local opcional: ${context}. Descripcion del usuario: ${description}
 
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:

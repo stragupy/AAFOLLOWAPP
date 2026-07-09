@@ -1,4 +1,5 @@
 const MAX_TOTAL_IMAGE_CHARS = 9_000_000;
+const MAX_NOTES_CHARS = 1600;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 class HttpError extends Error {
@@ -124,7 +125,7 @@ module.exports = async function handler(req, res) {
       provider: 'gemini',
       route: '/api/analyze-food',
       has_key: Boolean(apiKey),
-      message: 'API lista. Usa la app para enviar una o varias fotos por POST.'
+      message: 'API lista. Envia fotos, texto, o ambos por POST.'
     });
   }
 
@@ -139,11 +140,11 @@ module.exports = async function handler(req, res) {
   try {
     const body = await parseBody(req);
     const images = Array.isArray(body.images) ? body.images : [body.image].filter(Boolean);
-    const notes = String(body.notes || '').slice(0, 500);
+    const notes = String(body.notes || body.description || '').trim().slice(0, MAX_NOTES_CHARS);
     const parsedImages = images.slice(0, 4).map(parseDataUrl).filter(Boolean);
 
-    if (!parsedImages.length) {
-      return sendJson(res, 400, { error: 'Debes enviar al menos una imagen valida' });
+    if (!parsedImages.length && notes.length < 3) {
+      return sendJson(res, 400, { error: 'Describe la comida o envia al menos una imagen valida' });
     }
 
     const totalChars = parsedImages.reduce((sum, img) => sum + img.data.length, 0);
@@ -151,10 +152,11 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 413, { error: 'Las imagenes son demasiado grandes' });
     }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+    const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+    const mode = parsedImages.length && notes ? 'fotos y descripcion' : parsedImages.length ? 'fotos' : 'descripcion';
     const parts = [
       {
-        text: `Analiza esta comida desde una o varias fotos y estima macros. Si hay varias imagenes, usalas juntas como referencia del mismo plato o comida. Si hay duda, usa valores razonables para una porcion normal. Contexto del usuario: ${notes || 'sin contexto'}.\n\nDevuelve un unico objeto JSON valido, sin markdown, sin explicaciones antes ni despues, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
+        text: `Analiza esta comida usando ${mode} y estima macros. Si hay fotos, usalas como referencia visual. Si hay descripcion, usala para ingredientes, porciones, preparacion y cantidades. Si hay foto y texto, combina ambas fuentes y dale prioridad a cantidades especificas del texto. Si no hay cantidades exactas, usa porciones razonables y marca menor confianza. Descripcion del usuario: ${notes || 'sin descripcion'}.\n\nDevuelve un unico objeto JSON valido, sin markdown, sin explicaciones antes ni despues, con esta forma exacta: {"meal_name":"Almuerzo","food_item":"nombre breve del plato","portion":"porcion estimada","calories":0,"protein":0,"carbs":0,"fat":0,"confidence":0.0,"notes":"observacion corta"}`
       },
       ...parsedImages.map(img => ({
         inline_data: {
