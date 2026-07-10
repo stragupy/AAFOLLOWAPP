@@ -168,7 +168,7 @@ module.exports = async function handler(req, res) {
     const preferences = cleanString(body.preferences, 1000);
     const context = JSON.stringify(body.context || {}).slice(0, 9000);
 
-    const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
     const prompt = `Recomienda comidas practicas para una app fitness. El usuario pide ideas para: ${mealName}. Ajusta las opciones a sus objetivos y a lo que ya comio hoy. Si faltan muchas calorias o proteina, prioriza eso. Si ya esta cerca del objetivo, sugiere opciones mas livianas. Si es dia libre, no lo marques como fallo: igual intenta que la opcion sea razonable. Preferencias o restricciones del usuario: ${preferences || 'sin preferencias'}. Contexto nutricional local: ${context}.
 
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:

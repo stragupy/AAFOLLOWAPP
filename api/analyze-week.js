@@ -192,7 +192,7 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 400, { error: 'Faltan datos de la semana para analizar' });
     }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
     const prompt = `Actua como coach semanal de una app fitness. Analiza la semana seleccionada con tono directo, claro y practico. No diagnostiques salud, no inventes datos no presentes y si hay poca informacion dilo. Tu objetivo es ayudar al usuario a decidir que repetir, que corregir y que hacer la proxima semana. Si un dia viene con free_day:true o aparece en free_dates, tratalo como dia libre: evalua solo los datos que esten cargados y no lo marques como fallo por comida, entreno, cardio, peso, agua o descanso faltantes. Semana: ${week}. Nota opcional del usuario: ${note || 'sin nota'}. Datos locales resumidos: ${summary}
 
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:

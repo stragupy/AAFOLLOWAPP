@@ -152,7 +152,7 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 413, { error: 'Las imagenes son demasiado grandes' });
     }
 
-    const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
     const mode = parsedImages.length && notes ? 'fotos y descripcion' : parsedImages.length ? 'fotos' : 'descripcion';
     const parts = [
       {
