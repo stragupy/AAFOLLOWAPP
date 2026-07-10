@@ -3166,7 +3166,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Inicio</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
-    <button class="nav-btn" onclick="go('dayai')">IA Día</button>
+    <button class="nav-btn" onclick="go('dayai')">IA Semana</button>
     <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Gym</button>
@@ -3190,7 +3190,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Dashboard</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
-    <button class="nav-btn" onclick="go('dayai')">IA Día</button>
+    <button class="nav-btn" onclick="go('dayai')">IA Semana</button>
     <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Entrenamiento</button>
@@ -3449,34 +3449,34 @@ tr:hover td {
     </div>
   </div>
 
-  <!-- IA DEL DIA -->
+  <!-- IA SEMANAL -->
   <div id="page-dayai" class="page">
     <div class="page-head">
-      <h1>IA Día</h1>
-      <p>Describe tu día y revisa un borrador antes de cargarlo en tus registros</p>
+      <h1>IA Semana</h1>
+      <p>Describe la semana completa y revisa borradores por día antes de cargarlos</p>
     </div>
     <div class="content">
       <div class="card mb">
         <div class="form-grid fg2">
           <div class="form-row">
-            <label class="form-label">Fecha</label>
-            <input type="date" id="ai-day-date">
+            <label class="form-label">Semana</label>
+            <input type="week" id="ai-week-fill-week">
           </div>
           <div class="form-row">
             <label class="form-label">Acción</label>
             <div class="btn-row" style="margin-top:0">
-              <button class="btn btn-primary btn-sm" onclick="analyzeDayDescription()">Analizar día</button>
-              <button class="btn btn-ghost btn-sm" onclick="clearDayAiDraft()">Limpiar</button>
+              <button class="btn btn-primary btn-sm" onclick="analyzeWeekFillDescription()">Analizar semana</button>
+              <button class="btn btn-ghost btn-sm" onclick="clearWeekFillDraft()">Limpiar</button>
             </div>
           </div>
           <div class="form-row" style="grid-column:1 / -1">
-            <label class="form-label">Describe tu día</label>
-            <textarea id="ai-day-description" placeholder="Ej: Dormí 7 horas, desayuné café con tostadas, almorcé pollo con arroz, entrené pecho 4 series de press banca 10 reps con 60kg, hice 8000 pasos, tomé creatina y terminé con buena energía."></textarea>
+            <label class="form-label">Describe tu semana</label>
+            <textarea id="ai-week-fill-description" placeholder="Ej: Lunes pecho 4 series de press banca 10 reps con 60kg y almuerzo pollo con arroz. Martes descanso y 8000 pasos. Miércoles pierna, cena carne con papas. Viernes día libre. Domingo peso 82kg."></textarea>
           </div>
         </div>
       </div>
       <div id="ai-day-result" class="card">
-        <div class="empty">Tu borrador aparecerá acá antes de guardar cualquier dato.</div>
+        <div class="empty">Tu borrador semanal aparecerá acá antes de guardar cualquier dato.</div>
       </div>
     </div>
   </div>
@@ -4161,9 +4161,11 @@ function syncDateControls(date = selectedDate()) {
   const calendarWeek = document.getElementById('calendar-week');
   const checkingWeek = document.getElementById('c-week');
   const aiWeek = document.getElementById('ai-week-week');
+  const aiFillWeek = document.getElementById('ai-week-fill-week');
   if (calendarWeek) calendarWeek.value = week;
   if (checkingWeek) checkingWeek.value = week;
   if (aiWeek) aiWeek.value = week;
+  if (aiFillWeek) aiFillWeek.value = week;
   renderFreeDayStatus(date);
 }
 
@@ -5383,14 +5385,15 @@ function editNote(id) {
 }
 
 // ═══════════════════════════════════════════════════
-// IA DEL DIA
+// IA SEMANA
 // ═══════════════════════════════════════════════════
 let dayAiDraft = null;
+let weekFillDraft = null;
 
 function loadDayAi() {
-  const date = document.getElementById('ai-day-date');
-  if (date && !date.value) date.value = selectedDate();
-  renderDayAiDraft(dayAiDraft);
+  const week = document.getElementById('ai-week-fill-week');
+  if (week && !week.value) week.value = weekValueFromDate(selectedDate());
+  renderWeekFillDraft(weekFillDraft);
 }
 
 function dayAiContext() {
@@ -5445,12 +5448,110 @@ function clearDayAiDraft() {
   renderDayAiDraft(null);
 }
 
+function weekFillDates(week = weekValueFromDate(selectedDate())) {
+  return getWeekDates(week);
+}
+
+async function analyzeWeekFillDescription() {
+  const description = document.getElementById('ai-week-fill-description')?.value.trim() || '';
+  const week = document.getElementById('ai-week-fill-week')?.value || weekValueFromDate(selectedDate());
+  const result = document.getElementById('ai-day-result');
+  if (!description || description.length < 12) return toast('Describe un poco mas tu semana', 'err');
+  if (location.protocol === 'file:') {
+    return toast('La IA semanal funciona cuando la app esta subida a Vercel', 'err');
+  }
+  if (result) result.innerHTML = '<div class="empty">Analizando tu semana...</div>';
+  try {
+    const res = await fetch('/api/analyze-week-fill', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ week, dates: weekFillDates(week), description, context: dayAiContext() })
+    });
+    const raw = await res.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch {}
+    if (!res.ok) {
+      const cleanText = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 220);
+      throw new Error(data.error || cleanText || `Error ${res.status} en /api/analyze-week-fill`);
+    }
+    weekFillDraft = data;
+    renderWeekFillDraft(weekFillDraft);
+    toast('Borrador semanal listo');
+  } catch (err) {
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo analizar la semana')}</div>`;
+    toast(err.message || 'No se pudo analizar la semana', 'err');
+  }
+}
+
+function clearWeekFillDraft() {
+  weekFillDraft = null;
+  const description = document.getElementById('ai-week-fill-description');
+  if (description) description.value = '';
+  renderWeekFillDraft(null);
+}
+
+function renderWeekFillDraft(draft) {
+  const el = document.getElementById('ai-day-result');
+  if (!el) return;
+  if (!draft) {
+    el.innerHTML = '<div class="empty">Tu borrador semanal aparecerá acá antes de guardar cualquier dato.</div>';
+    return;
+  }
+  const days = draft.days || [];
+  const totalItems = days.reduce((sum, day) => sum + dayAiCount(day), 0);
+  const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const dates = draft.dates || weekFillDates(draft.week);
+  el.innerHTML = `
+    <div class="flex jb ai-c gap-2" style="margin-bottom:16px">
+      <div>
+        <div class="card-title" style="margin-bottom:6px">Borrador de ${esc(draft.week || '')}</div>
+        <div class="mini-muted">${esc(draft.summary || 'Revisa cada día antes de aplicar.')}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="applyWeekFillDraft()">Aplicar semana</button>
+    </div>
+    <div class="quick-grid mb">
+      <div class="quick-card"><div class="quick-label">Días</div><div class="quick-value">${days.length}</div><div class="quick-sub">con datos</div></div>
+      <div class="quick-card"><div class="quick-label">Items</div><div class="quick-value">${totalItems}</div><div class="quick-sub">detectados</div></div>
+      <div class="quick-card"><div class="quick-label">Semana</div><div class="quick-value" style="font-size:1rem">${esc(dates[0]?.slice(5) || '')}</div><div class="quick-sub">a ${esc(dates[6]?.slice(5) || '')}</div></div>
+    </div>
+    ${days.length ? `<div class="compare-list">${days.map(day => {
+      const dateIndex = dates.indexOf(day.date);
+      const label = dateIndex >= 0 ? dayNames[dateIndex] : 'Día';
+      const meals = day.meals || [];
+      const sessions = day.sessions || [];
+      const cardio = day.cardio || [];
+      const supplements = day.supplements || [];
+      const details = [
+        meals.length ? `${meals.length} comida(s)` : '',
+        sessions.length ? `${sessions.length} entreno(s)` : '',
+        cardio.length ? `${cardio.length} cardio/pasos` : '',
+        supplements.length ? `${supplements.length} suplemento(s)` : '',
+        day.free_day ? 'dia libre' : '',
+        aiHasBodyData(day.bodylog) ? 'cuerpo' : '',
+        aiHasWellnessData(day.wellness) ? 'bienestar' : '',
+        day.water_ml ? `${Math.round(+day.water_ml || 0)} ml agua` : '',
+        day.note ? 'nota' : ''
+      ].filter(Boolean).join(' · ');
+      return `
+        <div class="compare-row">
+          <div>
+            <strong>${esc(label)} ${esc(day.date)}</strong>
+            <div class="mini-muted">${esc(day.summary || details || 'Datos detectados')}</div>
+            ${details ? `<div class="mini-muted mt-2">${esc(details)}</div>` : ''}
+          </div>
+          <span class="badge b-accent">${dayAiCount(day)} items</span>
+          <button class="btn btn-ghost btn-sm" onclick="applySingleWeekFillDay('${esc(day.date)}')">Aplicar día</button>
+        </div>`;
+    }).join('')}</div>` : '<div class="empty">La IA no detectó datos claros para ningún día.</div>'}`;
+}
+
 function dayAiCount(draft) {
   if (!draft) return 0;
   return (draft.meals || []).length +
     (draft.sessions || []).length +
     (draft.cardio || []).length +
     (draft.supplements || []).length +
+    (draft.free_day ? 1 : 0) +
     (aiHasBodyData(draft.bodylog) ? 1 : 0) +
     (aiHasWellnessData(draft.wellness) ? 1 : 0) +
     (draft.water_ml ? 1 : 0) +
@@ -5649,12 +5750,18 @@ function applyAiSupplements(date, supplements) {
   return count;
 }
 
-function applyDayAiDraft() {
-  if (!dayAiDraft) return toast('Primero genera un borrador', 'err');
-  const date = dayAiDraft.date || document.getElementById('ai-day-date')?.value || selectedDate();
+function applyAiDraftToDate(draft, fallbackDate = selectedDate()) {
+  const date = draft?.date || fallbackDate || selectedDate();
   let count = 0;
 
-  (dayAiDraft.meals || []).forEach(m => {
+  if (draft?.free_day) {
+    const days = freeDaysMap();
+    if (!days[date]) days[date] = { date, created_at: new Date().toISOString() };
+    DB.set('free_days', days);
+    count++;
+  }
+
+  (draft?.meals || []).forEach(m => {
     if (!m.food_item) return;
     DB.push('meals', {
       id: uid(),
@@ -5669,9 +5776,9 @@ function applyDayAiDraft() {
     count++;
   });
 
-  count += applyAiBodylog(date, dayAiDraft.bodylog);
-  (dayAiDraft.sessions || []).forEach(session => { count += applyAiSession(date, session); });
-  (dayAiDraft.cardio || []).forEach(c => {
+  count += applyAiBodylog(date, draft?.bodylog);
+  (draft?.sessions || []).forEach(session => { count += applyAiSession(date, session); });
+  (draft?.cardio || []).forEach(c => {
     const value = Math.round(+c.value || 0);
     if (!value) return;
     DB.push('checking_cardio', {
@@ -5683,26 +5790,63 @@ function applyDayAiDraft() {
     });
     count++;
   });
-  count += applyAiSupplements(date, dayAiDraft.supplements);
-  count += applyAiWellness(date, dayAiDraft.wellness);
-  count += applyAiWater(date, dayAiDraft.water_ml);
+  count += applyAiSupplements(date, draft?.supplements);
+  count += applyAiWellness(date, draft?.wellness);
+  count += applyAiWater(date, draft?.water_ml);
 
-  if (dayAiDraft.note?.content || dayAiDraft.note?.title) {
+  if (draft?.note?.content || draft?.note?.title) {
     DB.push('notes', {
       id: uid(),
       date,
       created_at: new Date().toISOString(),
-      title: dayAiDraft.note.title || 'Resumen del dia',
-      content: dayAiDraft.note.content || dayAiDraft.summary || 'Cargado desde IA Día',
-      mood: +dayAiDraft.note.mood || 3
+      title: draft.note.title || 'Resumen del dia',
+      content: draft.note.content || draft.summary || 'Cargado desde IA',
+      mood: +draft.note.mood || 3
     });
     count++;
   }
 
+  return { date, count };
+}
+
+function applyDayAiDraft() {
+  if (!dayAiDraft) return toast('Primero genera un borrador', 'err');
+  const result = applyAiDraftToDate(dayAiDraft, selectedDate());
   dayAiDraft = null;
   renderDayAiDraft(null);
-  changeGlobalDate(date);
-  toast(count ? `Borrador aplicado: ${count} item(s)` : 'No habia datos claros para aplicar');
+  changeGlobalDate(result.date);
+  toast(result.count ? `Borrador aplicado: ${result.count} item(s)` : 'No habia datos claros para aplicar');
+}
+
+function applySingleWeekFillDay(date) {
+  if (!weekFillDraft) return toast('Primero genera un borrador semanal', 'err');
+  const day = (weekFillDraft.days || []).find(d => d.date === date);
+  if (!day) return toast('No encontre ese dia en el borrador', 'err');
+
+  const result = applyAiDraftToDate(day, date);
+  weekFillDraft.days = (weekFillDraft.days || []).filter(d => d.date !== date);
+  const remaining = weekFillDraft.days.length;
+  renderWeekFillDraft(remaining ? weekFillDraft : null);
+  if (!remaining) weekFillDraft = null;
+  changeGlobalDate(result.date);
+  toast(result.count ? `Dia aplicado: ${result.count} item(s)` : 'No habia datos claros para aplicar');
+}
+
+function applyWeekFillDraft() {
+  if (!weekFillDraft) return toast('Primero genera un borrador semanal', 'err');
+  let total = 0;
+  let lastDate = selectedDate();
+
+  (weekFillDraft.days || []).forEach(day => {
+    const result = applyAiDraftToDate(day, day.date || lastDate);
+    total += result.count;
+    lastDate = result.date || lastDate;
+  });
+
+  weekFillDraft = null;
+  renderWeekFillDraft(null);
+  changeGlobalDate(lastDate);
+  toast(total ? `Semana aplicada: ${total} item(s)` : 'No habia datos claros para aplicar');
 }
 
 // ═══════════════════════════════════════════════════
