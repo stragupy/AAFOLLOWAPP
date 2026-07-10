@@ -21,6 +21,7 @@ No tocar la estructura de progreso de usuarios sin mucho cuidado.
 - `index.html`: UI, estilos y casi todo el JS inline.
 - `api/analyze-food.js`: analiza comida con Gemini.
 - `api/analyze-day.js`: IA para describir el dia y generar un borrador editable.
+- `api/analyze-week-fill.js`: IA para describir la semana completa y generar borradores por dia.
 - `api/analyze-week.js`: Coach IA semanal.
 - `api/suggest-meal.js`: sugiere comidas segun objetivos y lo consumido en el dia.
 - `manifest.webmanifest`: PWA.
@@ -46,7 +47,7 @@ process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
   - restringe imagenes a `image/jpeg`, `image/png`, `image/webp`
   - maneja errores HTTP con `HttpError`
 
-### IA Dia
+### IA Semana
 
 Se creo `api/analyze-day.js` y una pantalla `IA Dia`.
 Permite describir el dia y generar un borrador antes de aplicar.
@@ -62,6 +63,12 @@ El borrador puede incluir:
 - nota
 
 Importante: no guarda nada hasta tocar "Aplicar borrador".
+
+Luego se agrego `api/analyze-week-fill.js` y la pantalla se cambio a `IA Semana`.
+Permite describir la semana completa y decir cosas como lunes/martes/viernes para que la IA arme borradores por fecha.
+El usuario puede aplicar un solo dia o aplicar toda la semana.
+Sigue sin guardar nada hasta tocar "Aplicar dia" o "Aplicar semana".
+Si el usuario dice que un dia es libre, el borrador puede traer `free_day:true` y se guarda usando la misma clave existente `ft_free_days`.
 
 ### Editor rapido del dia
 
@@ -154,7 +161,7 @@ awk 'found && /<\/script>/{exit} found{print} /^<script>$/{found=1}' index.html 
 Para validar APIs:
 
 ```bash
-node --check api/analyze-food.js && node --check api/analyze-day.js && node --check api/analyze-week.js
+node --check api/analyze-food.js && node --check api/analyze-day.js && node --check api/analyze-week-fill.js && node --check api/analyze-week.js
 ```
 
 Si existe `api/suggest-meal.js`, incluirlo:
@@ -170,6 +177,7 @@ Recordar que suelen necesitar subirse estos archivos segun cambios recientes:
 - `index.html`
 - `api/analyze-food.js`
 - `api/analyze-day.js`
+- `api/analyze-week-fill.js`
 - `api/analyze-week.js`
 - `api/suggest-meal.js`
 
