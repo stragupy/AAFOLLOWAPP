@@ -31,7 +31,7 @@ Las APIs usan la misma key/modelo:
 
 ```js
 process.env.GEMINI_API_KEY || process.env.gemini_api_key
-process.env.GEMINI_MODEL || 'gemini-3.5-flash'
+process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite'
 ```
 
 ## Cambios hechos en esta conversacion
