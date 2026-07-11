@@ -11,9 +11,10 @@
 <meta name="apple-mobile-web-app-title" content="AA Follow">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#1a7fff">
+<meta name="theme-color" content="#f2f2f7">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.2/html5-qrcode.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -3442,6 +3443,355 @@ tr:hover td {
   }
 }
 
+/* IOS SYSTEM THEME PASS */
+:root {
+  --bg: #f2f2f7;
+  --surface: rgba(255, 255, 255, 0.72);
+  --card: rgba(255, 255, 255, 0.74);
+  --elevated: rgba(255, 255, 255, 0.5);
+  --border: rgba(60, 60, 67, 0.12);
+  --accent: #1683ff;
+  --accent-l: #0068d9;
+  --accent-dim: rgba(22, 131, 255, 0.12);
+  --text: #111113;
+  --muted: rgba(60, 60, 67, 0.72);
+  --dim: rgba(60, 60, 67, 0.48);
+  --shadow: 0 18px 46px rgba(0, 0, 0, 0.11);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.075);
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 30px;
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-bg-strong: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --glass-shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
+  --glass-shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.075);
+  --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.035);
+  --glass-blur: blur(26px) saturate(1.7);
+}
+
+html {
+  background: #f2f2f7 !important;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(242, 242, 247, 0.96) 38%, #f2f2f7 100%) !important;
+  color: var(--text) !important;
+}
+
+#main {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(22, 131, 255, 0.12), transparent 32vw),
+    radial-gradient(circle at 86% 12%, rgba(16, 185, 129, 0.06), transparent 30vw),
+    transparent !important;
+}
+
+.page-head h1 {
+  font-weight: 850 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.page-head p,
+.mini-muted,
+.metric-sub,
+.quick-sub,
+.stat-sub {
+  color: var(--muted) !important;
+}
+
+.card,
+.metric,
+.quick-card,
+.stat-tile,
+.record-card,
+.template-card,
+.day-card,
+.month-cell,
+.workout-set-card,
+.workout-result,
+.alert-item,
+.food-ai-preview,
+.food-ai-result-card,
+.empty,
+.tabs,
+.mood-day,
+.series-index,
+.target-pill,
+.result-metric,
+.login-card,
+.modal {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.62)),
+    var(--glass-bg) !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
+  border-radius: 26px !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow-soft), var(--glass-inner) !important;
+}
+
+.card {
+  padding: 22px !important;
+}
+
+.metric,
+.quick-card,
+.stat-tile {
+  min-height: 112px;
+}
+
+.card-title,
+.metric-label,
+.quick-label,
+.stat-label,
+.form-label,
+.nav-label {
+  color: var(--dim) !important;
+  font-size: 0.68rem !important;
+  font-weight: 760 !important;
+  letter-spacing: 0.08em !important;
+}
+
+.card-title {
+  border-bottom-color: rgba(60, 60, 67, 0.08) !important;
+}
+
+.card-title::before {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 999px !important;
+  background: var(--accent) !important;
+  box-shadow: 0 0 0 5px rgba(22, 131, 255, 0.1) !important;
+}
+
+input,
+select,
+textarea,
+.login-input {
+  min-height: 44px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(60, 60, 67, 0.12) !important;
+  color: var(--text) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.login-input:focus {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(22, 131, 255, 0.56) !important;
+  box-shadow: 0 0 0 4px rgba(22, 131, 255, 0.13) !important;
+}
+
+.btn,
+.login-btn,
+.tab,
+.status-btn,
+.mood-btn,
+.energy-btn {
+  min-height: 44px !important;
+  border-radius: 999px !important;
+  font-weight: 760 !important;
+  letter-spacing: 0 !important;
+  border: 1px solid rgba(60, 60, 67, 0.1) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: var(--glass-inner), 0 5px 14px rgba(0, 0, 0, 0.055) !important;
+}
+
+.btn-sm {
+  min-height: 36px !important;
+  padding: 7px 14px !important;
+}
+
+.btn-primary,
+.login-btn {
+  background: linear-gradient(180deg, #2997ff, var(--accent)) !important;
+  border-color: rgba(255, 255, 255, 0.48) !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 12px 22px rgba(22, 131, 255, 0.25) !important;
+}
+
+.btn-ghost:hover,
+.tab:hover,
+.status-btn:hover,
+.mood-btn:hover,
+.energy-btn:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.tabs {
+  padding: 4px !important;
+  background: rgba(118, 118, 128, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.045) !important;
+}
+
+.tab {
+  min-height: 36px !important;
+  box-shadow: none !important;
+}
+
+.tab.active,
+.status-btn.active,
+.mood-btn.active,
+.energy-btn.active {
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: var(--accent-l) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08), var(--glass-inner) !important;
+}
+
+.metric-val,
+.quick-value,
+.stat-value {
+  color: #0b0b0f !important;
+  font-weight: 820 !important;
+}
+
+.badge {
+  border-radius: 999px !important;
+  padding: 4px 9px !important;
+}
+
+.empty {
+  color: var(--muted) !important;
+  border-style: solid !important;
+  min-height: 104px !important;
+}
+
+.insight-card,
+.gym-focus-card {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.56)),
+    rgba(255, 255, 255, 0.7) !important;
+  color: var(--text) !important;
+}
+
+.insight-title {
+  color: var(--accent-l) !important;
+}
+
+.insight-text {
+  color: var(--text) !important;
+  font-weight: 760 !important;
+}
+
+#sidebar,
+#mobile-topbar,
+#mobile-menu-panel,
+.global-date-bar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.62)),
+    rgba(255, 255, 255, 0.68) !important;
+  border-color: rgba(60, 60, 67, 0.1) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+
+#sidebar .nav-btn,
+#mobile-menu-panel .nav-btn {
+  min-height: 38px !important;
+  color: rgba(60, 60, 67, 0.78) !important;
+  font-weight: 720 !important;
+}
+
+#sidebar .nav-btn.active,
+#mobile-menu-panel .nav-btn.active {
+  background: rgba(22, 131, 255, 0.13) !important;
+  color: var(--accent-l) !important;
+  border-color: rgba(22, 131, 255, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(22, 131, 255, 0.05) !important;
+}
+
+#sidebar .nav-btn.active::before {
+  background: var(--accent) !important;
+}
+
+.global-date-bar input {
+  font-weight: 650 !important;
+}
+
+.compare-row,
+.day-line,
+td,
+th {
+  border-color: rgba(60, 60, 67, 0.09) !important;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.52) !important;
+}
+
+@media (min-width: 769px) {
+  #sidebar {
+    border-radius: 0 0 28px 28px;
+  }
+
+  #sidebar .nav-btn {
+    padding: 0 13px !important;
+  }
+
+  .global-date-bar {
+    border-radius: 0 0 24px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    background: #f2f2f7 !important;
+  }
+
+  body {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.76), #f2f2f7 210px) !important;
+  }
+
+  #mobile-topbar {
+    height: calc(58px + env(safe-area-inset-top, 0px)) !important;
+    padding-top: calc(9px + env(safe-area-inset-top, 0px)) !important;
+  }
+
+  .global-date-bar {
+    top: calc(58px + env(safe-area-inset-top, 0px)) !important;
+    border-radius: 0 0 22px 22px;
+  }
+
+  .page-head {
+    padding-top: 20px !important;
+  }
+
+  .page-head h1 {
+    font-size: 1.72rem !important;
+  }
+
+  .content {
+    padding-bottom: calc(42px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .card,
+  .metric,
+  .quick-card,
+  .stat-tile,
+  .record-card,
+  .template-card,
+  .workout-set-card,
+  .food-ai-result-card,
+  .modal {
+    border-radius: 22px !important;
+  }
+
+  .btn:not(.btn-sm),
+  .login-btn,
+  input,
+  select {
+    min-height: 46px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3708,6 +4058,24 @@ tr:hover td {
           <button class="btn btn-ghost btn-sm" id="free-day-toggle" onclick="toggleFreeDay()">Marcar día libre</button>
         </div>
       </div>
+      <div class="card mb">
+        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
+          <div>
+            <div class="card-title" style="margin-bottom:6px">Recordatorios</div>
+            <div class="mini-muted" id="notification-permission-status">Notificaciones sin configurar</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="requestNotificationPermission()">Activar avisos</button>
+        </div>
+        <div class="form-grid fg3">
+          <div class="form-row"><label class="form-label">Recordatorio</label><input id="reminder-label" placeholder="Ej: Tomar creatina"></div>
+          <div class="form-row"><label class="form-label">Tipo</label><select id="reminder-type"><option value="training">Entreno</option><option value="meal">Comida</option><option value="water">Agua</option><option value="supplement">Suplemento</option><option value="checkin">Check-in</option><option value="personal">Personal</option></select></div>
+          <div class="form-row"><label class="form-label">Hora</label><input type="time" id="reminder-time"></div>
+          <div class="form-row"><label class="form-label">Repetición</label><select id="reminder-repeat"><option value="daily">Todos los días</option><option value="weekdays">Lunes a viernes</option><option value="weekends">Fin de semana</option><option value="once">Una vez</option></select></div>
+          <div class="form-row"><label class="form-label">Fecha para una vez</label><input type="date" id="reminder-date"></div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveReminder()">Guardar recordatorio</button></div>
+        <div id="reminders-list" class="mt-3"><div class="empty">Sin recordatorios configurados.</div></div>
+      </div>
       <div class="quick-grid mb">
         <div class="quick-card">
           <div class="quick-label">Entreno</div>
@@ -3813,6 +4181,10 @@ tr:hover td {
           <div class="card-title">Último reporte guardado</div>
           <div id="ai-week-saved-summary"><div class="empty">Todavía no hay reporte para esta semana.</div></div>
         </div>
+      </div>
+      <div class="card mb">
+        <div class="card-title">Plan semanal vs real</div>
+        <div id="week-plan-comparison"><div class="empty">No hay un plan guardado para esta semana.</div></div>
       </div>
       <div id="ai-week-result" class="card">
         <div class="empty">El análisis del coach aparecerá acá sin modificar tus registros.</div>
@@ -3984,6 +4356,24 @@ tr:hover td {
           <button class="btn btn-ghost btn-sm" onclick="useFoodAiEstimate()">Usar estimacion</button>
         </div>
         <div id="food-ai-result" class="mt-3"><div class="empty">Sube fotos, describe la comida, o usa ambas cosas para estimar macros antes de guardar.</div></div>
+      </div>
+      <div class="card mb">
+        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
+          <div class="card-title" style="margin:0">Código de barras</div>
+          <button class="btn btn-ghost btn-sm" id="barcode-scan-button" onclick="toggleBarcodeScanner()">Escanear</button>
+        </div>
+        <div class="form-grid fg2">
+          <div class="form-row">
+            <label class="form-label">Código EAN o UPC</label>
+            <input id="barcode-code" inputmode="numeric" autocomplete="off" placeholder="Escanea o escribe el código">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Consulta</label>
+            <button class="btn btn-primary" type="button" onclick="lookupBarcode()">Buscar producto</button>
+          </div>
+        </div>
+        <div id="barcode-reader" style="display:none; width:100%; max-width:520px; min-height:280px; margin:16px auto 0; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-md); background:#0f1117"></div>
+        <div id="barcode-result" class="mt-3"><div class="empty">Sin producto consultado.</div></div>
       </div>
       <div class="card mb">
         <div class="flex jb ai-c" style="margin-bottom:14px">
@@ -4169,6 +4559,16 @@ tr:hover td {
       <div class="card">
         <div class="card-title">Fotos guardadas</div>
         <div id="progress-photos"><div class="empty">Sin fotos de progreso</div></div>
+      </div>
+      <div class="g2 mt-3">
+        <div class="card">
+          <div class="card-title">Papelera</div>
+          <div id="data-trash"><div class="empty">La papelera está vacía.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Historial de cambios</div>
+          <div id="change-history"><div class="empty">Todavía no hay cambios registrados.</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -4395,14 +4795,115 @@ let cloudAutoSyncTimer = null;
 let cloudAutoSyncBusy = false;
 let cloudRestoreActive = false;
 
+const SAFETY_COLLECTIONS = new Set([
+  'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals', 'notes',
+  'checking_cardio', 'checking_goals', 'supplements', 'progress_photos',
+  'week_plans', 'reminders'
+]);
+
+const SAFETY_COLLECTION_LABELS = {
+  bodylogs: 'Cuerpo', routines: 'Rutina', sessions: 'Entreno', meals: 'Comida',
+  meal_templates: 'Plantilla', goals: 'Objetivo', notes: 'Nota',
+  checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
+  progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio'
+};
+
+function safetyId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function safetyRead(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem('ft_' + key) || 'null');
+    return value == null ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+
+function safetyItemLabel(collection, item = {}) {
+  const base = item.food_item || item.title || item.name || item.routine_name || item.day_name || item.exercise_name || item.type;
+  const date = item.date || item.week || '';
+  if (base && date) return `${base} · ${date}`;
+  return String(base || date || SAFETY_COLLECTION_LABELS[collection] || 'Registro');
+}
+
+function appendChangeHistory(action, collection, item, detail = '') {
+  const history = safetyRead('change_history', []);
+  history.unshift({
+    id: safetyId(),
+    action,
+    collection,
+    label: safetyItemLabel(collection, item),
+    detail,
+    changed_at: new Date().toISOString()
+  });
+  try {
+    localStorage.setItem('ft_change_history', JSON.stringify(history.slice(0, 160)));
+  } catch {
+    try { localStorage.setItem('ft_change_history', JSON.stringify(history.slice(0, 60))); } catch {}
+  }
+  scheduleCloudAutoUpload('change_history');
+}
+
+function appendTrashItems(collection, items) {
+  if (!items.length) return;
+  const trash = safetyRead('trash', []);
+  const deletedAt = new Date().toISOString();
+  const entries = items.map(item => ({
+    id: safetyId(),
+    collection,
+    label: safetyItemLabel(collection, item),
+    item,
+    deleted_at: deletedAt
+  }));
+  localStorage.setItem('ft_trash', JSON.stringify(entries.concat(trash)));
+  scheduleCloudAutoUpload('trash');
+}
+
+function safetyArrayChanges(collection, previous, next) {
+  if (!SAFETY_COLLECTIONS.has(collection) || !Array.isArray(previous) || !Array.isArray(next)) return null;
+  const before = new Map(previous.filter(item => item?.id != null).map(item => [item.id, item]));
+  const after = new Map(next.filter(item => item?.id != null).map(item => [item.id, item]));
+  const removed = [...before.entries()].filter(([id]) => !after.has(id)).map(([, item]) => item);
+  const created = [...after.entries()].filter(([id]) => !before.has(id)).map(([, item]) => item);
+  const updated = [...after.entries()]
+    .filter(([id, item]) => before.has(id) && JSON.stringify(before.get(id)) !== JSON.stringify(item))
+    .map(([, item]) => item);
+  return { removed, created, updated };
+}
+
 const DB = {
   get: k => JSON.parse(localStorage.getItem('ft_' + k) || 'null'),
-  set: (k, v) => {
-    localStorage.setItem('ft_' + k, JSON.stringify(v));
+  set: (k, v, options = {}) => {
+    const storageKey = 'ft_' + k;
+    const previousRaw = localStorage.getItem(storageKey);
+    const previous = previousRaw == null ? null : JSON.parse(previousRaw);
+    const changes = !options.skipAudit && !cloudRestoreActive ? safetyArrayChanges(k, previous || [], v || []) : null;
+    localStorage.setItem(storageKey, JSON.stringify(v));
+    if (changes?.removed.length) {
+      try {
+        appendTrashItems(k, changes.removed);
+      } catch (err) {
+        if (previousRaw == null) localStorage.removeItem(storageKey);
+        else localStorage.setItem(storageKey, previousRaw);
+        setTimeout(() => toast('No se eliminó: no hay espacio para guardarlo en la papelera', 'err'), 0);
+        throw err;
+      }
+    }
+    changes?.created.forEach(item => appendChangeHistory('created', k, item));
+    changes?.updated.forEach(item => appendChangeHistory('updated', k, item));
+    changes?.removed.forEach(item => appendChangeHistory('deleted', k, item));
     scheduleCloudAutoUpload(k);
+    return v;
   },
   push: (k, v) => { const a = DB.get(k) || []; a.unshift(v); DB.set(k, a); return a; },
-  del: (k, id) => { const a = (DB.get(k) || []).filter(x => x.id !== id); DB.set(k, a); return a; },
+  del: (k, id) => {
+    const current = DB.get(k) || [];
+    const next = current.filter(x => x.id !== id);
+    if (next.length !== current.length) DB.set(k, next);
+    return next;
+  },
 };
 
 const SUPABASE_URL = 'https://fqydbdssmmfvkrzefspq.supabase.co';
@@ -4873,30 +5374,92 @@ function findPreviousRoutineSession(session) {
     .sort((a, b) => b.date.localeCompare(a.date))[0] || null;
 }
 
+function compareExercisesWithPrevious(session) {
+  const currentGroups = new Map();
+  (session.sets || []).forEach(set => {
+    const key = String(set.exercise_name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    if (!key) return;
+    if (!currentGroups.has(key)) currentGroups.set(key, { name: set.exercise_name, sets: [] });
+    currentGroups.get(key).sets.push(set);
+  });
+  const allSessions = DB.get('sessions') || [];
+  return [...currentGroups.entries()].map(([key, group]) => {
+    const current = workoutStats(group.sets);
+    const previousSession = allSessions
+      .filter(item => item.id !== session.id && item.date < session.date && (item.sets || []).some(set => String(set.exercise_name || '').trim().toLowerCase().replace(/\s+/g, ' ') === key))
+      .sort((a, b) => b.date.localeCompare(a.date))[0] || null;
+    const previousSets = previousSession
+      ? (previousSession.sets || []).filter(set => String(set.exercise_name || '').trim().toLowerCase().replace(/\s+/g, ' ') === key)
+      : [];
+    const previous = previousSession ? workoutStats(previousSets) : null;
+    return {
+      name: group.name,
+      current,
+      previous,
+      previousDate: previousSession?.date || null,
+      diff: {
+        reps: previous ? current.reps - previous.reps : 0,
+        maxWeight: previous ? Number((current.maxWeight - previous.maxWeight).toFixed(2)) : 0
+      }
+    };
+  });
+}
+
 function compareWorkoutSession(session) {
   const current = workoutStats(session.sets || []);
   const previous = findPreviousRoutineSession(session);
-  if (!previous) {
+  const exercises = compareExercisesWithPrevious(session);
+  const comparableExercises = exercises.filter(item => item.previous);
+  if (!previous && !comparableExercises.length) {
     return {
       status: 'neutral',
       title: 'Primera referencia guardada',
       copy: 'No encontré una sesión anterior de esta misma rutina para comparar. La próxima vez te diré si mejoraste.',
       current,
       previous: null,
-      diff: { volume: 0, reps: 0, maxWeight: 0 }
+      diff: { volume: 0, reps: 0, maxWeight: 0 },
+      exercises
     };
   }
-  const previousStats = workoutStats(previous.sets || []);
+  const previousStats = previous ? workoutStats(previous.sets || []) : {
+    volume: comparableExercises.reduce((sum, item) => sum + item.previous.volume, 0),
+    reps: comparableExercises.reduce((sum, item) => sum + item.previous.reps, 0),
+    maxWeight: comparableExercises.reduce((max, item) => Math.max(max, item.previous.maxWeight), 0)
+  };
   const diff = {
     volume: current.volume - previousStats.volume,
     reps: current.reps - previousStats.reps,
-    maxWeight: current.maxWeight - previousStats.maxWeight
+    maxWeight: Number((current.maxWeight - previousStats.maxWeight).toFixed(2))
   };
-  const score = (diff.volume > 0 ? 1 : diff.volume < 0 ? -1 : 0) + (diff.reps > 0 ? 1 : diff.reps < 0 ? -1 : 0) + (diff.maxWeight > 0 ? 1 : diff.maxWeight < 0 ? -1 : 0);
+  const exerciseScore = comparableExercises.reduce((score, item) => score +
+    (item.diff.reps > 0 ? 1 : item.diff.reps < 0 ? -1 : 0) +
+    (item.diff.maxWeight > 0 ? 1 : item.diff.maxWeight < 0 ? -1 : 0), 0);
+  const score = comparableExercises.length ? exerciseScore :
+    (diff.volume > 0 ? 1 : diff.volume < 0 ? -1 : 0) +
+    (diff.reps > 0 ? 1 : diff.reps < 0 ? -1 : 0) +
+    (diff.maxWeight > 0 ? 1 : diff.maxWeight < 0 ? -1 : 0);
   const status = score > 0 ? 'good' : score < 0 ? 'danger' : 'warn';
   const title = status === 'good' ? 'Mejoraste vs la última sesión' : status === 'danger' ? 'Bajaste vs la última sesión' : 'Rendimiento similar a la última sesión';
-  const copy = `Comparado con ${previous.date}: ${diff.volume >= 0 ? '+' : ''}${Math.round(diff.volume)} kg de volumen, ${diff.reps >= 0 ? '+' : ''}${diff.reps} reps y ${diff.maxWeight >= 0 ? '+' : ''}${diff.maxWeight} kg en peso máximo.`;
-  return { status, title, copy, current, previous: previousStats, previousDate: previous.date, diff };
+  const comparisonDate = previous?.date || comparableExercises.map(item => item.previousDate).filter(Boolean).sort().reverse()[0];
+  const copy = `Comparado con ${comparisonDate}: ${diff.volume >= 0 ? '+' : ''}${Math.round(diff.volume)} kg de volumen, ${diff.reps >= 0 ? '+' : ''}${diff.reps} reps y ${diff.maxWeight >= 0 ? '+' : ''}${diff.maxWeight} kg en peso máximo.`;
+  return { status, title, copy, current, previous: previousStats, previousDate: comparisonDate, diff, exercises };
+}
+
+function workoutExerciseComparisonHtml(result) {
+  const exercises = result?.exercises || [];
+  if (!exercises.length) return '';
+  return `<div class="compare-list mt-3">${exercises.map(item => {
+    if (!item.previous) return `<div class="compare-row"><strong>${esc(item.name)}</strong><span class="badge b-accent">Primera vez</span><span></span></div>`;
+    const reps = item.diff.reps;
+    const weight = item.diff.maxWeight;
+    const repsClass = reps > 0 ? 'b-green' : reps < 0 ? 'b-red' : 'b-accent';
+    const weightClass = weight > 0 ? 'b-green' : weight < 0 ? 'b-red' : 'b-accent';
+    return `<div class="compare-row">
+      <div><strong>${esc(item.name)}</strong><div class="mini-muted">vs ${esc(item.previousDate)}</div></div>
+      <span class="badge ${repsClass}">${reps > 0 ? '+' : ''}${reps} reps</span>
+      <span class="badge ${weightClass}">${weight > 0 ? '+' : ''}${weight} kg</span>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function renderWorkoutComparison(result, targetId = 'training-session-result') {
@@ -4912,6 +5475,7 @@ function renderWorkoutComparison(result, targetId = 'training-session-result') {
         <div class="result-metric"><span>Reps</span><strong>${result.current.reps}</strong></div>
         <div class="result-metric"><span>Peso máximo</span><strong>${result.current.maxWeight} kg</strong></div>
       </div>
+      ${workoutExerciseComparisonHtml(result)}
     </div>`;
 }
 
@@ -5429,7 +5993,168 @@ function loadToday() {
         <span class="badge ${checkingStatus(g) === 'done' ? 'b-green' : checkingStatus(g) === 'missed' ? 'b-red' : 'b-amber'}">${checkLabel(g)}</span>
       </div>
     </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
+  renderReminders();
   renderDayEditor();
+}
+
+// ═══════════════════════════════════════════════════
+// RECORDATORIOS CONFIGURABLES
+// ═══════════════════════════════════════════════════
+const REMINDER_TYPE_LABELS = {
+  training: 'Entreno', meal: 'Comida', water: 'Agua', supplement: 'Suplemento',
+  checkin: 'Check-in', personal: 'Personal'
+};
+const REMINDER_REPEAT_LABELS = {
+  daily: 'Todos los días', weekdays: 'Lunes a viernes', weekends: 'Fin de semana', once: 'Una vez'
+};
+let reminderCheckTimer = null;
+
+function notificationPermissionLabel() {
+  if (typeof Notification === 'undefined') return 'Avisos del sistema no disponibles';
+  if (Notification.permission === 'granted') return 'Avisos del sistema activados';
+  if (Notification.permission === 'denied') return 'Avisos bloqueados en el dispositivo';
+  return 'Avisos del sistema sin activar';
+}
+
+function renderReminders() {
+  const el = document.getElementById('reminders-list');
+  const status = document.getElementById('notification-permission-status');
+  if (!el || !status) return;
+  status.textContent = notificationPermissionLabel();
+  const dateInput = document.getElementById('reminder-date');
+  if (dateInput && !dateInput.value) dateInput.value = selectedDate();
+  const reminders = [...(DB.get('reminders') || [])].sort((a, b) => String(a.time || '').localeCompare(String(b.time || '')));
+  if (!reminders.length) {
+    el.innerHTML = '<div class="empty">Sin recordatorios configurados.</div>';
+    return;
+  }
+  el.innerHTML = `<div class="compare-list">${reminders.map(reminder => `
+    <div class="compare-row">
+      <div>
+        <strong>${esc(reminder.label)}</strong>
+        <div class="mini-muted">${esc(REMINDER_TYPE_LABELS[reminder.type] || 'Personal')} · ${esc(REMINDER_REPEAT_LABELS[reminder.repeat] || 'Todos los días')}${reminder.repeat === 'once' ? ' · ' + esc(reminder.date || '') : ''}</div>
+      </div>
+      <span class="badge ${reminder.enabled === false ? 'b-red' : 'b-accent'}">${esc(reminder.time || '--:--')}</span>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" onclick="toggleReminder('${reminder.id}')">${reminder.enabled === false ? 'Activar' : 'Pausar'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteReminder('${reminder.id}')">Eliminar</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function saveReminder() {
+  const type = document.getElementById('reminder-type')?.value || 'personal';
+  const label = document.getElementById('reminder-label')?.value.trim() || REMINDER_TYPE_LABELS[type];
+  const time = document.getElementById('reminder-time')?.value || '';
+  const repeat = document.getElementById('reminder-repeat')?.value || 'daily';
+  const date = document.getElementById('reminder-date')?.value || selectedDate();
+  if (!/^\d{2}:\d{2}$/.test(time)) return toast('Selecciona una hora para el recordatorio', 'err');
+  DB.push('reminders', {
+    id: uid(), label, type, time, repeat,
+    date: repeat === 'once' ? date : null,
+    enabled: true,
+    created_at: new Date().toISOString()
+  });
+  document.getElementById('reminder-label').value = '';
+  document.getElementById('reminder-time').value = '';
+  renderReminders();
+  checkDueReminders();
+  toast('Recordatorio guardado');
+}
+
+function toggleReminder(id) {
+  const reminders = DB.get('reminders') || [];
+  const reminder = reminders.find(item => item.id === id);
+  if (!reminder) return;
+  reminder.enabled = reminder.enabled === false;
+  DB.set('reminders', reminders);
+  renderReminders();
+}
+
+function deleteReminder(id) {
+  if (!confirm('¿Eliminar este recordatorio?')) return;
+  DB.del('reminders', id);
+  renderReminders();
+  toast('Recordatorio enviado a la papelera');
+}
+
+async function registerReminderServiceWorker() {
+  if (!('serviceWorker' in navigator) || location.protocol === 'file:') return null;
+  try {
+    return await navigator.serviceWorker.register('./service-worker.js');
+  } catch {
+    return null;
+  }
+}
+
+async function requestNotificationPermission() {
+  if (typeof Notification === 'undefined') return toast('Este dispositivo no ofrece avisos del sistema', 'err');
+  await registerReminderServiceWorker();
+  try {
+    const permission = await Notification.requestPermission();
+    renderReminders();
+    toast(permission === 'granted' ? 'Avisos activados' : 'Los avisos no fueron autorizados', permission === 'granted' ? 'ok' : 'err');
+  } catch {
+    toast('No se pudieron activar los avisos', 'err');
+  }
+}
+
+function reminderAppliesToday(reminder, date, weekday) {
+  if (reminder.enabled === false) return false;
+  if (reminder.repeat === 'once') return reminder.date === date;
+  if (reminder.repeat === 'weekdays') return weekday >= 1 && weekday <= 5;
+  if (reminder.repeat === 'weekends') return weekday === 0 || weekday === 6;
+  return true;
+}
+
+async function deliverReminder(reminder) {
+  toast(reminder.label);
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+  const options = {
+    body: `AA Follow · ${REMINDER_TYPE_LABELS[reminder.type] || 'Recordatorio'} · ${reminder.time}`,
+    icon: './icon-192.png',
+    badge: './favicon-32.png',
+    tag: `aa-follow-${reminder.id}`,
+    data: { url: './' }
+  };
+  try {
+    const registration = await navigator.serviceWorker?.getRegistration();
+    if (registration?.showNotification) await registration.showNotification(reminder.label, options);
+    else new Notification(reminder.label, options);
+  } catch {}
+}
+
+function checkDueReminders() {
+  const now = new Date();
+  const date = dateKey(now);
+  const minute = now.getHours() * 60 + now.getMinutes();
+  const deliveries = DB.get('reminder_deliveries') || {};
+  let changed = false;
+  (DB.get('reminders') || []).forEach(reminder => {
+    if (!reminderAppliesToday(reminder, date, now.getDay())) return;
+    const match = /^(\d{2}):(\d{2})$/.exec(reminder.time || '');
+    if (!match) return;
+    const due = (+match[1] * 60) + +match[2];
+    const deliveryKey = `${date}|${reminder.id}|${reminder.time}`;
+    if (minute < due || minute > due + 5 || deliveries[deliveryKey]) return;
+    deliveries[deliveryKey] = new Date().toISOString();
+    changed = true;
+    deliverReminder(reminder);
+  });
+  if (changed) {
+    const recent = {};
+    const cutoff = addDays(date, -30);
+    Object.entries(deliveries).forEach(([key, value]) => { if (key.slice(0, 10) >= cutoff) recent[key] = value; });
+    DB.set('reminder_deliveries', recent);
+  }
+}
+
+function installReminderSystem() {
+  if (reminderCheckTimer) return;
+  registerReminderServiceWorker();
+  checkDueReminders();
+  reminderCheckTimer = setInterval(checkDueReminders, 30000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkDueReminders(); });
 }
 
 // ═══════════════════════════════════════════════════
@@ -5804,7 +6529,10 @@ function renderWeekFillDraft(draft) {
         <div class="card-title" style="margin-bottom:6px">Borrador de ${esc(draft.week || '')}</div>
         <div class="mini-muted">${esc(draft.summary || 'Revisa cada día antes de aplicar.')}</div>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="applyWeekFillDraft()">Aplicar semana</button>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" onclick="saveWeekFillAsPlan()">Guardar como plan</button>
+        <button class="btn btn-primary btn-sm" onclick="applyWeekFillDraft()">Aplicar semana</button>
+      </div>
     </div>
     <div class="quick-grid mb">
       <div class="quick-card"><div class="quick-label">Días</div><div class="quick-value">${days.length}</div><div class="quick-sub">con datos</div></div>
@@ -5853,6 +6581,35 @@ function dayAiCount(draft) {
     (aiHasWellnessData(draft.wellness) ? 1 : 0) +
     (draft.water_ml ? 1 : 0) +
     (draft.note ? 1 : 0);
+}
+
+function weekPlans() {
+  return DB.get('week_plans') || [];
+}
+
+function saveWeekFillAsPlan() {
+  if (!weekFillDraft) return toast('Primero genera un borrador semanal', 'err');
+  const week = weekFillDraft.week || document.getElementById('ai-week-fill-week')?.value;
+  if (!week) return toast('Selecciona una semana válida', 'err');
+  const plans = weekPlans();
+  const index = plans.findIndex(plan => plan.week === week);
+  const previous = index >= 0 ? plans[index] : null;
+  const plan = {
+    id: previous?.id || `week-plan-${week}`,
+    week,
+    dates: weekFillDraft.dates || weekFillDates(week),
+    summary: weekFillDraft.summary || '',
+    description: document.getElementById('ai-week-fill-description')?.value.trim() || previous?.description || '',
+    days: JSON.parse(JSON.stringify(weekFillDraft.days || [])),
+    created_at: previous?.created_at || new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  if (index >= 0) plans[index] = plan; else plans.unshift(plan);
+  DB.set('week_plans', plans);
+  const coachWeek = document.getElementById('ai-week-week');
+  if (coachWeek) coachWeek.value = week;
+  renderWeekPlanComparison(week);
+  toast(previous ? 'Plan semanal actualizado' : 'Plan semanal guardado');
 }
 
 function renderDayAiDraft(draft) {
@@ -6169,7 +6926,96 @@ function loadWeekCoach() {
   const saved = weekCoachReports()[week] || null;
   weekCoachReport = saved;
   renderWeekCoachSavedSummary(saved);
+  renderWeekPlanComparison(week);
   renderWeekCoachReport(saved);
+}
+
+function plannedDayComparison(day) {
+  const date = day.date;
+  const actualMeals = (DB.get('meals') || []).filter(item => item.date === date);
+  const actualSessions = sessionsForDate(date);
+  const actualCardio = (DB.get('checking_cardio') || []).filter(item => item.date === date);
+  const actualBody = (DB.get('bodylogs') || []).find(item => item.date === date);
+  const actualWellness = (DB.get('daily_wellness') || {})[date] || {};
+  const actualWater = +(DB.get('daily_water') || {})[date] || 0;
+  const actualNotes = (DB.get('notes') || []).filter(item => item.date === date);
+  const supplementChecks = (DB.get('supplement_checks') || {})[date] || {};
+  const targets = [];
+  const add = (name, planned, actual, done) => targets.push({ name, planned, actual, done });
+
+  if ((day.sessions || []).length) {
+    add('Entreno', `${day.sessions.length} sesión(es)`, `${actualSessions.length} sesión(es)`, actualSessions.length >= day.sessions.length);
+  }
+  if ((day.meals || []).length) {
+    add('Comidas', `${day.meals.length} registro(s)`, `${actualMeals.length} registro(s)`, actualMeals.length >= day.meals.length);
+  }
+  ['steps', 'minutes'].forEach(type => {
+    const planned = (day.cardio || []).filter(item => item.type === type).reduce((sum, item) => sum + (+item.value || 0), 0);
+    if (!planned) return;
+    const actual = actualCardio.filter(item => item.type === type).reduce((sum, item) => sum + (+item.value || 0), 0);
+    const unit = type === 'steps' ? 'pasos' : 'min';
+    add(type === 'steps' ? 'Pasos' : 'Cardio', `${planned.toLocaleString('es-CL')} ${unit}`, `${actual.toLocaleString('es-CL')} ${unit}`, actual >= planned);
+  });
+  if ((day.supplements || []).filter(item => item.taken !== false).length) {
+    const planned = day.supplements.filter(item => item.taken !== false).length;
+    const actual = Object.values(supplementChecks).filter(Boolean).length;
+    add('Suplementos', `${planned} toma(s)`, `${actual} marcada(s)`, actual >= planned);
+  }
+  if (aiHasBodyData(day.bodylog)) add('Cuerpo', 'registro', actualBody ? 'registrado' : 'sin registro', Boolean(actualBody));
+  if (aiHasWellnessData(day.wellness)) {
+    const completed = actualWellness.sleep != null || actualWellness.energy != null;
+    add('Bienestar', 'registro', completed ? 'registrado' : 'sin registro', completed);
+  }
+  if (+day.water_ml > 0) add('Agua', `${Math.round(+day.water_ml)} ml`, `${Math.round(actualWater)} ml`, actualWater >= +day.water_ml);
+  if (day.note) add('Nota', 'registro', actualNotes.length ? 'registrada' : 'sin registro', actualNotes.length > 0);
+  if (day.free_day) add('Día libre', 'marcado', isFreeDay(date) ? 'marcado' : 'sin marcar', isFreeDay(date));
+
+  const completed = targets.filter(target => target.done).length;
+  return { date, targets, completed, total: targets.length, rate: targets.length ? Math.round((completed / targets.length) * 100) : 0 };
+}
+
+function renderWeekPlanComparison(week = getWeekCoachWeek()) {
+  const el = document.getElementById('week-plan-comparison');
+  if (!el) return;
+  const plan = weekPlans().find(item => item.week === week);
+  if (!plan) {
+    el.innerHTML = '<div class="empty">No hay un plan guardado para esta semana.</div>';
+    return;
+  }
+  const rows = (plan.days || []).map(plannedDayComparison);
+  const total = rows.reduce((sum, row) => sum + row.total, 0);
+  const completed = rows.reduce((sum, row) => sum + row.completed, 0);
+  const rate = total ? Math.round((completed / total) * 100) : 0;
+  const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const dates = plan.dates || weekFillDates(week);
+  el.innerHTML = `
+    <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
+      <div><strong>${esc(plan.week)}</strong><div class="mini-muted">${esc(plan.summary || 'Plan semanal guardado')}</div></div>
+      <button class="btn btn-danger btn-sm" onclick="deleteWeekPlan('${esc(plan.id)}')">Eliminar plan</button>
+    </div>
+    <div class="quick-grid mb">
+      <div class="quick-card"><div class="quick-label">Cumplimiento</div><div class="quick-value">${rate}%</div><div class="quick-sub">plan vs real</div></div>
+      <div class="quick-card"><div class="quick-label">Cumplido</div><div class="quick-value">${completed}</div><div class="quick-sub">de ${total} puntos</div></div>
+      <div class="quick-card"><div class="quick-label">Días</div><div class="quick-value">${rows.length}</div><div class="quick-sub">planificados</div></div>
+    </div>
+    ${rows.length ? `<div class="compare-list">${rows.map(row => {
+      const dayIndex = dates.indexOf(row.date);
+      const planText = row.targets.map(target => `${target.name}: ${target.planned}`).join(' · ');
+      const actualText = row.targets.map(target => `${target.name}: ${target.actual}`).join(' · ');
+      return `<div class="compare-row">
+        <div><strong>${esc(dayNames[dayIndex] || 'Día')} ${esc(row.date)}</strong><div class="mini-muted">Plan: ${esc(planText || 'Sin puntos medibles')}</div></div>
+        <div class="mini-muted">Real: ${esc(actualText || 'Sin registros')}</div>
+        <span class="badge ${row.rate >= 100 ? 'b-green' : row.rate ? 'b-amber' : 'b-red'}">${row.rate}%</span>
+      </div>`;
+    }).join('')}</div>` : '<div class="empty">El plan no tiene días medibles.</div>'}`;
+}
+
+function deleteWeekPlan(planId) {
+  const plan = weekPlans().find(item => item.id === planId);
+  if (!plan || !confirm('¿Eliminar este plan semanal?')) return;
+  DB.del('week_plans', planId);
+  renderWeekPlanComparison(plan.week);
+  toast('Plan semanal enviado a la papelera');
 }
 
 function dayCoachSummary(date) {
@@ -6459,6 +7305,7 @@ function loadProgress() {
   renderProgressRecords();
   renderWeeklyHistory('progress-history');
   renderProgressPhotos();
+  renderDataSafety();
 }
 
 function renderProgressRecords() {
@@ -6520,8 +7367,90 @@ function renderProgressPhotos() {
 
 function deleteProgressPhoto(id) {
   DB.del('progress_photos', id);
-  toast('Foto eliminada');
+  toast('Foto enviada a la papelera');
   renderProgressPhotos();
+}
+
+function safetyTimeLabel(value) {
+  const date = new Date(value || 0);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+}
+
+function changeActionLabel(action) {
+  return ({
+    created: 'Creado', updated: 'Editado', deleted: 'En papelera',
+    restored: 'Restaurado', permanently_deleted: 'Eliminado definitivamente'
+  })[action] || 'Cambio';
+}
+
+function renderDataSafety() {
+  const trashEl = document.getElementById('data-trash');
+  const historyEl = document.getElementById('change-history');
+  if (!trashEl || !historyEl) return;
+  const trash = safetyRead('trash', []);
+  const history = safetyRead('change_history', []);
+
+  trashEl.innerHTML = trash.length ? `<div class="compare-list">${trash.slice(0, 30).map(entry => `
+    <div class="compare-row">
+      <div>
+        <strong>${esc(entry.label || 'Registro')}</strong>
+        <div class="mini-muted">${esc(SAFETY_COLLECTION_LABELS[entry.collection] || entry.collection)} · ${esc(safetyTimeLabel(entry.deleted_at))}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="restoreTrashItem('${entry.id}')">Restaurar</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteTrashItemPermanently('${entry.id}')">Eliminar</button>
+    </div>`).join('')}</div>` : '<div class="empty">La papelera está vacía.</div>';
+
+  historyEl.innerHTML = history.length ? `<div class="compare-list">${history.slice(0, 30).map(entry => `
+    <div class="compare-row">
+      <div>
+        <strong>${esc(entry.label || 'Registro')}</strong>
+        <div class="mini-muted">${esc(SAFETY_COLLECTION_LABELS[entry.collection] || entry.collection)} · ${esc(safetyTimeLabel(entry.changed_at))}</div>
+      </div>
+      <span class="badge ${entry.action === 'deleted' || entry.action === 'permanently_deleted' ? 'b-red' : entry.action === 'restored' ? 'b-green' : 'b-accent'}">${esc(changeActionLabel(entry.action))}</span>
+      <span></span>
+    </div>`).join('')}</div>` : '<div class="empty">Todavía no hay cambios registrados.</div>';
+}
+
+function restoreTrashItem(trashId) {
+  const trash = safetyRead('trash', []);
+  const entry = trash.find(item => item.id === trashId);
+  if (!entry) return toast('Ese registro ya no está en la papelera', 'err');
+  const current = DB.get(entry.collection) || [];
+  if (!Array.isArray(current)) return toast('No se puede restaurar este tipo de registro', 'err');
+  if (entry.item?.id != null && current.some(item => item.id === entry.item.id)) {
+    return toast('Ese registro ya existe en sus datos', 'err');
+  }
+
+  const trashKey = 'ft_trash';
+  const collectionKey = 'ft_' + entry.collection;
+  const oldTrash = localStorage.getItem(trashKey);
+  const oldCollection = localStorage.getItem(collectionKey);
+  try {
+    localStorage.setItem(trashKey, JSON.stringify(trash.filter(item => item.id !== trashId)));
+    localStorage.setItem(collectionKey, JSON.stringify([entry.item, ...current]));
+  } catch (err) {
+    if (oldTrash == null) localStorage.removeItem(trashKey); else localStorage.setItem(trashKey, oldTrash);
+    if (oldCollection == null) localStorage.removeItem(collectionKey); else localStorage.setItem(collectionKey, oldCollection);
+    return toast('No se pudo restaurar por falta de espacio', 'err');
+  }
+  appendChangeHistory('restored', entry.collection, entry.item);
+  scheduleCloudAutoUpload('trash');
+  scheduleCloudAutoUpload(entry.collection);
+  loadProgress();
+  toast('Registro restaurado');
+}
+
+function deleteTrashItemPermanently(trashId) {
+  const trash = safetyRead('trash', []);
+  const entry = trash.find(item => item.id === trashId);
+  if (!entry) return;
+  if (!confirm('¿Eliminar definitivamente este registro? Esta acción no se puede deshacer.')) return;
+  localStorage.setItem('ft_trash', JSON.stringify(trash.filter(item => item.id !== trashId)));
+  appendChangeHistory('permanently_deleted', entry.collection, entry.item);
+  scheduleCloudAutoUpload('trash');
+  renderDataSafety();
+  toast('Registro eliminado definitivamente');
 }
 
 function exportAllData() {
@@ -6685,7 +7614,7 @@ function renderBodyTable() {
 
 function deleteBodyLog(id) {
   DB.del('bodylogs', id);
-  toast('Registro eliminado');
+  toast('Registro enviado a la papelera');
   renderBodyTable(); renderBodyChart();
   loadGoals();
   loadDashboard();
@@ -6836,7 +7765,7 @@ function renderRoutinesList() {
 function deleteRoutine(id) {
   if (!confirm('¿Eliminar esta rutina?')) return;
   DB.del('routines', id);
-  toast('Rutina eliminada');
+  toast('Rutina enviada a la papelera');
   renderRoutinesList();
   fillLiveRoutines();
 }
@@ -7379,7 +8308,7 @@ function renderSessionsList() {
   const el = document.getElementById('sessions-list');
   if (!sessions.length) { el.innerHTML = '<div class="empty">Sin sesiones guardadas de entrenamiento</div>'; return; }
   el.innerHTML = sessions.map(s => {
-    const cmp = s.comparison || (s.routine_name ? compareWorkoutSession(s) : null);
+    const cmp = s.comparison?.exercises ? s.comparison : compareWorkoutSession(s);
     return `
     <div class="card mb">
       <div class="flex jb ai-c" style="margin-bottom:14px">
@@ -7398,6 +8327,7 @@ function renderSessionsList() {
         <div class="alert-title">${esc(cmp.title)}</div>
         <div class="alert-copy">${esc(cmp.copy)}</div>
       </div>` : ''}
+      ${workoutExerciseComparisonHtml(cmp)}
       <table style="font-size:0.8rem">
         <thead><tr><th>Ejercicio</th><th>Objetivo</th><th>Serie</th><th>Reps logradas</th><th>Peso</th></tr></thead>
         <tbody>${(s.sets || []).map(x => `<tr>
@@ -7433,7 +8363,7 @@ function renderTrainingProgress() {
 function deleteSession(id) {
   if (!confirm('¿Eliminar esta sesión?')) return;
   DB.del('sessions', id);
-  toast('Sesión de entrenamiento eliminada');
+  toast('Sesión enviada a la papelera');
   renderSessionsList();
   renderTrainingProgress();
   renderExerciseHistoryDraft();
@@ -7496,7 +8426,7 @@ function toggleSupplementCheck(id) {
 
 function deleteSupplement(id) {
   DB.del('supplements', id);
-  toast('Suplemento eliminado');
+  toast('Suplemento enviado a la papelera');
   renderSupplements();
 }
 
@@ -7524,6 +8454,154 @@ function renderSupplements() {
 
 let foodAiEstimate = null;
 let mealSuggestionOptions = [];
+let barcodeScanner = null;
+let barcodeScannerActive = false;
+let barcodeDecodeLocked = false;
+let barcodeProduct = null;
+
+function barcodeFormats() {
+  if (!window.Html5QrcodeSupportedFormats) return undefined;
+  return ['EAN_13', 'EAN_8', 'UPC_A', 'UPC_E', 'CODE_128', 'CODE_39']
+    .map(name => window.Html5QrcodeSupportedFormats[name])
+    .filter(value => value != null);
+}
+
+async function stopBarcodeScanner() {
+  const scanner = barcodeScanner;
+  barcodeScanner = null;
+  try {
+    if (scanner && barcodeScannerActive) await scanner.stop();
+    if (scanner) await scanner.clear();
+  } catch {}
+  barcodeScannerActive = false;
+  const reader = document.getElementById('barcode-reader');
+  const button = document.getElementById('barcode-scan-button');
+  if (reader) {
+    reader.style.display = 'none';
+    reader.innerHTML = '';
+  }
+  if (button) button.textContent = 'Escanear';
+}
+
+async function toggleBarcodeScanner() {
+  if (barcodeScannerActive || barcodeScanner) return stopBarcodeScanner();
+  if (!window.Html5Qrcode) return toast('No se pudo cargar el lector de códigos', 'err');
+  if (location.protocol === 'file:') return toast('La cámara funciona desde Vercel o localhost', 'err');
+  const reader = document.getElementById('barcode-reader');
+  const button = document.getElementById('barcode-scan-button');
+  if (!reader) return;
+  reader.style.display = 'block';
+  reader.innerHTML = '';
+  if (button) button.textContent = 'Cerrar cámara';
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  const formats = barcodeFormats();
+  const size = Math.max(180, Math.min(300, Math.floor(reader.clientWidth * 0.86)));
+  barcodeScanner = new Html5Qrcode('barcode-reader', formats?.length ? { formatsToSupport: formats } : undefined);
+  barcodeDecodeLocked = false;
+  barcodeScannerActive = true;
+  try {
+    await barcodeScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: size, height: Math.min(120, Math.round(size * 0.42)) }, aspectRatio: 1.777778 },
+      async decodedText => {
+        if (barcodeDecodeLocked) return;
+        barcodeDecodeLocked = true;
+        const code = String(decodedText || '').replace(/\D/g, '');
+        const input = document.getElementById('barcode-code');
+        if (input) input.value = code;
+        await stopBarcodeScanner();
+        await lookupBarcode(code);
+      },
+      () => {}
+    );
+  } catch (err) {
+    await stopBarcodeScanner();
+    toast('No se pudo abrir la cámara. Revisa el permiso del navegador.', 'err');
+  }
+}
+
+function barcodeMacroValues(product, grams) {
+  const factor = Math.max(+grams || 0, 0) / 100;
+  const values = product?.per_100g || {};
+  return {
+    calories: Math.round((+values.calories || 0) * factor),
+    protein: Math.round((+values.protein || 0) * factor * 10) / 10,
+    carbs: Math.round((+values.carbs || 0) * factor * 10) / 10,
+    fat: Math.round((+values.fat || 0) * factor * 10) / 10
+  };
+}
+
+function renderBarcodeProduct(product) {
+  const el = document.getElementById('barcode-result');
+  if (!el) return;
+  if (!product) {
+    el.innerHTML = '<div class="empty">Sin producto consultado.</div>';
+    return;
+  }
+  const grams = Math.max(Math.round(+product.serving_grams || 100), 1);
+  const values = barcodeMacroValues(product, grams);
+  el.innerHTML = `
+    <div class="flex gap-3 ai-c" style="margin-bottom:14px">
+      ${product.image_url ? `<img src="${esc(product.image_url)}" alt="${esc(product.name)}" style="width:72px;height:72px;object-fit:contain;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff">` : ''}
+      <div><strong>${esc(product.name)}</strong><div class="mini-muted">${esc(product.brands || 'Marca sin informar')} · ${esc(product.code)}</div><div class="mini-muted mt-2">Datos: Open Food Facts</div></div>
+    </div>
+    <div class="form-grid fg2">
+      <div class="form-row"><label class="form-label">Porción (g)</label><input type="number" id="barcode-grams" min="1" step="1" value="${grams}" oninput="updateBarcodeProductPortion()"></div>
+      <div class="form-row"><label class="form-label">Acción</label><button class="btn btn-primary" type="button" onclick="useBarcodeProduct()">Usar en comida</button></div>
+    </div>
+    <div class="quick-grid mt-3">
+      <div class="quick-card"><div class="quick-label">Kcal</div><div class="quick-value" id="barcode-calories">${values.calories}</div></div>
+      <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value" id="barcode-protein">${values.protein}g</div></div>
+      <div class="quick-card"><div class="quick-label">Carbos</div><div class="quick-value" id="barcode-carbs">${values.carbs}g</div></div>
+      <div class="quick-card"><div class="quick-label">Grasas</div><div class="quick-value" id="barcode-fat">${values.fat}g</div></div>
+    </div>`;
+}
+
+function updateBarcodeProductPortion() {
+  if (!barcodeProduct) return;
+  const grams = +document.getElementById('barcode-grams')?.value || 0;
+  const values = barcodeMacroValues(barcodeProduct, grams);
+  document.getElementById('barcode-calories').textContent = values.calories;
+  document.getElementById('barcode-protein').textContent = `${values.protein}g`;
+  document.getElementById('barcode-carbs').textContent = `${values.carbs}g`;
+  document.getElementById('barcode-fat').textContent = `${values.fat}g`;
+}
+
+async function lookupBarcode(value) {
+  const input = document.getElementById('barcode-code');
+  const code = String(value || input?.value || '').replace(/\D/g, '');
+  if (!/^\d{8,14}$/.test(code)) return toast('Ingresa un código EAN o UPC válido', 'err');
+  if (input) input.value = code;
+  if (location.protocol === 'file:') return toast('La consulta funciona cuando la app está subida a Vercel', 'err');
+  const result = document.getElementById('barcode-result');
+  if (result) result.innerHTML = '<div class="empty">Buscando producto...</div>';
+  try {
+    const response = await fetch(`/api/barcode-food?code=${encodeURIComponent(code)}`);
+    const raw = await response.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch {}
+    if (!response.ok || !data.product) throw new Error(data.error || 'Producto no encontrado');
+    barcodeProduct = data.product;
+    renderBarcodeProduct(barcodeProduct);
+    toast('Producto encontrado');
+  } catch (err) {
+    barcodeProduct = null;
+    if (result) result.innerHTML = `<div class="empty">${esc(err.message || 'No se pudo consultar el producto')}</div>`;
+    toast(err.message || 'No se pudo consultar el producto', 'err');
+  }
+}
+
+function useBarcodeProduct() {
+  if (!barcodeProduct) return toast('Primero busca un producto', 'err');
+  const grams = Math.max(+document.getElementById('barcode-grams')?.value || 0, 1);
+  const values = barcodeMacroValues(barcodeProduct, grams);
+  showModal('modal-meal');
+  document.getElementById('m-food').value = `${Math.round(grams)}g ${barcodeProduct.name}`;
+  document.getElementById('m-cal').value = values.calories;
+  document.getElementById('m-prot').value = values.protein;
+  document.getElementById('m-carbs').value = values.carbs;
+  document.getElementById('m-fat').value = values.fat;
+}
 
 function readFileAsDataUrl(file) {
   return new Promise((resolve, reject) => {
@@ -7859,7 +8937,7 @@ function useMealTemplate(id) {
 
 function deleteMealTemplate(id) {
   DB.del('meal_templates', id);
-  toast('Plantilla eliminada');
+  toast('Plantilla enviada a la papelera');
   fillMealTemplates();
   renderMealTemplates();
 }
@@ -7927,7 +9005,7 @@ function loadMeals() {
 
 function deleteMeal(id) {
   DB.del('meals', id);
-  toast('Item eliminado');
+  toast('Item enviado a la papelera');
   loadMeals();
   renderDayEditor();
   loadDashboard();
@@ -7988,7 +9066,7 @@ function saveGoal() {
 function deleteGoal(id) {
   if (!confirm('¿Eliminar este objetivo?')) return;
   DB.del('goals', id);
-  toast('Meta eliminada');
+  toast('Meta enviada a la papelera');
   loadGoals();
   loadDashboard();
 }
@@ -8140,7 +9218,7 @@ function saveNote() {
 function deleteNote(id) {
   if (!confirm('¿Eliminar esta nota?')) return;
   DB.del('notes', id);
-  toast('Nota eliminada permanentemente');
+  toast('Nota enviada a la papelera');
   loadNotes();
   renderDayEditor();
 }
@@ -8202,7 +9280,7 @@ function renderCheckinCardio() {
 function deleteCheckinCardio(id) {
   if (!confirm('¿Eliminar este registro de cardio?')) return;
   DB.del('checking_cardio', id);
-  toast('Registro de cardio eliminado');
+  toast('Registro de cardio enviado a la papelera');
   renderCheckinCardio();
   renderDayEditor();
   loadDashboard();
@@ -8296,7 +9374,7 @@ function setCheckingGoalStatus(id, status) {
 function deleteCheckingGoal(id) {
   if (!confirm('¿Eliminar este objetivo semanal?')) return;
   DB.del('checking_goals', id);
-  toast('Objetivo eliminado');
+  toast('Objetivo enviado a la papelera');
   renderCheckingGoals();
 }
 
@@ -8480,6 +9558,7 @@ async function logoutUser() {
 }
 
 // ── INIT ──
+installReminderSystem();
 initAuth();
 </script>
 </body>
