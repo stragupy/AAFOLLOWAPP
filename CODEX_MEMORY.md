@@ -150,6 +150,62 @@ La IA recibe:
 
 Devuelve opciones con macros estimados. No guarda nada automaticamente: el usuario toca "Usar" y se rellena el modal de alimento.
 
+### Funciones avanzadas agregadas en julio de 2026
+
+Modo gimnasio avanzado en `index.html`:
+
+- muestra un ejercicio por vez y la serie anterior
+- confirma cada serie antes de considerarla realizada
+- guarda RIR o RPE en la serie
+- temporizador de descanso por hora de finalizacion, resistente al bloqueo de pantalla
+- vibracion cuando corresponde
+- calculadora de discos por lado
+- mantiene compatibilidad con `ft_live_workout_draft` anterior; el borrador ahora usa `version: 2`
+
+Progresion inteligente derivada de `ft_sessions`:
+
+- recomienda peso/reps para la proxima sesion
+- calcula 1RM estimado con Epley
+- detecta meseta y posible descarga
+- nunca aplica una sugerencia sin confirmacion del usuario
+
+Registro por voz en Hoy:
+
+- usa Web Speech API cuando esta disponible
+- envia el texto a la misma ruta `api/analyze-day.js`
+- guarda texto y borrador por fecha en `ft_voice_day_drafts`
+- no aplica nada hasta "Revisado, aplicar"
+
+Progreso:
+
+- comparador antes/despues usa las fotos existentes de `ft_progress_photos`
+- informe PDF semanal se genera para imprimir desde los datos locales y el Coach IA guardado
+
+### Web Push real
+
+Archivos nuevos:
+
+- `api/push-config.js`
+- `api/push-subscription.js`
+- `api/send-reminders.js`
+- `supabase-push-setup.sql`
+- `package.json` y `package-lock.json` con `web-push` fijado en `3.6.7`
+
+`service-worker.js` ya recibe eventos `push`.
+El estado del dispositivo usa `aa_push_enabled` sin prefijo `ft_`, porque no debe copiarse a otro telefono con el progreso.
+
+Variables privadas requeridas en Vercel, nunca en el navegador:
+
+```txt
+SUPABASE_SERVICE_ROLE_KEY
+VAPID_PUBLIC_KEY
+VAPID_PRIVATE_KEY
+VAPID_SUBJECT
+CRON_SECRET
+```
+
+Para activar avisos reales hay que reemplazar `APP_URL` y `CRON_SECRET` en `supabase-push-setup.sql`, ejecutar ese SQL una vez en Supabase y configurar las variables de Vercel. La clave publica de Supabase puede seguir en el frontend; `service_role` nunca.
+
 ## Verificaciones usadas
 
 Para validar el JS inline:
@@ -180,6 +236,15 @@ Recordar que suelen necesitar subirse estos archivos segun cambios recientes:
 - `api/analyze-week-fill.js`
 - `api/analyze-week.js`
 - `api/suggest-meal.js`
+- `api/push-config.js`
+- `api/push-subscription.js`
+- `api/send-reminders.js`
+- `service-worker.js`
+- `manifest.webmanifest`
+- `package.json`
+- `package-lock.json`
+- `supabase-push-setup.sql`
+- `.gitignore`
 
 ## Estilo de respuesta al usuario
 

@@ -1,0 +1,12 @@
+{
+  "name": "aa-follow-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AA Follow App y funciones serverless para Vercel",
+  "scripts": {
+    "generate-vapid": "web-push generate-vapid-keys"
+  },
+  "dependencies": {
+    "web-push": "3.6.7"
+  }
+}
