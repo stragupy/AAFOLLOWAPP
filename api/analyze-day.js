@@ -126,7 +126,9 @@ function normalizeSet(set, index) {
     target_sets: numberValue(set.target_sets, null),
     target_reps: numberValue(set.target_reps, null),
     reps: Math.round(numberValue(set.reps, 0)),
-    weight: numberValue(set.weight, 0)
+    weight: numberValue(set.weight, 0),
+    rir: set.rir == null ? null : Math.min(10, numberValue(set.rir, 0)),
+    rpe: set.rpe == null ? null : Math.min(10, Math.max(1, numberValue(set.rpe, 1)))
   };
 }
 
@@ -229,7 +231,7 @@ module.exports = async function handler(req, res) {
     const prompt = `Convierte esta descripcion diaria en datos para una app de seguimiento fitness. Usa solo informacion mencionada o inferencias prudentes. Si no hay dato claro, usa arrays vacios o null. Si estima macros de comidas sin cantidades exactas, usa porciones razonables y confidence implicita conservadora. Fecha objetivo: ${date}. Contexto local opcional: ${context}. Descripcion del usuario: ${description}
 
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
-{"date":"${date}","summary":"resumen corto","meals":[{"meal_name":"Desayuno","food_item":"alimento o plato","calories":0,"protein":0,"carbs":0,"fat":0}],"bodylog":{"weight":null,"body_fat":null,"arm":null,"chest":null,"waist":null,"thigh":null,"calf":null,"notes":""},"sessions":[{"routine_name":"","day_name":"","duration":0,"notes":"","sets":[{"exercise_name":"Press banca","set_number":1,"target_sets":null,"target_reps":null,"reps":0,"weight":0}]}],"cardio":[{"type":"steps","value":0}],"supplements":[{"name":"Creatina","dose":"","taken":true}],"wellness":{"sleep":null,"energy":null,"mood":""},"water_ml":null,"note":{"title":"Resumen del dia","content":"","mood":3}}`;
+{"date":"${date}","summary":"resumen corto","meals":[{"meal_name":"Desayuno","food_item":"alimento o plato","calories":0,"protein":0,"carbs":0,"fat":0}],"bodylog":{"weight":null,"body_fat":null,"arm":null,"chest":null,"waist":null,"thigh":null,"calf":null,"notes":""},"sessions":[{"routine_name":"","day_name":"","duration":0,"notes":"","sets":[{"exercise_name":"Press banca","set_number":1,"target_sets":null,"target_reps":null,"reps":0,"weight":0,"rir":null,"rpe":null}]}],"cardio":[{"type":"steps","value":0}],"supplements":[{"name":"Creatina","dose":"","taken":true}],"wellness":{"sleep":null,"energy":null,"mood":""},"water_ml":null,"note":{"title":"Resumen del dia","content":"","mood":3}}`;
 
     const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
       method: 'POST',
