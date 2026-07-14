@@ -3876,6 +3876,127 @@ tr:hover td {
   overflow-wrap: anywhere;
 }
 
+.exercise-demo-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.exercise-demo-media {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.exercise-demo-media.single {
+  grid-template-columns: minmax(0, 210px);
+}
+
+.exercise-demo-figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.exercise-demo-image-box {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.exercise-demo-image-box img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.exercise-demo-figure figcaption,
+.exercise-demo-figure.is-missing::before {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: .68rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.exercise-demo-figure.is-missing .exercise-demo-image-box { display: none; }
+.exercise-demo-figure.is-missing::before {
+  content: 'Imagen no disponible';
+  min-height: 110px;
+  padding: 16px 8px;
+  border: 1px solid var(--border);
+}
+
+.exercise-demo-copy {
+  min-width: 0;
+  align-self: center;
+}
+
+.exercise-demo-kicker {
+  color: var(--muted);
+  font-size: .66rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.exercise-demo-title {
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.exercise-demo-steps {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding-left: 20px;
+  color: var(--text);
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.exercise-demo-source {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .66rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.exercise-demo-source a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.exercise-demo-loading {
+  grid-column: 1 / -1;
+  min-height: 150px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: .8rem;
+  animation: demoPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes demoPulse {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
 .gym-rest-panel {
   display: grid;
   grid-template-columns: 82px minmax(0, 1fr);
@@ -4044,6 +4165,9 @@ tr:hover td {
   .gym-set-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gym-set-grid .form-row:last-child { grid-column: 1 / -1; }
   .gym-context-strip { grid-template-columns: 1fr; }
+  .exercise-demo-panel { grid-template-columns: 1fr; }
+  .exercise-demo-media { width: min(100%, 380px); justify-self: center; }
+  .exercise-demo-media.single { width: min(72%, 230px); justify-self: center; }
   .progression-row { grid-template-columns: minmax(0, 1fr) auto; }
   .progression-row > :last-child { grid-column: 1 / -1; }
   .photo-compare-stage { aspect-ratio: 3 / 4; }
@@ -5601,6 +5725,113 @@ function renderInternalReminders() {
   renderAlerts('internal-reminders', internalReminderItems());
 }
 
+const exerciseDemoCache = new Map();
+const exerciseDemoRequests = new Map();
+
+function safeExerciseDemoUrl(value) {
+  try {
+    const url = new URL(value, location.origin);
+    return url.protocol === 'https:' || url.origin === location.origin ? url.href : '';
+  } catch {
+    return '';
+  }
+}
+
+function exerciseDemoLoadingHtml(exerciseName) {
+  const key = exerciseGroupKey(exerciseName);
+  return `<div class="exercise-demo-panel" id="gym-exercise-demo" data-exercise-key="${esc(key)}">
+    <div class="exercise-demo-loading">Cargando demostración de ${esc(exerciseName)}...</div>
+  </div>`;
+}
+
+function exerciseDemoContentHtml(data) {
+  const images = (Array.isArray(data?.images) ? data.images : [])
+    .map(image => ({
+      url: safeExerciseDemoUrl(image?.url),
+      full: safeExerciseDemoUrl(image?.full || image?.url),
+      author: String(image?.author || '').trim()
+    }))
+    .filter(image => image.url)
+    .slice(0, 2);
+  if (!images.length) return `<div class="exercise-demo-copy">
+    <div class="exercise-demo-kicker">Técnica</div>
+    <div class="exercise-demo-title">Demostración no disponible</div>
+    <div class="exercise-demo-source">La rutina y el entreno siguen funcionando normalmente.</div>
+  </div>`;
+
+  const referenceName = String(data.referenceName || data.requestedName || 'Ejercicio');
+  const steps = (Array.isArray(data.instructions) ? data.instructions : [])
+    .map(step => String(step || '').trim())
+    .filter(Boolean)
+    .slice(0, 4);
+  const authors = [...new Set(images.map(image => image.author).filter(Boolean))];
+  const sourceUrl = safeExerciseDemoUrl(data.sourceUrl);
+  const licenseUrl = safeExerciseDemoUrl(data.license?.url);
+  const source = sourceUrl ? `<a href="${esc(sourceUrl)}" target="_blank" rel="noopener noreferrer">wger</a>` : 'wger';
+  const licenseName = String(data.license?.name || '').trim();
+  const license = licenseName
+    ? (licenseUrl ? `<a href="${esc(licenseUrl)}" target="_blank" rel="noopener noreferrer">${esc(licenseName)}</a>` : esc(licenseName))
+    : '';
+
+  return `
+    <div class="exercise-demo-media ${images.length === 1 ? 'single' : ''}">
+      ${images.map((image, index) => `<figure class="exercise-demo-figure">
+        <a href="${esc(image.full)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir demostración de ${esc(referenceName)}">
+          <div class="exercise-demo-image-box"><img src="${esc(image.url)}" alt="${esc(referenceName)} - ${images.length > 1 ? (index === 0 ? 'posición inicial' : 'posición final') : 'demostración'}" loading="eager" decoding="async" onerror="this.closest('.exercise-demo-figure').classList.add('is-missing')"></div>
+        </a>
+        <figcaption>${images.length > 1 ? (index === 0 ? 'Inicio' : 'Final') : 'Referencia'}</figcaption>
+      </figure>`).join('')}
+    </div>
+    <div class="exercise-demo-copy">
+      <div class="exercise-demo-kicker">${data.exact ? 'Demostración asociada' : 'Variante equivalente'}</div>
+      <div class="exercise-demo-title">${esc(referenceName)}</div>
+      ${steps.length ? `<ol class="exercise-demo-steps">${steps.map(step => `<li>${esc(step)}</li>`).join('')}</ol>` : ''}
+      <div class="exercise-demo-source">Fuente: ${source}${license ? ` · ${license}` : ''}${authors.length ? ` · ${esc(authors.join(', '))}` : ''}</div>
+    </div>`;
+}
+
+async function requestExerciseDemo(exerciseName) {
+  const key = exerciseGroupKey(exerciseName);
+  const cached = exerciseDemoCache.get(key);
+  if (cached && (!cached.error || Date.now() - cached.savedAt < 30000)) return cached;
+  if (exerciseDemoRequests.has(key)) return exerciseDemoRequests.get(key);
+
+  const request = (async () => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const response = await fetch(`/api/exercise-demo?name=${encodeURIComponent(exerciseName)}`, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' }
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || 'Demostración no disponible');
+      const result = { ...payload, savedAt: Date.now() };
+      exerciseDemoCache.set(key, result);
+      return result;
+    } catch (error) {
+      const result = { error: error?.name === 'AbortError' ? 'La demostración demoró demasiado.' : (error.message || 'No se pudo cargar la demostración.'), savedAt: Date.now() };
+      exerciseDemoCache.set(key, result);
+      return result;
+    } finally {
+      clearTimeout(timeout);
+      exerciseDemoRequests.delete(key);
+    }
+  })();
+  exerciseDemoRequests.set(key, request);
+  return request;
+}
+
+async function loadExerciseDemo(exerciseName) {
+  const key = exerciseGroupKey(exerciseName);
+  const data = await requestExerciseDemo(exerciseName);
+  const el = document.getElementById('gym-exercise-demo');
+  if (!el || el.dataset.exerciseKey !== key) return;
+  el.innerHTML = data.error
+    ? `<div class="exercise-demo-copy"><div class="exercise-demo-kicker">Técnica</div><div class="exercise-demo-title">Sin demostración disponible</div><div class="exercise-demo-source">${esc(data.error)} El registro del ejercicio no se ve afectado.</div></div>`
+    : exerciseDemoContentHtml(data);
+}
+
 function renderMobileGymDraft() {
   const el = document.getElementById('mobile-gym-draft');
   if (!el) return;
@@ -5650,6 +5881,7 @@ function renderMobileGymDraft() {
         <div class="prog-wrap"><div class="prog-fill" style="width:${Math.round((done / Math.max(allRows.length, 1)) * 100)}%;background:var(--accent)"></div></div>
         <span class="mini-muted">${done}/${allRows.length}</span>
       </div>
+      ${exerciseDemoLoadingHtml(ex)}
       <div class="gym-context-strip">
         <div class="gym-context-item"><span>Serie actual</span><strong>${rowIndex + 1} de ${group.rows.length}${targetReps ? ` · objetivo ${targetReps}` : ''}</strong></div>
         <div class="gym-context-item"><span>Serie anterior</span><strong>${esc(previousSetText)}</strong></div>
@@ -5673,6 +5905,7 @@ function renderMobileGymDraft() {
         <button class="btn btn-ghost btn-sm" onclick="gymMoveExercise(1)" ${gymExerciseIndex >= groups.length - 1 ? 'disabled' : ''}>Siguiente</button>
       </div>
     </div>`;
+  loadExerciseDemo(ex);
   updateGymRestTimer();
 }
 
