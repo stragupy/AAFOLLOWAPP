@@ -6386,6 +6386,1149 @@ tr:hover td {
   }
 }
 
+/* TODAY OPERATIONS */
+#page-today .today-pro-content {
+  display: block;
+}
+
+.today-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.today-command-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  overflow: hidden;
+  border: 1px solid #223149;
+  border-radius: 8px;
+  background: #152137;
+  color: #f8fafc;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.13);
+}
+
+.today-command-lead {
+  min-width: 0;
+  padding: 27px 30px 25px;
+}
+
+.today-command-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #9db0ca;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.today-mode-badge {
+  padding: 5px 7px;
+  border: 1px solid rgba(45, 212, 191, 0.28);
+  border-radius: 5px;
+  background: rgba(45, 212, 191, 0.09);
+  color: #78e4d2;
+  letter-spacing: 0.04em;
+}
+
+.today-mode-badge.free {
+  border-color: rgba(245, 158, 11, 0.34);
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.today-command-lead h2 {
+  margin-top: 14px;
+  color: #ffffff;
+  font-size: 1.42rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.today-command-lead > p {
+  max-width: 760px;
+  margin-top: 9px;
+  color: #b8c6d9;
+  font-size: 0.79rem;
+  line-height: 1.65;
+}
+
+.today-command-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 19px;
+  color: #91a4bd;
+  font-size: 0.65rem;
+}
+
+.today-free-toggle {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #edf4fc;
+  font: inherit;
+  font-size: 0.66rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.today-free-toggle:hover,
+.today-free-toggle:focus-visible {
+  border-color: rgba(255, 255, 255, 0.3);
+  outline: 0;
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.today-free-toggle.active {
+  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+.today-streak-copy {
+  margin-left: auto;
+  color: #9db0ca;
+  white-space: nowrap;
+}
+
+.today-streak-copy strong {
+  color: #ffffff;
+  font-size: 0.78rem;
+}
+
+.today-coverage-panel {
+  display: flex;
+  min-height: 190px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 23px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.today-coverage-ring {
+  display: grid;
+  width: 92px;
+  height: 92px;
+  padding: 7px;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#2dd4bf var(--today-coverage), rgba(255, 255, 255, 0.12) 0);
+}
+
+.today-coverage-ring > div {
+  display: grid;
+  width: 78px;
+  height: 78px;
+  place-content: center;
+  border-radius: 50%;
+  background: #152137;
+}
+
+.today-coverage-ring strong,
+.today-coverage-ring span {
+  display: block;
+}
+
+.today-coverage-ring strong {
+  color: #ffffff;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.today-coverage-ring span {
+  margin-top: 5px;
+  color: #8fa2bc;
+  font-size: 0.52rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.today-coverage-panel > strong {
+  margin-top: 12px;
+  color: #f8fafc;
+  font-size: 0.72rem;
+}
+
+.today-coverage-panel > span {
+  margin-top: 4px;
+  color: #8fa2bc;
+  font-size: 0.61rem;
+}
+
+.today-metrics-strip {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.today-metric {
+  position: relative;
+  min-width: 0;
+  min-height: 105px;
+  padding: 20px 22px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.today-metric:last-child {
+  border-right: 0;
+}
+
+.today-metric::before {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  width: 18px;
+  height: 2px;
+  background: #2dd4bf;
+  content: '';
+}
+
+.today-metric:nth-child(2)::before {
+  background: #f59e0b;
+}
+
+.today-metric:nth-child(3)::before {
+  background: #38bdf8;
+}
+
+.today-metric:nth-child(4)::before {
+  background: #60a5fa;
+}
+
+.today-metric:nth-child(5)::before {
+  background: #f472b6;
+}
+
+.today-metric > span {
+  display: block;
+  margin-top: 9px;
+  color: #8fa2bc;
+  font-size: 0.59rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.today-metric > strong {
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 1.3rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-metric > strong b,
+.today-metric > strong i {
+  font: inherit;
+}
+
+.today-metric > strong i {
+  margin-left: 4px;
+  color: #9db0ca;
+  font-size: 0.58rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.today-metric small {
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #8295ae;
+  font-size: 0.59rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(330px, 0.75fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.today-primary-column,
+.today-secondary-column {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  min-width: 0;
+}
+
+.today-panel,
+.today-editor-panel {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 7px 19px rgba(15, 23, 42, 0.045);
+}
+
+.today-panel {
+  padding: 21px 22px;
+}
+
+.today-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.today-section-head.compact {
+  margin-bottom: 14px;
+}
+
+.today-section-head span,
+.today-section-head h2,
+.today-section-head small {
+  display: block;
+}
+
+.today-section-head span {
+  color: var(--dim);
+  font-size: 0.59rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.today-section-head h2 {
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.today-section-head small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.61rem;
+  font-weight: 500;
+}
+
+.today-section-action {
+  min-height: 30px;
+  flex: 0 0 auto;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--accent-l);
+  font: inherit;
+  font-size: 0.64rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.today-section-action:hover,
+.today-section-action:focus-visible {
+  border-color: rgba(22, 131, 255, 0.3);
+  outline: 0;
+  background: var(--accent-dim);
+}
+
+.today-ledger {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.today-ledger-row {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.today-ledger-row:last-child {
+  border-bottom: 0;
+}
+
+.today-ledger-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.today-ledger-row.training .today-ledger-marker {
+  background: #10b981;
+}
+
+.today-ledger-row.nutrition .today-ledger-marker {
+  background: #f59e0b;
+}
+
+.today-ledger-row.activity .today-ledger-marker {
+  background: #ec4899;
+}
+
+.today-ledger-row.recovery .today-ledger-marker {
+  background: #38bdf8;
+}
+
+.today-ledger-row.calendar .today-ledger-marker {
+  background: #8b5cf6;
+}
+
+.today-ledger-copy {
+  min-width: 0;
+}
+
+.today-ledger-copy span,
+.today-ledger-copy strong,
+.today-ledger-copy small {
+  display: block;
+}
+
+.today-ledger-copy span {
+  color: var(--dim);
+  font-size: 0.56rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.today-ledger-copy strong {
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-ledger-copy small {
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.63rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-ledger-action {
+  min-height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--elevated);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.61rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.today-panel-empty {
+  display: grid;
+  min-height: 108px;
+  place-content: center;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.today-signals-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0;
+}
+
+.today-signal-block {
+  min-width: 0;
+  padding: 21px 22px;
+}
+
+.today-priority-block {
+  border-right: 1px solid var(--border);
+}
+
+.today-priority {
+  display: grid;
+  min-height: 125px;
+  align-content: space-between;
+  gap: 14px;
+  padding: 15px;
+  border-left: 3px solid var(--accent);
+  background: var(--elevated);
+}
+
+.today-priority.good {
+  border-left-color: var(--green);
+}
+
+.today-priority.warn {
+  border-left-color: var(--amber);
+}
+
+.today-priority strong,
+.today-priority span {
+  display: block;
+}
+
+.today-priority strong {
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.today-priority span {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.66rem;
+  line-height: 1.55;
+}
+
+.today-priority button {
+  width: max-content;
+  min-height: 31px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.63rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+#page-today .alert-list {
+  display: grid;
+  gap: 7px;
+}
+
+#page-today .alert-item {
+  min-height: 0;
+  padding: 10px 11px;
+  border: 0;
+  border-left: 3px solid var(--amber);
+  border-radius: 5px;
+  background: var(--elevated);
+}
+
+#page-today .alert-item.good {
+  border-left-color: var(--green);
+}
+
+#page-today .alert-item.danger {
+  border-left-color: var(--red);
+}
+
+#page-today .alert-title {
+  font-size: 0.68rem;
+}
+
+#page-today .alert-copy {
+  margin-top: 3px;
+  font-size: 0.61rem;
+  line-height: 1.45;
+}
+
+.today-checking-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.today-checking-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 150px) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+}
+
+.today-checking-row strong,
+.today-checking-row small {
+  display: block;
+}
+
+.today-checking-row strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.today-checking-row small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.59rem;
+}
+
+.today-checking-progress {
+  height: 5px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--border);
+}
+
+.today-checking-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.today-checking-status {
+  min-width: 58px;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: var(--accent-dim);
+  color: var(--accent-l);
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.today-checking-status.done {
+  background: rgba(16, 185, 129, 0.1);
+  color: #047857;
+}
+
+.today-checking-status.missed {
+  background: rgba(239, 68, 68, 0.09);
+  color: #b91c1c;
+}
+
+.today-recovery-panel {
+  padding-bottom: 17px;
+}
+
+.today-control-block,
+.today-hydration-block {
+  margin-top: 17px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.today-control-block > label,
+.today-control-label {
+  color: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 700;
+}
+
+.today-control-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.today-control-label output {
+  color: var(--text);
+  font-size: 0.61rem;
+  font-weight: 800;
+}
+
+.today-segmented,
+.today-energy-control {
+  display: grid;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.today-segmented {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.today-energy-control {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.today-segmented button,
+.today-energy-control button,
+.today-hydration-actions button {
+  min-height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.64rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.today-segmented button.active,
+.today-energy-control button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.today-inline-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+.today-inline-control input {
+  min-width: 0;
+}
+
+.today-inline-control button,
+.today-cardio-form button,
+.today-reminder-save {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.64rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.today-hydration-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.today-hydration-head span,
+.today-hydration-head strong {
+  display: block;
+}
+
+.today-hydration-head span {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.today-hydration-head strong {
+  margin-top: 3px;
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.today-hydration-head small {
+  color: var(--accent-l);
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.today-progress-track {
+  height: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--border);
+}
+
+.today-progress-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.today-hydration-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.today-hydration-actions button:last-child {
+  color: var(--red);
+}
+
+.today-cardio-form {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr auto;
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.today-cardio-form select,
+.today-cardio-form input {
+  min-width: 0;
+}
+
+.today-secondary-command,
+.today-notification-command {
+  width: 100%;
+  min-height: 35px;
+  margin-top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--elevated);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.63rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.today-reminder-form {
+  display: grid;
+  gap: 8px;
+  margin: 15px -2px 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--elevated);
+}
+
+.today-reminder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.today-reminder-grid > * {
+  min-width: 0;
+}
+
+.today-reminder-save {
+  width: 100%;
+}
+
+.today-reminders-list {
+  margin-top: 14px;
+}
+
+#page-today .today-reminders-list .compare-list {
+  display: grid;
+  gap: 7px;
+}
+
+#page-today .today-reminders-list .compare-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--elevated);
+}
+
+#page-today .today-reminders-list .compare-row > .badge {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#page-today .today-reminders-list .compare-row > .flex {
+  grid-column: 1 / -1;
+}
+
+.today-editor-panel {
+  margin-top: 18px;
+}
+
+.today-editor-panel summary {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.today-editor-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.today-editor-panel summary span,
+.today-editor-panel summary b,
+.today-editor-panel summary small {
+  display: block;
+}
+
+.today-editor-panel summary b {
+  color: var(--text);
+  font-size: 0.77rem;
+}
+
+.today-editor-panel summary small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.today-editor-panel summary > strong {
+  color: var(--accent-l);
+  font-size: 0.65rem;
+}
+
+.today-editor-panel[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.today-editor-panel[open] summary > strong {
+  font-size: 0;
+}
+
+.today-editor-panel[open] summary > strong::after {
+  font-size: 0.65rem;
+  content: 'Cerrar editor';
+}
+
+.today-editor-panel #day-editor {
+  padding: 18px 20px 22px;
+}
+
+@media (max-width: 1180px) {
+  .today-workspace {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+
+  .today-metrics-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .today-metric:nth-child(3) {
+    border-right: 0;
+  }
+
+  .today-metric:nth-child(n+4) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 920px) {
+  .today-command-board {
+    grid-template-columns: minmax(0, 1fr) 210px;
+  }
+
+  .today-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .today-secondary-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .today-reminders-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  #page-today .today-pro-head {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .today-head-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .today-command-board {
+    grid-template-columns: 1fr;
+  }
+
+  .today-command-lead {
+    padding: 22px 18px;
+  }
+
+  .today-command-footer {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .today-command-footer #free-day-status {
+    order: 3;
+    width: 100%;
+  }
+
+  .today-coverage-panel {
+    min-height: 0;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 14px;
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 0;
+    text-align: left;
+  }
+
+  .today-coverage-ring {
+    width: 64px;
+    height: 64px;
+    padding: 5px;
+  }
+
+  .today-coverage-ring > div {
+    width: 54px;
+    height: 54px;
+  }
+
+  .today-coverage-ring strong {
+    font-size: 0.98rem;
+  }
+
+  .today-coverage-ring span {
+    font-size: 0.42rem;
+  }
+
+  .today-coverage-panel > strong {
+    margin-top: 0;
+  }
+
+  .today-coverage-panel > span {
+    margin-left: auto;
+  }
+
+  .today-metrics-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .today-metric {
+    min-height: 96px;
+    padding: 17px 16px;
+  }
+
+  .today-metric::before {
+    top: 15px;
+    left: 16px;
+  }
+
+  .today-metric:nth-child(odd) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .today-metric:nth-child(even) {
+    border-right: 0;
+  }
+
+  .today-metric:nth-child(n+3) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .today-signals-panel,
+  .today-secondary-column {
+    grid-template-columns: 1fr;
+  }
+
+  .today-priority-block {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .today-reminders-panel {
+    grid-column: auto;
+  }
+
+  .today-checking-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .today-checking-progress {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 460px) {
+  .today-head-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .today-head-actions .btn-primary {
+    grid-column: 1 / -1;
+  }
+
+  .today-command-eyebrow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .today-streak-copy {
+    margin-left: 0;
+  }
+
+  .today-coverage-panel {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .today-coverage-panel > span {
+    grid-column: 2;
+    margin: -22px 0 0;
+  }
+
+  .today-metrics-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .today-metric,
+  .today-metric:nth-child(n) {
+    min-height: 88px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 0;
+  }
+
+  .today-metric:first-child {
+    border-top: 0;
+  }
+
+  .today-panel {
+    padding: 18px 15px;
+  }
+
+  .today-signal-block {
+    padding: 18px 15px;
+  }
+
+  .today-ledger-row {
+    grid-template-columns: 8px minmax(0, 1fr);
+  }
+
+  .today-ledger-action {
+    grid-column: 2;
+    width: max-content;
+  }
+
+  .today-cardio-form,
+  .today-reminder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .today-cardio-form button {
+    width: 100%;
+  }
+
+  .today-editor-panel summary {
+    padding: 14px 15px;
+  }
+}
+
 /* CENTRAL APP ASSISTANT */
 .sr-only {
   position: absolute;
@@ -7397,80 +8540,175 @@ input[type="radio"] {
 
   <!-- HOY -->
   <div id="page-today" class="page">
-    <div class="page-head flex jb ai-c">
-      <div><h1>Hoy</h1><p>Resumen directo para entrenar, comer y cerrar el día con intención</p></div>
-      <div class="flex gap-2">
-        <button class="btn btn-ghost btn-sm" onclick="showModal('modal-meal')">+ Comida</button>
-        <button class="btn btn-primary btn-sm" onclick="showModal('modal-session')">Entrenar</button>
+    <div class="page-head flex jb ai-c today-pro-head">
+      <div><h1>Hoy</h1><p>Operación diaria, recuperación y registros en un solo lugar</p></div>
+      <div class="today-head-actions">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="go('calendar')">Agenda</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="showModal('modal-meal')">+ Alimento</button>
+        <button class="btn btn-primary btn-sm" type="button" onclick="showModal('modal-session')">Entrenar</button>
       </div>
     </div>
-    <div class="content">
-      <div class="insight-card mb">
-        <div class="insight-title">Lectura del día</div>
-        <div class="insight-text" id="today-insight">Preparando tu resumen...</div>
-      </div>
-      <div class="card mb">
-        <div class="flex jb ai-c gap-2">
-          <div>
-            <div class="card-title" style="margin-bottom:6px">Día libre</div>
-            <div class="mini-muted" id="free-day-status">Este día cuenta normalmente en tus análisis.</div>
+    <div class="content today-pro-content">
+      <section class="today-command-board">
+        <div class="today-command-lead">
+          <div class="today-command-eyebrow">
+            <span id="today-date-label">Jornada seleccionada</span>
+            <span id="today-free-badge" class="today-mode-badge">Seguimiento normal</span>
           </div>
-          <button class="btn btn-ghost btn-sm" id="free-day-toggle" onclick="toggleFreeDay()">Marcar día libre</button>
-        </div>
-      </div>
-      <div class="card mb">
-        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
-          <div>
-            <div class="card-title" style="margin-bottom:6px">Recordatorios</div>
-            <div class="mini-muted" id="notification-permission-status">Notificaciones sin configurar</div>
+          <h2 id="today-status-title">Jornada aún sin registrar</h2>
+          <p id="today-insight">Preparando tu lectura diaria...</p>
+          <div class="today-command-footer">
+            <button class="today-free-toggle" id="free-day-toggle" type="button" onclick="toggleFreeDay()">Marcar día libre</button>
+            <span id="free-day-status">Este día cuenta normalmente en tus análisis.</span>
+            <span class="today-streak-copy"><strong id="today-streak">0</strong> días de registro</span>
           </div>
-          <button class="btn btn-ghost btn-sm" id="notification-permission-button" onclick="togglePushNotifications()">Activar avisos</button>
         </div>
-        <div class="form-grid fg3">
-          <div class="form-row"><label class="form-label">Recordatorio</label><input id="reminder-label" placeholder="Ej: Tomar creatina"></div>
-          <div class="form-row"><label class="form-label">Tipo</label><select id="reminder-type"><option value="training">Entreno</option><option value="meal">Comida</option><option value="water">Agua</option><option value="supplement">Suplemento</option><option value="checkin">Check-in</option><option value="personal">Personal</option></select></div>
-          <div class="form-row"><label class="form-label">Hora</label><input type="time" id="reminder-time"></div>
-          <div class="form-row"><label class="form-label">Repetición</label><select id="reminder-repeat"><option value="daily">Todos los días</option><option value="weekdays">Lunes a viernes</option><option value="weekends">Fin de semana</option><option value="once">Una vez</option></select></div>
-          <div class="form-row"><label class="form-label">Fecha para una vez</label><input type="date" id="reminder-date"></div>
+
+        <div class="today-coverage-panel">
+          <div class="today-coverage-ring" id="today-coverage-ring" style="--today-coverage:0deg">
+            <div><strong id="today-coverage-value">0%</strong><span>cobertura</span></div>
+          </div>
+          <strong id="today-coverage-title">Sin datos cargados</strong>
+          <span id="today-coverage-copy">0 de 5 áreas registradas</span>
         </div>
-        <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveReminder()">Guardar recordatorio</button></div>
-        <div id="reminders-list" class="mt-3"><div class="empty">Sin recordatorios configurados.</div></div>
+
+        <div class="today-metrics-strip">
+          <div class="today-metric">
+            <span>Entrenamiento</span>
+            <strong id="today-training-count">0</strong>
+            <small id="today-training-sub">sesiones hoy</small>
+          </div>
+          <div class="today-metric">
+            <span>Nutrición</span>
+            <strong><b id="today-calories">0</b><i>kcal</i></strong>
+            <small id="today-calories-sub">sin registros</small>
+          </div>
+          <div class="today-metric">
+            <span>Proteína</span>
+            <strong><b id="today-protein">0</b><i>g</i></strong>
+            <small id="today-protein-sub">de la meta diaria</small>
+          </div>
+          <div class="today-metric">
+            <span>Hidratación</span>
+            <strong><b id="today-water">0</b><i>ml</i></strong>
+            <small id="today-water-sub">de 2500 ml</small>
+          </div>
+          <div class="today-metric">
+            <span>Actividad</span>
+            <strong id="today-steps">0</strong>
+            <small id="today-steps-sub">pasos registrados</small>
+          </div>
+        </div>
+      </section>
+
+      <div class="today-workspace">
+        <main class="today-primary-column">
+          <section class="today-panel today-ledger-panel">
+            <div class="today-section-head">
+              <div><span>Actividad</span><h2>Registro de la jornada</h2></div>
+              <button class="today-section-action" type="button" onclick="document.getElementById('today-editor-details').open=true;document.getElementById('today-editor-details').scrollIntoView({behavior:'smooth'})">Editar registros</button>
+            </div>
+            <div id="today-ledger" class="today-ledger"><div class="today-panel-empty">Todavía no hay actividad registrada.</div></div>
+          </section>
+
+          <section class="today-panel today-signals-panel">
+            <div class="today-signal-block today-priority-block">
+              <div class="today-section-head compact"><div><span>Decisión</span><h2>Próxima prioridad</h2></div></div>
+              <div id="today-next-action"><div class="today-panel-empty">Sin acción pendiente.</div></div>
+            </div>
+            <div class="today-signal-block">
+              <div class="today-section-head compact"><div><span>Control</span><h2>Señales del día</h2></div></div>
+              <div id="today-alerts"><div class="today-panel-empty">Sin alertas.</div></div>
+            </div>
+          </section>
+
+          <section class="today-panel today-checking-panel">
+            <div class="today-section-head">
+              <div><span>Semana activa</span><h2>Objetivos y check-in</h2></div>
+              <button class="today-section-action" type="button" onclick="go('checking')">Abrir check-in</button>
+            </div>
+            <div id="today-checking"><div class="today-panel-empty">Sin objetivos semanales.</div></div>
+          </section>
+        </main>
+
+        <aside class="today-secondary-column">
+          <section class="today-panel today-recovery-panel">
+            <div class="today-section-head"><div><span>Recuperación</span><h2>Estado físico</h2></div></div>
+
+            <div class="today-control-block">
+              <label>Estado general</label>
+              <div class="today-segmented" id="today-mood-controls">
+                <button type="button" data-today-mood="Mal" onclick="saveTodayMood('Mal')">Mal</button>
+                <button type="button" data-today-mood="Regular" onclick="saveTodayMood('Regular')">Regular</button>
+                <button type="button" data-today-mood="Bien" onclick="saveTodayMood('Bien')">Bien</button>
+              </div>
+            </div>
+
+            <div class="today-control-block">
+              <div class="today-control-label"><label for="today-sleep-hours">Horas de sueño</label><output id="today-sleep-status">Sin cargar</output></div>
+              <div class="today-inline-control">
+                <input type="number" id="today-sleep-hours" min="0" max="24" step="0.5" placeholder="0">
+                <button type="button" onclick="saveTodaySleep()">Guardar</button>
+              </div>
+            </div>
+
+            <div class="today-control-block">
+              <div class="today-control-label"><span>Energía</span><output id="today-energy-status">Sin cargar</output></div>
+              <div class="today-energy-control" id="today-energy-controls">
+                <button type="button" data-today-energy="1" onclick="saveTodayEnergy(1)">1</button>
+                <button type="button" data-today-energy="2" onclick="saveTodayEnergy(2)">2</button>
+                <button type="button" data-today-energy="3" onclick="saveTodayEnergy(3)">3</button>
+                <button type="button" data-today-energy="4" onclick="saveTodayEnergy(4)">4</button>
+                <button type="button" data-today-energy="5" onclick="saveTodayEnergy(5)">5</button>
+              </div>
+            </div>
+
+            <div class="today-hydration-block">
+              <div class="today-hydration-head"><div><span>Agua</span><strong id="today-water-value">0 ml</strong></div><small id="today-water-progress">0%</small></div>
+              <div class="today-progress-track"><i id="today-water-bar" style="width:0%"></i></div>
+              <div class="today-hydration-actions">
+                <button type="button" onclick="addWater(250)">+250</button>
+                <button type="button" onclick="addWater(500)">+500</button>
+                <button type="button" onclick="resetWater()">Reiniciar</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="today-panel today-activity-capture">
+            <div class="today-section-head"><div><span>Movimiento</span><h2>Captura rápida</h2></div><small id="today-cardio-summary">Sin actividad</small></div>
+            <div class="today-cardio-form">
+              <select id="today-cardio-type" aria-label="Tipo de actividad"><option value="steps">Pasos</option><option value="minutes">Minutos de cardio</option></select>
+              <input type="number" id="today-cardio-value" min="1" step="1" inputmode="numeric" placeholder="Cantidad" aria-label="Cantidad">
+              <button type="button" onclick="saveTodayCardio()">Registrar</button>
+            </div>
+            <button class="today-secondary-command" type="button" onclick="go('body')">Registrar control corporal</button>
+          </section>
+
+          <section class="today-panel today-reminders-panel">
+            <div class="today-section-head">
+              <div><span>Agenda personal</span><h2>Recordatorios</h2><small id="notification-permission-status">Notificaciones sin configurar</small></div>
+              <button class="today-section-action" id="today-reminder-form-toggle" type="button" onclick="toggleTodayReminderForm()">Nuevo</button>
+            </div>
+            <div id="today-reminder-form" class="today-reminder-form" style="display:none">
+              <input id="reminder-label" placeholder="Nombre del recordatorio" aria-label="Recordatorio">
+              <div class="today-reminder-grid">
+                <select id="reminder-type" aria-label="Tipo"><option value="training">Entreno</option><option value="meal">Comida</option><option value="water">Agua</option><option value="supplement">Suplemento</option><option value="checkin">Check-in</option><option value="personal">Personal</option></select>
+                <input type="time" id="reminder-time" aria-label="Hora">
+                <select id="reminder-repeat" aria-label="Repetición" onchange="syncTodayReminderDateVisibility()"><option value="daily">Todos los días</option><option value="weekdays">Lunes a viernes</option><option value="weekends">Fin de semana</option><option value="once">Una vez</option></select>
+                <input type="date" id="reminder-date" aria-label="Fecha para una vez">
+              </div>
+              <button class="today-reminder-save" type="button" onclick="saveReminder()">Guardar recordatorio</button>
+            </div>
+            <div id="reminders-list" class="today-reminders-list"><div class="today-panel-empty">Sin recordatorios configurados.</div></div>
+            <button class="today-notification-command" id="notification-permission-button" type="button" onclick="togglePushNotifications()">Activar avisos del dispositivo</button>
+          </section>
+        </aside>
       </div>
-      <div class="quick-grid mb">
-        <div class="quick-card">
-          <div class="quick-label">Entreno</div>
-          <div class="quick-value" id="today-training-count">0</div>
-          <div class="quick-sub" id="today-training-sub">sesiones hoy</div>
-        </div>
-        <div class="quick-card">
-          <div class="quick-label">Nutrición</div>
-          <div class="quick-value" id="today-calories">0</div>
-          <div class="quick-sub" id="today-calories-sub">kcal registradas</div>
-        </div>
-        <div class="quick-card">
-          <div class="quick-label">Racha</div>
-          <div class="quick-value" id="today-streak">0</div>
-          <div class="quick-sub">días con registro</div>
-        </div>
-      </div>
-      <div class="g2 mb">
-        <div class="card">
-          <div class="card-title">Próxima acción</div>
-          <div id="today-next-action"><div class="empty">Sin acción pendiente</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Alertas visuales</div>
-          <div id="today-alerts"><div class="empty">Sin alertas</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Check-in de la semana</div>
-        <div id="today-checking"><div class="empty">Sin objetivos semanales</div></div>
-      </div>
-      <div class="card mt-3">
-        <div class="card-title">Editor rápido del día</div>
-        <div id="day-editor"><div class="empty">Los registros del día aparecerán acá para editarlos sin rehacerlos.</div></div>
-      </div>
+
+      <details class="today-editor-panel" id="today-editor-details">
+        <summary><span><b>Gestión de registros</b><small>Editar o eliminar información cargada en esta fecha</small></span><strong>Abrir editor</strong></summary>
+        <div id="day-editor"><div class="today-panel-empty">Los registros del día aparecerán aquí.</div></div>
+      </details>
     </div>
   </div>
 
@@ -8704,7 +9942,8 @@ function renderFreeDayStatus(date = selectedDate()) {
     : 'Este día cuenta normalmente en tus análisis.';
   if (btn) {
     btn.textContent = active ? 'Quitar día libre' : 'Marcar día libre';
-    btn.className = active ? 'btn btn-danger btn-sm' : 'btn btn-ghost btn-sm';
+    if (btn.classList.contains('today-free-toggle')) btn.classList.toggle('active', active);
+    else btn.className = active ? 'btn btn-danger btn-sm' : 'btn btn-ghost btn-sm';
   }
   if (globalBtn) {
     globalBtn.textContent = active ? 'Quitar día libre' : 'Día libre';
@@ -9876,6 +11115,7 @@ function addWater(amount) {
   water[selectedDate()] = (water[selectedDate()] || 0) + amount;
   DB.set('daily_water', water);
   renderWaterToday();
+  refreshTodayIfActive();
 }
 
 function resetWater() {
@@ -9883,6 +11123,7 @@ function resetWater() {
   water[selectedDate()] = 0;
   DB.set('daily_water', water);
   renderWaterToday();
+  refreshTodayIfActive();
 }
 
 function renderWaterToday() {
@@ -10029,48 +11270,269 @@ function loadDashboard() {
   refreshCloudStatus();
 }
 
+function todayDateLabel(date = selectedDate()) {
+  const value = new Intl.DateTimeFormat('es-AR', { weekday: 'long', day: 'numeric', month: 'long' }).format(localDate(date));
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function todayMovement(date = selectedDate()) {
+  const records = (DB.get('checking_cardio') || []).filter(item => item.date === date);
+  return {
+    records,
+    steps: records.filter(item => item.type === 'steps').reduce((sum, item) => sum + (+item.value || 0), 0),
+    minutes: records.filter(item => item.type === 'minutes').reduce((sum, item) => sum + (+item.value || 0), 0)
+  };
+}
+
+function todayCoverage(date = selectedDate()) {
+  const meals = nutritionForDate(date).meals;
+  const sessions = sessionsForDate(date);
+  const movement = todayMovement(date);
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const mood = (DB.get('dashboard_moods') || {})[date];
+  const water = +(DB.get('daily_water') || {})[date] || 0;
+  const areas = [
+    { key: 'nutrition', done: meals.length > 0 },
+    { key: 'training', done: sessions.length > 0 },
+    { key: 'movement', done: movement.records.length > 0 },
+    { key: 'recovery', done: wellness.sleep != null || wellness.energy != null || Boolean(mood) },
+    { key: 'hydration', done: water > 0 }
+  ];
+  const completed = areas.filter(area => area.done).length;
+  return { areas, completed, total: areas.length, percent: Math.round((completed / areas.length) * 100) };
+}
+
+function renderTodayCoverage(date = selectedDate()) {
+  const coverage = todayCoverage(date);
+  const free = isFreeDay(date);
+  const ring = document.getElementById('today-coverage-ring');
+  const badge = document.getElementById('today-free-badge');
+  document.getElementById('today-date-label').textContent = todayDateLabel(date);
+  document.getElementById('today-coverage-value').textContent = `${coverage.percent}%`;
+  document.getElementById('today-coverage-copy').textContent = `${coverage.completed} de ${coverage.total} áreas registradas`;
+  document.getElementById('today-coverage-title').textContent = coverage.completed === 0
+    ? 'Sin datos cargados'
+    : coverage.completed === coverage.total ? 'Registro completo' : 'Registro en curso';
+  document.getElementById('today-status-title').textContent = free
+    ? 'Día libre en seguimiento'
+    : coverage.completed === 0 ? 'Jornada aún sin registrar'
+    : coverage.percent < 60 ? 'Jornada en construcción'
+    : coverage.percent < 100 ? 'Registro diario avanzado' : 'Registro diario completo';
+  if (ring) ring.style.setProperty('--today-coverage', `${coverage.percent * 3.6}deg`);
+  if (badge) {
+    badge.textContent = free ? 'Día libre' : 'Seguimiento normal';
+    badge.classList.toggle('free', free);
+  }
+}
+
+function renderTodayRecovery(date = selectedDate()) {
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const mood = (DB.get('dashboard_moods') || {})[date] || '';
+  const water = +(DB.get('daily_water') || {})[date] || 0;
+  const waterPercent = Math.min(100, Math.round((water / 2500) * 100));
+  const sleepInput = document.getElementById('today-sleep-hours');
+  if (sleepInput && document.activeElement !== sleepInput) sleepInput.value = wellness.sleep ?? '';
+  const sleepStatus = document.getElementById('today-sleep-status');
+  const energyStatus = document.getElementById('today-energy-status');
+  if (sleepStatus) sleepStatus.textContent = wellness.sleep != null ? `${wellness.sleep} h` : 'Sin cargar';
+  if (energyStatus) energyStatus.textContent = wellness.energy != null ? `${wellness.energy}/5` : 'Sin cargar';
+  document.querySelectorAll('[data-today-mood]').forEach(button => button.classList.toggle('active', button.dataset.todayMood === mood));
+  document.querySelectorAll('[data-today-energy]').forEach(button => button.classList.toggle('active', +button.dataset.todayEnergy === +wellness.energy));
+  const waterValue = document.getElementById('today-water-value');
+  const waterProgress = document.getElementById('today-water-progress');
+  const waterBar = document.getElementById('today-water-bar');
+  if (waterValue) waterValue.textContent = `${water.toLocaleString('es-AR')} ml`;
+  if (waterProgress) waterProgress.textContent = `${waterPercent}%`;
+  if (waterBar) waterBar.style.width = `${waterPercent}%`;
+}
+
+function renderTodayLedger(date = selectedDate()) {
+  const el = document.getElementById('today-ledger');
+  if (!el) return;
+  const entries = [];
+  calendarEventsForDate(date).forEach(item => entries.push({
+    order: 10,
+    tone: 'calendar',
+    category: item.all_day ? 'Agenda · Todo el día' : `Agenda · ${calendarEventTimeLabel(item)}`,
+    title: item.title,
+    meta: [item.category, item.location].filter(Boolean).join(' · ') || 'Evento planificado',
+    action: `<button class="today-ledger-action" type="button" data-calendar-event-id="${esc(item.id)}" onclick="openCalendarEventFromElement(this)">Abrir</button>`
+  }));
+  sessionsForDate(date).forEach(item => entries.push({
+    order: 20,
+    tone: 'training',
+    category: 'Entrenamiento',
+    title: item.routine_name || item.day_name || 'Sesión registrada',
+    meta: `${item.duration || 0} min · ${(item.sets || []).length} series${item.notes ? ' · ' + item.notes : ''}`,
+    action: `<button class="today-ledger-action" type="button" onclick="editSessionQuick('${esc(item.id)}')">Editar</button>`
+  }));
+  nutritionForDate(date).meals.forEach(item => entries.push({
+    order: 30,
+    tone: 'nutrition',
+    category: item.meal_name || 'Nutrición',
+    title: item.food_item || 'Alimento registrado',
+    meta: `${Math.round(+item.calories || 0)} kcal · P ${Math.round(+item.protein || 0)}g · C ${Math.round(+item.carbs || 0)}g · G ${Math.round(+item.fat || 0)}g`,
+    action: `<button class="today-ledger-action" type="button" onclick="editMeal('${esc(item.id)}')">Editar</button>`
+  }));
+  todayMovement(date).records.forEach(item => entries.push({
+    order: 40,
+    tone: 'activity',
+    category: item.type === 'steps' ? 'Pasos' : 'Cardio',
+    title: item.type === 'steps' ? `${Number(item.value || 0).toLocaleString('es-AR')} pasos` : `${Number(item.value || 0).toLocaleString('es-AR')} minutos`,
+    meta: 'Actividad registrada manualmente',
+    action: `<button class="today-ledger-action" type="button" onclick="editCheckinCardio('${esc(item.id)}')">Editar</button>`
+  }));
+  const body = (DB.get('bodylogs') || []).find(item => item.date === date);
+  if (body) entries.push({
+    order: 50,
+    tone: 'recovery',
+    category: 'Control corporal',
+    title: body.weight ? `${body.weight} kg` : 'Medidas registradas',
+    meta: [body.body_fat ? `${body.body_fat}% grasa` : '', body.waist ? `${body.waist} cm cintura` : '', body.notes || ''].filter(Boolean).join(' · '),
+    action: `<button class="today-ledger-action" type="button" onclick="editBodyLog('${esc(body.id)}')">Editar</button>`
+  });
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const mood = (DB.get('dashboard_moods') || {})[date];
+  const water = +(DB.get('daily_water') || {})[date] || 0;
+  if (wellness.sleep != null || wellness.energy != null || mood || water) entries.push({
+    order: 60,
+    tone: 'recovery',
+    category: 'Recuperación',
+    title: [wellness.sleep != null ? `${wellness.sleep} h sueño` : '', wellness.energy != null ? `energía ${wellness.energy}/5` : '', mood || ''].filter(Boolean).join(' · ') || 'Estado diario',
+    meta: water ? `${water.toLocaleString('es-AR')} ml de agua` : 'Sin agua registrada',
+    action: `<button class="today-ledger-action" type="button" onclick="document.getElementById('today-sleep-hours')?.focus()">Revisar</button>`
+  });
+  entries.sort((a, b) => a.order - b.order);
+  if (!entries.length) {
+    el.innerHTML = '<div class="today-panel-empty">Todavía no hay actividad registrada para esta fecha.</div>';
+    return;
+  }
+  const visible = entries.slice(0, 16);
+  el.innerHTML = visible.map(item => `<div class="today-ledger-row ${item.tone}">
+    <span class="today-ledger-marker"></span>
+    <div class="today-ledger-copy"><span>${esc(item.category)}</span><strong>${esc(item.title)}</strong><small>${esc(item.meta)}</small></div>
+    ${item.action || '<span></span>'}
+  </div>`).join('') + (entries.length > visible.length ? `<div class="mini-muted" style="padding-top:12px">${entries.length - visible.length} registros adicionales disponibles en el editor.</div>` : '');
+}
+
+function saveTodayMood(value) {
+  const moods = DB.get('dashboard_moods') || {};
+  moods[selectedDate()] = value;
+  DB.set('dashboard_moods', moods);
+  loadToday();
+  toast('Estado general guardado');
+}
+
+function saveTodaySleep() {
+  const input = document.getElementById('today-sleep-hours');
+  if (!input || input.value === '') return toast('Indica las horas de sueño', 'err');
+  const sleep = Number(input.value);
+  if (!Number.isFinite(sleep) || sleep < 0 || sleep > 24) return toast('Ingresa un valor entre 0 y 24 horas', 'err');
+  setWellnessToday({ sleep });
+  loadToday();
+  toast('Sueño guardado');
+}
+
+function saveTodayEnergy(level) {
+  setWellnessToday({ energy: Math.max(1, Math.min(5, Math.round(+level || 1))) });
+  loadToday();
+  toast('Energía guardada');
+}
+
+function saveTodayCardio() {
+  const type = document.getElementById('today-cardio-type')?.value || 'steps';
+  const input = document.getElementById('today-cardio-value');
+  const value = Math.round(Number(input?.value));
+  if (!Number.isFinite(value) || value <= 0) return toast('Ingresa una cantidad válida', 'err');
+  DB.push('checking_cardio', { id: uid(), week: weekValueFromDate(selectedDate()), date: selectedDate(), type, value });
+  input.value = '';
+  loadToday();
+  loadGoals();
+  toast(type === 'steps' ? 'Pasos registrados' : 'Cardio registrado');
+}
+
+function toggleTodayReminderForm(force) {
+  const form = document.getElementById('today-reminder-form');
+  const button = document.getElementById('today-reminder-form-toggle');
+  if (!form) return;
+  const open = typeof force === 'boolean' ? force : form.style.display === 'none';
+  form.style.display = open ? 'grid' : 'none';
+  if (button) button.textContent = open ? 'Cerrar' : 'Nuevo';
+  if (open) {
+    syncTodayReminderDateVisibility();
+    setTimeout(() => document.getElementById('reminder-label')?.focus(), 30);
+  }
+}
+
+function syncTodayReminderDateVisibility() {
+  const repeat = document.getElementById('reminder-repeat')?.value || 'daily';
+  const date = document.getElementById('reminder-date');
+  if (!date) return;
+  date.style.display = repeat === 'once' ? '' : 'none';
+  date.disabled = repeat !== 'once';
+}
+
+function refreshTodayIfActive() {
+  if (document.getElementById('page-today')?.classList.contains('active')) loadToday();
+}
+
 function loadToday() {
-  const { cfg, totals } = nutritionForDate();
-  const sessions = sessionsForDate();
-  const check = checkingStats(weekValueFromDate(selectedDate()));
-  const free = isFreeDay();
-  document.getElementById('today-insight').textContent = smartInsight();
+  const date = selectedDate();
+  const { cfg, meals, totals } = nutritionForDate(date);
+  const sessions = sessionsForDate(date);
+  const check = checkingStats(weekValueFromDate(date));
+  const movement = todayMovement(date);
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const water = +(DB.get('daily_water') || {})[date] || 0;
+  const free = isFreeDay(date);
+  document.getElementById('today-insight').textContent = smartInsight(date);
   document.getElementById('today-training-count').textContent = sessions.length;
-  document.getElementById('today-training-sub').textContent = sessions.length === 1 ? 'sesión hoy' : 'sesiones hoy';
-  document.getElementById('today-calories').textContent = totals.cal;
-  document.getElementById('today-calories-sub').textContent = free ? 'día libre: solo cuenta lo cargado' : `de ${cfg.calories} kcal`;
+  document.getElementById('today-training-sub').textContent = sessions.length === 1 ? 'sesión registrada' : 'sesiones registradas';
+  document.getElementById('today-calories').textContent = Math.round(totals.cal);
+  document.getElementById('today-calories-sub').textContent = free ? 'solo se evalúa lo cargado' : `de ${cfg.calories} kcal`;
+  document.getElementById('today-protein').textContent = Math.round(totals.p);
+  document.getElementById('today-protein-sub').textContent = `de ${cfg.protein} g`;
+  document.getElementById('today-water').textContent = water.toLocaleString('es-AR');
+  document.getElementById('today-water-sub').textContent = `${Math.min(100, Math.round((water / 2500) * 100))}% del objetivo`;
+  document.getElementById('today-steps').textContent = movement.steps.toLocaleString('es-AR');
+  document.getElementById('today-steps-sub').textContent = movement.minutes ? `${movement.minutes} min de cardio` : 'pasos registrados';
   document.getElementById('today-streak').textContent = activityStreak();
-  renderFreeDayStatus();
+  document.getElementById('today-cardio-summary').textContent = movement.steps || movement.minutes
+    ? `${movement.steps.toLocaleString('es-AR')} pasos · ${movement.minutes} min`
+    : 'Sin actividad';
+  renderFreeDayStatus(date);
+  renderTodayCoverage(date);
 
-  const next = document.getElementById('today-next-action');
   const routines = DB.get('routines') || [];
-  const actionTitle = free ? 'Día libre activo' : !sessions.length ? 'Entrenamiento' : totals.p < cfg.protein ? 'Recuperación' : 'Cierre del día';
-  const actionCopy = free
-    ? 'Puedes registrar comidas o notas igual, pero este día no entra en análisis, promedios ni coach semanal.'
-    : !sessions.length
-    ? (routines.length ? 'Abre Entrenar, elige tu rutina y registra lo logrado junto al peso.' : 'Crea una rutina para que tus objetivos se carguen solos al registrar entreno.')
-    : totals.p < cfg.protein ? `Suma proteína. Faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)}g para tu objetivo.` : 'Revisa Check-in y deja observaciones de cómo va la semana.';
-  next.innerHTML = `
-    <div class="alert-item ${free || sessions.length ? 'good' : 'warn'}">
-      <div class="alert-title">${actionTitle}</div>
-      <div class="alert-copy">${actionCopy}</div>
-      <div class="btn-row">
-        <button class="btn btn-primary btn-sm" onclick="${free ? "toggleFreeDay()" : !sessions.length ? "showModal('modal-session')" : "go('checking')"}">${free ? 'Quitar día libre' : !sessions.length ? 'Registrar entreno' : 'Abrir Check-in'}</button>
-      </div>
-    </div>`;
+  let action = { title: 'Día bajo control', copy: 'Los registros principales están cubiertos. Revisa las señales y cierra lo pendiente cuando corresponda.', label: 'Abrir check-in', onclick: "go('checking')", tone: 'good' };
+  if (free) {
+    action = { title: 'Día libre activo', copy: 'Solo se evalúan los datos que decidas registrar; las áreas vacías no cuentan en contra.', label: 'Quitar día libre', onclick: 'toggleFreeDay()', tone: 'good' };
+  } else if (!meals.length) {
+    action = { title: 'Nutrición sin registrar', copy: 'Carga la primera comida para abrir el seguimiento de calorías y macronutrientes del día.', label: 'Registrar alimento', onclick: "showModal('modal-meal')", tone: 'warn' };
+  } else if (!sessions.length) {
+    action = { title: 'Entrenamiento o descanso', copy: routines.length ? 'Si hoy entrenas, abre tu rutina y registra las series logradas. Si descansas, continúa con recuperación y actividad.' : 'Crea una rutina o registra una sesión manual para iniciar el seguimiento de rendimiento.', label: routines.length ? 'Registrar entreno' : 'Abrir entrenamiento', onclick: routines.length ? "showModal('modal-session')" : "go('training')", tone: 'warn' };
+  } else if (wellness.sleep == null && wellness.energy == null) {
+    action = { title: 'Completar recuperación', copy: 'El entrenamiento ya está registrado. Añade sueño y energía para interpretar mejor tu rendimiento.', label: 'Registrar recuperación', onclick: "document.getElementById('today-sleep-hours')?.focus()", tone: 'warn' };
+  } else if (totals.p < cfg.protein) {
+    action = { title: 'Proteína por completar', copy: `Faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)} g para alcanzar la referencia diaria.`, label: 'Registrar alimento', onclick: "showModal('modal-meal')", tone: 'warn' };
+  } else if (check.total && check.pending) {
+    action = { title: 'Check-in abierto', copy: `${check.pending} objetivo${check.pending === 1 ? '' : 's'} semanal${check.pending === 1 ? '' : 'es'} siguen pendientes.`, label: 'Abrir check-in', onclick: "go('checking')", tone: 'warn' };
+  }
+  document.getElementById('today-next-action').innerHTML = `<div class="today-priority ${action.tone}"><div><strong>${esc(action.title)}</strong><span>${esc(action.copy)}</span></div><button type="button" onclick="${action.onclick}">${esc(action.label)}</button></div>`;
 
-  renderAlerts('today-alerts', dailyAlerts());
+  renderAlerts('today-alerts', dailyAlerts(date));
   const checkingEl = document.getElementById('today-checking');
-  checkingEl.innerHTML = check.goals.length ? `<div class="alert-list">${check.goals.map(g => `
-    <div class="alert-item ${checkingStatus(g) === 'done' ? 'good' : checkingStatus(g) === 'missed' ? 'danger' : 'warn'}">
-      <div class="flex jb ai-c gap-2">
-        <div>
-          <div class="alert-title">${esc(g.title)}</div>
-          <div class="alert-copy">${checkingStatus(g) === 'done' ? 'Cumplido' : checkingStatus(g) === 'missed' ? 'Fallado' : 'Pendiente'}</div>
-        </div>
-        <span class="badge ${checkingStatus(g) === 'done' ? 'b-green' : checkingStatus(g) === 'missed' ? 'b-red' : 'b-amber'}">${checkLabel(g)}</span>
-      </div>
-    </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
+  checkingEl.innerHTML = check.goals.length ? `<div class="today-checking-list">${check.goals.slice(0, 5).map(goal => {
+    const status = checkingStatus(goal);
+    const progress = checkingGoalProgress(goal);
+    return `<div class="today-checking-row">
+      <div><strong>${esc(goal.title)}</strong><small>${esc(progress.current)} de ${esc(progress.target)} ${esc(progress.unit || '')}</small></div>
+      <div class="today-checking-progress"><i style="width:${progress.percent}%"></i></div>
+      <span class="today-checking-status ${status}">${esc(checkLabel(goal))}</span>
+    </div>`;
+  }).join('')}</div>` : '<div class="today-panel-empty">Sin objetivos semanales configurados.</div>';
+  renderTodayRecovery(date);
+  renderTodayLedger(date);
   renderReminders();
   renderDayEditor();
 }
@@ -10148,6 +11610,7 @@ function saveReminder() {
   document.getElementById('reminder-label').value = '';
   document.getElementById('reminder-time').value = '';
   renderReminders();
+  toggleTodayReminderForm(false);
   checkDueReminders();
   toast('Recordatorio guardado');
 }
@@ -10487,6 +11950,7 @@ function editCheckinCardio(id) {
   renderCheckinCardio();
   loadDashboard();
   loadGoals();
+  refreshTodayIfActive();
   toast('Cardio actualizado');
 }
 
@@ -10507,6 +11971,7 @@ function editWellnessToday() {
   renderWellnessToday();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
   toast('Sueño y energía actualizados');
 }
 
@@ -10521,6 +11986,7 @@ function editWaterToday() {
   renderWaterToday();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
   toast('Agua actualizada');
 }
 
@@ -10542,6 +12008,7 @@ function editSessionQuick(id) {
   renderExerciseHistoryDraft();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
   toast('Sesión actualizada');
 }
 
@@ -10568,6 +12035,7 @@ function editSessionSet(sessionId, setIndex) {
   renderExerciseHistoryDraft();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
   toast('Serie actualizada');
 }
 
@@ -12404,6 +13872,7 @@ function saveCalendarEvent() {
   const wasEditing = Boolean(previous);
   hideModal('modal-calendar-event');
   loadCalendar({ preserveCursor: true });
+  refreshTodayIfActive();
   toast(wasEditing ? 'Evento actualizado' : 'Evento guardado');
 }
 
@@ -12414,6 +13883,7 @@ function deleteCalendarEvent() {
   DB.del('calendar_events', item.id);
   hideModal('modal-calendar-event');
   loadCalendar({ preserveCursor: true });
+  refreshTodayIfActive();
   toast('Evento eliminado');
 }
 
@@ -12912,6 +14382,7 @@ function saveBodyLog() {
   loadGoals();
   loadDashboard();
   renderDayEditor();
+  refreshTodayIfActive();
 }
 
 function renderBodyTable() {
@@ -12935,6 +14406,7 @@ function deleteBodyLog(id) {
   loadGoals();
   loadDashboard();
   renderDayEditor();
+  refreshTodayIfActive();
 }
 
 function renderBodyChart() {
@@ -13948,6 +15420,7 @@ function deleteSession(id) {
   loadDashboard();
   loadGoals();
   renderDayEditor();
+  refreshTodayIfActive();
 }
 
 function loadRecords() {
@@ -14468,6 +15941,7 @@ function saveMeal() {
   renderMealTemplates();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
 }
 
 function currentMealForm() {
@@ -14587,6 +16061,7 @@ function deleteMeal(id) {
   loadMeals();
   renderDayEditor();
   loadDashboard();
+  refreshTodayIfActive();
 }
 
 // ═══════════════════════════════════════════════════
