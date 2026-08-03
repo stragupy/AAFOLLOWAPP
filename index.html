@@ -16,7 +16,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.2/html5-qrcode.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
   --bg: #f5f7fb;
@@ -4174,6 +4174,2990 @@ tr:hover td {
   .photo-compare-toolbar > * { flex: 1 1 145px; }
 }
 
+/* PROFESSIONAL CALENDAR */
+#page-calendar {
+  --aa-cal-border: #dfe3e8;
+  --aa-cal-border-soft: #eceff3;
+  --aa-cal-text: #202124;
+  --aa-cal-muted: #6f7783;
+  --aa-cal-surface: #ffffff;
+  --aa-cal-subtle: #f8f9fb;
+  --aa-cal-accent: #1683ff;
+}
+
+#page-calendar .aa-calendar-page-head {
+  align-items: flex-end;
+}
+
+#page-calendar .aa-calendar-new-btn {
+  min-height: 42px !important;
+  padding: 9px 17px !important;
+  border: 1px solid #0875ed !important;
+  border-radius: 10px !important;
+  background: #1683ff !important;
+  box-shadow: 0 5px 14px rgba(22, 131, 255, 0.2) !important;
+  font-size: 0.82rem !important;
+  font-weight: 750 !important;
+}
+
+#page-calendar .aa-calendar-new-btn:hover {
+  background: #0875ed !important;
+  box-shadow: 0 7px 17px rgba(22, 131, 255, 0.25) !important;
+  transform: translateY(-1px);
+}
+
+#page-calendar .aa-calendar-content {
+  display: block !important;
+  max-width: 1580px;
+}
+
+.aa-calendar-shell {
+  overflow: hidden;
+  border: 1px solid var(--aa-cal-border);
+  border-radius: 16px;
+  background: var(--aa-cal-surface);
+  box-shadow: 0 12px 34px rgba(32, 33, 36, 0.08);
+}
+
+.aa-calendar-toolbar {
+  display: grid;
+  min-height: 68px;
+  padding: 12px 18px;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--aa-cal-border);
+  background: #ffffff;
+}
+
+.aa-calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.aa-calendar-today,
+.aa-calendar-arrow {
+  display: inline-flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  color: #3c4043;
+  background: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.aa-calendar-today {
+  min-width: 66px;
+  padding: 0 15px;
+}
+
+.aa-calendar-arrow {
+  width: 38px;
+  padding: 0;
+  border-color: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.aa-calendar-today:hover,
+.aa-calendar-arrow:hover {
+  border-color: #c9cdd2;
+  background: #f5f7f9;
+}
+
+.aa-calendar-today:focus-visible,
+.aa-calendar-arrow:focus-visible,
+.aa-calendar-day-add:focus-visible,
+.aa-calendar-event:focus-visible,
+.aa-calendar-agenda-item:focus-visible,
+.aa-calendar-color:focus-visible {
+  outline: 2px solid rgba(22, 131, 255, 0.42);
+  outline-offset: 2px;
+}
+
+.aa-calendar-month-title {
+  margin: 0;
+  color: var(--aa-cal-text);
+  font-size: 1.22rem;
+  font-weight: 760;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.aa-calendar-event-count {
+  justify-self: end;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #5f6670;
+  background: #f2f4f7;
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
+.aa-calendar-workspace {
+  display: grid;
+  grid-template-columns: 258px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.aa-calendar-sidebar {
+  display: flex;
+  min-width: 0;
+  min-height: 744px;
+  padding: 22px 18px;
+  flex-direction: column;
+  border-right: 1px solid var(--aa-cal-border);
+  background: var(--aa-cal-subtle);
+}
+
+.aa-calendar-agenda-head > span,
+.aa-calendar-side-title {
+  color: #8a919b;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.aa-calendar-agenda-head h3 {
+  margin: 6px 0 17px;
+  color: var(--aa-cal-text);
+  font-size: 1rem;
+  font-weight: 780;
+  line-height: 1.35;
+}
+
+.aa-calendar-agenda {
+  min-width: 0;
+}
+
+.aa-calendar-agenda-events,
+.aa-calendar-record-list {
+  display: grid;
+  gap: 8px;
+}
+
+.aa-calendar-agenda-item {
+  --event-color: #1a73e8;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 11px 10px 13px;
+  gap: 3px;
+  border: 1px solid #e5e8ec;
+  border-left: 4px solid var(--event-color);
+  border-radius: 9px;
+  color: var(--aa-cal-text);
+  background: #ffffff;
+  box-shadow: 0 2px 7px rgba(32, 33, 36, 0.045);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.aa-calendar-agenda-item:hover {
+  border-color: #d1d6dc;
+  border-left-color: var(--event-color);
+  box-shadow: 0 5px 13px rgba(32, 33, 36, 0.08);
+  transform: translateY(-1px);
+}
+
+.aa-calendar-agenda-item strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #25282d;
+  font-size: 0.79rem;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-agenda-item > span:last-child,
+.aa-calendar-agenda-time {
+  overflow: hidden;
+  color: #747b85;
+  font-size: 0.65rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-agenda-empty {
+  display: grid;
+  min-height: 96px;
+  padding: 15px 12px;
+  place-content: center;
+  gap: 10px;
+  border: 1px dashed #d8dce2;
+  border-radius: 10px;
+  color: #858c96;
+  background: rgba(255, 255, 255, 0.64);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.aa-calendar-agenda-empty button {
+  padding: 0;
+  border: 0;
+  color: #0b70dc;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 760;
+}
+
+.aa-calendar-agenda-divider {
+  display: flex;
+  margin: 20px 0 11px;
+  align-items: center;
+  gap: 9px;
+  color: #8a919b;
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.aa-calendar-agenda-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #dfe3e8;
+}
+
+.aa-calendar-record-item {
+  display: grid;
+  padding: 7px 2px;
+  grid-template-columns: 9px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+}
+
+.aa-calendar-record-item > div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.aa-calendar-record-item strong {
+  color: #3a3f46;
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.aa-calendar-record-item span,
+.aa-calendar-record-empty {
+  color: #858c96;
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.aa-calendar-record-legend {
+  display: grid;
+  margin-top: auto;
+  padding-top: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
+  border-top: 1px solid #e0e4e9;
+}
+
+.aa-calendar-record-legend .aa-calendar-side-title {
+  grid-column: 1 / -1;
+  margin-bottom: 2px;
+}
+
+.aa-calendar-record-legend > span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  color: #757d87;
+  font-size: 0.62rem;
+  font-weight: 650;
+}
+
+.aa-cal-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: #a7adb5;
+}
+
+.aa-cal-dot.train { background: #1683ff; }
+.aa-cal-dot.nut { background: #f6a609; }
+.aa-cal-dot.body { background: #19a974; }
+.aa-cal-dot.cardio { background: #08a8bd; }
+.aa-cal-dot.check { background: #df4b44; }
+.aa-cal-dot.free { background: #f59e0b; }
+.aa-cal-dot.note { background: #7e57c2; }
+
+.aa-calendar-main {
+  min-width: 0;
+  overflow-x: auto;
+  background: #ffffff;
+}
+
+#calendar-month-draft {
+  min-width: 840px;
+}
+
+.aa-calendar-weekdays,
+.aa-calendar-month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.aa-calendar-weekdays {
+  height: 42px;
+  align-items: center;
+  border-bottom: 1px solid var(--aa-cal-border);
+  color: #747b84;
+  background: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 760;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.aa-calendar-weekdays span:not(:last-child) {
+  border-right: 1px solid #f1f2f4;
+}
+
+.aa-calendar-day {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 116px;
+  padding: 7px 6px 6px;
+  flex-direction: column;
+  border-right: 1px solid var(--aa-cal-border-soft);
+  border-bottom: 1px solid var(--aa-cal-border-soft);
+  color: var(--aa-cal-text);
+  background: #ffffff;
+  cursor: pointer;
+  transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.aa-calendar-day:nth-child(7n) {
+  border-right: 0;
+}
+
+.aa-calendar-day:hover {
+  background: #fafcff;
+}
+
+.aa-calendar-day.outside {
+  color: #a2a8b0;
+  background: #fafbfc;
+}
+
+.aa-calendar-day.selected {
+  background: #f4f8ff;
+  box-shadow: inset 0 0 0 2px rgba(22, 131, 255, 0.42);
+}
+
+.aa-calendar-day-head {
+  display: flex;
+  min-height: 27px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.aa-calendar-day-number {
+  display: inline-flex;
+  width: 25px;
+  height: 25px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.aa-calendar-day.today .aa-calendar-day-number {
+  color: #ffffff;
+  background: var(--aa-cal-accent);
+  font-weight: 800;
+}
+
+.aa-calendar-day-add {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  color: #5f6670;
+  background: #edf1f5;
+  opacity: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+
+.aa-calendar-day:hover .aa-calendar-day-add,
+.aa-calendar-day.selected .aa-calendar-day-add,
+.aa-calendar-day-add:focus-visible {
+  opacity: 1;
+}
+
+.aa-calendar-day-add:hover {
+  color: #0b70dc;
+  background: #e2edfb;
+}
+
+.aa-calendar-event-stack {
+  display: grid;
+  min-width: 0;
+  padding-top: 3px;
+  gap: 3px;
+}
+
+.aa-calendar-event {
+  --event-color: #1a73e8;
+  --event-bg: #e8f0fe;
+  --event-text: #174ea6;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 22px;
+  padding: 3px 5px 3px 7px;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  border: 0;
+  border-left: 3px solid var(--event-color);
+  border-radius: 5px;
+  color: var(--event-text);
+  background: var(--event-bg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.64rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.aa-calendar-event:hover {
+  filter: brightness(0.975);
+}
+
+.aa-calendar-event.all-day {
+  border-left: 0;
+  color: #ffffff;
+  background: var(--event-color);
+}
+
+.aa-calendar-event-time {
+  flex: 0 0 auto;
+  font-size: 0.58rem;
+  font-weight: 750;
+}
+
+.aa-calendar-event-title {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.color-blue { --event-color: #1a73e8; --event-bg: #e8f0fe; --event-text: #174ea6; }
+.color-green { --event-color: #188038; --event-bg: #e6f4ea; --event-text: #137333; }
+.color-amber { --event-color: #e39a00; --event-bg: #fef7e0; --event-text: #795400; }
+.color-red { --event-color: #d93025; --event-bg: #fce8e6; --event-text: #a50e0e; }
+.color-violet { --event-color: #7e57c2; --event-bg: #f1e9fb; --event-text: #5e35a4; }
+.color-slate { --event-color: #64748b; --event-bg: #edf1f5; --event-text: #475569; }
+
+.aa-calendar-more {
+  width: max-content;
+  max-width: 100%;
+  padding: 2px 5px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  color: #5f6670;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.61rem;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-more:hover {
+  color: #0b70dc;
+  background: #edf4fd;
+}
+
+.aa-calendar-day-signals {
+  display: flex;
+  min-height: 16px;
+  margin-top: auto;
+  padding: 4px 2px 0;
+  align-items: center;
+  gap: 5px;
+}
+
+.aa-calendar-day-signals .aa-cal-dot {
+  width: 6px;
+  height: 6px;
+  flex-basis: 6px;
+}
+
+.aa-calendar-free-label {
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: #875d05;
+  background: #fff3d6;
+  font-size: 0.54rem;
+  font-weight: 760;
+}
+
+.aa-calendar-week-section {
+  margin-top: 28px;
+  padding-top: 25px;
+  border-top: 1px solid #dfe4ea;
+}
+
+.aa-calendar-section-head {
+  display: flex;
+  margin-bottom: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.aa-calendar-section-head h2 {
+  margin: 0;
+  color: #25282d;
+  font-size: 1.06rem;
+  font-weight: 780;
+}
+
+.aa-calendar-section-head p {
+  margin: 5px 0 0;
+  color: #7b838d;
+  font-size: 0.72rem;
+}
+
+.aa-calendar-week-picker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #747c87;
+  font-size: 0.66rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+#page-calendar .aa-calendar-week-picker input {
+  width: 168px;
+  min-height: 38px;
+  margin: 0;
+  border: 1px solid #d9dee5 !important;
+  border-radius: 9px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  font-size: 0.75rem;
+}
+
+#page-calendar #calendar-summary {
+  display: grid;
+  margin-bottom: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#page-calendar #calendar-summary .stat-tile {
+  min-height: 104px;
+  padding: 16px 17px !important;
+  border: 1px solid #e0e4e9 !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(32, 33, 36, 0.045) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+#page-calendar #calendar-grid {
+  gap: 9px;
+}
+
+#page-calendar .aa-calendar-week-day {
+  min-height: 172px;
+  padding: 13px !important;
+  border: 1px solid #e0e4e9 !important;
+  border-radius: 11px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+#page-calendar .aa-calendar-week-day:hover,
+#page-calendar .aa-calendar-week-day.selected {
+  border-color: rgba(22, 131, 255, 0.55) !important;
+  box-shadow: 0 5px 14px rgba(32, 33, 36, 0.07) !important;
+  transform: translateY(-1px);
+}
+
+#page-calendar .aa-calendar-week-day.selected {
+  box-shadow: inset 0 0 0 1px rgba(22, 131, 255, 0.25), 0 5px 14px rgba(32, 33, 36, 0.07) !important;
+}
+
+/* Calendar event modal */
+.aa-calendar-event-modal {
+  width: min(680px, calc(100vw - 28px)) !important;
+  max-width: 680px !important;
+  padding: 23px !important;
+  border: 1px solid #dfe3e8 !important;
+  border-radius: 15px !important;
+  background: #ffffff !important;
+  box-shadow: 0 24px 70px rgba(20, 27, 38, 0.24) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.aa-calendar-event-modal .modal-head {
+  margin-bottom: 19px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #eceff3;
+}
+
+.aa-calendar-event-modal .modal-head h3 {
+  color: #25282d;
+  font-size: 1.08rem;
+  font-weight: 780;
+}
+
+.aa-calendar-event-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.aa-calendar-field-wide {
+  grid-column: 1 / -1;
+}
+
+.aa-calendar-event-form .form-label {
+  color: #6f7782 !important;
+  font-size: 0.64rem !important;
+  font-weight: 760 !important;
+}
+
+.aa-calendar-event-form input:not([type="checkbox"]),
+.aa-calendar-event-form select,
+.aa-calendar-event-form textarea {
+  min-height: 42px !important;
+  border: 1px solid #d9dee5 !important;
+  border-radius: 9px !important;
+  color: #25282d !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.aa-calendar-event-form input:focus,
+.aa-calendar-event-form select:focus,
+.aa-calendar-event-form textarea:focus {
+  border-color: #5da1ef !important;
+  box-shadow: 0 0 0 3px rgba(22, 131, 255, 0.1) !important;
+}
+
+.aa-calendar-event-form textarea {
+  min-height: 90px !important;
+  resize: vertical;
+}
+
+.aa-calendar-all-day {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 9px;
+  color: #444a52;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.aa-calendar-all-day input {
+  width: 17px !important;
+  height: 17px !important;
+  min-height: 0 !important;
+  margin: 0;
+  accent-color: #1683ff;
+}
+
+.aa-calendar-time-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  transition: opacity 140ms ease;
+}
+
+.aa-calendar-time-fields.disabled {
+  opacity: 0.42;
+}
+
+.aa-calendar-color-picker {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 11px;
+}
+
+.aa-calendar-color {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #1a73e8;
+  box-shadow: 0 0 0 1px #d3d8de;
+  cursor: pointer;
+  transition: box-shadow 140ms ease, transform 140ms ease;
+}
+
+.aa-calendar-color:hover {
+  transform: scale(1.08);
+}
+
+.aa-calendar-color.active {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px currentColor;
+}
+
+.aa-calendar-color.blue { color: #1a73e8; background: #1a73e8; }
+.aa-calendar-color.green { color: #188038; background: #188038; }
+.aa-calendar-color.amber { color: #e39a00; background: #e39a00; }
+.aa-calendar-color.red { color: #d93025; background: #d93025; }
+.aa-calendar-color.violet { color: #7e57c2; background: #7e57c2; }
+.aa-calendar-color.slate { color: #64748b; background: #64748b; }
+
+.aa-calendar-modal-actions {
+  display: flex;
+  margin-top: 22px;
+  padding-top: 17px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #eceff3;
+}
+
+.aa-calendar-modal-actions .btn-row {
+  margin-left: auto;
+}
+
+.aa-calendar-event-modal .btn {
+  min-height: 39px !important;
+  border-radius: 9px !important;
+  box-shadow: none !important;
+}
+
+.aa-calendar-event-modal .btn-primary {
+  background: #1683ff !important;
+}
+
+@media (max-width: 1180px) {
+  .aa-calendar-workspace {
+    grid-template-columns: 225px minmax(0, 1fr);
+  }
+
+  .aa-calendar-sidebar {
+    padding: 20px 15px;
+  }
+
+  #calendar-month-draft {
+    min-width: 770px;
+  }
+}
+
+@media (max-width: 920px) {
+  .aa-calendar-toolbar {
+    grid-template-columns: minmax(190px, 1fr) auto minmax(150px, 1fr);
+  }
+
+  .aa-calendar-workspace {
+    display: block;
+  }
+
+  .aa-calendar-sidebar {
+    min-height: 0;
+    padding: 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--aa-cal-border);
+  }
+
+  .aa-calendar-record-legend {
+    margin-top: 20px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .aa-calendar-record-legend .aa-calendar-side-title {
+    grid-column: 1 / -1;
+  }
+
+  .aa-calendar-agenda-events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #page-calendar #calendar-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  #page-calendar .aa-calendar-page-head {
+    align-items: stretch;
+  }
+
+  #page-calendar .aa-calendar-new-btn {
+    width: 100%;
+  }
+
+  .aa-calendar-shell {
+    border-radius: 12px;
+  }
+
+  .aa-calendar-toolbar {
+    display: flex;
+    min-height: 104px;
+    padding: 13px 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .aa-calendar-month-title {
+    width: calc(100% - 100px);
+    order: 1;
+    font-size: 1.08rem;
+    text-align: left;
+  }
+
+  .aa-calendar-event-count {
+    margin-left: auto;
+    order: 2;
+  }
+
+  .aa-calendar-nav {
+    width: 100%;
+    order: 3;
+  }
+
+  .aa-calendar-sidebar {
+    padding: 16px 14px;
+  }
+
+  .aa-calendar-agenda-events {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-calendar-record-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #calendar-month-draft {
+    min-width: 735px;
+  }
+
+  .aa-calendar-day {
+    min-height: 108px;
+  }
+
+  .aa-calendar-day-add {
+    opacity: 1;
+  }
+
+  .aa-calendar-section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .aa-calendar-week-picker {
+    justify-content: space-between;
+  }
+
+  #page-calendar .aa-calendar-week-picker input {
+    width: min(190px, 62vw);
+  }
+
+  #page-calendar #calendar-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  #page-calendar #calendar-summary .stat-tile {
+    min-height: 94px;
+    padding: 12px 10px !important;
+  }
+
+  #page-calendar #calendar-grid {
+    display: grid;
+    padding-bottom: 8px;
+    grid-template-columns: repeat(7, minmax(142px, 1fr));
+    overflow-x: auto;
+  }
+
+  .aa-calendar-event-form,
+  .aa-calendar-time-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-calendar-event-form > *,
+  .aa-calendar-time-fields {
+    grid-column: 1 / -1;
+  }
+
+  .aa-calendar-modal-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .aa-calendar-modal-actions .btn-row,
+  .aa-calendar-modal-actions #calendar-event-delete-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .aa-calendar-modal-actions .btn-row .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  #page-calendar .aa-calendar-content {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .aa-calendar-month-title {
+    width: calc(100% - 88px);
+  }
+
+  .aa-calendar-event-count {
+    padding: 5px 8px;
+    font-size: 0.62rem;
+  }
+
+  #page-calendar #calendar-summary .stat-value {
+    font-size: 1.08rem;
+  }
+
+  #page-calendar #calendar-summary .stat-label,
+  #page-calendar #calendar-summary .stat-sub {
+    font-size: 0.58rem;
+  }
+
+  .aa-calendar-event-modal {
+    padding: 18px !important;
+  }
+}
+
+/* PROFESSIONAL WEEKLY CHECK-IN */
+#page-checking {
+  --checking-ink: #172033;
+  --checking-muted: #697386;
+  --checking-border: #dfe4eb;
+  --checking-border-soft: #edf0f4;
+  --checking-surface: #ffffff;
+  --checking-subtle: #f6f8fb;
+  --checking-accent: #2577e8;
+  --checking-success: #15956f;
+  --checking-warning: #d58a12;
+  --checking-danger: #c95050;
+}
+
+#page-checking .checking-pro-head {
+  align-items: flex-end;
+  gap: 24px;
+}
+
+#page-checking .checking-pro-head > div:first-child {
+  min-width: 0;
+}
+
+#page-checking .checking-pro-head h1 {
+  letter-spacing: 0;
+}
+
+.checking-week-navigation {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.checking-current-week,
+.checking-week-arrow,
+.checking-carry-btn,
+.checking-filter-btn,
+.checking-goal-actions button,
+.checking-manual-progress button,
+.checking-note-fields > button,
+.checking-empty button {
+  border: 1px solid var(--checking-border);
+  border-radius: 7px;
+  color: #3e485a;
+  background: #ffffff;
+  box-shadow: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 720;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.checking-current-week {
+  height: 40px;
+  padding: 0 13px;
+  font-size: 0.71rem;
+}
+
+.checking-week-arrow {
+  display: inline-flex;
+  width: 38px;
+  height: 40px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+#page-checking #c-week {
+  width: 156px;
+  height: 40px;
+  min-height: 40px;
+  margin: 0;
+  border: 1px solid var(--checking-border) !important;
+  border-radius: 7px !important;
+  color: var(--checking-ink) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+#page-checking .checking-new-goal {
+  min-height: 40px !important;
+  padding: 8px 15px !important;
+  border-radius: 7px !important;
+  box-shadow: 0 5px 13px rgba(37, 119, 232, 0.18) !important;
+  font-size: 0.74rem !important;
+}
+
+.checking-current-week:hover,
+.checking-week-arrow:hover,
+.checking-carry-btn:hover,
+.checking-goal-actions button:hover,
+.checking-manual-progress button:hover,
+.checking-note-fields > button:hover,
+.checking-empty button:hover {
+  border-color: #b9c3d0;
+  color: #145fbf;
+  background: #f7faff;
+}
+
+.checking-current-week:focus-visible,
+.checking-week-arrow:focus-visible,
+.checking-carry-btn:focus-visible,
+.checking-filter-btn:focus-visible,
+.checking-goal-actions button:focus-visible,
+.checking-status-control button:focus-visible,
+.checking-energy-control button:focus-visible,
+.checking-manual-progress button:focus-visible,
+.checking-note-fields > button:focus-visible,
+.checking-empty button:focus-visible {
+  outline: 2px solid rgba(37, 119, 232, 0.35);
+  outline-offset: 2px;
+}
+
+#page-checking .checking-pro-content {
+  display: block !important;
+  max-width: 1580px;
+}
+
+.checking-overview {
+  display: grid;
+  overflow: hidden;
+  margin-bottom: 18px;
+  grid-template-columns: minmax(380px, 0.9fr) minmax(560px, 1.55fr);
+  border: 1px solid #1e2c43;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #162236;
+  box-shadow: 0 12px 30px rgba(17, 29, 48, 0.13);
+}
+
+.checking-score-panel {
+  display: grid;
+  min-width: 0;
+  min-height: 190px;
+  padding: 28px 30px;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.checking-score-ring {
+  display: grid;
+  width: 110px;
+  height: 110px;
+  padding: 8px;
+  flex: 0 0 110px;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#39c79a var(--checking-score), rgba(255, 255, 255, 0.13) 0);
+}
+
+.checking-score-ring > div {
+  display: flex;
+  width: 94px;
+  height: 94px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  background: #162236;
+}
+
+.checking-score-ring strong {
+  color: #ffffff;
+  font-size: 1.55rem;
+  font-weight: 820;
+  line-height: 1;
+}
+
+.checking-score-ring span {
+  margin-top: 7px;
+  color: #9eabc0;
+  font-size: 0.58rem;
+  font-weight: 680;
+  text-transform: uppercase;
+}
+
+.checking-score-copy {
+  min-width: 0;
+}
+
+.checking-eyebrow,
+.checking-modal-eyebrow {
+  display: block;
+  color: #8a96a9;
+  font-size: 0.61rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.checking-score-copy .checking-eyebrow {
+  color: #7fd8bd;
+}
+
+.checking-score-copy h2 {
+  margin: 7px 0 8px;
+  color: #ffffff;
+  font-size: 1.12rem;
+  font-weight: 790;
+  line-height: 1.25;
+}
+
+.checking-score-copy p {
+  margin: 0;
+  color: #acb7c8;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.checking-summary-grid {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.checking-kpi {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 190px;
+  padding: 29px 21px;
+  justify-content: center;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.checking-kpi:last-child {
+  border-right: 0;
+}
+
+.checking-kpi::before {
+  position: absolute;
+  top: 26px;
+  left: 21px;
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: #71839d;
+  content: "";
+}
+
+.checking-kpi.success::before { background: var(--checking-success); }
+.checking-kpi.warning::before { background: var(--checking-warning); }
+.checking-kpi.danger::before { background: var(--checking-danger); }
+
+.checking-kpi span {
+  margin-top: 20px;
+  overflow: hidden;
+  color: #99a7bb;
+  font-size: 0.6rem;
+  font-weight: 770;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.checking-kpi strong {
+  margin: 8px 0 5px;
+  color: #ffffff;
+  font-size: 1.65rem;
+  font-weight: 820;
+  line-height: 1;
+}
+
+.checking-kpi small {
+  overflow: hidden;
+  color: #8997aa;
+  font-size: 0.61rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.checking-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(330px, 0.72fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.checking-goals-panel,
+.checking-review-panel {
+  min-width: 0;
+  border: 1px solid var(--checking-border);
+  border-radius: 8px;
+  background: var(--checking-surface);
+  box-shadow: 0 7px 20px rgba(27, 39, 59, 0.055);
+}
+
+.checking-goals-panel {
+  overflow: hidden;
+}
+
+.checking-review-panel {
+  position: sticky;
+  top: 82px;
+  padding: 21px;
+}
+
+.checking-section-head {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.checking-goals-panel > .checking-section-head {
+  padding: 21px 22px 15px;
+}
+
+.checking-section-head > div {
+  min-width: 0;
+}
+
+.checking-section-head h2 {
+  margin: 5px 0 0;
+  color: var(--checking-ink);
+  font-size: 1rem;
+  font-weight: 790;
+  line-height: 1.25;
+}
+
+.checking-carry-btn {
+  flex: 0 0 auto;
+  padding: 8px 11px;
+  font-size: 0.67rem;
+}
+
+.checking-filters {
+  display: flex;
+  min-width: 0;
+  padding: 0 22px 15px;
+  align-items: center;
+  gap: 5px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--checking-border-soft);
+  scrollbar-width: none;
+}
+
+.checking-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.checking-filter-btn {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  border-color: transparent;
+  color: #737d8d;
+  background: transparent;
+  font-size: 0.67rem;
+}
+
+.checking-filter-btn:hover {
+  color: #334055;
+  background: #f3f5f8;
+}
+
+.checking-filter-btn.active {
+  border-color: #d9e5f4;
+  color: #1b64bd;
+  background: #edf5ff;
+}
+
+.checking-goal-list {
+  display: grid;
+  padding: 0;
+}
+
+.checking-goal-card {
+  position: relative;
+  min-width: 0;
+  padding: 21px 22px;
+  border-bottom: 1px solid var(--checking-border-soft);
+  background: #ffffff;
+}
+
+.checking-goal-card:last-child {
+  border-bottom: 0;
+}
+
+.checking-goal-card::before {
+  position: absolute;
+  top: 21px;
+  bottom: 21px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--checking-warning);
+  content: "";
+}
+
+.checking-goal-card.is-done::before { background: var(--checking-success); }
+.checking-goal-card.is-missed::before { background: var(--checking-danger); }
+
+.checking-goal-topline,
+.checking-goal-heading,
+.checking-progress-meta,
+.checking-goal-controls,
+.checking-review-label,
+.checking-trend-head {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.checking-goal-tags,
+.checking-goal-actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.checking-category-tag,
+.checking-priority-tag,
+.checking-auto-label,
+.checking-review-status {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  border-radius: 5px;
+  font-size: 0.58rem;
+  font-weight: 780;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.checking-category-tag {
+  padding: 5px 7px;
+  color: #276bbf;
+  background: #edf5ff;
+}
+
+.checking-priority-tag {
+  padding: 5px 7px;
+  color: #717b8a;
+  background: #f1f3f6;
+}
+
+.checking-priority-tag.high {
+  color: #a53e43;
+  background: #fcecee;
+}
+
+.checking-priority-tag.low {
+  color: #667085;
+  background: #f5f6f8;
+}
+
+.checking-goal-actions {
+  flex: 0 0 auto;
+}
+
+.checking-goal-actions button {
+  min-height: 28px;
+  padding: 5px 8px;
+  border-color: transparent;
+  color: #778191;
+  background: transparent;
+  font-size: 0.64rem;
+}
+
+.checking-goal-actions button.danger {
+  width: 28px;
+  padding: 0;
+  color: #b95a5f;
+  font-size: 1rem;
+}
+
+.checking-goal-actions button.danger:hover {
+  border-color: #f1d5d8;
+  color: #a2363c;
+  background: #fff3f4;
+}
+
+.checking-goal-heading {
+  margin-top: 15px;
+  align-items: flex-start;
+}
+
+.checking-goal-heading > div {
+  min-width: 0;
+}
+
+.checking-goal-heading h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--checking-ink);
+  font-size: 0.93rem;
+  font-weight: 780;
+  line-height: 1.35;
+}
+
+.checking-goal-card.is-done .checking-goal-heading h3 {
+  color: #536173;
+}
+
+.checking-goal-heading p {
+  margin: 5px 0 0;
+  color: #818a99;
+  font-size: 0.63rem;
+  line-height: 1.4;
+}
+
+.checking-goal-percent {
+  flex: 0 0 auto;
+  color: #4e5a6c;
+  font-size: 0.78rem;
+  font-weight: 790;
+}
+
+.checking-progress-track {
+  height: 7px;
+  margin-top: 15px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e9edf2;
+}
+
+.checking-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--checking-warning);
+  transition: width 220ms ease;
+}
+
+.checking-goal-card.is-done .checking-progress-track span { background: var(--checking-success); }
+.checking-goal-card.is-missed .checking-progress-track span { background: var(--checking-danger); }
+
+.checking-progress-meta {
+  margin-top: 8px;
+  align-items: baseline;
+}
+
+.checking-progress-meta strong {
+  color: #303b4d;
+  font-size: 0.77rem;
+  font-weight: 790;
+}
+
+.checking-progress-meta strong small,
+.checking-progress-meta > span {
+  color: #818b9b;
+  font-size: 0.62rem;
+  font-weight: 650;
+}
+
+.checking-goal-controls {
+  margin-top: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.checking-auto-label {
+  min-height: 31px;
+  padding: 7px 9px;
+  color: #617086;
+  background: #f2f5f8;
+}
+
+.checking-manual-progress {
+  display: grid;
+  gap: 5px;
+}
+
+.checking-manual-progress label {
+  color: #7a8494;
+  font-size: 0.59rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.checking-manual-progress > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checking-manual-progress input {
+  width: 90px !important;
+  min-height: 33px !important;
+  padding: 6px 8px !important;
+  border: 1px solid var(--checking-border) !important;
+  border-radius: 6px !important;
+  color: var(--checking-ink) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  font-size: 0.72rem !important;
+}
+
+.checking-manual-progress button {
+  min-height: 33px;
+  padding: 6px 9px;
+  font-size: 0.62rem;
+}
+
+.checking-status-control {
+  display: inline-grid;
+  padding: 3px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+  border-radius: 7px;
+  background: #f0f2f5;
+}
+
+.checking-status-control button {
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 5px;
+  color: #717b8a;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.61rem;
+  font-weight: 730;
+}
+
+.checking-status-control button.active {
+  color: #4b5667;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(24, 34, 50, 0.09);
+}
+
+.checking-status-control button.done.active { color: #147a5d; }
+.checking-status-control button.missed.active { color: #ad4147; }
+
+.checking-goal-notes {
+  margin-top: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--checking-border-soft);
+}
+
+.checking-goal-notes summary {
+  width: max-content;
+  max-width: 100%;
+  color: #687385;
+  cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: 750;
+}
+
+.checking-note-fields {
+  display: grid;
+  margin-top: 13px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 10px;
+}
+
+.checking-note-fields textarea,
+.checking-review-panel textarea {
+  border: 1px solid var(--checking-border) !important;
+  border-radius: 7px !important;
+  color: var(--checking-ink) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  resize: vertical;
+}
+
+.checking-note-fields > button {
+  width: max-content;
+  min-height: 34px;
+  padding: 7px 10px;
+  grid-column: 1 / -1;
+  font-size: 0.63rem;
+}
+
+.checking-empty {
+  display: grid;
+  min-height: 280px;
+  padding: 38px 24px;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: #7b8595;
+  text-align: center;
+}
+
+.checking-empty.compact {
+  min-height: 190px;
+}
+
+.checking-empty strong {
+  color: #344054;
+  font-size: 0.88rem;
+}
+
+.checking-empty span {
+  max-width: 430px;
+  font-size: 0.69rem;
+  line-height: 1.55;
+}
+
+.checking-empty button {
+  margin-top: 7px;
+  padding: 8px 11px;
+  color: #1c66c2;
+  font-size: 0.66rem;
+}
+
+.checking-review-status {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  color: #477664;
+  background: #eaf6f1;
+}
+
+.checking-review-status.unsaved {
+  color: #916416;
+  background: #fff5df;
+}
+
+.checking-review-field {
+  margin-top: 18px;
+}
+
+.checking-review-label label,
+.checking-review-label span,
+.checking-review-panel .form-label {
+  color: #626e80 !important;
+  font-size: 0.65rem !important;
+  font-weight: 750 !important;
+}
+
+.checking-review-label output {
+  color: #2f3a4c;
+  font-size: 0.69rem;
+  font-weight: 800;
+}
+
+#page-checking #c-review-adherence {
+  width: 100%;
+  height: 5px;
+  min-height: 5px;
+  margin-top: 12px;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 3px !important;
+  background: #dfe5ec !important;
+  box-shadow: none !important;
+  accent-color: var(--checking-accent);
+}
+
+.checking-energy-control {
+  display: grid;
+  margin-top: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.checking-energy-control button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px;
+  border: 1px solid var(--checking-border);
+  border-radius: 6px;
+  color: #6f7989;
+  background: #ffffff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 760;
+}
+
+.checking-energy-control button:hover {
+  border-color: #aebccc;
+  background: #f8fafc;
+}
+
+.checking-energy-control button.active {
+  border-color: #357fda;
+  color: #ffffff;
+  background: #357fda;
+}
+
+.checking-review-panel textarea {
+  min-height: 64px !important;
+  padding: 10px !important;
+  font-size: 0.7rem !important;
+  line-height: 1.45;
+}
+
+.checking-review-panel textarea:focus,
+.checking-note-fields textarea:focus,
+.checking-manual-progress input:focus,
+.checking-goal-form input:focus,
+.checking-goal-form select:focus,
+.checking-goal-form textarea:focus {
+  border-color: #75a7e4 !important;
+  box-shadow: 0 0 0 3px rgba(37, 119, 232, 0.09) !important;
+  outline: 0;
+}
+
+.checking-save-review {
+  width: 100%;
+  min-height: 39px !important;
+  margin-top: 18px;
+  border-radius: 7px !important;
+  box-shadow: 0 5px 13px rgba(37, 119, 232, 0.15) !important;
+  font-size: 0.7rem !important;
+}
+
+.checking-trend-block {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--checking-border-soft);
+}
+
+.checking-trend-head span {
+  color: #3d4859;
+  font-size: 0.68rem;
+  font-weight: 780;
+}
+
+.checking-trend-head small {
+  color: #8b94a2;
+  font-size: 0.58rem;
+}
+
+.checking-trend {
+  display: grid;
+  min-height: 105px;
+  margin-top: 13px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: end;
+  gap: 7px;
+}
+
+.checking-trend-column {
+  display: grid;
+  min-width: 0;
+  justify-items: center;
+  gap: 5px;
+}
+
+.checking-trend-column > span,
+.checking-trend-column > small {
+  color: #808a99;
+  font-size: 0.53rem;
+  font-weight: 700;
+}
+
+.checking-trend-column > div {
+  position: relative;
+  width: min(18px, 70%);
+  height: 64px;
+  overflow: hidden;
+  border-radius: 3px 3px 1px 1px;
+  background: #edf0f4;
+}
+
+.checking-trend-column i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 3px 3px 1px 1px;
+  background: #31a884;
+}
+
+.checking-trend-empty {
+  display: grid;
+  min-height: 100px;
+  grid-column: 1 / -1;
+  place-items: center;
+  color: #929aa7;
+  font-size: 0.64rem;
+}
+
+/* Check-in goal modal */
+.checking-goal-modal {
+  width: min(700px, calc(100vw - 28px)) !important;
+  max-width: 700px !important;
+  padding: 23px !important;
+  border: 1px solid #dce2ea !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: 0 24px 70px rgba(20, 29, 43, 0.24) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.checking-goal-modal .modal-head {
+  margin-bottom: 19px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e9edf2;
+}
+
+.checking-goal-modal .modal-head h3 {
+  margin-top: 4px;
+  color: #253044;
+  font-size: 1.08rem;
+  font-weight: 790;
+}
+
+.checking-goal-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.checking-field-wide {
+  grid-column: 1 / -1;
+}
+
+.checking-goal-form .form-label {
+  color: #697486 !important;
+  font-size: 0.63rem !important;
+  font-weight: 770 !important;
+}
+
+.checking-goal-form input,
+.checking-goal-form select,
+.checking-goal-form textarea {
+  min-height: 42px !important;
+  border: 1px solid #d8dfe7 !important;
+  border-radius: 7px !important;
+  color: #273246 !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.checking-goal-form textarea {
+  min-height: 86px !important;
+  resize: vertical;
+}
+
+.checking-field-help {
+  margin-top: 6px;
+  color: #8a94a3;
+  font-size: 0.61rem;
+  line-height: 1.4;
+}
+
+.checking-modal-actions {
+  display: flex;
+  margin-top: 21px;
+  padding-top: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid #e9edf2;
+}
+
+.checking-modal-actions .btn-row {
+  margin-left: auto;
+}
+
+.checking-goal-modal .btn {
+  min-height: 39px !important;
+  border-radius: 7px !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1240px) {
+  .checking-overview {
+    grid-template-columns: minmax(350px, 0.86fr) minmax(500px, 1.3fr);
+  }
+
+  .checking-score-panel {
+    padding: 25px 23px;
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .checking-score-ring {
+    width: 98px;
+    height: 98px;
+  }
+
+  .checking-score-ring > div {
+    width: 82px;
+    height: 82px;
+  }
+
+  .checking-kpi {
+    padding: 27px 16px;
+  }
+
+  .checking-kpi::before {
+    left: 16px;
+  }
+}
+
+@media (max-width: 1080px) {
+  #page-checking .checking-pro-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .checking-week-navigation {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .checking-overview {
+    grid-template-columns: 1fr;
+  }
+
+  .checking-score-panel {
+    min-height: 165px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .checking-kpi {
+    min-height: 132px;
+  }
+
+  .checking-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .checking-review-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  #page-checking .checking-pro-content {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .checking-week-navigation {
+    display: grid;
+    grid-template-columns: auto 38px minmax(128px, 1fr) 38px;
+  }
+
+  .checking-current-week {
+    padding: 0 10px;
+  }
+
+  #page-checking #c-week {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #page-checking .checking-new-goal {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+
+  .checking-score-panel {
+    min-height: 0;
+    padding: 22px 18px;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .checking-score-ring {
+    width: 84px;
+    height: 84px;
+    padding: 6px;
+  }
+
+  .checking-score-ring > div {
+    width: 72px;
+    height: 72px;
+  }
+
+  .checking-score-ring strong {
+    font-size: 1.22rem;
+  }
+
+  .checking-score-ring span {
+    margin-top: 5px;
+    font-size: 0.48rem;
+  }
+
+  .checking-score-copy h2 {
+    font-size: 0.94rem;
+  }
+
+  .checking-score-copy p {
+    font-size: 0.65rem;
+  }
+
+  .checking-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checking-kpi {
+    min-height: 112px;
+    padding: 20px 17px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .checking-kpi:nth-child(2) {
+    border-right: 0;
+  }
+
+  .checking-kpi:nth-child(n+3) {
+    border-bottom: 0;
+  }
+
+  .checking-kpi::before {
+    top: 18px;
+    left: 17px;
+  }
+
+  .checking-kpi span {
+    margin-top: 17px;
+  }
+
+  .checking-kpi strong {
+    font-size: 1.38rem;
+  }
+
+  .checking-goals-panel > .checking-section-head,
+  .checking-goal-card {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .checking-filters {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .checking-goal-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .checking-status-control {
+    width: 100%;
+  }
+
+  .checking-note-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .checking-note-fields > button {
+    grid-column: 1;
+  }
+
+  .checking-goal-form {
+    grid-template-columns: 1fr;
+  }
+
+  .checking-goal-form > * {
+    grid-column: 1;
+  }
+
+  .checking-modal-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .checking-modal-actions .btn-row,
+  .checking-modal-actions #checking-goal-delete-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .checking-modal-actions .btn-row .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .checking-week-navigation {
+    grid-template-columns: 38px minmax(0, 1fr) 38px;
+  }
+
+  .checking-current-week {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+
+  .checking-week-navigation .checking-week-arrow:first-of-type {
+    grid-column: 1;
+  }
+
+  .checking-score-panel {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .checking-score-ring {
+    display: none;
+  }
+
+  .checking-goal-topline {
+    align-items: flex-start;
+  }
+
+  .checking-goal-tags {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .checking-review-panel {
+    padding: 17px 15px;
+  }
+
+  .checking-goal-modal {
+    padding: 18px !important;
+  }
+}
+
+/* CENTRAL APP ASSISTANT */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#page-assistant .app-ai-page-head {
+  gap: 24px;
+}
+
+.app-ai-date-context {
+  min-width: 220px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.app-ai-date-context span,
+.app-ai-date-context strong {
+  display: block;
+}
+
+.app-ai-date-context span {
+  margin-bottom: 3px;
+  color: var(--dim);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.app-ai-date-context strong {
+  color: var(--text);
+  font-size: 0.79rem;
+}
+
+.app-ai-layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: 610px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.app-ai-side-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  background: #152137;
+  color: #f8fafc;
+}
+
+.app-ai-side-section {
+  padding: 25px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-ai-history-section {
+  min-height: 0;
+  flex: 1;
+  border-bottom: 0;
+}
+
+.app-ai-kicker {
+  display: block;
+  color: var(--dim);
+  font-size: 0.64rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.app-ai-side-panel .app-ai-kicker {
+  color: #91a4c0;
+}
+
+.app-ai-shortcuts {
+  display: grid;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.app-ai-shortcuts button,
+.app-ai-history-item {
+  width: 100%;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #dbe5f2;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+}
+
+.app-ai-shortcuts button {
+  position: relative;
+  padding: 10px 11px 10px 24px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.app-ai-shortcuts button::before {
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #39a0ff;
+  content: '';
+  transform: translateY(-50%);
+}
+
+.app-ai-shortcuts button:hover,
+.app-ai-shortcuts button:focus-visible,
+.app-ai-history-item:hover,
+.app-ai-history-item:focus-visible {
+  outline: 0;
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+}
+
+.app-ai-shortcuts button:active {
+  transform: translateY(1px);
+}
+
+.app-ai-section-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.app-ai-text-button {
+  border: 0;
+  background: transparent;
+  color: #8eb8e7;
+  font: inherit;
+  font-size: 0.66rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.app-ai-history {
+  display: grid;
+  gap: 5px;
+  margin-top: 13px;
+}
+
+.app-ai-history-item {
+  padding: 9px 10px;
+}
+
+.app-ai-history-item span,
+.app-ai-history-item small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-ai-history-item span {
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.app-ai-history-item small {
+  margin-top: 4px;
+  color: #8192aa;
+  font-size: 0.61rem;
+}
+
+.app-ai-empty-compact {
+  padding: 12px 10px;
+  color: #8192aa;
+  font-size: 0.7rem;
+}
+
+.app-ai-workspace {
+  min-width: 0;
+  background: var(--surface);
+}
+
+.app-ai-composer {
+  padding: 28px 30px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--elevated);
+}
+
+.app-ai-composer-head,
+.app-ai-composer-actions,
+.app-ai-review-head,
+.app-ai-review-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.app-ai-composer h2,
+.app-ai-review-head h2 {
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 1.15rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.app-ai-status {
+  min-width: 76px;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.app-ai-status.working,
+.app-ai-status.review {
+  border-color: rgba(22, 131, 255, 0.25);
+  background: var(--accent-dim);
+  color: var(--accent-l);
+}
+
+.app-ai-status.attention {
+  border-color: rgba(245, 158, 11, 0.28);
+  background: rgba(245, 158, 11, 0.09);
+  color: #a16207;
+}
+
+.app-ai-status.error {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.08);
+  color: #b91c1c;
+}
+
+#app-ai-request {
+  width: 100%;
+  min-height: 132px;
+  margin-top: 18px;
+  padding: 16px;
+  resize: vertical;
+  border: 1px solid #d7dee8;
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  box-shadow: inset 0 1px 2px rgba(15, 17, 23, 0.03);
+}
+
+#app-ai-request:focus {
+  border-color: var(--accent);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.app-ai-composer-actions {
+  margin-top: 14px;
+}
+
+.app-ai-composer-actions > span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.app-ai-result {
+  min-height: 285px;
+  padding: 28px 30px 32px;
+}
+
+.app-ai-empty-state,
+.app-ai-error-state,
+.app-ai-loading,
+.app-ai-success-state {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.app-ai-empty-state strong,
+.app-ai-error-state strong,
+.app-ai-success-state strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.app-ai-empty-state span,
+.app-ai-error-state span,
+.app-ai-success-state span {
+  max-width: 480px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.app-ai-error-state strong {
+  color: var(--red);
+}
+
+.app-ai-loading span {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: app-ai-spin 0.75s linear infinite;
+}
+
+.app-ai-loading strong {
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+@keyframes app-ai-spin {
+  to { transform: rotate(360deg); }
+}
+
+.app-ai-success-state {
+  flex-direction: row;
+  text-align: left;
+}
+
+.app-ai-success-state > div {
+  display: grid;
+  gap: 5px;
+}
+
+.app-ai-success-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  font-weight: 900;
+}
+
+.app-ai-review-head {
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.app-ai-review-head p {
+  max-width: 650px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.app-ai-select-all {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.app-ai-warning-list {
+  display: grid;
+  gap: 5px;
+  margin: 14px 0;
+  padding: 11px 13px;
+  border-left: 3px solid var(--amber);
+  background: rgba(245, 158, 11, 0.07);
+  color: #92400e;
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+.app-ai-operation-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.app-ai-operation {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 3px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 82px;
+  padding: 13px 15px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.app-ai-operation:hover {
+  border-color: #c9d4e2;
+  box-shadow: var(--shadow-soft);
+  transform: translateY(-1px);
+}
+
+.app-ai-operation-accent {
+  width: 3px;
+  height: 38px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+.app-ai-operation.action-delete .app-ai-operation-accent {
+  background: var(--red);
+}
+
+.app-ai-operation.action-create .app-ai-operation-accent {
+  background: var(--green);
+}
+
+.app-ai-operation-copy,
+.app-ai-operation-copy strong,
+.app-ai-operation-copy small {
+  display: block;
+  min-width: 0;
+}
+
+.app-ai-operation-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.app-ai-operation-meta b,
+.app-ai-operation-meta em {
+  font-size: 0.59rem;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.app-ai-operation-meta b {
+  color: var(--accent-l);
+}
+
+.action-create .app-ai-operation-meta b {
+  color: #047857;
+}
+
+.action-delete .app-ai-operation-meta b {
+  color: #b91c1c;
+}
+
+.app-ai-operation-meta em {
+  color: var(--dim);
+}
+
+.app-ai-operation-copy strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-ai-operation-copy small {
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.65rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-ai-review-actions {
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.app-ai-clarification {
+  display: grid;
+  min-height: 220px;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.app-ai-clarification strong {
+  max-width: 580px;
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .app-ai-layout {
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .app-ai-composer,
+  .app-ai-result {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  #page-assistant .app-ai-page-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-ai-date-context {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-ai-layout {
+    display: block;
+    min-height: 0;
+  }
+
+  .app-ai-side-panel {
+    display: block;
+  }
+
+  .app-ai-side-section {
+    padding: 16px;
+  }
+
+  .app-ai-history-section {
+    display: none;
+  }
+
+  .app-ai-shortcuts {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .app-ai-shortcuts::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-ai-shortcuts button {
+    width: auto;
+    min-width: max-content;
+    padding: 9px 12px 9px 24px;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .app-ai-composer,
+  .app-ai-result {
+    padding: 20px 16px;
+  }
+
+  .app-ai-composer-actions,
+  .app-ai-review-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-ai-composer-actions > span {
+    order: 2;
+  }
+
+  .app-ai-composer-actions > .flex {
+    width: 100%;
+  }
+
+  .app-ai-composer-actions .btn {
+    flex: 1;
+  }
+
+  .app-ai-select-all {
+    align-self: flex-start;
+  }
+
+  .app-ai-operation-copy strong,
+  .app-ai-operation-copy small {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 430px) {
+  .app-ai-composer-head {
+    align-items: flex-start;
+  }
+
+  #app-ai-request {
+    min-height: 150px;
+  }
+
+  .app-ai-composer-actions > .flex,
+  .app-ai-review-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .app-ai-review-actions .btn {
+    width: 100%;
+  }
+
+  .app-ai-operation {
+    grid-template-columns: 18px 3px minmax(0, 1fr);
+    padding: 12px;
+  }
+}
+
+/* UNIFIED COMPACT CORNERS */
+:root {
+  --radius-sm: 7px;
+  --radius-md: 8px;
+  --radius-lg: 8px;
+  --radius-pill: 7px;
+}
+
+/* Main surfaces */
+.card,
+.metric,
+.quick-card,
+.stat-tile,
+.record-card,
+.template-card,
+.day-card,
+.month-cell,
+.workout-set-card,
+.workout-result,
+.alert-item,
+.food-ai-preview,
+.food-ai-result-card,
+.insight-card,
+.gym-focus-card,
+.empty,
+.tabs,
+.mood-day,
+.result-metric,
+.login-card,
+.modal,
+.profile-chip {
+  border-radius: 8px !important;
+}
+
+/* Commands and navigation */
+.btn,
+.login-btn,
+.tab,
+.status-btn,
+.mood-btn,
+.energy-btn,
+.nav-btn,
+.bnav-btn,
+.mobile-menu-btn,
+.mobile-close-btn,
+#sidebar .nav-btn,
+#mobile-menu-panel .nav-btn,
+#sidebar-user-area > button {
+  border-radius: 7px !important;
+}
+
+/* Form controls */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea,
+.login-input,
+.global-date-bar input {
+  border-radius: 7px !important;
+}
+
+input[type="checkbox"] {
+  border-radius: 4px !important;
+}
+
+input[type="radio"] {
+  border-radius: 50% !important;
+}
+
+/* Compact labels and values */
+.badge,
+.series-index,
+.target-pill,
+.result-metric {
+  border-radius: 5px !important;
+}
+
+/* Desktop and mobile app bars */
+#sidebar {
+  border-radius: 0 0 8px 8px !important;
+}
+
+.global-date-bar {
+  border-radius: 0 0 8px 8px !important;
+}
+
+/* Calendar follows the same corner system */
+#page-calendar .aa-calendar-new-btn,
+#page-calendar .aa-calendar-week-picker input,
+#page-calendar .aa-calendar-event-modal .btn {
+  border-radius: 7px !important;
+}
+
+.aa-calendar-shell,
+.aa-calendar-agenda-empty,
+#page-calendar #calendar-summary .stat-tile,
+#page-calendar .aa-calendar-week-day,
+.aa-calendar-event-modal {
+  border-radius: 8px !important;
+}
+
+.aa-calendar-agenda-item,
+.aa-calendar-event-form input:not([type="checkbox"]),
+.aa-calendar-event-form select,
+.aa-calendar-event-form textarea {
+  border-radius: 7px !important;
+}
+
+.aa-calendar-event-count {
+  border-radius: 5px !important;
+}
+
+/* Intentional circles stay circular */
+#sidebar-user-avatar,
+.status-dot,
+.mood-dot,
+.rank-num,
+.gym-rest-clock,
+.checking-score-ring,
+.checking-score-ring > div,
+.aa-cal-dot,
+.aa-calendar-day-number,
+.aa-calendar-day-add,
+.aa-calendar-color,
+.card-title::before,
+.nav-btn.active::before {
+  border-radius: 50% !important;
+}
+
+
 </style>
 </head>
 <body>
@@ -4195,8 +7179,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Inicio</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
-    <button class="nav-btn" onclick="go('dayai')">IA Semana</button>
-    <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
+    <button class="nav-btn" onclick="go('assistant')">IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Gym</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutricion</button>
@@ -4204,8 +7187,6 @@ tr:hover td {
     <div class="nav-label">Analisis</div>
     <button class="nav-btn" onclick="go('goals')">Objetivos</button>
     <button class="nav-btn" onclick="go('stats')">Estadisticas</button>
-    <button class="nav-btn" onclick="go('progress')">Progreso</button>
-    <button class="nav-btn" onclick="go('notes')">Notas</button>
     <button class="nav-btn" onclick="go('checking')">Check-in</button>
   </nav>
 </div>
@@ -4219,8 +7200,7 @@ tr:hover td {
     <div class="nav-label">Principal</div>
     <button class="nav-btn active" onclick="go('dashboard')">Dashboard</button>
     <button class="nav-btn" onclick="go('today')">Hoy</button>
-    <button class="nav-btn" onclick="go('dayai')">IA Semana</button>
-    <button class="nav-btn" onclick="go('weekcoach')">Coach IA</button>
+    <button class="nav-btn" onclick="go('assistant')">IA</button>
     <button class="nav-btn" onclick="go('body')">Cuerpo</button>
     <button class="nav-btn" onclick="go('training')">Entrenamiento</button>
     <button class="nav-btn" onclick="go('nutrition')">Nutrición</button>
@@ -4228,8 +7208,6 @@ tr:hover td {
     <div class="nav-label">Análisis</div>
     <button class="nav-btn" onclick="go('goals')">Objetivos</button>
     <button class="nav-btn" onclick="go('stats')">Estadísticas</button>
-    <button class="nav-btn" onclick="go('progress')">Progreso</button>
-    <button class="nav-btn" onclick="go('notes')">Notas</button>
     <button class="nav-btn" onclick="go('checking')">Check-in</button>
   </nav>
   <!-- Usuario -->
@@ -4239,7 +7217,7 @@ tr:hover td {
       <span style="font-size:.85rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px;" id="sidebar-user-name">—</span>
     </div>
     <button onclick="logoutUser()" title="Cerrar sesión"
-      style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1rem;padding:4px 6px;border-radius:999px;"
+      style="background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1rem;padding:4px 6px;border-radius:7px;"
       onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">⎋</button>
   </div>
 </div>
@@ -4458,27 +7436,6 @@ tr:hover td {
         <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveReminder()">Guardar recordatorio</button></div>
         <div id="reminders-list" class="mt-3"><div class="empty">Sin recordatorios configurados.</div></div>
       </div>
-      <div class="card mb">
-        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
-          <div>
-            <div class="card-title" style="margin-bottom:6px">Registrar el día por voz</div>
-            <div class="mini-muted" id="voice-day-status">Dicta o escribe; la IA prepara un borrador antes de guardar.</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" id="voice-record-button" onclick="toggleVoiceRecording()">Iniciar voz</button>
-        </div>
-        <div class="form-row">
-          <label class="form-label" for="voice-day-description">Descripción del día</label>
-          <textarea id="voice-day-description" oninput="saveVoiceDraftState()" placeholder="Ej: desayuné dos huevos y tostadas, entrené pecho, hice 8 mil pasos y dormí 7 horas."></textarea>
-        </div>
-        <div class="voice-actions">
-          <div class="mini-muted">Fecha: <strong id="voice-day-date-label"></strong></div>
-          <div class="flex gap-2">
-            <button class="btn btn-ghost btn-sm" onclick="clearVoiceDayDraft()">Limpiar</button>
-            <button class="btn btn-primary btn-sm" id="voice-analyze-button" onclick="analyzeVoiceDay()">Preparar borrador</button>
-          </div>
-        </div>
-        <div id="voice-day-result" class="voice-review"><div class="empty">Todavía no hay un borrador para revisar.</div></div>
-      </div>
       <div class="quick-grid mb">
         <div class="quick-card">
           <div class="quick-label">Entreno</div>
@@ -4517,80 +7474,68 @@ tr:hover td {
     </div>
   </div>
 
-  <!-- IA SEMANAL -->
-  <div id="page-dayai" class="page">
-    <div class="page-head">
-      <h1>IA Semana</h1>
-      <p>Describe la semana completa y revisa borradores por día antes de cargarlos</p>
+  <!-- ASISTENTE CENTRAL -->
+  <div id="page-assistant" class="page">
+    <div class="page-head flex jb ai-c app-ai-page-head">
+      <div>
+        <h1>IA</h1>
+        <p>Centro de control de tus registros y planificación</p>
+      </div>
+      <div class="app-ai-date-context">
+        <span>Contexto activo</span>
+        <strong id="app-ai-context-date">Hoy</strong>
+      </div>
     </div>
-    <div class="content">
-      <div class="card mb">
-        <div class="form-grid fg2">
-          <div class="form-row">
-            <label class="form-label">Semana</label>
-            <input type="week" id="ai-week-fill-week">
-          </div>
-          <div class="form-row">
-            <label class="form-label">Acción</label>
-            <div class="btn-row" style="margin-top:0">
-              <button class="btn btn-primary btn-sm" onclick="analyzeWeekFillDescription()">Analizar semana</button>
-              <button class="btn btn-ghost btn-sm" onclick="clearWeekFillDraft()">Limpiar</button>
+    <div class="content app-ai-content">
+      <div class="app-ai-layout">
+        <aside class="app-ai-side-panel">
+          <div class="app-ai-side-section">
+            <span class="app-ai-kicker">Accesos rápidos</span>
+            <div class="app-ai-shortcuts">
+              <button type="button" onclick="setAppAiPrompt('Registra lo que hice hoy según esta descripción: ')">Registrar mi día</button>
+              <button type="button" onclick="setAppAiPrompt('Organiza mi calendario de esta semana de esta forma: ')">Organizar semana</button>
+              <button type="button" onclick="setAppAiPrompt('Actualiza mis objetivos con estos cambios: ')">Editar objetivos</button>
+              <button type="button" onclick="setAppAiPrompt('Corrige estos registros: ')">Corregir registros</button>
             </div>
           </div>
-          <div class="form-row" style="grid-column:1 / -1">
-            <label class="form-label">Describe tu semana</label>
-            <textarea id="ai-week-fill-description" placeholder="Ej: Lunes pecho 4 series de press banca 10 reps con 60kg y almuerzo pollo con arroz. Martes descanso y 8000 pasos. Miércoles pierna, cena carne con papas. Viernes día libre. Domingo peso 82kg."></textarea>
+          <div class="app-ai-side-section app-ai-history-section">
+            <div class="app-ai-section-line">
+              <span class="app-ai-kicker">Actividad reciente</span>
+              <button class="app-ai-text-button" type="button" onclick="clearAppAiHistory()">Limpiar</button>
+            </div>
+            <div id="app-ai-history" class="app-ai-history">
+              <div class="app-ai-empty-compact">Sin solicitudes recientes.</div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div id="ai-day-result" class="card">
-        <div class="empty">Tu borrador semanal aparecerá acá antes de guardar cualquier dato.</div>
-      </div>
-    </div>
-  </div>
+        </aside>
 
-  <!-- COACH SEMANAL IA -->
-  <div id="page-weekcoach" class="page">
-    <div class="page-head">
-      <h1>Coach IA</h1>
-      <p>Analiza la semana seleccionada y prepara el foco de la próxima</p>
-    </div>
-    <div class="content">
-      <div class="card mb">
-        <div class="form-grid fg2">
-          <div class="form-row">
-            <label class="form-label">Semana</label>
-            <input type="week" id="ai-week-week" onchange="loadWeekCoach()">
-          </div>
-          <div class="form-row">
-            <label class="form-label">Acción</label>
-            <div class="btn-row" style="margin-top:0">
-              <button class="btn btn-primary btn-sm" onclick="analyzeWeekCoach()">Analizar semana</button>
-              <button class="btn btn-ghost btn-sm" onclick="clearWeekCoach()">Limpiar</button>
+        <section class="app-ai-workspace">
+          <div class="app-ai-composer">
+            <div class="app-ai-composer-head">
+              <div>
+                <span class="app-ai-kicker">Solicitud</span>
+                <h2>¿Qué quieres cambiar?</h2>
+              </div>
+              <span id="app-ai-status" class="app-ai-status ready">Lista</span>
+            </div>
+            <label class="sr-only" for="app-ai-request">Solicitud para la IA</label>
+            <textarea id="app-ai-request" maxlength="4000" placeholder="Ej: El lunes hice 8.500 pasos, cené pollo con arroz y dormí 7 horas. También mueve mi entrenamiento del martes al miércoles."></textarea>
+            <div class="app-ai-composer-actions">
+              <span id="app-ai-request-meta">Fecha seleccionada: hoy</span>
+              <div class="flex gap-2">
+                <button class="btn btn-ghost" type="button" onclick="resetAppAssistant()">Nueva solicitud</button>
+                <button class="btn btn-primary" id="app-ai-submit" type="button" onclick="requestAppAssistant()">Preparar cambios</button>
+              </div>
             </div>
           </div>
-          <div class="form-row" style="grid-column:1 / -1">
-            <label class="form-label">Nota para el coach</label>
-            <textarea id="ai-week-note" placeholder="Ej: Esta semana me costó dormir, entrené menos por trabajo y quiero enfocarme en recomposición."></textarea>
+
+          <div id="app-ai-result" class="app-ai-result" aria-live="polite">
+            <div class="app-ai-empty-state">
+              <strong>Sin cambios pendientes</strong>
+              <span>Las propuestas aparecerán aquí para que las revises.</span>
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="g2 mb">
-        <div class="card">
-          <div class="card-title">Datos que se van a analizar</div>
-          <div id="ai-week-local-summary"><div class="empty">Elegí una semana para ver el resumen.</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Último reporte guardado</div>
-          <div id="ai-week-saved-summary"><div class="empty">Todavía no hay reporte para esta semana.</div></div>
-        </div>
-      </div>
-      <div class="card mb">
-        <div class="card-title">Plan semanal vs real</div>
-        <div id="week-plan-comparison"><div class="empty">No hay un plan guardado para esta semana.</div></div>
-      </div>
-      <div id="ai-week-result" class="card">
-        <div class="empty">El análisis del coach aparecerá acá sin modificar tus registros.</div>
+        </section>
       </div>
     </div>
   </div>
@@ -4787,34 +7732,6 @@ tr:hover td {
         <div id="barcode-reader" style="display:none; width:100%; max-width:520px; min-height:280px; margin:16px auto 0; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-md); background:#0f1117"></div>
         <div id="barcode-result" class="mt-3"><div class="empty">Sin producto consultado.</div></div>
       </div>
-      <div class="card mb">
-        <div class="flex jb ai-c" style="margin-bottom:14px">
-          <div class="card-title" style="margin:0">Qué puedo comer</div>
-          <button class="btn btn-ghost btn-sm" onclick="clearMealSuggestions()">Limpiar</button>
-        </div>
-        <div class="form-grid fg2">
-          <div class="form-row">
-            <label class="form-label">Tipo de comida</label>
-            <select id="meal-suggest-type">
-              <option>Desayuno</option>
-              <option selected>Almuerzo</option>
-              <option>Merienda</option>
-              <option>Cena</option>
-              <option>Pre-entreno</option>
-              <option>Post-entreno</option>
-              <option>Snack</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label class="form-label">Preferencias</label>
-            <input id="meal-suggest-preferences" placeholder="Ej: rápido, con pollo, sin lácteos, tengo arroz y huevos...">
-          </div>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-primary btn-sm" onclick="suggestMealOptions()">Sugerir comidas</button>
-        </div>
-        <div id="meal-suggest-result" class="mt-3"><div class="empty">La IA usará tus objetivos y lo que ya comiste hoy para sugerir opciones.</div></div>
-      </div>
       <div class="g2 mb">
         <div class="card">
           <div class="card-title">Calorías</div>
@@ -4869,21 +7786,64 @@ tr:hover td {
 
   <!-- CALENDARIO -->
   <div id="page-calendar" class="page">
-    <div class="page-head flex jb ai-c">
-      <div><h1>Calendario</h1><p>Vista semanal de entrenamiento, nutrición, cuerpo y notas</p></div>
-      <input type="week" id="calendar-week" style="width:auto" onchange="loadCalendar()">
+    <div class="page-head flex jb ai-c aa-calendar-page-head">
+      <div><h1>Calendario</h1><p>Organiza tus eventos y revisa toda tu actividad en un solo lugar</p></div>
+      <button class="btn btn-primary aa-calendar-new-btn" type="button" onclick="openCalendarEventModal()">+ Crear evento</button>
     </div>
-    <div class="content">
-      <div class="g3 mb" id="calendar-summary">
-        <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">0</div><div class="stat-sub">esta semana</div></div>
-        <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">0</div><div class="stat-sub">promedio diario</div></div>
-        <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">0%</div><div class="stat-sub">cumplimiento semanal</div></div>
-      </div>
-      <div class="week-grid mb" id="calendar-grid"></div>
-      <div class="card">
-        <div class="card-title">Calendario mensual visual - borrador</div>
-        <div id="calendar-month-draft"><div class="empty">Sin calendario mensual.</div></div>
-      </div>
+    <div class="content aa-calendar-content">
+      <section class="aa-calendar-shell" aria-label="Calendario mensual">
+        <header class="aa-calendar-toolbar">
+          <div class="aa-calendar-nav">
+            <button class="aa-calendar-today" type="button" onclick="calendarGoToday()">Hoy</button>
+            <button class="aa-calendar-arrow" type="button" onclick="moveCalendarMonth(-1)" aria-label="Mes anterior" title="Mes anterior">&#8249;</button>
+            <button class="aa-calendar-arrow" type="button" onclick="moveCalendarMonth(1)" aria-label="Mes siguiente" title="Mes siguiente">&#8250;</button>
+          </div>
+          <h2 id="calendar-month-title" class="aa-calendar-month-title">Mes</h2>
+          <div id="calendar-event-count" class="aa-calendar-event-count">0 eventos</div>
+        </header>
+
+        <div class="aa-calendar-workspace">
+          <aside class="aa-calendar-sidebar">
+            <div class="aa-calendar-agenda-head">
+              <span>Agenda</span>
+              <h3 id="calendar-selected-label">Día seleccionado</h3>
+            </div>
+            <div id="calendar-agenda" class="aa-calendar-agenda">
+              <div class="aa-calendar-agenda-empty">No hay eventos para este día.</div>
+            </div>
+            <div class="aa-calendar-record-legend">
+              <div class="aa-calendar-side-title">Registros de la app</div>
+              <span><i class="aa-cal-dot train"></i>Entrenamiento</span>
+              <span><i class="aa-cal-dot nut"></i>Nutrición</span>
+              <span><i class="aa-cal-dot body"></i>Cuerpo</span>
+              <span><i class="aa-cal-dot cardio"></i>Cardio</span>
+            </div>
+          </aside>
+
+          <div class="aa-calendar-main">
+            <div id="calendar-month-draft"><div class="empty">Cargando calendario...</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="aa-calendar-week-section">
+        <div class="aa-calendar-section-head">
+          <div>
+            <h2>Resumen semanal</h2>
+            <p>Entrenamiento, nutrición y cumplimiento de la semana elegida</p>
+          </div>
+          <label class="aa-calendar-week-picker">
+            <span>Semana</span>
+            <input type="week" id="calendar-week" onchange="calendarWeekChanged()">
+          </label>
+        </div>
+        <div class="g3" id="calendar-summary">
+          <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">0</div><div class="stat-sub">esta semana</div></div>
+          <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">0</div><div class="stat-sub">promedio diario</div></div>
+          <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">0%</div><div class="stat-sub">cumplimiento semanal</div></div>
+        </div>
+        <div class="week-grid" id="calendar-grid"></div>
+      </section>
     </div>
   </div>
 
@@ -4931,105 +7891,107 @@ tr:hover td {
     </div>
   </div>
 
-  <!-- PROGRESO -->
-  <div id="page-progress" class="page">
-    <div class="page-head flex jb ai-c">
-      <div><h1>Progreso</h1><p>Fotos, récords, rachas, historial semanal y respaldo de datos</p></div>
-      <div class="flex gap-2">
-        <button class="btn btn-ghost btn-sm" onclick="exportWeeklyProfessionalReport()">PDF semanal</button>
-        <button class="btn btn-ghost btn-sm" onclick="exportCsvData()">Exportar CSV</button>
-        <button class="btn btn-primary btn-sm" onclick="exportAllData()">Exportar datos</button>
-      </div>
-    </div>
-    <div class="content">
-      <div class="g3 mb" id="progress-streaks"></div>
-      <div class="g2 mb">
-        <div class="card">
-          <div class="card-title">Foto de progreso</div>
-          <div class="form-grid fg2">
-            <div class="form-row"><label class="form-label">Fecha</label><input type="date" id="photo-date"></div>
-            <div class="form-row"><label class="form-label">Vista</label><select id="photo-type"><option>Frente</option><option>Lado</option><option>Espalda</option><option>Libre</option></select></div>
-            <div class="form-row" style="grid-column:1/-1"><label class="form-label">Foto</label><input type="file" id="photo-file" accept="image/*"></div>
-            <div class="form-row" style="grid-column:1/-1"><label class="form-label">Nota</label><input id="photo-note" placeholder="Luz, peso, sensación o contexto..."></div>
-          </div>
-          <div class="btn-row"><button class="btn btn-primary" onclick="saveProgressPhoto()">Guardar foto</button></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Comparación semanal</div>
-          <div id="progress-weekly-summary"><div class="empty">Aún no hay suficiente historial</div></div>
-        </div>
-      </div>
-      <div class="card mb">
-        <div class="card-title">Comparador antes y después</div>
-        <div class="photo-compare-toolbar">
-          <div class="form-row"><label class="form-label">Antes</label><select id="photo-compare-before" onchange="renderPhotoComparison()"></select></div>
-          <div class="form-row"><label class="form-label">Después</label><select id="photo-compare-after" onchange="renderPhotoComparison()"></select></div>
-          <div class="form-row"><label class="form-label">Vista</label><select id="photo-compare-mode" onchange="renderPhotoComparison()"><option value="slider">Deslizador</option><option value="side">Lado a lado</option></select></div>
-        </div>
-        <div id="photo-comparison"><div class="empty">Guarda al menos dos fotos para compararlas.</div></div>
-      </div>
-      <div class="g2 mb">
-        <div class="card">
-          <div class="card-title">Récords destacados</div>
-          <div id="progress-records"><div class="empty">Tus PR aparecerán aquí</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Historial semanal</div>
-          <div id="progress-history"><div class="empty">Registra algunos días para ver el historial</div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Fotos guardadas</div>
-        <div id="progress-photos"><div class="empty">Sin fotos de progreso</div></div>
-      </div>
-      <div class="g2 mt-3">
-        <div class="card">
-          <div class="card-title">Papelera</div>
-          <div id="data-trash"><div class="empty">La papelera está vacía.</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Historial de cambios</div>
-          <div id="change-history"><div class="empty">Todavía no hay cambios registrados.</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOTAS -->
-  <div id="page-notes" class="page">
-    <div class="page-head flex jb ai-c">
-      <div><h1>Notas</h1><p>Bitacora permanente y observaciones personales</p></div>
-      <button class="btn btn-primary btn-sm" onclick="showModal('modal-note')">+ Nueva Nota</button>
-    </div>
-    <div class="content">
-      <div id="notes-list"><div class="empty">Registra tus observaciones permanentes.</div></div>
-    </div>
-  </div>
-
   <!-- CHECK-IN -->
   <div id="page-checking" class="page">
-    <div class="page-head">
-      <h1>Check-in</h1>
-      <p>Objetivos semanales y observaciones de la semana</p>
+    <div class="page-head flex jb ai-c checking-pro-head">
+      <div>
+        <h1>Check-in semanal</h1>
+        <p>Objetivos medibles, revisión de desempeño y decisiones para la próxima semana</p>
+      </div>
+      <div class="checking-week-navigation">
+        <button class="checking-current-week" type="button" onclick="checkingGoCurrentWeek()">Esta semana</button>
+        <button class="checking-week-arrow" type="button" onclick="moveCheckingWeek(-1)" aria-label="Semana anterior" title="Semana anterior">&#8249;</button>
+        <input type="week" id="c-week" onchange="loadChecking()" aria-label="Semana del check-in">
+        <button class="checking-week-arrow" type="button" onclick="moveCheckingWeek(1)" aria-label="Semana siguiente" title="Semana siguiente">&#8250;</button>
+        <button class="btn btn-primary checking-new-goal" type="button" onclick="openCheckingGoalModal()">+ Nuevo objetivo</button>
+      </div>
     </div>
-    <div class="content">
-      <div class="card mb">
-        <div class="card-title">Nuevo objetivo semanal</div>
-        <div class="form-grid fg2">
-          <div class="form-row"><label class="form-label">Semana</label><input type="week" id="c-week" onchange="loadChecking()"></div>
-          <div class="form-row"><label class="form-label">Objetivo</label><input id="c-goal-title" placeholder="Ej: entrenar 4 veces"></div>
-          <div class="form-row" style="grid-column:1 / -1"><label class="form-label">Observaciones del objetivo</label><textarea id="c-goal-observations" placeholder="Escribe aquí observaciones iniciales para este objetivo..."></textarea></div>
+    <div class="content checking-pro-content">
+      <section class="checking-overview">
+        <div class="checking-score-panel">
+          <div class="checking-score-ring" id="checking-score-ring" style="--checking-score:0deg">
+            <div><strong id="checking-score-value">0%</strong><span>cumplimiento</span></div>
+          </div>
+          <div class="checking-score-copy">
+            <span class="checking-eyebrow">Estado de la semana</span>
+            <h2 id="checking-score-title">Sin objetivos cargados</h2>
+            <p id="checking-insight">Crea objetivos medibles para obtener una lectura semanal útil.</p>
+          </div>
         </div>
-        <div class="btn-row"><button class="btn btn-primary" onclick="saveCheckingGoal()">Agregar objetivo</button></div>
-      </div>
-      <div class="g3 mb" id="checking-summary">
-        <div class="stat-tile"><div class="stat-label">Pendientes</div><div class="stat-value">0</div><div class="stat-sub">por cerrar</div></div>
-        <div class="stat-tile"><div class="stat-label">Cumplidos</div><div class="stat-value">0</div><div class="stat-sub">objetivos logrados</div></div>
-        <div class="stat-tile"><div class="stat-label">Fallados</div><div class="stat-value">0</div><div class="stat-sub">para revisar</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Objetivos de la semana</div>
-        <div id="checking-list"><div class="empty">Agrega tus objetivos semanales.</div></div>
+        <div class="checking-summary-grid" id="checking-summary">
+          <div class="checking-kpi"><span>Objetivos</span><strong>0</strong><small>esta semana</small></div>
+          <div class="checking-kpi success"><span>Cumplidos</span><strong>0</strong><small>logrados</small></div>
+          <div class="checking-kpi warning"><span>En curso</span><strong>0</strong><small>pendientes</small></div>
+          <div class="checking-kpi danger"><span>Revisar</span><strong>0</strong><small>fallados</small></div>
+        </div>
+      </section>
+
+      <div class="checking-workspace">
+        <section class="checking-goals-panel">
+          <div class="checking-section-head">
+            <div>
+              <span class="checking-eyebrow">Plan semanal</span>
+              <h2>Objetivos y progreso</h2>
+            </div>
+            <button class="checking-carry-btn" type="button" onclick="carryCheckingGoals()">Pasar pendientes</button>
+          </div>
+          <div class="checking-filters" role="tablist" aria-label="Filtrar objetivos">
+            <button class="checking-filter-btn active" type="button" data-checking-filter="all" onclick="setCheckingGoalFilter('all')">Todos</button>
+            <button class="checking-filter-btn" type="button" data-checking-filter="pending" onclick="setCheckingGoalFilter('pending')">En curso</button>
+            <button class="checking-filter-btn" type="button" data-checking-filter="done" onclick="setCheckingGoalFilter('done')">Cumplidos</button>
+            <button class="checking-filter-btn" type="button" data-checking-filter="missed" onclick="setCheckingGoalFilter('missed')">Revisar</button>
+          </div>
+          <div id="checking-list" class="checking-goal-list">
+            <div class="checking-empty">Agrega tu primer objetivo semanal.</div>
+          </div>
+        </section>
+
+        <aside class="checking-review-panel">
+          <div class="checking-section-head">
+            <div>
+              <span class="checking-eyebrow">Cierre semanal</span>
+              <h2>Revisión de desempeño</h2>
+            </div>
+            <span id="checking-review-status" class="checking-review-status">Sin guardar</span>
+          </div>
+
+          <div class="checking-review-field">
+            <div class="checking-review-label"><label for="c-review-adherence">Adherencia percibida</label><output id="c-review-adherence-value">7/10</output></div>
+            <input type="range" id="c-review-adherence" min="0" max="10" step="1" value="7" oninput="updateCheckingAdherenceLabel()">
+          </div>
+
+          <div class="checking-review-field">
+            <div class="checking-review-label"><span>Energía general</span><output id="c-review-energy-value">3/5</output></div>
+            <input type="hidden" id="c-review-energy" value="3">
+            <div class="checking-energy-control" role="group" aria-label="Energía general">
+              <button type="button" data-checking-energy="1" onclick="selectCheckingEnergy(1)">1</button>
+              <button type="button" data-checking-energy="2" onclick="selectCheckingEnergy(2)">2</button>
+              <button type="button" class="active" data-checking-energy="3" onclick="selectCheckingEnergy(3)">3</button>
+              <button type="button" data-checking-energy="4" onclick="selectCheckingEnergy(4)">4</button>
+              <button type="button" data-checking-energy="5" onclick="selectCheckingEnergy(5)">5</button>
+            </div>
+          </div>
+
+          <div class="form-row checking-review-field">
+            <label class="form-label" for="c-review-win">Principal logro</label>
+            <textarea id="c-review-win" rows="2" maxlength="400" placeholder="Qué salió especialmente bien esta semana..." oninput="markCheckingReviewUnsaved()"></textarea>
+          </div>
+          <div class="form-row checking-review-field">
+            <label class="form-label" for="c-review-obstacle">Principal obstáculo</label>
+            <textarea id="c-review-obstacle" rows="2" maxlength="400" placeholder="Qué te frenó o hizo más difícil cumplir..." oninput="markCheckingReviewUnsaved()"></textarea>
+          </div>
+          <div class="form-row checking-review-field">
+            <label class="form-label" for="c-review-focus">Próximo enfoque</label>
+            <textarea id="c-review-focus" rows="2" maxlength="400" placeholder="Qué decisión concreta llevarás a la próxima semana..." oninput="markCheckingReviewUnsaved()"></textarea>
+          </div>
+
+          <button class="btn btn-primary checking-save-review" type="button" onclick="saveCheckingReview()">Guardar revisión semanal</button>
+
+          <div class="checking-trend-block">
+            <div class="checking-trend-head"><span>Tendencia</span><small>últimas 6 semanas</small></div>
+            <div id="checking-trend" class="checking-trend"><div class="checking-trend-empty">Sin historial suficiente.</div></div>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
@@ -5040,11 +8002,9 @@ tr:hover td {
 <nav id="bottom-nav">
   <button class="bnav-btn active" onclick="go('dashboard')">Inicio</button>
   <button class="bnav-btn" onclick="go('today')">Hoy</button>
-  <button class="bnav-btn" onclick="go('dayai')">IA</button>
-  <button class="bnav-btn" onclick="go('weekcoach')">Coach</button>
+  <button class="bnav-btn" onclick="go('assistant')">IA</button>
   <button class="bnav-btn" onclick="go('training')">Gym</button>
   <button class="bnav-btn" onclick="go('nutrition')">Dieta</button>
-  <button class="bnav-btn" onclick="go('progress')">Progreso</button>
   <button class="bnav-btn" onclick="go('checking')">Check</button>
 </nav>
 
@@ -5187,6 +8147,179 @@ tr:hover td {
   </div>
 </div>
 
+<!-- Evento de calendario Modal -->
+<div id="modal-calendar-event" class="overlay">
+  <div class="modal aa-calendar-event-modal" role="dialog" aria-modal="true" aria-labelledby="calendar-event-modal-title">
+    <div class="modal-head">
+      <h3 id="calendar-event-modal-title">Nuevo evento</h3>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="hideModal('modal-calendar-event')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="aa-calendar-event-form">
+      <div class="form-row aa-calendar-field-wide">
+        <label class="form-label" for="ce-title">Título</label>
+        <input id="ce-title" maxlength="90" placeholder="Ej. Entrenar con Martín" autocomplete="off">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="ce-date">Fecha</label>
+        <input type="date" id="ce-date">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="ce-category">Categoría</label>
+        <select id="ce-category">
+          <option value="personal">Personal</option>
+          <option value="training">Entrenamiento</option>
+          <option value="nutrition">Nutrición</option>
+          <option value="health">Salud</option>
+          <option value="reminder">Recordatorio</option>
+        </select>
+      </div>
+
+      <label class="aa-calendar-all-day aa-calendar-field-wide" for="ce-all-day">
+        <input type="checkbox" id="ce-all-day" onchange="toggleCalendarEventTimeFields()">
+        <span>Todo el día</span>
+      </label>
+
+      <div id="calendar-event-time-fields" class="aa-calendar-time-fields aa-calendar-field-wide">
+        <div class="form-row">
+          <label class="form-label" for="ce-start">Comienza</label>
+          <input type="time" id="ce-start">
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="ce-end">Termina</label>
+          <input type="time" id="ce-end">
+        </div>
+      </div>
+
+      <div class="form-row aa-calendar-field-wide">
+        <label class="form-label" for="ce-location">Ubicación</label>
+        <input id="ce-location" maxlength="120" placeholder="Gimnasio, casa, consultorio..." autocomplete="off">
+      </div>
+
+      <div class="form-row aa-calendar-field-wide">
+        <label class="form-label" for="ce-notes">Notas</label>
+        <textarea id="ce-notes" maxlength="600" rows="3" placeholder="Detalles importantes del evento..."></textarea>
+      </div>
+
+      <div class="form-row aa-calendar-field-wide">
+        <label class="form-label">Color</label>
+        <input type="hidden" id="ce-color" value="blue">
+        <div class="aa-calendar-color-picker" role="group" aria-label="Color del evento">
+          <button class="aa-calendar-color active blue" type="button" data-event-color="blue" onclick="selectCalendarEventColor('blue')" aria-label="Azul" title="Azul"></button>
+          <button class="aa-calendar-color green" type="button" data-event-color="green" onclick="selectCalendarEventColor('green')" aria-label="Verde" title="Verde"></button>
+          <button class="aa-calendar-color amber" type="button" data-event-color="amber" onclick="selectCalendarEventColor('amber')" aria-label="Amarillo" title="Amarillo"></button>
+          <button class="aa-calendar-color red" type="button" data-event-color="red" onclick="selectCalendarEventColor('red')" aria-label="Rojo" title="Rojo"></button>
+          <button class="aa-calendar-color violet" type="button" data-event-color="violet" onclick="selectCalendarEventColor('violet')" aria-label="Violeta" title="Violeta"></button>
+          <button class="aa-calendar-color slate" type="button" data-event-color="slate" onclick="selectCalendarEventColor('slate')" aria-label="Gris" title="Gris"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="aa-calendar-modal-actions">
+      <button class="btn btn-danger" id="calendar-event-delete-btn" type="button" onclick="deleteCalendarEvent()" style="display:none">Eliminar</button>
+      <div class="btn-row">
+        <button class="btn btn-ghost" type="button" onclick="hideModal('modal-calendar-event')">Cancelar</button>
+        <button class="btn btn-primary" id="calendar-event-save-btn" type="button" onclick="saveCalendarEvent()">Guardar evento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Objetivo semanal Modal -->
+<div id="modal-checking-goal" class="overlay">
+  <div class="modal checking-goal-modal" role="dialog" aria-modal="true" aria-labelledby="checking-goal-modal-title">
+    <div class="modal-head">
+      <div>
+        <span class="checking-modal-eyebrow">Plan semanal</span>
+        <h3 id="checking-goal-modal-title">Nuevo objetivo</h3>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="hideModal('modal-checking-goal')" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="checking-goal-form">
+      <div class="form-row checking-field-wide">
+        <label class="form-label" for="c-goal-title">Objetivo</label>
+        <input id="c-goal-title" maxlength="100" placeholder="Ej. Completar cuatro entrenamientos" autocomplete="off">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="c-goal-week">Semana</label>
+        <input type="week" id="c-goal-week">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="c-goal-category">Área</label>
+        <select id="c-goal-category">
+          <option value="general">General</option>
+          <option value="training">Entrenamiento</option>
+          <option value="nutrition">Nutrición</option>
+          <option value="recovery">Recuperación</option>
+          <option value="cardio">Cardio</option>
+          <option value="habits">Hábitos</option>
+        </select>
+      </div>
+
+      <div class="form-row checking-field-wide">
+        <label class="form-label" for="c-goal-metric">Cómo se mide</label>
+        <select id="c-goal-metric" onchange="updateCheckingMetricFields()">
+          <option value="manual">Seguimiento manual</option>
+          <option value="training_sessions">Entrenamientos registrados</option>
+          <option value="steps">Pasos acumulados</option>
+          <option value="cardio_minutes">Minutos de cardio</option>
+          <option value="nutrition_days">Días con nutrición registrada</option>
+          <option value="protein_days">Días cumpliendo proteína</option>
+          <option value="water_days">Días cumpliendo agua</option>
+          <option value="sleep_average">Promedio de sueño</option>
+        </select>
+        <small id="c-goal-metric-help" class="checking-field-help">Actualiza el avance directamente desde la tarjeta.</small>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="c-goal-target">Meta</label>
+        <input type="number" id="c-goal-target" min="0.01" step="0.1" inputmode="decimal" value="1">
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="c-goal-unit">Unidad</label>
+        <input id="c-goal-unit" maxlength="24" value="veces" placeholder="sesiones, pasos, días...">
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="c-goal-priority">Prioridad</label>
+        <select id="c-goal-priority">
+          <option value="medium">Importante</option>
+          <option value="high">Prioridad alta</option>
+          <option value="low">Normal</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label" for="c-goal-due-day">Revisar el</label>
+        <select id="c-goal-due-day">
+          <option value="sunday">Domingo</option>
+          <option value="monday">Lunes</option>
+          <option value="tuesday">Martes</option>
+          <option value="wednesday">Miércoles</option>
+          <option value="thursday">Jueves</option>
+          <option value="friday">Viernes</option>
+          <option value="saturday">Sábado</option>
+        </select>
+      </div>
+
+      <div class="form-row checking-field-wide">
+        <label class="form-label" for="c-goal-observations">Plan de acción</label>
+        <textarea id="c-goal-observations" rows="3" maxlength="600" placeholder="Qué harás para cumplirlo, cuándo y bajo qué condiciones..."></textarea>
+      </div>
+    </div>
+
+    <div class="checking-modal-actions">
+      <button class="btn btn-danger" id="checking-goal-delete-btn" type="button" onclick="deleteCheckingGoalFromModal()" style="display:none">Eliminar</button>
+      <div class="btn-row">
+        <button class="btn btn-ghost" type="button" onclick="hideModal('modal-checking-goal')">Cancelar</button>
+        <button class="btn btn-primary" id="checking-goal-save-btn" type="button" onclick="saveCheckingGoal()">Guardar objetivo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Nota Modal -->
 <div id="modal-note" class="overlay">
   <div class="modal">
@@ -5220,14 +8353,15 @@ let cloudRestoreActive = false;
 const SAFETY_COLLECTIONS = new Set([
   'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals', 'notes',
   'checking_cardio', 'checking_goals', 'supplements', 'progress_photos',
-  'week_plans', 'reminders'
+  'week_plans', 'reminders', 'calendar_events', 'checking_reviews'
 ]);
 
 const SAFETY_COLLECTION_LABELS = {
   bodylogs: 'Cuerpo', routines: 'Rutina', sessions: 'Entreno', meals: 'Comida',
   meal_templates: 'Plantilla', goals: 'Objetivo', notes: 'Nota',
   checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
-  progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio'
+  progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio',
+  calendar_events: 'Evento', checking_reviews: 'Revisión semanal'
 };
 
 function safetyId() {
@@ -5357,7 +8491,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, weekcoach: loadWeekCoach, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
   loaders[page]?.();
   closeMobileMenu();
 }
@@ -5380,12 +8514,8 @@ function syncDateControls(date = selectedDate()) {
   const week = weekValueFromDate(date);
   const calendarWeek = document.getElementById('calendar-week');
   const checkingWeek = document.getElementById('c-week');
-  const aiWeek = document.getElementById('ai-week-week');
-  const aiFillWeek = document.getElementById('ai-week-fill-week');
   if (calendarWeek) calendarWeek.value = week;
   if (checkingWeek) checkingWeek.value = week;
-  if (aiWeek) aiWeek.value = week;
-  if (aiFillWeek) aiFillWeek.value = week;
   renderFreeDayStatus(date);
 }
 
@@ -5394,7 +8524,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, dayai: loadDayAi, weekcoach: loadWeekCoach, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, progress: loadProgress, notes: loadNotes, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
   loaders[activePage]?.();
 }
 
@@ -5438,10 +8568,12 @@ function hideModal(id) {
   document.getElementById(id).classList.remove('show');
   if (id === 'modal-meal') resetMealEditMode();
   if (id === 'modal-note') resetNoteEditMode();
+  if (id === 'modal-calendar-event') editingCalendarEventId = null;
+  if (id === 'modal-checking-goal') editingCheckingGoalId = null;
 }
 
 // Cerrar modal al click fuera
-document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); }));
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) hideModal(o.id); }));
 
 // ═══════════════════════════════════════════════════
 // TOASTS
@@ -5458,6 +8590,38 @@ function toast(msg, type = 'ok') {
 // DRAFT INTELLIGENCE HELPERS
 // ═══════════════════════════════════════════════════
 const dayNamesShort = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const CALENDAR_EVENT_COLORS = ['blue', 'green', 'amber', 'red', 'violet', 'slate'];
+const CALENDAR_CATEGORY_LABELS = {
+  personal: 'Personal',
+  training: 'Entrenamiento',
+  nutrition: 'Nutrición',
+  health: 'Salud',
+  reminder: 'Recordatorio'
+};
+const CHECKING_CATEGORY_LABELS = {
+  general: 'General',
+  training: 'Entrenamiento',
+  nutrition: 'Nutrición',
+  recovery: 'Recuperación',
+  cardio: 'Cardio',
+  habits: 'Hábitos'
+};
+const CHECKING_PRIORITY_LABELS = { low: 'Normal', medium: 'Importante', high: 'Prioridad alta' };
+const CHECKING_METRIC_CONFIG = {
+  manual: { label: 'Seguimiento manual', unit: 'veces', target: 1, help: 'Actualiza el avance directamente desde la tarjeta.' },
+  training_sessions: { label: 'Entrenamientos registrados', unit: 'sesiones', target: 4, help: 'Se calcula con las sesiones guardadas en Entrenamiento.' },
+  steps: { label: 'Pasos acumulados', unit: 'pasos', target: 70000, help: 'Suma los pasos registrados durante la semana.' },
+  cardio_minutes: { label: 'Cardio acumulado', unit: 'min', target: 150, help: 'Suma los minutos de cardio registrados durante la semana.' },
+  nutrition_days: { label: 'Días con nutrición registrada', unit: 'días', target: 7, help: 'Cuenta los días que tienen al menos una comida registrada.' },
+  protein_days: { label: 'Días cumpliendo proteína', unit: 'días', target: 5, help: 'Cuenta los días que alcanzan tu objetivo actual de proteína.' },
+  water_days: { label: 'Días cumpliendo agua', unit: 'días', target: 5, help: 'Cuenta los días con al menos 2500 ml registrados.' },
+  sleep_average: { label: 'Promedio de sueño', unit: 'h', target: 8, help: 'Calcula el promedio con los días que tienen sueño registrado.' }
+};
+let calendarCursorMonth = '';
+let calendarSelectedDay = '';
+let editingCalendarEventId = null;
+let editingCheckingGoalId = null;
+let checkingGoalFilter = 'all';
 
 function localDate(dateStr = selectedDate()) {
   const [y, m, d] = dateStr.split('-').map(Number);
@@ -5564,9 +8728,59 @@ function sessionsForDate(date = selectedDate()) {
   return (DB.get('sessions') || []).filter(s => s.date === date);
 }
 
+function checkingMetricCurrent(goal) {
+  const dates = getWeekDates(goal.week || currentCheckingWeek());
+  const metric = goal.metric || 'manual';
+  if (metric === 'training_sessions') {
+    return (DB.get('sessions') || []).filter(item => dates.includes(item.date)).length;
+  }
+  if (metric === 'steps' || metric === 'cardio_minutes') {
+    const type = metric === 'steps' ? 'steps' : 'minutes';
+    return (DB.get('checking_cardio') || [])
+      .filter(item => dates.includes(item.date) && item.type === type)
+      .reduce((total, item) => total + (+item.value || 0), 0);
+  }
+  if (metric === 'nutrition_days') {
+    return new Set((DB.get('meals') || []).filter(item => dates.includes(item.date)).map(item => item.date)).size;
+  }
+  if (metric === 'protein_days') {
+    const cfg = DB.get('nutconfig') || { protein: 150 };
+    return dates.filter(date => nutritionForDate(date).totals.p >= (+cfg.protein || 150)).length;
+  }
+  if (metric === 'water_days') {
+    const water = DB.get('daily_water') || {};
+    return dates.filter(date => (+water[date] || 0) >= 2500).length;
+  }
+  if (metric === 'sleep_average') {
+    const wellness = DB.get('daily_wellness') || {};
+    const values = dates
+      .map(date => wellness[date]?.sleep)
+      .filter(value => value !== '' && value != null && Number.isFinite(+value))
+      .map(Number);
+    return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0;
+  }
+  return Math.max(0, +goal.progress || (goal.done ? (+goal.target || 1) : 0));
+}
+
+function checkingGoalProgress(goal) {
+  const metric = goal.metric || 'manual';
+  const config = CHECKING_METRIC_CONFIG[metric] || CHECKING_METRIC_CONFIG.manual;
+  const target = Math.max(0.01, +goal.target || config.target || 1);
+  const current = Math.max(0, checkingMetricCurrent(goal));
+  return {
+    current,
+    target,
+    percent: Math.min(100, Math.round((current / target) * 100)),
+    unit: goal.unit || config.unit,
+    label: config.label,
+    automatic: metric !== 'manual'
+  };
+}
+
 function checkingStatus(goal) {
-  if (goal.status) return goal.status;
-  return goal.done ? 'done' : 'pending';
+  const explicit = goal.status || (goal.done ? 'done' : 'pending');
+  if (explicit === 'missed' || explicit === 'done') return explicit;
+  return checkingGoalProgress(goal).percent >= 100 ? 'done' : 'pending';
 }
 
 function checkingStats(week = weekValueFromDate()) {
@@ -6184,41 +9398,199 @@ function renderWorkoutComparison(result, targetId = 'training-session-result') {
     </div>`;
 }
 
+function calendarEvents() {
+  const stored = DB.get('calendar_events');
+  return Array.isArray(stored)
+    ? stored.filter(item => item && item.id && item.date && item.title)
+    : [];
+}
+
+function calendarEventColor(value) {
+  return CALENDAR_EVENT_COLORS.includes(value) ? value : 'blue';
+}
+
+function calendarEventsForDate(date) {
+  return calendarEvents()
+    .filter(item => item.date === date)
+    .sort((a, b) => {
+      if (Boolean(a.all_day) !== Boolean(b.all_day)) return a.all_day ? -1 : 1;
+      const byTime = String(a.start_time || '').localeCompare(String(b.start_time || ''));
+      return byTime || String(a.title).localeCompare(String(b.title), 'es');
+    });
+}
+
+function calendarMonthStart(date) {
+  const base = localDate(date);
+  return dateKey(new Date(base.getFullYear(), base.getMonth(), 1));
+}
+
+function ensureCalendarState(reset = false) {
+  const base = selectedDate();
+  if (reset || !calendarSelectedDay) calendarSelectedDay = base;
+  if (reset || !calendarCursorMonth) calendarCursorMonth = calendarMonthStart(base);
+}
+
+function calendarMonthName(date) {
+  const text = new Intl.DateTimeFormat('es-AR', { month: 'long', year: 'numeric' }).format(localDate(date));
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function calendarDayName(date) {
+  const text = new Intl.DateTimeFormat('es-AR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long'
+  }).format(localDate(date));
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function calendarEventTimeLabel(item) {
+  if (item.all_day) return 'Todo el día';
+  if (item.start_time && item.end_time) return `${item.start_time} - ${item.end_time}`;
+  return item.start_time || 'Sin horario';
+}
+
+function openCalendarEventFromElement(button) {
+  openCalendarEventModal(button?.dataset.calendarEventId || null);
+}
+
+function openCalendarEventForDay(button) {
+  openCalendarEventModal(null, button?.dataset.date || calendarSelectedDay || selectedDate());
+}
+
+function calendarEventChipHtml(item) {
+  const color = calendarEventColor(item.color);
+  const time = item.all_day ? '' : item.start_time || '';
+  return `<button class="aa-calendar-event color-${color} ${item.all_day ? 'all-day' : ''}"
+      type="button"
+      data-calendar-event-id="${esc(item.id)}"
+      onclick="event.stopPropagation();openCalendarEventFromElement(this)"
+      title="${esc(`${calendarEventTimeLabel(item)} · ${item.title}`)}">
+      ${time ? `<span class="aa-calendar-event-time">${esc(time)}</span>` : ''}
+      <span class="aa-calendar-event-title">${esc(item.title)}</span>
+    </button>`;
+}
+
+function renderCalendarAgenda() {
+  const agenda = document.getElementById('calendar-agenda');
+  const label = document.getElementById('calendar-selected-label');
+  if (!agenda || !label) return;
+
+  ensureCalendarState();
+  const date = calendarSelectedDay;
+  const events = calendarEventsForDate(date);
+  const sessions = sessionsForDate(date);
+  const nutrition = nutritionForDate(date);
+  const body = (DB.get('bodylogs') || []).find(item => item.date === date);
+  const cardio = (DB.get('checking_cardio') || []).filter(item => item.date === date);
+  const notes = (DB.get('notes') || []).filter(item => item.date === date);
+  const steps = cardio.filter(item => item.type === 'steps').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const minutes = cardio.filter(item => item.type === 'minutes').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const records = [];
+
+  if (isFreeDay(date)) records.push({ color: 'free', title: 'Día libre', detail: 'Solo cuenta lo registrado' });
+  if (sessions.length) records.push({ color: 'train', title: 'Entrenamiento', detail: `${sessions.length} sesión${sessions.length === 1 ? '' : 'es'}` });
+  if (nutrition.meals.length) records.push({ color: 'nut', title: 'Nutrición', detail: `${nutrition.totals.cal} kcal · ${nutrition.meals.length} comida${nutrition.meals.length === 1 ? '' : 's'}` });
+  if (body) records.push({ color: 'body', title: 'Cuerpo', detail: body.weight ? `${body.weight} kg` : 'Registro corporal' });
+  if (steps) records.push({ color: 'cardio', title: 'Pasos', detail: `${steps.toLocaleString('es-AR')} pasos` });
+  if (minutes) records.push({ color: 'cardio', title: 'Cardio', detail: `${minutes} min` });
+  if (notes.length) records.push({ color: 'note', title: 'Notas', detail: `${notes.length} registrada${notes.length === 1 ? '' : 's'}` });
+
+  label.textContent = calendarDayName(date);
+  agenda.innerHTML = `
+    <div class="aa-calendar-agenda-events">
+      ${events.length ? events.map(item => {
+        const color = calendarEventColor(item.color);
+        const category = CALENDAR_CATEGORY_LABELS[item.category] || CALENDAR_CATEGORY_LABELS.personal;
+        return `<button class="aa-calendar-agenda-item color-${color}" type="button"
+            data-calendar-event-id="${esc(item.id)}" onclick="openCalendarEventFromElement(this)">
+            <span class="aa-calendar-agenda-time">${esc(calendarEventTimeLabel(item))}</span>
+            <strong>${esc(item.title)}</strong>
+            <span>${esc(category)}${item.location ? ` · ${esc(item.location)}` : ''}</span>
+          </button>`;
+      }).join('') : `<div class="aa-calendar-agenda-empty">
+        <span>No hay eventos para este día.</span>
+        <button type="button" data-date="${date}" onclick="openCalendarEventForDay(this)">+ Agregar evento</button>
+      </div>`}
+    </div>
+    <div class="aa-calendar-agenda-divider"><span>Actividad registrada</span></div>
+    <div class="aa-calendar-record-list">
+      ${records.length ? records.map(item => `<div class="aa-calendar-record-item">
+        <i class="aa-cal-dot ${item.color}"></i>
+        <div><strong>${esc(item.title)}</strong><span>${esc(item.detail)}</span></div>
+      </div>`).join('') : '<div class="aa-calendar-record-empty">Sin registros de la app.</div>'}
+    </div>`;
+}
+
 function renderCalendarMonthDraft() {
   const el = document.getElementById('calendar-month-draft');
   if (!el) return;
-  const base = localDate(selectedDate());
+  ensureCalendarState();
+
+  const base = localDate(calendarCursorMonth);
   const first = new Date(base.getFullYear(), base.getMonth(), 1);
   const startOffset = (first.getDay() + 6) % 7;
   const start = new Date(first);
   start.setDate(first.getDate() - startOffset);
+  const currentMonthEvents = calendarEvents().filter(item => {
+    const date = localDate(item.date);
+    return date.getFullYear() === base.getFullYear() && date.getMonth() === base.getMonth();
+  });
   const cells = [];
+
   for (let i = 0; i < 42; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
     const key = dateKey(d);
     const sameMonth = d.getMonth() === base.getMonth();
+    const events = calendarEventsForDate(key);
+    const visibleEvents = events.slice(0, 3);
+    const remaining = events.length - visibleEvents.length;
     const free = isFreeDay(key);
     const hasTraining = sessionsForDate(key).length;
     const hasNutrition = nutritionForDate(key).meals.length;
-    const hasBody = (DB.get('bodylogs') || []).some(b => b.date === key);
-    const hasCardio = (DB.get('checking_cardio') || []).some(c => c.date === key);
+    const hasBody = (DB.get('bodylogs') || []).some(item => item.date === key);
+    const hasCardio = (DB.get('checking_cardio') || []).some(item => item.date === key);
     const check = checkingStats(weekValueFromDate(key));
-    cells.push(`<div class="month-cell ${sameMonth ? '' : 'muted'}">
-      <div class="month-day">${d.getDate()}</div>
-      <div class="dot-row">
-        ${free ? '<span class="badge b-amber" style="font-size:.62rem;padding:2px 5px">Libre</span>' : ''}
-        ${hasTraining ? '<span class="status-dot train"></span>' : ''}
-        ${hasNutrition ? '<span class="status-dot nut"></span>' : ''}
-        ${hasBody ? '<span class="status-dot body"></span>' : ''}
-        ${hasCardio ? '<span class="status-dot cardio"></span>' : ''}
-        ${check.total && check.rate === 100 ? '<span class="status-dot check"></span>' : ''}
+    const classes = [
+      'aa-calendar-day',
+      sameMonth ? '' : 'outside',
+      key === today() ? 'today' : '',
+      key === calendarSelectedDay ? 'selected' : ''
+    ].filter(Boolean).join(' ');
+
+    cells.push(`<div class="${classes}" data-date="${key}" onclick="selectCalendarDay(this.dataset.date)">
+      <div class="aa-calendar-day-head">
+        <span class="aa-calendar-day-number">${d.getDate()}</span>
+        <button class="aa-calendar-day-add" type="button" data-date="${key}"
+          onclick="event.stopPropagation();openCalendarEventForDay(this)" aria-label="Agregar evento el ${key}" title="Agregar evento">+</button>
+      </div>
+      <div class="aa-calendar-event-stack">
+        ${visibleEvents.map(calendarEventChipHtml).join('')}
+        ${remaining > 0 ? `<button class="aa-calendar-more" type="button" onclick="event.stopPropagation();selectCalendarDay('${key}')">+${remaining} más</button>` : ''}
+      </div>
+      <div class="aa-calendar-day-signals">
+        ${free ? '<span class="aa-calendar-free-label">Libre</span>' : ''}
+        ${hasTraining ? '<i class="aa-cal-dot train" title="Entrenamiento"></i>' : ''}
+        ${hasNutrition ? '<i class="aa-cal-dot nut" title="Nutrición"></i>' : ''}
+        ${hasBody ? '<i class="aa-cal-dot body" title="Cuerpo"></i>' : ''}
+        ${hasCardio ? '<i class="aa-cal-dot cardio" title="Cardio"></i>' : ''}
+        ${check.total && check.rate === 100 ? '<i class="aa-cal-dot check" title="Check-in completo"></i>' : ''}
       </div>
     </div>`);
   }
+
+  const monthTitle = document.getElementById('calendar-month-title');
+  const eventCount = document.getElementById('calendar-event-count');
+  if (monthTitle) monthTitle.textContent = calendarMonthName(calendarCursorMonth);
+  if (eventCount) eventCount.textContent = `${currentMonthEvents.length} evento${currentMonthEvents.length === 1 ? '' : 's'}`;
+
   el.innerHTML = `
-    <div class="mini-muted mb">Azul: entreno · Amarillo: nutrición · Verde: cuerpo · Celeste: cardio · Rojo: check-in completo · Libre: solo evalúa lo cargado</div>
-    <div class="month-grid">${cells.join('')}</div>`;
+    <div class="aa-calendar-weekdays" aria-hidden="true">
+      ${dayNamesShort.map(day => `<span>${day}</span>`).join('')}
+    </div>
+    <div class="aa-calendar-month-grid">${cells.join('')}</div>`;
+  renderCalendarAgenda();
 }
 
 function renderSmartGoalsDraft() {
@@ -6700,7 +10072,6 @@ function loadToday() {
       </div>
     </div>`).join('')}</div>` : '<div class="empty">Sin objetivos semanales</div>';
   renderReminders();
-  loadVoiceLogger();
   renderDayEditor();
 }
 
@@ -7221,7 +10592,667 @@ function editNote(id) {
 }
 
 // ═══════════════════════════════════════════════════
-// IA SEMANA
+// ASISTENTE CENTRAL DE LA APP
+// ═══════════════════════════════════════════════════
+const APP_AI_ARRAY_COLLECTIONS = new Set([
+  'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals',
+  'checking_cardio', 'checking_goals', 'supplements', 'calendar_events',
+  'reminders', 'checking_reviews'
+]);
+
+const APP_AI_MAP_COLLECTIONS = new Set([
+  'nutconfig', 'daily_water', 'daily_wellness', 'free_days',
+  'supplement_checks', 'dashboard_moods'
+]);
+
+const APP_AI_COLLECTION_LABELS = {
+  bodylogs: 'Cuerpo', routines: 'Rutinas', sessions: 'Entrenamientos', meals: 'Nutrición',
+  meal_templates: 'Plantillas de comida', goals: 'Objetivos', checking_cardio: 'Cardio',
+  checking_goals: 'Check-in', supplements: 'Suplementos', calendar_events: 'Calendario',
+  reminders: 'Recordatorios', checking_reviews: 'Revisión semanal', nutconfig: 'Metas nutricionales',
+  daily_water: 'Agua', daily_wellness: 'Sueño y energía', free_days: 'Días libres',
+  supplement_checks: 'Control de suplementos', dashboard_moods: 'Estado del día'
+};
+
+const APP_AI_ALLOWED_FIELDS = {
+  bodylogs: ['date', 'weight', 'body_fat', 'arm', 'chest', 'waist', 'thigh', 'calf', 'notes'],
+  routines: ['name', 'days'],
+  sessions: ['date', 'routine_name', 'day_name', 'duration', 'notes', 'sets'],
+  meals: ['date', 'meal_name', 'food_item', 'calories', 'protein', 'carbs', 'fat'],
+  meal_templates: ['meal_name', 'food_item', 'calories', 'protein', 'carbs', 'fat'],
+  goals: ['title', 'status', 'type', 'unit', 'current', 'target', 'date'],
+  checking_cardio: ['week', 'date', 'type', 'value'],
+  checking_goals: ['week', 'title', 'category', 'metric', 'target', 'unit', 'priority', 'due_day', 'observations', 'reflection', 'progress', 'status', 'done'],
+  supplements: ['name', 'dose'],
+  calendar_events: ['title', 'date', 'all_day', 'start_time', 'end_time', 'category', 'location', 'notes', 'color'],
+  reminders: ['label', 'type', 'time', 'repeat', 'date', 'enabled'],
+  checking_reviews: ['week', 'adherence', 'energy', 'win', 'obstacle', 'focus'],
+  nutconfig: ['calories', 'protein', 'carbs', 'fat'],
+  daily_water: ['value'],
+  daily_wellness: ['sleep', 'energy'],
+  free_days: ['active'],
+  supplement_checks: ['supplement_id', 'taken'],
+  dashboard_moods: ['value']
+};
+
+const APP_AI_ACTION_LABELS = {
+  create: 'Crear', update: 'Editar', delete: 'Eliminar', set: 'Configurar'
+};
+
+const APP_AI_FIELD_LABELS = {
+  date: 'Fecha', week: 'Semana', weight: 'Peso', body_fat: 'Grasa', name: 'Nombre',
+  routine_name: 'Rutina', day_name: 'Día', duration: 'Duración', notes: 'Notas',
+  meal_name: 'Comida', food_item: 'Alimento', calories: 'Calorías', protein: 'Proteína',
+  carbs: 'Carbohidratos', fat: 'Grasas', title: 'Título', current: 'Inicio', target: 'Meta',
+  value: 'Valor', type: 'Tipo', dose: 'Dosis', start_time: 'Inicio', end_time: 'Fin',
+  location: 'Lugar', time: 'Hora', repeat: 'Repetición', sleep: 'Sueño', energy: 'Energía',
+  active: 'Activo', taken: 'Completado', status: 'Estado', progress: 'Avance'
+};
+
+let appAiProposal = null;
+let appAiLastNotice = null;
+
+function appAiSafeValue(value, depth = 0) {
+  if (value == null || typeof value === 'boolean') return value;
+  if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
+  if (typeof value === 'string') return value.slice(0, 600);
+  if (depth >= 4) return null;
+  if (Array.isArray(value)) return value.slice(0, 80).map(item => appAiSafeValue(item, depth + 1));
+  if (typeof value !== 'object') return null;
+  const safe = {};
+  Object.entries(value).slice(0, 50).forEach(([key, item]) => {
+    if (['__proto__', 'prototype', 'constructor'].includes(key)) return;
+    safe[key] = appAiSafeValue(item, depth + 1);
+  });
+  return safe;
+}
+
+function appAiPickData(collection, data = {}) {
+  const safe = appAiSafeValue(data) || {};
+  const fields = APP_AI_ALLOWED_FIELDS[collection] || [];
+  return Object.fromEntries(fields.filter(field => safe[field] !== undefined).map(field => [field, safe[field]]));
+}
+
+function appAiCompactRecord(collection, item) {
+  if (!item || typeof item !== 'object') return null;
+  const record = { id: item.id, ...appAiPickData(collection, item) };
+  if (collection === 'sessions' && Array.isArray(record.sets)) record.sets = record.sets.slice(0, 40);
+  if (collection === 'routines' && Array.isArray(record.days)) {
+    record.days = record.days.slice(0, 12).map(day => ({
+      ...day,
+      exercises: Array.isArray(day?.exercises) ? day.exercises.slice(0, 30) : []
+    }));
+  }
+  return record;
+}
+
+function appAiRecentArray(collection, limit) {
+  const rows = DB.get(collection);
+  if (!Array.isArray(rows)) return [];
+  return rows.slice(0, limit).map(item => appAiCompactRecord(collection, item)).filter(Boolean);
+}
+
+function appAiRecentMap(collection, limit = 45) {
+  const source = DB.get(collection);
+  if (!source || typeof source !== 'object' || Array.isArray(source)) return {};
+  return Object.fromEntries(Object.entries(source).sort(([a], [b]) => a.localeCompare(b)).slice(-limit).map(([key, value]) => [key, appAiSafeValue(value)]));
+}
+
+function appAiBoundContext(context, maxChars = 64_000) {
+  const minimums = {
+    meals: 20, sessions: 12, calendar_events: 20, bodylogs: 15, routines: 5,
+    checking_cardio: 15, checking_goals: 15, reminders: 10, checking_reviews: 6,
+    goals: 10, supplements: 10, meal_templates: 10
+  };
+  const recordOrder = ['meals', 'sessions', 'calendar_events', 'bodylogs', 'checking_cardio', 'checking_goals', 'routines', 'reminders', 'checking_reviews', 'goals', 'meal_templates', 'supplements'];
+  let trimmed = false;
+  let passes = 0;
+  while (JSON.stringify(context).length > maxChars && passes++ < 200) {
+    let changed = false;
+    recordOrder.forEach(collection => {
+      const rows = context.records[collection];
+      if (Array.isArray(rows) && rows.length > (minimums[collection] || 5)) {
+        rows.pop();
+        changed = true;
+        trimmed = true;
+      }
+    });
+    if (!changed) {
+      let nestedChanged = false;
+      context.records.sessions.forEach(session => {
+        if (Array.isArray(session.sets) && session.sets.length > 12) {
+          session.sets.pop();
+          nestedChanged = true;
+        }
+      });
+      context.records.routines.forEach(routine => (routine.days || []).forEach(day => {
+        if (Array.isArray(day.exercises) && day.exercises.length > 10) {
+          day.exercises.pop();
+          nestedChanged = true;
+        }
+      }));
+      if (nestedChanged) {
+        trimmed = true;
+        continue;
+      }
+      const settingKey = Object.keys(context.settings).find(key => {
+        const value = context.settings[key];
+        return value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length > 14;
+      });
+      if (!settingKey) break;
+      const firstKey = Object.keys(context.settings[settingKey]).sort()[0];
+      delete context.settings[settingKey][firstKey];
+      trimmed = true;
+    }
+  }
+  if (JSON.stringify(context).length > maxChars) {
+    Object.keys(context.records).forEach(collection => {
+      if (Array.isArray(context.records[collection])) context.records[collection] = context.records[collection].slice(0, 6);
+    });
+    context.records.sessions.forEach(session => {
+      if (Array.isArray(session.sets)) session.sets = session.sets.slice(0, 8);
+    });
+    context.records.routines.forEach(routine => (routine.days || []).forEach(day => {
+      if (Array.isArray(day.exercises)) day.exercises = day.exercises.slice(0, 8);
+    }));
+    Object.keys(context.settings).forEach(key => {
+      const value = context.settings[key];
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        context.settings[key] = Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).slice(-8));
+      }
+    });
+    trimmed = true;
+  }
+  if (trimmed) context.context_truncated = true;
+  return context;
+}
+
+function appAssistantContext() {
+  return appAiBoundContext({
+    selected_date: selectedDate(),
+    selected_week: weekValueFromDate(selectedDate()),
+    today: today(),
+    records: {
+      bodylogs: appAiRecentArray('bodylogs', 60),
+      routines: appAiRecentArray('routines', 20),
+      sessions: appAiRecentArray('sessions', 60),
+      meals: appAiRecentArray('meals', 100),
+      meal_templates: appAiRecentArray('meal_templates', 30),
+      goals: appAiRecentArray('goals', 40),
+      checking_cardio: appAiRecentArray('checking_cardio', 60),
+      checking_goals: appAiRecentArray('checking_goals', 60),
+      supplements: appAiRecentArray('supplements', 30),
+      calendar_events: appAiRecentArray('calendar_events', 80),
+      reminders: appAiRecentArray('reminders', 40),
+      checking_reviews: appAiRecentArray('checking_reviews', 20)
+    },
+    settings: {
+      nutconfig: appAiPickData('nutconfig', DB.get('nutconfig') || {}),
+      daily_water: appAiRecentMap('daily_water'),
+      daily_wellness: appAiRecentMap('daily_wellness'),
+      free_days: appAiRecentMap('free_days'),
+      supplement_checks: appAiRecentMap('supplement_checks'),
+      dashboard_moods: appAiRecentMap('dashboard_moods')
+    }
+  });
+}
+
+function appAiDateText(date = selectedDate()) {
+  return new Intl.DateTimeFormat('es-AR', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' })
+    .format(localDate(date)).replace('.', '');
+}
+
+function setAppAiStatus(kind, text) {
+  const status = document.getElementById('app-ai-status');
+  if (!status) return;
+  status.className = `app-ai-status ${kind}`;
+  status.textContent = text;
+}
+
+function loadAppAssistant() {
+  const context = document.getElementById('app-ai-context-date');
+  const meta = document.getElementById('app-ai-request-meta');
+  if (context) context.textContent = `${appAiDateText()} · ${weekValueFromDate(selectedDate())}`;
+  if (meta) meta.textContent = `Fecha seleccionada: ${appAiDateText()}`;
+  renderAppAiHistory();
+  if (appAiProposal) renderAppAiProposal();
+  else renderAppAiIdle();
+}
+
+function setAppAiPrompt(text) {
+  const input = document.getElementById('app-ai-request');
+  if (!input) return;
+  input.value = text;
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+}
+
+function resetAppAssistant() {
+  const input = document.getElementById('app-ai-request');
+  if (input) input.value = '';
+  appAiProposal = null;
+  appAiLastNotice = null;
+  setAppAiStatus('ready', 'Lista');
+  renderAppAiIdle();
+  input?.focus();
+}
+
+function renderAppAiIdle() {
+  const result = document.getElementById('app-ai-result');
+  if (!result) return;
+  if (appAiLastNotice) {
+    result.innerHTML = `<div class="app-ai-success-state">
+      <span class="app-ai-success-mark">✓</span>
+      <div><strong>${esc(appAiLastNotice.title)}</strong><span>${esc(appAiLastNotice.copy)}</span></div>
+    </div>`;
+    return;
+  }
+  result.innerHTML = `<div class="app-ai-empty-state"><strong>Sin cambios pendientes</strong><span>Las propuestas aparecerán aquí para que las revises.</span></div>`;
+}
+
+function appAiHistory() {
+  const history = DB.get('app_ai_history');
+  return Array.isArray(history) ? history : [];
+}
+
+function saveAppAiHistory(entry) {
+  try {
+    DB.set('app_ai_history', [{ id: uid(), created_at: new Date().toISOString(), ...entry }, ...appAiHistory()].slice(0, 25));
+  } catch {}
+  renderAppAiHistory();
+}
+
+function renderAppAiHistory() {
+  const el = document.getElementById('app-ai-history');
+  if (!el) return;
+  const history = appAiHistory();
+  if (!history.length) {
+    el.innerHTML = '<div class="app-ai-empty-compact">Sin solicitudes recientes.</div>';
+    return;
+  }
+  el.innerHTML = history.slice(0, 8).map((item, index) => `<button class="app-ai-history-item" type="button" onclick="reuseAppAiHistory(${index})">
+    <span>${esc(item.request || 'Solicitud')}</span>
+    <small>${item.status === 'applied' ? `${+item.count || 0} cambios aplicados` : 'Sin cambios'} · ${esc(String(item.created_at || '').slice(0, 10))}</small>
+  </button>`).join('');
+}
+
+function reuseAppAiHistory(index) {
+  const item = appAiHistory()[index];
+  if (item) setAppAiPrompt(String(item.request || ''));
+}
+
+function clearAppAiHistory() {
+  if (!appAiHistory().length) return;
+  if (!confirm('¿Limpiar la actividad reciente de la IA? Tus registros no se modificarán.')) return;
+  DB.set('app_ai_history', []);
+  renderAppAiHistory();
+}
+
+function normalizeAppAiClientOperation(raw, index) {
+  if (!raw || typeof raw !== 'object') return null;
+  const action = String(raw.action || '').toLowerCase();
+  const collection = String(raw.collection || '');
+  if (!['create', 'update', 'delete', 'set'].includes(action)) return null;
+  if (!APP_AI_ARRAY_COLLECTIONS.has(collection) && !APP_AI_MAP_COLLECTIONS.has(collection)) return null;
+  if (APP_AI_ARRAY_COLLECTIONS.has(collection) && !['create', 'update', 'delete'].includes(action)) return null;
+  if (APP_AI_MAP_COLLECTIONS.has(collection) && !['set', 'update', 'delete'].includes(action)) return null;
+  return {
+    id: String(raw.id || `operation-${index + 1}`),
+    action,
+    collection,
+    target: appAiSafeValue(raw.target || {}) || {},
+    data: appAiPickData(collection, raw.data || {}),
+    label: String(raw.label || `${APP_AI_ACTION_LABELS[action]} ${APP_AI_COLLECTION_LABELS[collection]}`).slice(0, 180)
+  };
+}
+
+function appAiOperationDetail(operation) {
+  const data = operation.data || {};
+  const entries = Object.entries(data).filter(([, value]) => value !== '' && value != null).slice(0, 5);
+  const detail = entries.map(([key, value]) => {
+    const label = APP_AI_FIELD_LABELS[key] || key;
+    if (Array.isArray(value)) return `${label}: ${value.length}`;
+    if (typeof value === 'object') return `${label}: actualizado`;
+    return `${label}: ${String(value).slice(0, 55)}`;
+  });
+  const target = operation.target?.id ? `ID ${operation.target.id}` : operation.target?.date || operation.target?.week || '';
+  return [target, ...detail].filter(Boolean).join(' · ') || 'Sin detalle adicional';
+}
+
+function renderAppAiProposal() {
+  const result = document.getElementById('app-ai-result');
+  if (!result || !appAiProposal) return;
+  const proposal = appAiProposal;
+  if (proposal.needs_clarification) {
+    result.innerHTML = `<div class="app-ai-clarification"><span class="app-ai-kicker">Falta un dato</span><strong>${esc(proposal.clarification || proposal.message)}</strong><button class="btn btn-primary" type="button" onclick="document.getElementById('app-ai-request')?.focus()">Completar solicitud</button></div>`;
+    setAppAiStatus('attention', 'Por completar');
+    return;
+  }
+  if (!proposal.operations.length) {
+    result.innerHTML = `<div class="app-ai-empty-state"><strong>${esc(proposal.message || 'No hay cambios para aplicar')}</strong><span>${esc((proposal.warnings || [])[0] || 'Puedes reformular la solicitud con más detalle.')}</span></div>`;
+    setAppAiStatus('ready', 'Sin cambios');
+    return;
+  }
+  result.innerHTML = `
+    <div class="app-ai-review-head">
+      <div><span class="app-ai-kicker">Vista previa</span><h2>${esc(proposal.summary || 'Cambios propuestos')}</h2><p>${esc(proposal.message || '')}</p></div>
+      <label class="app-ai-select-all"><input type="checkbox" id="app-ai-select-all" checked onchange="toggleAllAppAiOperations(this.checked)"> Seleccionar todo</label>
+    </div>
+    ${(proposal.warnings || []).length ? `<div class="app-ai-warning-list">${proposal.warnings.map(item => `<span>${esc(item)}</span>`).join('')}</div>` : ''}
+    <div class="app-ai-operation-list">${proposal.operations.map((operation, index) => `
+      <label class="app-ai-operation action-${operation.action}">
+        <input type="checkbox" data-app-ai-operation="${index}" checked onchange="updateAppAiSelectedCount()">
+        <span class="app-ai-operation-accent"></span>
+        <span class="app-ai-operation-copy">
+          <span class="app-ai-operation-meta"><b>${esc(APP_AI_ACTION_LABELS[operation.action])}</b><em>${esc(APP_AI_COLLECTION_LABELS[operation.collection])}</em></span>
+          <strong>${esc(operation.label)}</strong>
+          <small>${esc(appAiOperationDetail(operation))}</small>
+        </span>
+      </label>`).join('')}</div>
+    <div class="app-ai-review-actions">
+      <button class="btn btn-ghost" type="button" onclick="cancelAppAiProposal()">Descartar</button>
+      <button class="btn btn-primary" id="app-ai-apply" type="button" onclick="applyAppAiProposal()">Aplicar ${proposal.operations.length} cambios</button>
+    </div>`;
+  setAppAiStatus('review', 'Revisar');
+}
+
+function toggleAllAppAiOperations(checked) {
+  document.querySelectorAll('[data-app-ai-operation]').forEach(input => input.checked = checked);
+  updateAppAiSelectedCount();
+}
+
+function updateAppAiSelectedCount() {
+  const inputs = [...document.querySelectorAll('[data-app-ai-operation]')];
+  const count = inputs.filter(input => input.checked).length;
+  const button = document.getElementById('app-ai-apply');
+  const selectAll = document.getElementById('app-ai-select-all');
+  if (button) {
+    button.disabled = count === 0;
+    button.textContent = `Aplicar ${count} cambio${count === 1 ? '' : 's'}`;
+  }
+  if (selectAll) selectAll.checked = count === inputs.length;
+}
+
+function cancelAppAiProposal() {
+  appAiProposal = null;
+  setAppAiStatus('ready', 'Lista');
+  renderAppAiIdle();
+}
+
+async function requestAppAssistant() {
+  const input = document.getElementById('app-ai-request');
+  const button = document.getElementById('app-ai-submit');
+  const request = input?.value.trim() || '';
+  if (request.length < 4) return toast('Escribe qué quieres cambiar', 'err');
+  button.disabled = true;
+  button.textContent = 'Preparando...';
+  setAppAiStatus('working', 'Analizando');
+  const result = document.getElementById('app-ai-result');
+  if (result) result.innerHTML = '<div class="app-ai-loading"><span></span><strong>Preparando una propuesta segura...</strong></div>';
+  try {
+    const response = await fetch('/api/app-assistant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ request, context: appAssistantContext() })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'No se pudo consultar la IA');
+    appAiProposal = {
+      request,
+      message: String(data.message || ''),
+      summary: String(data.summary || ''),
+      needs_clarification: Boolean(data.needs_clarification),
+      clarification: String(data.clarification || ''),
+      warnings: (Array.isArray(data.warnings) ? data.warnings : []).map(item => String(item).slice(0, 240)).slice(0, 8),
+      operations: (Array.isArray(data.operations) ? data.operations : []).map(normalizeAppAiClientOperation).filter(Boolean).slice(0, 20)
+    };
+    appAiLastNotice = null;
+    renderAppAiProposal();
+    if (!appAiProposal.operations.length && !appAiProposal.needs_clarification) {
+      saveAppAiHistory({ request, status: 'answered', count: 0 });
+    }
+  } catch (err) {
+    appAiProposal = null;
+    if (result) result.innerHTML = `<div class="app-ai-error-state"><strong>No se pudo preparar la solicitud</strong><span>${esc(err.message || 'Intenta nuevamente.')}</span></div>`;
+    setAppAiStatus('error', 'Error');
+    toast(err.message || 'No se pudo consultar la IA', 'err');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Preparar cambios';
+  }
+}
+
+function appAiNormalizeRoutineDays(days) {
+  if (!Array.isArray(days)) return [];
+  return days.slice(0, 14).map(day => ({
+    id: day?.id || uid(),
+    name: String(day?.name || '').trim().slice(0, 100),
+    exercises: (Array.isArray(day?.exercises) ? day.exercises : []).slice(0, 30).map(exercise => ({
+      id: exercise?.id || uid(),
+      name: String(exercise?.name || '').trim().slice(0, 120),
+      target_sets: Math.max(1, Math.round(+exercise?.target_sets || +exercise?.sets || 1)),
+      reps: Math.max(1, Math.round(+exercise?.reps || +exercise?.target_reps || 10))
+    })).filter(exercise => exercise.name)
+  })).filter(day => day.name);
+}
+
+function appAiNormalizeSessionSets(sets) {
+  if (!Array.isArray(sets)) return [];
+  return sets.slice(0, 100).map((set, index) => ({
+    exercise_name: String(set?.exercise_name || '').trim().slice(0, 120),
+    set_number: Math.max(1, Math.round(+set?.set_number || index + 1)),
+    target_sets: set?.target_sets == null ? null : Math.max(1, Math.round(+set.target_sets || 1)),
+    target_reps: set?.target_reps == null ? null : Math.max(1, Math.round(+set.target_reps || 1)),
+    reps: Math.max(0, Math.round(+set?.reps || 0)),
+    weight: Math.max(0, +set?.weight || 0),
+    is_pr: Boolean(set?.is_pr)
+  })).filter(set => set.exercise_name);
+}
+
+function appAiNormalizeArrayItem(collection, item) {
+  const value = { ...item };
+  const numericFields = {
+    bodylogs: ['weight', 'body_fat', 'arm', 'chest', 'waist', 'thigh', 'calf'],
+    sessions: ['duration'], meals: ['calories', 'protein', 'carbs', 'fat'],
+    meal_templates: ['calories', 'protein', 'carbs', 'fat'], goals: ['current', 'target'],
+    checking_cardio: ['value'], checking_goals: ['target', 'progress'], checking_reviews: ['adherence', 'energy']
+  }[collection] || [];
+  numericFields.forEach(field => {
+    if (value[field] !== undefined) value[field] = Math.max(0, +value[field] || 0);
+  });
+  if (collection === 'routines') value.days = appAiNormalizeRoutineDays(value.days);
+  if (collection === 'sessions') value.sets = appAiNormalizeSessionSets(value.sets);
+  if (collection === 'meals' || collection === 'meal_templates') {
+    value.meal_name = String(value.meal_name || 'Comida').slice(0, 80);
+    ['calories', 'protein', 'carbs', 'fat'].forEach(field => value[field] = Math.max(0, +value[field] || 0));
+  }
+  if (collection === 'goals') {
+    value.status = value.status || 'active';
+    value.type = ['weight', 'fat', 'strength', 'cardio_steps', 'cardio_minutes', 'training_count', 'checking_rate', 'other'].includes(value.type) ? value.type : 'other';
+    value.unit = String(value.unit || '').slice(0, 30);
+  }
+  if (collection === 'checking_cardio') {
+    value.type = value.type === 'minutes' ? 'minutes' : 'steps';
+    value.value = Math.round(value.value || 0);
+    value.week = value.week || weekValueFromDate(value.date || selectedDate());
+  }
+  if (collection === 'checking_goals') {
+    value.category = value.category || 'general';
+    value.metric = value.metric || 'manual';
+    value.priority = ['low', 'medium', 'high'].includes(value.priority) ? value.priority : 'medium';
+    value.due_day = value.due_day || 'sunday';
+    value.progress = Math.max(0, +value.progress || 0);
+    value.done = Boolean(value.done || value.status === 'done');
+    value.status = ['pending', 'done', 'missed'].includes(value.status) ? value.status : value.done ? 'done' : 'pending';
+  }
+  if (collection === 'calendar_events') {
+    value.all_day = Boolean(value.all_day);
+    value.start_time = value.all_day ? '' : String(value.start_time || '09:00');
+    value.end_time = value.all_day ? '' : String(value.end_time || '10:00');
+    value.category = value.category || 'personal';
+    value.location = String(value.location || '').slice(0, 180);
+    value.notes = String(value.notes || '').slice(0, 600);
+    value.color = calendarEventColor(value.color);
+  }
+  if (collection === 'reminders') {
+    value.enabled = value.enabled !== false;
+    value.type = value.type || 'personal';
+    value.repeat = ['daily', 'weekdays', 'weekends', 'once'].includes(value.repeat) ? value.repeat : 'daily';
+    value.date = value.repeat === 'once' ? value.date || selectedDate() : null;
+  }
+  if (collection === 'checking_reviews') {
+    value.adherence = Math.max(0, Math.min(10, Math.round(+value.adherence || 0)));
+    value.energy = Math.max(1, Math.min(5, Math.round(+value.energy || 3)));
+  }
+  return value;
+}
+
+function appAiValidateArrayItem(collection, item) {
+  const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+  const validWeek = value => /^\d{4}-W\d{2}$/.test(String(value || ''));
+  const required = {
+    bodylogs: validDate(item.date),
+    routines: Boolean(item.name),
+    sessions: validDate(item.date) && Array.isArray(item.sets) && item.sets.length > 0,
+    meals: validDate(item.date) && Boolean(item.food_item),
+    meal_templates: Boolean(item.food_item),
+    goals: Boolean(item.title),
+    checking_cardio: validDate(item.date) && item.value > 0,
+    checking_goals: validWeek(item.week) && Boolean(item.title) && item.target > 0,
+    supplements: Boolean(item.name) && Boolean(item.dose),
+    calendar_events: validDate(item.date) && Boolean(item.title),
+    reminders: Boolean(item.label) && /^\d{2}:\d{2}$/.test(String(item.time || '')),
+    checking_reviews: validWeek(item.week)
+  };
+  if (!required[collection]) throw new Error(`Datos incompletos para ${APP_AI_COLLECTION_LABELS[collection]}`);
+  if (collection === 'calendar_events' && !item.all_day && item.end_time && item.end_time <= item.start_time) {
+    throw new Error('El horario final del evento debe ser posterior al inicio');
+  }
+}
+
+function appAiBuildMutationPlan(operations) {
+  const staged = new Map();
+  const read = collection => {
+    if (staged.has(collection)) return staged.get(collection);
+    const source = DB.get(collection);
+    const fallback = APP_AI_ARRAY_COLLECTIONS.has(collection) ? [] : {};
+    const copy = JSON.parse(JSON.stringify(source == null ? fallback : source));
+    staged.set(collection, copy);
+    return copy;
+  };
+  operations.forEach(operation => {
+    const { action, collection, target } = operation;
+    const data = appAiPickData(collection, operation.data);
+    if (APP_AI_ARRAY_COLLECTIONS.has(collection)) {
+      const rows = read(collection);
+      if (!Array.isArray(rows)) throw new Error(`${APP_AI_COLLECTION_LABELS[collection]} tiene un formato inválido`);
+      if (action === 'create') {
+        const now = new Date().toISOString();
+        const entry = appAiNormalizeArrayItem(collection, { id: uid(), ...data });
+        if (collection === 'routines' || collection === 'supplements' || collection === 'meal_templates') entry.created = entry.created || today();
+        if (collection === 'calendar_events' || collection === 'checking_goals' || collection === 'checking_reviews') {
+          entry.created_at = now;
+          entry.updated_at = now;
+        }
+        appAiValidateArrayItem(collection, entry);
+        rows.unshift(entry);
+        return;
+      }
+      const index = rows.findIndex(item => String(item?.id) === String(target?.id || ''));
+      if (index < 0) throw new Error(`No encontré el registro indicado en ${APP_AI_COLLECTION_LABELS[collection]}`);
+      if (action === 'delete') {
+        rows.splice(index, 1);
+        return;
+      }
+      const entry = appAiNormalizeArrayItem(collection, { ...rows[index], ...data, id: rows[index].id });
+      if (['calendar_events', 'checking_goals', 'checking_reviews'].includes(collection)) entry.updated_at = new Date().toISOString();
+      appAiValidateArrayItem(collection, entry);
+      rows[index] = entry;
+      return;
+    }
+
+    const state = read(collection);
+    if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error(`${APP_AI_COLLECTION_LABELS[collection]} tiene un formato inválido`);
+    if (collection === 'nutconfig') {
+      if (action === 'delete') throw new Error('Las metas nutricionales no se pueden eliminar');
+      ['calories', 'protein', 'carbs', 'fat'].forEach(field => {
+        if (data[field] !== undefined) state[field] = Math.max(0, +data[field] || 0);
+      });
+      return;
+    }
+    const date = String(target?.date || selectedDate());
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`Fecha inválida para ${APP_AI_COLLECTION_LABELS[collection]}`);
+    if (collection === 'daily_water') {
+      if (action === 'delete') delete state[date];
+      else state[date] = Math.max(0, Math.round(+data.value || 0));
+    } else if (collection === 'daily_wellness') {
+      if (action === 'delete') delete state[date];
+      else state[date] = {
+        ...(state[date] || {}),
+        ...(data.sleep !== undefined ? { sleep: Math.max(0, +data.sleep || 0) } : {}),
+        ...(data.energy !== undefined ? { energy: Math.max(1, Math.min(5, Math.round(+data.energy || 1))) } : {})
+      };
+    } else if (collection === 'free_days') {
+      if (action === 'delete' || data.active === false) delete state[date];
+      else state[date] = { date, created_at: state[date]?.created_at || new Date().toISOString() };
+    } else if (collection === 'dashboard_moods') {
+      if (action === 'delete') delete state[date];
+      else state[date] = String(data.value || '').slice(0, 30);
+    } else if (collection === 'supplement_checks') {
+      const supplementId = String(target?.supplement_id || data.supplement_id || '');
+      if (!(DB.get('supplements') || []).some(item => String(item.id) === supplementId)) throw new Error('No encontré el suplemento indicado');
+      if (!state[date]) state[date] = {};
+      if (action === 'delete') delete state[date][supplementId];
+      else state[date][supplementId] = data.taken !== false;
+    }
+  });
+  return staged;
+}
+
+function appAiCommitMutationPlan(staged) {
+  const collections = [...staged.keys()];
+  const rollbackKeys = [...new Set([...collections, 'trash', 'change_history'])];
+  const snapshots = new Map(rollbackKeys.map(key => [key, localStorage.getItem('ft_' + key)]));
+  try {
+    collections.forEach(collection => DB.set(collection, staged.get(collection)));
+  } catch (error) {
+    snapshots.forEach((raw, key) => {
+      if (raw == null) localStorage.removeItem('ft_' + key);
+      else localStorage.setItem('ft_' + key, raw);
+    });
+    throw error;
+  }
+}
+
+function applyAppAiProposal() {
+  if (!appAiProposal) return;
+  const selected = [...document.querySelectorAll('[data-app-ai-operation]:checked')]
+    .map(input => appAiProposal.operations[+input.dataset.appAiOperation])
+    .filter(Boolean);
+  if (!selected.length) return toast('Selecciona al menos un cambio', 'err');
+  if (!confirm(`¿Aplicar ${selected.length} cambio${selected.length === 1 ? '' : 's'} a tus registros?`)) return;
+  try {
+    const staged = appAiBuildMutationPlan(selected);
+    appAiCommitMutationPlan(staged);
+    const request = appAiProposal.request;
+    saveAppAiHistory({ request, status: 'applied', count: selected.length });
+    appAiProposal = null;
+    appAiLastNotice = {
+      title: `${selected.length} cambio${selected.length === 1 ? '' : 's'} aplicado${selected.length === 1 ? '' : 's'}`,
+      copy: 'Tus registros quedaron actualizados y se sincronizarán con el respaldo habitual.'
+    };
+    setAppAiStatus('ready', 'Completado');
+    renderFreeDayStatus(selectedDate());
+    renderAppAiIdle();
+    toast('Cambios aplicados correctamente');
+  } catch (err) {
+    setAppAiStatus('error', 'Revisar');
+    toast(err.message || 'No se aplicó ningún cambio', 'err');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// IA SEMANA (compatibilidad de datos anteriores)
 // ═══════════════════════════════════════════════════
 let dayAiDraft = null;
 let weekFillDraft = null;
@@ -8245,9 +12276,152 @@ function checkLabel(goal) {
   return status === 'done' ? 'Cumplido' : status === 'missed' ? 'Fallado' : 'Pendiente';
 }
 
-function loadCalendar() {
+function selectCalendarDay(date) {
+  if (!date) return;
+  calendarSelectedDay = date;
+  calendarCursorMonth = calendarMonthStart(date);
+  const weekInput = document.getElementById('calendar-week');
+  if (weekInput) weekInput.value = weekValueFromDate(date);
+  loadCalendar({ preserveCursor: true });
+}
+
+function moveCalendarMonth(direction) {
+  ensureCalendarState();
+  const cursor = localDate(calendarCursorMonth);
+  const selected = localDate(calendarSelectedDay);
+  const preferredDay = selected.getDate();
+  const nextMonth = new Date(cursor.getFullYear(), cursor.getMonth() + direction, 1);
+  const lastDay = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 0).getDate();
+  calendarCursorMonth = dateKey(nextMonth);
+  calendarSelectedDay = dateKey(new Date(
+    nextMonth.getFullYear(),
+    nextMonth.getMonth(),
+    Math.min(preferredDay, lastDay)
+  ));
+  const weekInput = document.getElementById('calendar-week');
+  if (weekInput) weekInput.value = weekValueFromDate(calendarSelectedDay);
+  loadCalendar({ preserveCursor: true });
+}
+
+function calendarGoToday() {
+  calendarSelectedDay = today();
+  calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
+  const weekInput = document.getElementById('calendar-week');
+  if (weekInput) weekInput.value = weekValueFromDate(calendarSelectedDay);
+  loadCalendar({ preserveCursor: true });
+}
+
+function calendarWeekChanged() {
   const input = document.getElementById('calendar-week');
-  if (!input.value) input.value = weekValueFromDate(selectedDate());
+  if (!input?.value) return;
+  calendarSelectedDay = getWeekDates(input.value)[0];
+  calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
+  loadCalendar({ preserveCursor: true });
+}
+
+function selectCalendarEventColor(color) {
+  const safeColor = calendarEventColor(color);
+  const input = document.getElementById('ce-color');
+  if (input) input.value = safeColor;
+  document.querySelectorAll('#modal-calendar-event [data-event-color]').forEach(button => {
+    button.classList.toggle('active', button.dataset.eventColor === safeColor);
+  });
+}
+
+function toggleCalendarEventTimeFields() {
+  const allDay = document.getElementById('ce-all-day')?.checked;
+  const fields = document.getElementById('calendar-event-time-fields');
+  if (!fields) return;
+  fields.classList.toggle('disabled', Boolean(allDay));
+  fields.querySelectorAll('input').forEach(input => input.disabled = Boolean(allDay));
+}
+
+function openCalendarEventModal(eventId = null, date = null) {
+  ensureCalendarState();
+  const item = eventId ? calendarEvents().find(event => String(event.id) === String(eventId)) : null;
+  const eventDate = item?.date || date || calendarSelectedDay || selectedDate();
+  editingCalendarEventId = item?.id || null;
+
+  document.getElementById('calendar-event-modal-title').textContent = item ? 'Editar evento' : 'Nuevo evento';
+  document.getElementById('calendar-event-save-btn').textContent = item ? 'Guardar cambios' : 'Guardar evento';
+  document.getElementById('calendar-event-delete-btn').style.display = item ? '' : 'none';
+  document.getElementById('ce-title').value = item?.title || '';
+  document.getElementById('ce-date').value = eventDate;
+  document.getElementById('ce-category').value = item?.category || 'personal';
+  document.getElementById('ce-all-day').checked = Boolean(item?.all_day);
+  document.getElementById('ce-start').value = item?.start_time || '09:00';
+  document.getElementById('ce-end').value = item?.end_time || '10:00';
+  document.getElementById('ce-location').value = item?.location || '';
+  document.getElementById('ce-notes').value = item?.notes || '';
+  selectCalendarEventColor(item?.color || 'blue');
+  toggleCalendarEventTimeFields();
+  showModal('modal-calendar-event');
+  setTimeout(() => document.getElementById('ce-title')?.focus(), 50);
+}
+
+function saveCalendarEvent() {
+  const title = document.getElementById('ce-title').value.trim();
+  const date = document.getElementById('ce-date').value;
+  const allDay = document.getElementById('ce-all-day').checked;
+  const startTime = allDay ? '' : document.getElementById('ce-start').value;
+  const endTime = allDay ? '' : document.getElementById('ce-end').value;
+
+  if (!title) {
+    document.getElementById('ce-title').focus();
+    return toast('Escribe un título para el evento', 'err');
+  }
+  if (!date) return toast('Selecciona una fecha', 'err');
+  if (!allDay && !startTime) return toast('Selecciona la hora de inicio', 'err');
+  if (!allDay && endTime && endTime <= startTime) return toast('La hora de término debe ser posterior al inicio', 'err');
+
+  const events = calendarEvents();
+  const previous = editingCalendarEventId
+    ? events.find(item => String(item.id) === String(editingCalendarEventId))
+    : null;
+  const item = {
+    id: previous?.id || uid(),
+    title,
+    date,
+    all_day: allDay,
+    start_time: startTime,
+    end_time: endTime,
+    category: document.getElementById('ce-category').value || 'personal',
+    location: document.getElementById('ce-location').value.trim(),
+    notes: document.getElementById('ce-notes').value.trim(),
+    color: calendarEventColor(document.getElementById('ce-color').value),
+    created_at: previous?.created_at || new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  const next = previous
+    ? events.map(event => String(event.id) === String(previous.id) ? item : event)
+    : [item, ...events];
+
+  DB.set('calendar_events', next);
+  calendarSelectedDay = date;
+  calendarCursorMonth = calendarMonthStart(date);
+  const weekInput = document.getElementById('calendar-week');
+  if (weekInput) weekInput.value = weekValueFromDate(date);
+  const wasEditing = Boolean(previous);
+  hideModal('modal-calendar-event');
+  loadCalendar({ preserveCursor: true });
+  toast(wasEditing ? 'Evento actualizado' : 'Evento guardado');
+}
+
+function deleteCalendarEvent() {
+  const item = calendarEvents().find(event => String(event.id) === String(editingCalendarEventId));
+  if (!item) return;
+  if (!confirm(`¿Eliminar "${item.title}"?`)) return;
+  DB.del('calendar_events', item.id);
+  hideModal('modal-calendar-event');
+  loadCalendar({ preserveCursor: true });
+  toast('Evento eliminado');
+}
+
+function loadCalendar(options = {}) {
+  const preserveCursor = Boolean(options?.preserveCursor);
+  ensureCalendarState(!preserveCursor);
+  const input = document.getElementById('calendar-week');
+  if (!input.value) input.value = weekValueFromDate(calendarSelectedDay || selectedDate());
   const summary = weekSummary(input.value);
   document.getElementById('calendar-summary').innerHTML = `
     <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">${summary.sessions.length}</div><div class="stat-sub">esta semana</div></div>
@@ -8259,11 +12433,13 @@ function loadCalendar() {
     const nut = nutritionForDate(date);
     const sessions = sessionsForDate(date);
     const body = (DB.get('bodylogs') || []).find(b => b.date === date);
-    const notes = [];
-    return `<div class="day-card">
+    const notes = (DB.get('notes') || []).filter(note => note.date === date);
+    const events = calendarEventsForDate(date);
+    return `<div class="day-card aa-calendar-week-day ${date === calendarSelectedDay ? 'selected' : ''}" data-date="${date}" onclick="selectCalendarDay(this.dataset.date)">
       <div class="day-name">${dayNamesShort[i]}</div>
       <div class="day-date">${date.slice(5)}</div>
       ${free ? '<div class="day-line"><span>Estado</span><strong>Día libre</strong></div>' : ''}
+      <div class="day-line"><span>Eventos</span><strong>${events.length}</strong></div>
       <div class="day-line"><span>Entreno</span><strong>${sessions.length}</strong></div>
       <div class="day-line"><span>Kcal</span><strong>${nut.totals.cal}</strong></div>
       <div class="day-line"><span>Peso</span><strong>${body?.weight ? body.weight + ' kg' : '-'}</strong></div>
@@ -10571,6 +14747,7 @@ const MOODS = { 5:'Excelente', 4:'Bien', 3:'Normal', 2:'Bajo', 1:'Mal' };
 function loadNotes() {
   const notes = [...(DB.get('notes') || [])].sort((a, b) => (b.created_at || b.date || '').localeCompare(a.created_at || a.date || ''));
   const el = document.getElementById('notes-list');
+  if (!el) return;
   if (!notes.length) { el.innerHTML = '<div class="empty">Registra tus observaciones permanentes.</div>'; return; }
   el.innerHTML = `<div class="flex-col gap-3">${notes.map(n => `
     <div class="card">
@@ -10626,6 +14803,11 @@ function deleteNote(id) {
 }
 
 // ══ Check-in semanal
+const CHECKING_DUE_DAY_LABELS = {
+  monday: 'Lunes', tuesday: 'Martes', wednesday: 'Miércoles', thursday: 'Jueves',
+  friday: 'Viernes', saturday: 'Sábado', sunday: 'Domingo'
+};
+
 function currentCheckingWeek() {
   return weekValueFromDate(selectedDate());
 }
@@ -10636,8 +14818,26 @@ function getCheckingWeek() {
   return input.value;
 }
 
+function shiftCheckingWeek(week, amount) {
+  return weekValueFromDate(addDays(getWeekDates(week)[0], amount * 7));
+}
+
+function moveCheckingWeek(amount) {
+  document.getElementById('c-week').value = shiftCheckingWeek(getCheckingWeek(), amount);
+  loadChecking();
+}
+
+function checkingGoCurrentWeek() {
+  document.getElementById('c-week').value = currentCheckingWeek();
+  loadChecking();
+}
+
 function loadChecking() {
   getCheckingWeek();
+  checkingGoalFilter = 'all';
+  document.querySelectorAll('[data-checking-filter]').forEach(button => {
+    button.classList.toggle('active', button.dataset.checkingFilter === 'all');
+  });
   renderCheckingGoals();
 }
 
@@ -10689,107 +14889,390 @@ function deleteCheckinCardio(id) {
   loadGoals();
 }
 
-function saveCheckingGoal() {
-  const title = document.getElementById('c-goal-title').value.trim();
-  if (!title) return toast('Escribe un objetivo semanal', 'err');
-  DB.push('checking_goals', {
-    id: uid(),
-    week: getCheckingWeek(),
-    title,
-    observations: document.getElementById('c-goal-observations').value.trim(),
-    reflection: '',
-    status: 'pending',
-    done: false,
-    created: today()
-  });
-  document.getElementById('c-goal-title').value = '';
-  document.getElementById('c-goal-observations').value = '';
-  toast('Objetivo agregado');
-  renderCheckingGoals();
+function openCheckingGoalModal(id = null) {
+  const goal = id ? (DB.get('checking_goals') || []).find(item => item.id === id) : null;
+  editingCheckingGoalId = goal?.id || null;
+  const metric = goal?.metric || 'manual';
+  const config = CHECKING_METRIC_CONFIG[metric] || CHECKING_METRIC_CONFIG.manual;
+  document.getElementById('checking-goal-modal-title').textContent = goal ? 'Editar objetivo' : 'Nuevo objetivo';
+  document.getElementById('checking-goal-save-btn').textContent = goal ? 'Guardar cambios' : 'Guardar objetivo';
+  document.getElementById('checking-goal-delete-btn').style.display = goal ? '' : 'none';
+  document.getElementById('c-goal-title').value = goal?.title || '';
+  document.getElementById('c-goal-week').value = goal?.week || getCheckingWeek();
+  document.getElementById('c-goal-category').value = goal?.category || 'general';
+  document.getElementById('c-goal-metric').value = metric;
+  document.getElementById('c-goal-target').value = goal?.target || config.target;
+  document.getElementById('c-goal-unit').value = goal?.unit || config.unit;
+  document.getElementById('c-goal-priority').value = goal?.priority || 'medium';
+  document.getElementById('c-goal-due-day').value = goal?.due_day || 'sunday';
+  document.getElementById('c-goal-observations').value = goal?.observations || '';
+  document.getElementById('c-goal-metric').dataset.lastMetric = metric;
+  updateCheckingMetricFields(false);
+  showModal('modal-checking-goal');
+  setTimeout(() => document.getElementById('c-goal-title')?.focus(), 60);
 }
 
-function renderCheckingGoals() {
+function updateCheckingMetricFields(useDefaults = true) {
+  const metricInput = document.getElementById('c-goal-metric');
+  const targetInput = document.getElementById('c-goal-target');
+  const unitInput = document.getElementById('c-goal-unit');
+  const config = CHECKING_METRIC_CONFIG[metricInput.value] || CHECKING_METRIC_CONFIG.manual;
+  const metricChanged = metricInput.dataset.lastMetric !== metricInput.value;
+  if (useDefaults && metricChanged) {
+    targetInput.value = config.target;
+    unitInput.value = config.unit;
+  } else {
+    if (!targetInput.value) targetInput.value = config.target;
+    if (!unitInput.value) unitInput.value = config.unit;
+  }
+  document.getElementById('c-goal-metric-help').textContent = config.help;
+  metricInput.dataset.lastMetric = metricInput.value;
+}
+
+function saveCheckingGoal() {
+  const title = document.getElementById('c-goal-title').value.trim();
+  const visibleWeek = getCheckingWeek();
+  const week = document.getElementById('c-goal-week').value || getCheckingWeek();
+  const target = +document.getElementById('c-goal-target').value;
+  if (!title) return toast('Escribe un objetivo semanal', 'err');
+  if (!Number.isFinite(target) || target <= 0) return toast('La meta debe ser mayor que cero', 'err');
+
+  const goals = DB.get('checking_goals') || [];
+  const index = editingCheckingGoalId ? goals.findIndex(item => item.id === editingCheckingGoalId) : -1;
+  const previous = index >= 0 ? goals[index] : {};
+  const now = new Date().toISOString();
+  const entry = {
+    ...previous,
+    id: previous.id || uid(),
+    week,
+    title,
+    category: document.getElementById('c-goal-category').value,
+    metric: document.getElementById('c-goal-metric').value,
+    target,
+    unit: document.getElementById('c-goal-unit').value.trim(),
+    priority: document.getElementById('c-goal-priority').value,
+    due_day: document.getElementById('c-goal-due-day').value,
+    observations: document.getElementById('c-goal-observations').value.trim(),
+    reflection: previous.reflection || '',
+    progress: Math.max(0, +previous.progress || 0),
+    status: previous.status || 'pending',
+    done: Boolean(previous.done),
+    created: previous.created || today(),
+    created_at: previous.created_at || now,
+    updated_at: now
+  };
+  if (index >= 0) goals[index] = entry;
+  else goals.unshift(entry);
+  const wasEditing = index >= 0;
+  DB.set('checking_goals', goals);
+  document.getElementById('c-week').value = week;
+  hideModal('modal-checking-goal');
+  toast(wasEditing ? 'Objetivo actualizado' : 'Objetivo agregado');
+  renderCheckingGoals(visibleWeek === week);
+}
+
+function formatCheckingValue(value, metric = '') {
+  const maximumFractionDigits = metric === 'sleep_average' || !Number.isInteger(+value) ? 1 : 0;
+  return Number(value || 0).toLocaleString('es-AR', { maximumFractionDigits });
+}
+
+function renderCheckingGoals(preserveReview = false) {
   const week = getCheckingWeek();
-  const goals = (DB.get('checking_goals') || []).filter(g => g.week === week);
-  const el = document.getElementById('checking-list');
+  const goals = (DB.get('checking_goals') || []).filter(goal => goal.week === week);
   renderCheckingSummary(goals);
-  if (!goals.length) { el.innerHTML = '<div class="empty">Agrega tus objetivos semanales.</div>'; return; }
-  el.innerHTML = `<div class="flex-col gap-3">${goals.map(g => `
-    <div class="card" style="padding:14px">
-      <div class="flex jb ai-c gap-2">
-        <div>
-          <div style="font-weight:700; color:var(--text); text-decoration:${checkingStatus(g) === 'done' ? 'line-through' : 'none'}">${esc(g.title)}</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px">${g.week} · ${checkLabel(g)}</div>
+  renderCheckingGoalList(goals);
+  if (!preserveReview) renderCheckingReview();
+  renderCheckingTrend();
+}
+
+function renderCheckingGoalList(goals) {
+  const el = document.getElementById('checking-list');
+  if (!el) return;
+  const filtered = checkingGoalFilter === 'all'
+    ? goals
+    : goals.filter(goal => checkingStatus(goal) === checkingGoalFilter);
+  if (!goals.length) {
+    el.innerHTML = `<div class="checking-empty"><strong>Planifica una semana medible</strong><span>Crea objetivos manuales o vinculados con tus registros de entrenamiento, nutrición y recuperación.</span><button type="button" onclick="openCheckingGoalModal()">Crear primer objetivo</button></div>`;
+    return;
+  }
+  if (!filtered.length) {
+    el.innerHTML = '<div class="checking-empty compact"><strong>No hay objetivos en este estado</strong><span>Prueba otro filtro para ver el resto del plan.</span></div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(goal => {
+    const status = checkingStatus(goal);
+    const progress = checkingGoalProgress(goal);
+    const metric = goal.metric || 'manual';
+    const category = CHECKING_CATEGORY_LABELS[goal.category] || CHECKING_CATEGORY_LABELS.general;
+    const priority = CHECKING_PRIORITY_LABELS[goal.priority] || CHECKING_PRIORITY_LABELS.medium;
+    const dueDay = CHECKING_DUE_DAY_LABELS[goal.due_day] || 'Domingo';
+    const manualControl = !progress.automatic ? `
+      <div class="checking-manual-progress">
+        <label for="checking-progress-${goal.id}">Avance actual</label>
+        <div><input id="checking-progress-${goal.id}" data-checking-progress="${goal.id}" type="number" min="0" step="0.1" value="${progress.current}"><button type="button" onclick="updateCheckingGoalProgress('${goal.id}')">Actualizar</button></div>
+      </div>` : `<span class="checking-auto-label">Actualización automática</span>`;
+    return `
+      <article class="checking-goal-card is-${status}">
+        <div class="checking-goal-topline">
+          <div class="checking-goal-tags">
+            <span class="checking-category-tag">${esc(category)}</span>
+            <span class="checking-priority-tag ${esc(goal.priority || 'medium')}">${esc(priority)}</span>
+          </div>
+          <div class="checking-goal-actions">
+            <button type="button" onclick="openCheckingGoalModal('${goal.id}')">Editar</button>
+            <button class="danger" type="button" onclick="deleteCheckingGoal('${goal.id}')" aria-label="Eliminar objetivo" title="Eliminar">×</button>
+          </div>
         </div>
-        <div class="flex gap-2">
-          <button class="btn btn-danger btn-sm" onclick="deleteCheckingGoal('${g.id}')">✕</button>
+        <div class="checking-goal-heading">
+          <div>
+            <h3>${esc(goal.title)}</h3>
+            <p>${esc(progress.label)} · revisar el ${esc(dueDay.toLowerCase())}</p>
+          </div>
+          <span class="checking-goal-percent">${progress.percent}%</span>
         </div>
-      </div>
-      <div class="status-row">
-        <button class="status-btn pending ${checkingStatus(g) === 'pending' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','pending')">Pendiente</button>
-        <button class="status-btn done ${checkingStatus(g) === 'done' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','done')">Cumplido</button>
-        <button class="status-btn missed ${checkingStatus(g) === 'missed' ? 'active' : ''}" onclick="setCheckingGoalStatus('${g.id}','missed')">Fallado</button>
-      </div>
-      <div class="form-row" style="margin-top:12px">
-        <label class="form-label">Observaciones</label>
-        <textarea data-checking-observation="${g.id}" placeholder="Escribe aqui observaciones de este objetivo durante la semana...">${esc(g.observations || '')}</textarea>
-      </div>
-      <div class="form-row" style="margin-top:12px">
-        <label class="form-label">Reflexión final</label>
-        <textarea data-checking-reflection="${g.id}" placeholder="Qué funcionó, qué falló y qué ajustarás la próxima semana...">${esc(g.reflection || '')}</textarea>
-      </div>
-      <div class="btn-row"><button class="btn btn-ghost btn-sm" onclick="saveCheckingGoalObservation('${g.id}')">Guardar observaciones</button></div>
-    </div>`).join('')}</div>`;
+        <div class="checking-progress-track" aria-label="${progress.percent}% completado"><span style="width:${progress.percent}%"></span></div>
+        <div class="checking-progress-meta">
+          <strong>${formatCheckingValue(progress.current, metric)} <small>${esc(progress.unit)}</small></strong>
+          <span>Meta: ${formatCheckingValue(progress.target, metric)} ${esc(progress.unit)}</span>
+        </div>
+        <div class="checking-goal-controls">
+          ${manualControl}
+          <div class="checking-status-control" role="group" aria-label="Estado de ${esc(goal.title)}">
+            <button class="pending ${status === 'pending' ? 'active' : ''}" type="button" onclick="setCheckingGoalStatus('${goal.id}','pending')">En curso</button>
+            <button class="done ${status === 'done' ? 'active' : ''}" type="button" onclick="setCheckingGoalStatus('${goal.id}','done')">Cumplido</button>
+            <button class="missed ${status === 'missed' ? 'active' : ''}" type="button" onclick="setCheckingGoalStatus('${goal.id}','missed')">Revisar</button>
+          </div>
+        </div>
+        <details class="checking-goal-notes" ${(goal.observations || goal.reflection) ? 'open' : ''}>
+          <summary>Plan y reflexión</summary>
+          <div class="checking-note-fields">
+            <div class="form-row"><label class="form-label">Plan de acción</label><textarea data-checking-observation="${goal.id}" rows="2" maxlength="600" placeholder="Acciones y contexto para cumplirlo...">${esc(goal.observations || '')}</textarea></div>
+            <div class="form-row"><label class="form-label">Reflexión final</label><textarea data-checking-reflection="${goal.id}" rows="2" maxlength="600" placeholder="Qué funcionó, qué falló y qué ajustarás...">${esc(goal.reflection || '')}</textarea></div>
+            <button type="button" onclick="saveCheckingGoalObservation('${goal.id}')">Guardar notas</button>
+          </div>
+        </details>
+      </article>`;
+  }).join('');
 }
 
 function renderCheckingSummary(goals) {
   const el = document.getElementById('checking-summary');
   if (!el) return;
   const counts = { pending: 0, done: 0, missed: 0 };
-  goals.forEach(g => counts[checkingStatus(g)] = (counts[checkingStatus(g)] || 0) + 1);
+  goals.forEach(goal => { counts[checkingStatus(goal)] = (counts[checkingStatus(goal)] || 0) + 1; });
+  const rate = goals.length ? Math.round((counts.done / goals.length) * 100) : 0;
+  const averageProgress = goals.length
+    ? Math.round(goals.reduce((total, goal) => total + checkingGoalProgress(goal).percent, 0) / goals.length)
+    : 0;
   el.innerHTML = `
-    <div class="stat-tile"><div class="stat-label">Pendientes</div><div class="stat-value">${counts.pending}</div><div class="stat-sub">por cerrar</div></div>
-    <div class="stat-tile"><div class="stat-label">Cumplidos</div><div class="stat-value">${counts.done}</div><div class="stat-sub">objetivos logrados</div></div>
-    <div class="stat-tile"><div class="stat-label">Fallados</div><div class="stat-value">${counts.missed}</div><div class="stat-sub">para revisar</div></div>`;
+    <div class="checking-kpi"><span>Objetivos</span><strong>${goals.length}</strong><small>${averageProgress}% de avance medio</small></div>
+    <div class="checking-kpi success"><span>Cumplidos</span><strong>${counts.done}</strong><small>logrados</small></div>
+    <div class="checking-kpi warning"><span>En curso</span><strong>${counts.pending}</strong><small>pendientes</small></div>
+    <div class="checking-kpi danger"><span>Revisar</span><strong>${counts.missed}</strong><small>requieren ajuste</small></div>`;
+  document.getElementById('checking-score-ring')?.style.setProperty('--checking-score', `${rate * 3.6}deg`);
+  const scoreValue = document.getElementById('checking-score-value');
+  const scoreTitle = document.getElementById('checking-score-title');
+  const insight = document.getElementById('checking-insight');
+  if (scoreValue) scoreValue.textContent = `${rate}%`;
+  if (!goals.length) {
+    if (scoreTitle) scoreTitle.textContent = 'Sin objetivos cargados';
+    if (insight) insight.textContent = 'Crea objetivos medibles para obtener una lectura semanal útil.';
+  } else if (rate >= 80) {
+    if (scoreTitle) scoreTitle.textContent = 'Semana sólida y controlada';
+    if (insight) insight.textContent = counts.pending ? `Vas muy bien. Quedan ${counts.pending} objetivo${counts.pending === 1 ? '' : 's'} por cerrar.` : 'El plan semanal quedó completo. Registra la revisión antes de avanzar.';
+  } else if (rate >= 50) {
+    if (scoreTitle) scoreTitle.textContent = 'Buen avance, falta cerrar';
+    if (insight) insight.textContent = `Tienes ${counts.done} objetivo${counts.done === 1 ? '' : 's'} cumplido${counts.done === 1 ? '' : 's'} y ${counts.pending} todavía en curso.`;
+  } else {
+    if (scoreTitle) scoreTitle.textContent = 'La semana necesita foco';
+    if (insight) insight.textContent = counts.missed ? 'Revisa los obstáculos y reduce la próxima semana a compromisos ejecutables.' : 'Prioriza el objetivo de mayor impacto y registra el progreso real.';
+  }
+}
+
+function setCheckingGoalFilter(filter) {
+  checkingGoalFilter = filter;
+  document.querySelectorAll('[data-checking-filter]').forEach(button => {
+    button.classList.toggle('active', button.dataset.checkingFilter === filter);
+  });
+  renderCheckingGoals(true);
+}
+
+function updateCheckingGoalProgress(id) {
+  const input = document.querySelector(`[data-checking-progress="${id}"]`);
+  const value = +input?.value;
+  if (!input || !Number.isFinite(value) || value < 0) return toast('Ingresa un avance válido', 'err');
+  const goals = DB.get('checking_goals') || [];
+  const goal = goals.find(item => item.id === id);
+  if (!goal) return;
+  goal.progress = value;
+  goal.updated_at = new Date().toISOString();
+  if (value < (+goal.target || 1) && goal.status === 'done') {
+    goal.status = 'pending';
+    goal.done = false;
+  }
+  DB.set('checking_goals', goals);
+  toast('Progreso actualizado');
+  renderCheckingGoals(true);
 }
 
 function toggleCheckingGoal(id) {
-  const goals = DB.get('checking_goals') || [];
-  const goal = goals.find(g => g.id === id);
-  if (!goal) return;
-  goal.done = !goal.done;
-  goal.status = goal.done ? 'done' : 'pending';
-  DB.set('checking_goals', goals);
-  renderCheckingGoals();
+  const goal = (DB.get('checking_goals') || []).find(item => item.id === id);
+  setCheckingGoalStatus(id, checkingStatus(goal || {}) === 'done' ? 'pending' : 'done');
 }
 
 function setCheckingGoalStatus(id, status) {
+  if (!['pending', 'done', 'missed'].includes(status)) return;
   const goals = DB.get('checking_goals') || [];
-  const goal = goals.find(g => g.id === id);
+  const goal = goals.find(item => item.id === id);
   if (!goal) return;
   goal.status = status;
   goal.done = status === 'done';
+  goal.updated_at = new Date().toISOString();
   DB.set('checking_goals', goals);
-  renderCheckingGoals();
+  renderCheckingGoals(true);
 }
 
 function deleteCheckingGoal(id) {
-  if (!confirm('¿Eliminar este objetivo semanal?')) return;
+  if (!confirm('¿Eliminar este objetivo semanal? Podrás recuperarlo desde la papelera.')) return false;
   DB.del('checking_goals', id);
   toast('Objetivo enviado a la papelera');
-  renderCheckingGoals();
+  renderCheckingGoals(true);
+  return true;
+}
+
+function deleteCheckingGoalFromModal() {
+  const id = editingCheckingGoalId;
+  if (id && deleteCheckingGoal(id)) hideModal('modal-checking-goal');
 }
 
 function saveCheckingGoalObservation(id) {
   const goals = DB.get('checking_goals') || [];
-  const goal = goals.find(g => g.id === id);
+  const goal = goals.find(item => item.id === id);
   const textarea = document.querySelector(`[data-checking-observation="${id}"]`);
   const reflection = document.querySelector(`[data-checking-reflection="${id}"]`);
   if (!goal || !textarea) return;
-  goal.observations = textarea.value;
-  if (reflection) goal.reflection = reflection.value;
+  goal.observations = textarea.value.trim();
+  if (reflection) goal.reflection = reflection.value.trim();
+  goal.updated_at = new Date().toISOString();
   DB.set('checking_goals', goals);
-  toast('Observaciones guardadas');
+  toast('Plan y reflexión guardados');
+}
+
+function carryCheckingGoals() {
+  const week = getCheckingWeek();
+  const goals = DB.get('checking_goals') || [];
+  const pending = goals.filter(goal => goal.week === week && checkingStatus(goal) === 'pending');
+  if (!pending.length) return toast('No hay objetivos pendientes para pasar', 'err');
+  const nextWeek = shiftCheckingWeek(week, 1);
+  if (!confirm(`¿Pasar ${pending.length} objetivo${pending.length === 1 ? '' : 's'} pendiente${pending.length === 1 ? '' : 's'} a ${nextWeek}?`)) return;
+  const existingKeys = new Set(goals.filter(goal => goal.week === nextWeek).map(goal => `${String(goal.title).trim().toLowerCase()}|${goal.metric || 'manual'}`));
+  const now = new Date().toISOString();
+  const copies = pending.filter(goal => !existingKeys.has(`${String(goal.title).trim().toLowerCase()}|${goal.metric || 'manual'}`)).map(goal => ({
+    ...goal,
+    id: uid(),
+    week: nextWeek,
+    progress: 0,
+    status: 'pending',
+    done: false,
+    reflection: '',
+    carried_from: goal.id,
+    created: today(),
+    created_at: now,
+    updated_at: now
+  }));
+  if (!copies.length) return toast('Esos objetivos ya existen en la próxima semana', 'err');
+  DB.set('checking_goals', copies.concat(goals));
+  document.getElementById('c-week').value = nextWeek;
+  toast(`${copies.length} objetivo${copies.length === 1 ? '' : 's'} pasado${copies.length === 1 ? '' : 's'} a la próxima semana`);
+  loadChecking();
+}
+
+function checkingReviewForWeek(week = getCheckingWeek()) {
+  return (DB.get('checking_reviews') || []).find(review => review.week === week) || null;
+}
+
+function markCheckingReviewUnsaved() {
+  const status = document.getElementById('checking-review-status');
+  if (!status) return;
+  status.textContent = 'Cambios sin guardar';
+  status.classList.add('unsaved');
+}
+
+function updateCheckingAdherenceLabel() {
+  const value = +document.getElementById('c-review-adherence').value || 0;
+  document.getElementById('c-review-adherence-value').textContent = `${value}/10`;
+  markCheckingReviewUnsaved();
+}
+
+function selectCheckingEnergy(value) {
+  const normalized = Math.max(1, Math.min(5, +value || 3));
+  document.getElementById('c-review-energy').value = normalized;
+  document.getElementById('c-review-energy-value').textContent = `${normalized}/5`;
+  document.querySelectorAll('[data-checking-energy]').forEach(button => button.classList.toggle('active', +button.dataset.checkingEnergy === normalized));
+  markCheckingReviewUnsaved();
+}
+
+function renderCheckingReview() {
+  const review = checkingReviewForWeek();
+  const adherence = review?.adherence ?? 7;
+  const energy = review?.energy ?? 3;
+  document.getElementById('c-review-adherence').value = adherence;
+  document.getElementById('c-review-adherence-value').textContent = `${adherence}/10`;
+  document.getElementById('c-review-energy').value = energy;
+  document.getElementById('c-review-energy-value').textContent = `${energy}/5`;
+  document.querySelectorAll('[data-checking-energy]').forEach(button => button.classList.toggle('active', +button.dataset.checkingEnergy === +energy));
+  document.getElementById('c-review-win').value = review?.win || '';
+  document.getElementById('c-review-obstacle').value = review?.obstacle || '';
+  document.getElementById('c-review-focus').value = review?.focus || '';
+  const status = document.getElementById('checking-review-status');
+  status.textContent = review ? 'Revisión guardada' : 'Sin guardar';
+  status.classList.remove('unsaved');
+}
+
+function saveCheckingReview() {
+  const week = getCheckingWeek();
+  const reviews = DB.get('checking_reviews') || [];
+  const index = reviews.findIndex(review => review.week === week);
+  const previous = index >= 0 ? reviews[index] : {};
+  const now = new Date().toISOString();
+  const entry = {
+    ...previous,
+    id: previous.id || uid(),
+    week,
+    adherence: +document.getElementById('c-review-adherence').value || 0,
+    energy: +document.getElementById('c-review-energy').value || 3,
+    win: document.getElementById('c-review-win').value.trim(),
+    obstacle: document.getElementById('c-review-obstacle').value.trim(),
+    focus: document.getElementById('c-review-focus').value.trim(),
+    created_at: previous.created_at || now,
+    updated_at: now
+  };
+  if (index >= 0) reviews[index] = entry;
+  else reviews.unshift(entry);
+  DB.set('checking_reviews', reviews);
+  const status = document.getElementById('checking-review-status');
+  status.textContent = 'Revisión guardada';
+  status.classList.remove('unsaved');
+  toast('Revisión semanal guardada');
+}
+
+function renderCheckingTrend() {
+  const el = document.getElementById('checking-trend');
+  if (!el) return;
+  const selectedWeek = getCheckingWeek();
+  const weeks = Array.from({ length: 6 }, (_, index) => shiftCheckingWeek(selectedWeek, index - 5));
+  const values = weeks.map(week => ({ week, ...checkingStats(week) }));
+  if (!values.some(item => item.total)) {
+    el.innerHTML = '<div class="checking-trend-empty">Sin historial suficiente.</div>';
+    return;
+  }
+  el.innerHTML = values.map(item => `
+    <div class="checking-trend-column" title="${item.week}: ${item.rate}%">
+      <span>${item.total ? item.rate + '%' : '—'}</span>
+      <div><i style="height:${item.total ? Math.max(item.rate, 5) : 0}%"></i></div>
+      <small>S${item.week.slice(6)}</small>
+    </div>`).join('');
 }
 
 // ── INITIALIZATION ─────────────────────────────────
