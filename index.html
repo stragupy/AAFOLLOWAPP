@@ -8257,6 +8257,264 @@ input[type="radio"] {
   border-radius: 0 0 8px 8px !important;
 }
 
+/* PROFESSIONAL EXPORT */
+.professional-export-modal {
+  width: min(760px, calc(100vw - 28px));
+  max-width: 760px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px !important;
+}
+
+.export-modal-head {
+  padding: 22px 24px 18px;
+  margin: 0;
+  color: #fff;
+  background: #152137;
+  border-bottom: 0;
+}
+
+.export-modal-head h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-top: 3px;
+}
+
+.export-modal-head .btn {
+  color: #dbe8f8;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.export-eyebrow {
+  display: block;
+  color: #73b7ff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.export-modal-body {
+  display: grid;
+  gap: 20px;
+  padding: 22px 24px 24px;
+}
+
+.export-section-label {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.export-range-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 5px;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.export-range-option {
+  min-height: 42px;
+  padding: 8px 10px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.export-range-option:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.export-range-option.active {
+  color: #075fcf;
+  background: #fff;
+  border-color: #cfe4ff;
+  box-shadow: 0 3px 10px rgba(15, 17, 23, 0.08);
+}
+
+.export-custom-range {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.export-custom-range.show { display: grid; }
+
+.export-range-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 66px;
+  padding: 13px 15px;
+  background: #f7f9fc;
+  border-left: 3px solid var(--accent);
+}
+
+.export-range-summary strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.export-range-summary span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.export-range-days {
+  flex: 0 0 auto;
+  color: #075fcf;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.export-range-days small {
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+.export-data-preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.export-preview-stat {
+  min-width: 0;
+  padding: 13px 14px;
+  border-right: 1px solid var(--border);
+}
+
+.export-preview-stat:last-child { border-right: 0; }
+
+.export-preview-stat span {
+  display: block;
+  color: var(--dim);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.export-preview-stat strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.export-format-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.export-format-button {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 13px 15px;
+  color: var(--text);
+  text-align: left;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.export-format-button:hover {
+  transform: translateY(-1px);
+  border-color: #9ccaff;
+  box-shadow: 0 8px 20px rgba(22, 131, 255, 0.1);
+}
+
+.export-format-button:focus-visible {
+  outline: 3px solid rgba(22, 131, 255, 0.2);
+  outline-offset: 2px;
+}
+
+.export-format-button:disabled {
+  cursor: wait;
+  opacity: 0.66;
+  transform: none;
+}
+
+.export-format-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  background: #1683ff;
+  border-radius: 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.export-format-icon.google { background: #188038; }
+
+.export-format-copy strong {
+  display: block;
+  font-size: 0.86rem;
+}
+
+.export-format-copy span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.export-format-arrow {
+  color: var(--dim);
+  font-size: 1rem;
+}
+
+.export-data-note {
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 680px) {
+  .export-modal-head { padding: 18px; }
+  .export-modal-body { padding: 18px; gap: 17px; }
+  .export-range-options { grid-template-columns: 1fr 1fr; }
+  .export-data-preview { grid-template-columns: 1fr 1fr; }
+  .export-preview-stat:nth-child(2) { border-right: 0; }
+  .export-preview-stat:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .export-format-actions { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 430px) {
+  .professional-export-modal { width: calc(100vw - 16px); }
+  .export-custom-range { grid-template-columns: 1fr; }
+  .export-range-summary { align-items: flex-start; }
+}
+
 /* Calendar follows the same corner system */
 #page-calendar .aa-calendar-new-btn,
 #page-calendar .aa-calendar-week-picker input,
@@ -8406,7 +8664,7 @@ input[type="radio"] {
     <label for="global-date">Día seleccionado</label>
     <input type="date" id="global-date" onchange="changeGlobalDate(this.value)">
     <button class="btn btn-ghost btn-sm" id="global-free-day-toggle" onclick="toggleFreeDay()">Día libre</button>
-    <button class="btn btn-ghost btn-sm" onclick="exportDayPdf()">PDF del día</button>
+    <button class="btn btn-ghost btn-sm" onclick="openExportModal('day')">Exportar</button>
   </div>
 
   <!-- DASHBOARD -->
@@ -9575,6 +9833,72 @@ input[type="radio"] {
     <div class="btn-row">
       <button class="btn btn-ghost" style="flex: 1" onclick="hideModal('modal-note')">Cancelar</button>
       <button class="btn btn-primary" id="note-save-btn" style="flex: 1" onclick="saveNote()">Guardar nota</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exportación profesional -->
+<div id="modal-export" class="overlay">
+  <div class="modal professional-export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+    <div class="modal-head export-modal-head">
+      <div>
+        <span class="export-eyebrow">Informe de seguimiento</span>
+        <h3 id="export-modal-title">Exportar registros</h3>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="hideModal('modal-export')" aria-label="Cerrar">X</button>
+    </div>
+
+    <div class="export-modal-body">
+      <section>
+        <span class="export-section-label">Período</span>
+        <div class="export-range-options" role="group" aria-label="Período de exportación">
+          <button class="export-range-option active" type="button" data-export-preset="day" onclick="setExportPreset('day')">Un día</button>
+          <button class="export-range-option" type="button" data-export-preset="week" onclick="setExportPreset('week')">Una semana</button>
+          <button class="export-range-option" type="button" data-export-preset="month" onclick="setExportPreset('month')">Un mes</button>
+          <button class="export-range-option" type="button" data-export-preset="custom" onclick="setExportPreset('custom')">Personalizado</button>
+        </div>
+        <div class="export-custom-range" id="export-custom-range">
+          <div class="form-row">
+            <label class="form-label" for="export-start-date">Desde</label>
+            <input type="date" id="export-start-date" onchange="refreshExportPreview()">
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="export-end-date">Hasta</label>
+            <input type="date" id="export-end-date" onchange="refreshExportPreview()">
+          </div>
+        </div>
+      </section>
+
+      <div class="export-range-summary" id="export-range-summary">
+        <div>
+          <strong id="export-range-title">Día seleccionado</strong>
+          <span id="export-range-dates">—</span>
+        </div>
+        <div class="export-range-days"><span id="export-range-days">1</span> <small>días</small></div>
+      </div>
+
+      <div class="export-data-preview" id="export-data-preview">
+        <div class="export-preview-stat"><span>Comidas</span><strong id="export-preview-meals">0</strong></div>
+        <div class="export-preview-stat"><span>Sesiones</span><strong id="export-preview-sessions">0</strong></div>
+        <div class="export-preview-stat"><span>Registros corporales</span><strong id="export-preview-body">0</strong></div>
+        <div class="export-preview-stat"><span>Cumplimiento</span><strong id="export-preview-compliance">—</strong></div>
+      </div>
+
+      <section>
+        <span class="export-section-label">Formato</span>
+        <div class="export-format-actions">
+          <button class="export-format-button" id="export-pdf-button" type="button" onclick="exportSelectedPdf()">
+            <span class="export-format-icon">PDF</span>
+            <span class="export-format-copy"><strong>Informe PDF</strong><span id="export-pdf-range-label">Día seleccionado</span></span>
+            <span class="export-format-arrow">›</span>
+          </button>
+          <button class="export-format-button" id="export-ods-button" type="button" onclick="exportSelectedGoogleSpreadsheet()">
+            <span class="export-format-icon google">ODS</span>
+            <span class="export-format-copy"><strong>Google Sheets (.ods)</strong><span id="export-ods-range-label">Día seleccionado</span></span>
+            <span class="export-format-arrow">›</span>
+          </button>
+        </div>
+      </section>
     </div>
   </div>
 </div>
@@ -14202,7 +14526,7 @@ function reportRows(items, emptyText) {
   return items.length ? items.join('') : `<tr><td colspan="4" class="empty-row">${emptyText}</td></tr>`;
 }
 
-function exportDayPdf() {
+function exportDayPdfLegacy() {
   const date = selectedDate();
   const logo = document.querySelector('.logo img, .login-logo img')?.src || '';
   const meals = (DB.get('meals') || []).filter(m => m.date === date);
@@ -14288,7 +14612,7 @@ function weeklyExerciseReport(weekData) {
   return [...map.values()].sort((a, b) => b.volume - a.volume);
 }
 
-function exportWeeklyProfessionalReport() {
+function exportWeeklyProfessionalReportLegacy() {
   const week = weekValueFromDate(selectedDate());
   const data = weekCoachData(week);
   const totals = data.totals;
@@ -14354,6 +14678,1422 @@ function exportWeeklyProfessionalReport() {
   win.document.open();
   win.document.write(html);
   win.document.close();
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORTACIÓN PROFESIONAL — FUENTE ÚNICA DE DATOS
+// ═══════════════════════════════════════════════════
+const AA_FOLLOW_APP_VERSION = '1.0.0';
+const EXPORT_DAILY_TARGETS = Object.freeze({ water: 2500, steps: 10000, sleep: 8 });
+const EXPORT_BODY_LABELS = {
+  weight: 'Peso', body_fat: 'Grasa corporal', muscle_mass: 'Masa muscular',
+  arm: 'Brazo', chest: 'Pecho', waist: 'Cintura', hip: 'Cadera', thigh: 'Muslo',
+  calf: 'Pantorrilla', neck: 'Cuello', shoulders: 'Hombros'
+};
+let activeExportPreset = 'day';
+
+function exportNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function exportRound(value, decimals = 0) {
+  const factor = 10 ** decimals;
+  return Math.round(exportNumber(value) * factor) / factor;
+}
+
+function exportAverage(values, decimals = 0) {
+  const valid = values.filter(value => Number.isFinite(Number(value))).map(Number);
+  return valid.length ? exportRound(valid.reduce((sum, value) => sum + value, 0) / valid.length, decimals) : null;
+}
+
+function exportRangeDays(startDate, endDate) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate || '') || !/^\d{4}-\d{2}-\d{2}$/.test(endDate || '')) return [];
+  if (startDate > endDate) return [];
+  const dates = [];
+  let cursor = startDate;
+  let guard = 0;
+  while (cursor <= endDate && guard < 3660) {
+    dates.push(cursor);
+    cursor = addDays(cursor, 1);
+    guard += 1;
+  }
+  return dates;
+}
+
+function exportDateLabel(date, options = {}) {
+  if (!date) return '—';
+  return localDate(date).toLocaleDateString('es-AR', {
+    day: '2-digit', month: options.short ? 'short' : 'long', year: 'numeric'
+  });
+}
+
+function exportRangeLabel(startDate, endDate) {
+  return startDate === endDate
+    ? exportDateLabel(startDate)
+    : `${exportDateLabel(startDate, { short: true })} al ${exportDateLabel(endDate, { short: true })}`;
+}
+
+function exportPresetRange(preset = activeExportPreset, anchorDate = selectedDate()) {
+  if (preset === 'week') {
+    const dates = getWeekDates(weekValueFromDate(anchorDate));
+    return { startDate: dates[0], endDate: dates[6], title: 'Semana seleccionada' };
+  }
+  if (preset === 'month') {
+    const [year, month] = anchorDate.split('-').map(Number);
+    const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
+    const endDate = dateKey(new Date(year, month, 0));
+    return { startDate, endDate, title: 'Mes seleccionado' };
+  }
+  if (preset === 'custom') {
+    return {
+      startDate: document.getElementById('export-start-date')?.value || '',
+      endDate: document.getElementById('export-end-date')?.value || '',
+      title: 'Rango personalizado'
+    };
+  }
+  return { startDate: anchorDate, endDate: anchorDate, title: 'Día seleccionado' };
+}
+
+function exportMealTime(meal) {
+  if (meal.time || meal.hour) return String(meal.time || meal.hour).slice(0, 5);
+  const stamp = meal.created_at || meal.createdAt || '';
+  const match = String(stamp).match(/T(\d{2}:\d{2})/);
+  return match ? match[1] : '';
+}
+
+function exportSupplementDose(supplement) {
+  const raw = String(supplement.dose || supplement.target || '').trim();
+  const match = raw.match(/-?\d+(?:[.,]\d+)?/);
+  const target = supplement.target != null
+    ? exportNumber(supplement.target, null)
+    : match ? Number(match[0].replace(',', '.')) : null;
+  const unit = String(supplement.unit || (match ? raw.slice(match.index + match[0].length).trim() : '')).trim();
+  return { raw, target: Number.isFinite(target) ? target : null, unit };
+}
+
+function exportSupplementProgress(checkValue, dose, freeDay = false) {
+  let taken = false;
+  let consumed = 0;
+  if (checkValue && typeof checkValue === 'object') {
+    taken = checkValue.taken !== false;
+    consumed = exportNumber(checkValue.consumed ?? checkValue.amount, taken ? dose.target : 0);
+  } else if (typeof checkValue === 'number') {
+    consumed = Math.max(0, checkValue);
+    taken = consumed > 0;
+  } else {
+    taken = Boolean(checkValue);
+    consumed = taken ? dose.target : 0;
+  }
+  const ratio = dose.target && dose.target > 0 ? Math.max(0, consumed || 0) / dose.target : (taken ? 1 : 0);
+  const status = ratio >= 1 ? 'Completado' : ratio > 0 ? 'Parcial' : freeDay ? 'No evaluado' : 'Pendiente';
+  return { taken, consumed: dose.target == null ? (taken ? dose.raw || 'Sí' : '0') : exportRound(consumed, 2), ratio, status };
+}
+
+function exportStatusClass(status) {
+  if (status === 'Completado' || status === 'Cumplido' || status === 'Registrado') return 'complete';
+  if (status === 'Parcial' || status === 'En curso') return 'partial';
+  if (status === 'No evaluado') return 'neutral';
+  return 'pending';
+}
+
+function exportCheckingDueDate(goal) {
+  const dates = getWeekDates(goal.week || weekValueFromDate(goal.created || selectedDate()));
+  const offset = ({ monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 })[goal.due_day] ?? 6;
+  return dates[offset];
+}
+
+function exportComplianceScore(parts) {
+  const valid = parts.filter(value => Number.isFinite(value));
+  return valid.length ? Math.round((valid.reduce((sum, value) => sum + Math.max(0, Math.min(1, value)), 0) / valid.length) * 100) : null;
+}
+
+function collectExportData({ startDate, endDate, preset = 'custom' }) {
+  const dates = exportRangeDays(startDate, endDate);
+  if (!dates.length) throw new Error('Selecciona un rango de fechas válido');
+
+  const dateSet = new Set(dates);
+  const freeDays = freeDaysMap();
+  const nutritionConfig = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const mealsSource = (DB.get('meals') || []).filter(item => dateSet.has(item.date));
+  const sessionsSource = (DB.get('sessions') || []).filter(item => dateSet.has(item.date));
+  const bodySource = (DB.get('bodylogs') || []).filter(item => dateSet.has(item.date));
+  const cardioSource = (DB.get('checking_cardio') || []).filter(item => dateSet.has(item.date));
+  const wellnessSource = DB.get('daily_wellness') || {};
+  const waterSource = DB.get('daily_water') || {};
+  const moodSource = DB.get('dashboard_moods') || {};
+  const supplementsSource = DB.get('supplements') || [];
+  const supplementChecks = DB.get('supplement_checks') || {};
+
+  const meals = mealsSource.map(item => ({
+    date: item.date,
+    meal: item.meal_name || item.meal || 'Comida',
+    food: item.food_item || item.name || 'Alimento',
+    calories: exportNumber(item.calories),
+    protein: exportNumber(item.protein),
+    carbs: exportNumber(item.carbs),
+    fat: exportNumber(item.fat),
+    time: exportMealTime(item),
+    status: freeDays[item.date] ? 'Registrado · día libre' : 'Registrado'
+  })).sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+  const training = sessionsSource.flatMap(session => {
+    const sets = Array.isArray(session.sets) && session.sets.length ? session.sets : [null];
+    return sets.map((set, index) => ({
+      date: session.date,
+      session: session.routine_name || session.day_name || 'Entrenamiento',
+      exercise: set?.exercise_name || set?.exercise || '',
+      set: set?.set_number || index + 1,
+      weight: exportNumber(set?.weight),
+      reps: exportNumber(set?.reps),
+      volume: exportRound(exportNumber(set?.weight) * exportNumber(set?.reps), 1),
+      time: exportNumber(session.duration, null),
+      effort: set?.rir != null ? `RIR ${set.rir}` : set?.rpe != null ? `RPE ${set.rpe}` : '',
+      notes: [session.notes || '', set?.notes || ''].filter(Boolean).join(' · '),
+      isPr: Boolean(set?.is_pr)
+    }));
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  const supplements = dates.flatMap(date => supplementsSource
+    .filter(item => !item.created || item.created <= date)
+    .map(item => {
+      const dose = exportSupplementDose(item);
+      const progress = exportSupplementProgress((supplementChecks[date] || {})[item.id], dose, Boolean(freeDays[date]));
+      return {
+        date,
+        name: item.name || 'Suplemento',
+        objective: dose.target == null ? dose.raw || '—' : dose.target,
+        consumed: progress.consumed,
+        unit: dose.unit,
+        status: progress.status,
+        ratio: progress.ratio,
+        rawDose: dose.raw
+      };
+    }));
+
+  const discoveredBodyKeys = new Set(['weight', 'body_fat', 'muscle_mass', 'arm', 'chest', 'waist', 'hip', 'thigh', 'calf']);
+  const reservedBodyKeys = new Set(['id', 'date', 'notes', 'created', 'created_at', 'updated_at']);
+  bodySource.forEach(item => Object.keys(item).forEach(key => {
+    if (!reservedBodyKeys.has(key) && item[key] !== '' && item[key] != null && typeof item[key] !== 'object') discoveredBodyKeys.add(key);
+  }));
+  const bodyMeasurementKeys = [...discoveredBodyKeys].filter(key => bodySource.some(item => item[key] !== '' && item[key] != null));
+  const body = bodySource.map(item => {
+    const normalized = { date: item.date, notes: item.notes || '' };
+    bodyMeasurementKeys.forEach(key => normalized[key] = item[key] === '' || item[key] == null ? null : exportNumber(item[key], item[key]));
+    return normalized;
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  const stepsByDate = Object.fromEntries(dates.map(date => [date, cardioSource
+    .filter(item => item.date === date && item.type === 'steps')
+    .reduce((sum, item) => sum + exportNumber(item.value), 0)]));
+  const cardioByDate = Object.fromEntries(dates.map(date => [date, cardioSource
+    .filter(item => item.date === date && item.type !== 'steps')
+    .reduce((sum, item) => sum + exportNumber(item.value), 0)]));
+
+  const checkingHabits = (DB.get('checking_goals') || [])
+    .filter(goal => goal.category === 'habits')
+    .map(goal => {
+      const date = exportCheckingDueDate(goal);
+      if (!dateSet.has(date)) return null;
+      const progress = checkingGoalProgress(goal);
+      const state = checkingStatus(goal);
+      return {
+        date,
+        habit: goal.title || 'Hábito',
+        objective: progress.target,
+        actual: progress.current,
+        unit: progress.unit || goal.unit || '',
+        status: state === 'done' ? 'Cumplido' : state === 'missed' ? 'Pendiente' : 'En curso',
+        ratio: progress.target ? progress.current / progress.target : 0,
+        source: 'Check-in semanal'
+      };
+    }).filter(Boolean);
+
+  const habits = [...checkingHabits];
+  const hasWaterTracking = dates.some(date => exportNumber(waterSource[date]) > 0);
+  const hasSleepTracking = dates.some(date => exportNumber(wellnessSource[date]?.sleep) > 0);
+  const hasStepsTracking = dates.some(date => stepsByDate[date] > 0);
+  dates.forEach(date => {
+    const free = Boolean(freeDays[date]);
+    if (hasWaterTracking) {
+      const actual = exportNumber(waterSource[date]);
+      habits.push({ date, habit: 'Agua diaria', objective: EXPORT_DAILY_TARGETS.water, actual, unit: 'ml', status: actual >= EXPORT_DAILY_TARGETS.water ? 'Cumplido' : actual > 0 ? 'En curso' : free ? 'No evaluado' : 'Pendiente', ratio: actual / EXPORT_DAILY_TARGETS.water, source: 'Recuperación' });
+    }
+    if (hasSleepTracking) {
+      const actual = exportNumber(wellnessSource[date]?.sleep);
+      habits.push({ date, habit: 'Sueño', objective: EXPORT_DAILY_TARGETS.sleep, actual, unit: 'h', status: actual >= EXPORT_DAILY_TARGETS.sleep ? 'Cumplido' : actual > 0 ? 'En curso' : free ? 'No evaluado' : 'Pendiente', ratio: actual / EXPORT_DAILY_TARGETS.sleep, source: 'Recuperación' });
+    }
+    if (hasStepsTracking) {
+      const actual = stepsByDate[date];
+      habits.push({ date, habit: 'Pasos diarios', objective: EXPORT_DAILY_TARGETS.steps, actual, unit: 'pasos', status: actual >= EXPORT_DAILY_TARGETS.steps ? 'Cumplido' : actual > 0 ? 'En curso' : free ? 'No evaluado' : 'Pendiente', ratio: actual / EXPORT_DAILY_TARGETS.steps, source: 'Actividad' });
+    }
+  });
+  habits.sort((a, b) => a.date.localeCompare(b.date) || a.habit.localeCompare(b.habit));
+
+  const notes = (DB.get('notes') || []).filter(item => dateSet.has(item.date)).map(item => ({
+    date: item.date,
+    title: item.title || 'Nota',
+    content: item.content || '',
+    mood: item.mood ? (MOODS?.[item.mood] || String(item.mood)) : '',
+    source: 'Nota personal'
+  }));
+  bodySource.filter(item => item.notes).forEach(item => notes.push({ date: item.date, title: 'Observación corporal', content: item.notes, mood: '', source: 'Cuerpo' }));
+  (DB.get('calendar_events') || []).filter(item => dateSet.has(item.date)).forEach(item => {
+    const schedule = item.all_day ? 'Todo el día' : [item.start_time, item.end_time].filter(Boolean).join(' - ');
+    notes.push({
+      date: item.date,
+      title: item.title || 'Evento',
+      content: [schedule, item.location, item.notes].filter(Boolean).join(' · '),
+      mood: '',
+      source: 'Agenda'
+    });
+  });
+  notes.sort((a, b) => a.date.localeCompare(b.date));
+
+  const daily = dates.map(date => {
+    const dayMeals = meals.filter(item => item.date === date);
+    const daySupplements = supplements.filter(item => item.date === date);
+    const dayBody = [...body].reverse().find(item => item.date === date) || null;
+    const wellness = wellnessSource[date] || {};
+    const totals = dayMeals.reduce((sum, item) => ({
+      calories: sum.calories + item.calories,
+      protein: sum.protein + item.protein,
+      carbs: sum.carbs + item.carbs,
+      fat: sum.fat + item.fat
+    }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
+    const scoreParts = [];
+    if (dayMeals.length) {
+      scoreParts.push(totals.calories / Math.max(1, exportNumber(nutritionConfig.calories, 2000)));
+      scoreParts.push(totals.protein / Math.max(1, exportNumber(nutritionConfig.protein, 150)));
+      scoreParts.push(totals.carbs / Math.max(1, exportNumber(nutritionConfig.carbs, 200)));
+      scoreParts.push(totals.fat / Math.max(1, exportNumber(nutritionConfig.fat, 70)));
+    }
+    if (exportNumber(waterSource[date]) > 0) scoreParts.push(exportNumber(waterSource[date]) / EXPORT_DAILY_TARGETS.water);
+    if (stepsByDate[date] > 0) scoreParts.push(stepsByDate[date] / EXPORT_DAILY_TARGETS.steps);
+    if (exportNumber(wellness.sleep) > 0) scoreParts.push(exportNumber(wellness.sleep) / EXPORT_DAILY_TARGETS.sleep);
+    daySupplements.filter(item => item.status !== 'No evaluado').forEach(item => scoreParts.push(item.ratio));
+    return {
+      date,
+      freeDay: Boolean(freeDays[date]),
+      meals: dayMeals.length,
+      sessions: sessionsSource.filter(item => item.date === date).length,
+      ...totals,
+      water: exportNumber(waterSource[date]),
+      steps: stepsByDate[date],
+      cardioMinutes: cardioByDate[date],
+      weight: dayBody?.weight ?? null,
+      bodyFat: dayBody?.body_fat ?? null,
+      sleep: wellness.sleep == null || wellness.sleep === '' ? null : exportNumber(wellness.sleep),
+      energy: wellness.energy == null || wellness.energy === '' ? null : exportNumber(wellness.energy),
+      mood: moodSource[date] ?? null,
+      compliance: exportComplianceScore(scoreParts)
+    };
+  });
+
+  const complianceParts = daily.filter(item => item.compliance != null).map(item => item.compliance / 100);
+  checkingHabits.filter(item => item.status !== 'No evaluado').forEach(item => complianceParts.push(item.ratio));
+  const latestBody = [...body].reverse().find(item => item.weight != null || item.body_fat != null) || null;
+  const generatedAt = new Date();
+  const activeUser = DB.get('activeUser');
+  const userName = activeUser && String(activeUser).trim() ? String(activeUser).trim() : '';
+  const summary = {
+    calories: exportRound(daily.reduce((sum, item) => sum + item.calories, 0)),
+    protein: exportRound(daily.reduce((sum, item) => sum + item.protein, 0), 1),
+    carbs: exportRound(daily.reduce((sum, item) => sum + item.carbs, 0), 1),
+    fat: exportRound(daily.reduce((sum, item) => sum + item.fat, 0), 1),
+    waterTotal: exportRound(daily.reduce((sum, item) => sum + item.water, 0)),
+    waterAverage: exportAverage(daily.filter(item => item.water > 0).map(item => item.water)),
+    stepsTotal: exportRound(daily.reduce((sum, item) => sum + item.steps, 0)),
+    stepsAverage: exportAverage(daily.filter(item => item.steps > 0).map(item => item.steps)),
+    sleepAverage: exportAverage(daily.filter(item => item.sleep != null).map(item => item.sleep), 1),
+    weight: latestBody?.weight ?? null,
+    bodyFat: latestBody?.body_fat ?? null,
+    sessions: sessionsSource.length,
+    trainingVolume: exportRound(training.reduce((sum, item) => sum + item.volume, 0), 1),
+    compliance: exportComplianceScore(complianceParts),
+    freeDays: daily.filter(item => item.freeDay).length
+  };
+
+  return {
+    meta: {
+      app: 'AA Follow',
+      version: AA_FOLLOW_APP_VERSION,
+      userName,
+      generatedAt: generatedAt.toISOString(),
+      generatedLabel: generatedAt.toLocaleString('es-AR'),
+      preset,
+      startDate,
+      endDate,
+      rangeLabel: exportRangeLabel(startDate, endDate),
+      dayCount: dates.length,
+      logo: document.querySelector('.logo img, .login-logo img')?.src || ''
+    },
+    targets: { nutrition: { ...nutritionConfig }, ...EXPORT_DAILY_TARGETS },
+    dates,
+    summary,
+    daily,
+    meals,
+    supplements,
+    training,
+    body,
+    bodyMeasurementKeys,
+    bodyMeasurementLabels: { ...EXPORT_BODY_LABELS },
+    habits,
+    notes
+  };
+}
+
+function currentExportData(showError = true) {
+  try {
+    const range = exportPresetRange(activeExportPreset);
+    return collectExportData({ ...range, preset: activeExportPreset });
+  } catch (error) {
+    if (showError) toast(error.message || 'No se pudo preparar la exportación', 'err');
+    return null;
+  }
+}
+
+function openExportModal(preset = 'day') {
+  const anchor = selectedDate();
+  document.getElementById('export-start-date').value = anchor;
+  document.getElementById('export-end-date').value = anchor;
+  showModal('modal-export');
+  setExportPreset(preset);
+}
+
+function setExportPreset(preset) {
+  activeExportPreset = ['day', 'week', 'month', 'custom'].includes(preset) ? preset : 'day';
+  document.querySelectorAll('[data-export-preset]').forEach(button => button.classList.toggle('active', button.dataset.exportPreset === activeExportPreset));
+  document.getElementById('export-custom-range')?.classList.toggle('show', activeExportPreset === 'custom');
+  refreshExportPreview();
+}
+
+function refreshExportPreview() {
+  const range = exportPresetRange(activeExportPreset);
+  const data = currentExportData(false);
+  const title = document.getElementById('export-range-title');
+  const dates = document.getElementById('export-range-dates');
+  const days = document.getElementById('export-range-days');
+  if (!data) {
+    if (title) title.textContent = 'Revisa el período';
+    if (dates) dates.textContent = range.startDate && range.endDate ? `${range.startDate} - ${range.endDate}` : 'Selecciona ambas fechas';
+    if (days) days.textContent = '0';
+    ['export-pdf-button', 'export-ods-button'].forEach(id => { const button = document.getElementById(id); if (button) button.disabled = true; });
+    return;
+  }
+  if (title) title.textContent = range.title;
+  if (dates) dates.textContent = data.meta.rangeLabel;
+  if (days) days.textContent = data.meta.dayCount;
+  document.getElementById('export-preview-meals').textContent = data.meals.length;
+  document.getElementById('export-preview-sessions').textContent = data.summary.sessions;
+  document.getElementById('export-preview-body').textContent = data.body.length;
+  document.getElementById('export-preview-compliance').textContent = data.summary.compliance == null ? '—' : `${data.summary.compliance}%`;
+  document.getElementById('export-pdf-range-label').textContent = data.meta.rangeLabel;
+  document.getElementById('export-ods-range-label').textContent = data.meta.rangeLabel;
+  ['export-pdf-button', 'export-ods-button'].forEach(id => { const button = document.getElementById(id); if (button) button.disabled = false; });
+}
+
+function exportReportStatus(status) {
+  const clean = String(status || '—');
+  return `<span class="status ${exportStatusClass(clean)}">${esc(clean)}</span>`;
+}
+
+function exportReportTable(headers, rows, emptyText) {
+  const body = rows.length
+    ? rows.join('')
+    : `<tr><td class="empty-row" colspan="${headers.length}">${esc(emptyText)}</td></tr>`;
+  return `<div class="table-wrap"><table><thead><tr>${headers.map(header => `<th>${esc(header)}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+
+function exportReportMetric(label, value, unit = '') {
+  return `<div class="summary-metric"><span>${esc(label)}</span><strong>${value == null || value === '' ? '—' : esc(value)}${unit ? `<small>${esc(unit)}</small>` : ''}</strong></div>`;
+}
+
+function buildProfessionalPdfHtml(data) {
+  const multiDay = data.meta.dayCount > 1;
+  const summary = data.summary;
+  const number = value => Number(value || 0).toLocaleString('es-AR', { maximumFractionDigits: 1 });
+  const waterValue = multiDay ? summary.waterAverage : summary.waterTotal;
+  const stepsValue = multiDay ? summary.stepsAverage : summary.stepsTotal;
+  const mealRows = data.meals.map(item => `<tr>
+    <td>${esc(exportDateLabel(item.date, { short: true }))}</td>
+    <td><strong>${esc(item.meal)}</strong><span class="cell-sub">${esc(item.food)}</span></td>
+    <td>${esc(item.time || '—')}</td>
+    <td class="number">${number(item.calories)}</td>
+    <td class="macro">P ${number(item.protein)} · C ${number(item.carbs)} · G ${number(item.fat)}</td>
+    <td>${exportReportStatus(item.status)}</td>
+  </tr>`);
+  const supplementRows = data.supplements.map(item => {
+    const objective = typeof item.objective === 'number' ? number(item.objective) : item.objective;
+    const consumed = typeof item.consumed === 'number' ? number(item.consumed) : item.consumed;
+    return `<tr>
+      <td>${esc(exportDateLabel(item.date, { short: true }))}</td>
+      <td><strong>${esc(item.name)}</strong></td>
+      <td>${esc(objective)}${item.unit ? ` ${esc(item.unit)}` : ''}</td>
+      <td>${esc(consumed)}${item.unit ? ` ${esc(item.unit)}` : ''}</td>
+      <td>${exportReportStatus(item.status)}</td>
+    </tr>`;
+  });
+  const trainingRows = data.training.map(item => `<tr>
+    <td>${esc(exportDateLabel(item.date, { short: true }))}</td>
+    <td><strong>${esc(item.exercise || item.session)}</strong><span class="cell-sub">${esc(item.session)}</span></td>
+    <td class="number">${item.set || '—'}</td>
+    <td class="number">${number(item.weight)} kg</td>
+    <td class="number">${number(item.reps)}</td>
+    <td class="number">${number(item.volume)} kg</td>
+    <td>${item.time ? `${number(item.time)} min` : '—'}</td>
+    <td class="notes-cell">${esc([item.effort, item.notes].filter(Boolean).join(' · ') || '—')}${item.isPr ? '<span class="pr-mark">PR</span>' : ''}</td>
+  </tr>`);
+  const habitRows = data.habits.map(item => `<tr>
+    <td>${esc(exportDateLabel(item.date, { short: true }))}</td>
+    <td><strong>${esc(item.habit)}</strong><span class="cell-sub">${esc(item.source)}</span></td>
+    <td>${esc(number(item.actual))} / ${esc(number(item.objective))} ${esc(item.unit || '')}</td>
+    <td>${exportReportStatus(item.status)}</td>
+  </tr>`);
+  const bodyRecords = data.body.map(item => {
+    const values = data.bodyMeasurementKeys
+      .filter(key => item[key] != null && item[key] !== '')
+      .map(key => `<span><b>${esc(data.bodyMeasurementLabels[key] || key.replace(/_/g, ' '))}</b>${esc(number(item[key]))}${key === 'body_fat' ? '%' : key === 'weight' ? ' kg' : ' cm'}</span>`)
+      .join('');
+    return `<div class="body-record"><strong>${esc(exportDateLabel(item.date, { short: true }))}</strong><div>${values || '<span>Sin medidas numéricas</span>'}</div>${item.notes ? `<p>${esc(item.notes)}</p>` : ''}</div>`;
+  }).join('');
+  const noteRecords = data.notes.map(item => `<article class="note-record">
+    <div><strong>${esc(item.title)}</strong><span>${esc(exportDateLabel(item.date, { short: true }))} · ${esc(item.source)}${item.mood ? ` · ${esc(item.mood)}` : ''}</span></div>
+    <p>${esc(item.content || 'Sin contenido adicional')}</p>
+  </article>`).join('');
+
+  const metrics = [
+    exportReportMetric('Calorías', number(summary.calories), 'kcal'),
+    exportReportMetric('Proteínas', number(summary.protein), 'g'),
+    exportReportMetric('Carbohidratos', number(summary.carbs), 'g'),
+    exportReportMetric('Grasas', number(summary.fat), 'g'),
+    exportReportMetric(multiDay ? 'Agua / día' : 'Agua', waterValue == null ? null : number(waterValue), 'ml'),
+    exportReportMetric(multiDay ? 'Pasos / día' : 'Pasos', stepsValue == null ? null : number(stepsValue)),
+    exportReportMetric('Peso corporal', summary.weight == null ? null : number(summary.weight), 'kg'),
+    exportReportMetric('Sueño promedio', summary.sleepAverage == null ? null : number(summary.sleepAverage), 'h'),
+    exportReportMetric('Cumplimiento', summary.compliance == null ? null : summary.compliance, '%')
+  ].join('');
+
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Informe AA Follow · ${esc(data.meta.startDate)} · ${esc(data.meta.endDate)}</title>
+  <style>
+    *{box-sizing:border-box}html{background:#e9eef5}body{margin:0;color:#162033;background:#e9eef5;font-family:Inter,Arial,sans-serif;font-size:11px;line-height:1.45;letter-spacing:0}
+    .report{width:min(1040px,100%);min-height:100vh;margin:0 auto;padding:34px 38px;background:#fff}.report-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:start;padding-bottom:20px;border-bottom:3px solid #1683ff}
+    .brand{display:flex;align-items:center;gap:18px}.brand img{display:block;width:118px;max-height:56px;object-fit:contain}.brand-kicker{color:#1683ff;font-size:9px;font-weight:800;text-transform:uppercase}.brand h1{margin:3px 0 0;font-size:25px;line-height:1.08;letter-spacing:0}.meta{text-align:right;color:#64748b;font-size:10px;line-height:1.65}.meta strong{display:block;color:#162033;font-size:12px}
+    .identity{display:flex;justify-content:space-between;gap:24px;padding:11px 0;color:#64748b;border-bottom:1px solid #e5eaf1}.identity b{color:#162033}.summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0 8px}
+    .summary-metric{min-height:67px;padding:11px 12px;background:#f5f8fc;border-top:2px solid #cbd8e8;border-radius:6px}.summary-metric:first-child,.summary-metric:last-child{border-top-color:#1683ff}.summary-metric span{display:block;color:#718096;font-size:8px;font-weight:800;text-transform:uppercase}.summary-metric strong{display:block;margin-top:7px;color:#152137;font-size:17px;line-height:1}.summary-metric small{margin-left:3px;color:#718096;font-size:8px;font-weight:700}
+    .operations{display:flex;gap:22px;margin:11px 0 22px;padding:10px 13px;color:#526177;background:#152137;border-radius:6px}.operations span{color:#b8c9df}.operations b{margin-left:4px;color:#fff}.section{margin-top:24px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid #dce4ee}.section-head h2{margin:0;color:#152137;font-size:14px}.section-head span{color:#8290a4;font-size:9px}
+    .table-wrap{width:100%;overflow:visible}table{width:100%;border-collapse:collapse;table-layout:auto}thead{display:table-header-group}th{padding:7px 6px;color:#64748b;background:#f5f8fc;border-bottom:1px solid #ccd7e5;font-size:8px;text-align:left;text-transform:uppercase}td{padding:8px 6px;border-bottom:1px solid #e8edf3;vertical-align:top}tr{break-inside:avoid;page-break-inside:avoid}td strong{font-size:10px}.cell-sub{display:block;margin-top:2px;color:#7b8797;font-size:8px}.number{text-align:right;white-space:nowrap}.macro{white-space:nowrap}.notes-cell{max-width:180px}.empty-row{padding:20px;text-align:center;color:#8c98a8}.status{display:inline-block;padding:3px 6px;border-radius:4px;font-size:8px;font-weight:800;white-space:nowrap}.status.complete{color:#087a5b;background:#e6f6f0}.status.partial{color:#9a6700;background:#fff4d8}.status.pending{color:#b53a49;background:#fdecef}.status.neutral{color:#667085;background:#edf1f5}.pr-mark{display:inline-block;margin-left:5px;padding:1px 4px;color:#8b5b00;background:#fff1c5;border-radius:3px;font-size:7px;font-weight:900}
+    .body-list{display:grid;gap:7px}.body-record{padding:10px 12px;background:#f8fafc;border-left:3px solid #1683ff;break-inside:avoid}.body-record>strong{display:block;margin-bottom:6px}.body-record>div{display:flex;flex-wrap:wrap;gap:6px 15px}.body-record span{color:#64748b}.body-record b{margin-right:4px;color:#334155}.body-record p{margin:7px 0 0;color:#64748b}.notes-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}.note-record{padding:11px 12px;background:#f8fafc;border-top:1px solid #d9e2ed;break-inside:avoid}.note-record>div{display:flex;justify-content:space-between;gap:12px}.note-record span{color:#7b8797;font-size:8px}.note-record p{margin:7px 0 0;color:#4b596c;white-space:pre-wrap}.report-footer{display:flex;justify-content:space-between;gap:20px;margin-top:30px;padding-top:10px;color:#8a96a6;border-top:1px solid #dce4ee;font-size:8px}
+    @page{size:auto;margin:12mm}@media print{html,body{background:#fff}.report{width:auto;min-height:0;margin:0;padding:0}.section{break-inside:auto}.summary-metric,.operations,.body-record,.note-record{break-inside:avoid}.report-footer{break-inside:avoid}}@media(max-width:720px){.report{padding:22px 18px}.report-header{grid-template-columns:1fr}.meta{text-align:left}.summary-grid{grid-template-columns:repeat(2,1fr)}.notes-list{grid-template-columns:1fr}.identity,.operations{flex-wrap:wrap}}
+  </style></head><body><main class="report" data-report-ready="true">
+    <header class="report-header"><div class="brand">${data.meta.logo ? `<img src="${data.meta.logo}" alt="AA Follow">` : ''}<div><span class="brand-kicker">Seguimiento integral</span><h1>Informe de progreso</h1></div></div><div class="meta"><strong>${esc(data.meta.rangeLabel)}</strong>${esc(data.meta.dayCount)} día${data.meta.dayCount === 1 ? '' : 's'} analizados<br>Generado ${esc(data.meta.generatedLabel)}</div></header>
+    <div class="identity"><span>Cliente: <b>${esc(data.meta.userName || 'Sin nombre registrado')}</b></span><span>Período: <b>${esc(data.meta.startDate)} / ${esc(data.meta.endDate)}</b></span></div>
+    <section class="summary-grid">${metrics}</section>
+    <div class="operations"><span>Sesiones <b>${summary.sessions}</b></span><span>Volumen <b>${number(summary.trainingVolume)} kg</b></span><span>Días libres <b>${summary.freeDays}</b></span><span>Versión <b>${esc(data.meta.version)}</b></span></div>
+    <section class="section"><div class="section-head"><h2>Alimentación</h2><span>${data.meals.length} registro${data.meals.length === 1 ? '' : 's'}</span></div>${exportReportTable(['Fecha','Comida','Hora','Calorías','Macronutrientes','Estado'], mealRows, 'Sin alimentación registrada en el período')}</section>
+    <section class="section"><div class="section-head"><h2>Suplementos</h2><span>${data.supplements.length} controles</span></div>${exportReportTable(['Fecha','Nombre','Objetivo','Consumido','Estado'], supplementRows, 'Sin suplementos configurados')}</section>
+    <section class="section"><div class="section-head"><h2>Entrenamiento</h2><span>${summary.sessions} sesiones · ${data.training.length} series</span></div>${exportReportTable(['Fecha','Ejercicio','Serie','Peso','Reps','Volumen','Tiempo','Notas'], trainingRows, 'Sin entrenamiento registrado en el período')}</section>
+    <section class="section"><div class="section-head"><h2>Peso y medidas</h2><span>${data.body.length} controles</span></div><div class="body-list">${bodyRecords || '<div class="empty-row">Sin mediciones corporales en el período</div>'}</div></section>
+    <section class="section"><div class="section-head"><h2>Hábitos</h2><span>${data.habits.length} controles</span></div>${exportReportTable(['Fecha','Hábito','Avance','Estado'], habitRows, 'Sin hábitos medibles en el período')}</section>
+    <section class="section"><div class="section-head"><h2>Notas y contexto</h2><span>${data.notes.length} entradas</span></div><div class="notes-list">${noteRecords || '<div class="empty-row">Sin notas en el período</div>'}</div></section>
+    <footer class="report-footer"><span>Creado ${esc(data.meta.generatedLabel)}</span><span>AA Follow · versión ${esc(data.meta.version)}</span></footer>
+  </main><script>window.addEventListener('load',function(){setTimeout(function(){window.print()},500)})<\/script></body></html>`;
+}
+
+function openProfessionalPdfReport(data) {
+  const win = window.open('', '_blank');
+  if (!win) {
+    toast('Permite ventanas emergentes para generar el PDF', 'err');
+    return false;
+  }
+  win.document.open();
+  win.document.write(buildProfessionalPdfHtml(data));
+  win.document.close();
+  return true;
+}
+
+function exportSelectedPdf() {
+  const data = currentExportData();
+  if (!data) return;
+  if (openProfessionalPdfReport(data)) {
+    hideModal('modal-export');
+    toast('Informe PDF preparado');
+  }
+}
+
+function exportDayPdf() {
+  const date = selectedDate();
+  openProfessionalPdfReport(collectExportData({ startDate: date, endDate: date, preset: 'day' }));
+}
+
+function exportWeeklyProfessionalReport() {
+  const range = exportPresetRange('week');
+  openProfessionalPdfReport(collectExportData({ ...range, preset: 'week' }));
+}
+
+const EXCELJS_EXPORT_URL = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+let excelExportLibraryPromise = null;
+
+function ensureExcelExportLibrary() {
+  if (window.ExcelJS?.Workbook) return Promise.resolve(window.ExcelJS);
+  if (excelExportLibraryPromise) return excelExportLibraryPromise;
+
+  excelExportLibraryPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = EXCELJS_EXPORT_URL;
+    script.async = true;
+    script.dataset.excelExportLibrary = 'true';
+    script.onload = () => {
+      if (window.ExcelJS?.Workbook) resolve(window.ExcelJS);
+      else reject(new Error('El generador de Excel no respondió correctamente'));
+    };
+    script.onerror = () => reject(new Error('No se pudo cargar el generador de Excel. Revisa tu conexión.'));
+    document.head.appendChild(script);
+  }).catch(error => {
+    excelExportLibraryPromise = null;
+    document.querySelector('[data-excel-export-library="true"]')?.remove();
+    throw error;
+  });
+
+  return excelExportLibraryPromise;
+}
+
+function exportExcelColumnLetter(index) {
+  let value = index;
+  let result = '';
+  while (value > 0) {
+    const remainder = (value - 1) % 26;
+    result = String.fromCharCode(65 + remainder) + result;
+    value = Math.floor((value - 1) / 26);
+  }
+  return result;
+}
+
+function exportExcelStatusStyle(cell, status) {
+  const kind = exportStatusClass(status);
+  const palette = {
+    complete: { fill: 'FFE6F6F0', font: 'FF087A5B' },
+    partial: { fill: 'FFFFF4D8', font: 'FF9A6700' },
+    pending: { fill: 'FFFDECEF', font: 'FFB53A49' },
+    neutral: { fill: 'FFEDF1F5', font: 'FF667085' }
+  }[kind];
+  cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: palette.fill } };
+  cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: palette.font } };
+  cell.alignment = { horizontal: 'center', vertical: 'middle' };
+}
+
+function exportExcelCreateSheet(workbook, data, config) {
+  const worksheet = workbook.addWorksheet(config.name, {
+    properties: { defaultRowHeight: 19 },
+    views: [{ state: 'frozen', ySplit: 5, showGridLines: false }]
+  });
+  const lastColumn = exportExcelColumnLetter(config.columns.length);
+  worksheet.mergeCells(`A1:${lastColumn}1`);
+  worksheet.getCell('A1').value = config.title;
+  worksheet.getCell('A1').font = { name: 'Arial', size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
+  worksheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF152137' } };
+  worksheet.getCell('A1').alignment = { vertical: 'middle' };
+  worksheet.getRow(1).height = 32;
+  worksheet.mergeCells(`A2:${lastColumn}2`);
+  worksheet.getCell('A2').value = `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`;
+  worksheet.getCell('A2').font = { name: 'Arial', size: 9, color: { argb: 'FF64748B' } };
+  worksheet.getCell('A2').alignment = { vertical: 'middle' };
+  worksheet.getRow(2).height = 22;
+  worksheet.mergeCells(`A3:${lastColumn}3`);
+  worksheet.getCell('A3').value = `AA Follow · versión ${data.meta.version}`;
+  worksheet.getCell('A3').font = { name: 'Arial', size: 8, italic: true, color: { argb: 'FF94A3B8' } };
+
+  const headerRowNumber = 5;
+  const headerRow = worksheet.getRow(headerRowNumber);
+  config.columns.forEach((column, index) => {
+    const cell = headerRow.getCell(index + 1);
+    cell.value = column.header;
+    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1683FF' } };
+    cell.alignment = { horizontal: column.align || 'left', vertical: 'middle', wrapText: true };
+    worksheet.getColumn(index + 1).width = column.width || 14;
+  });
+  headerRow.height = 24;
+
+  config.rows.forEach((item, rowIndex) => {
+    const row = worksheet.getRow(headerRowNumber + 1 + rowIndex);
+    config.columns.forEach((column, columnIndex) => {
+      const cell = row.getCell(columnIndex + 1);
+      let value = item[column.key];
+      if (column.type === 'date' && value) value = localDate(value);
+      if (column.transform) value = column.transform(value, item);
+      cell.value = value == null ? '' : value;
+      cell.font = { name: 'Arial', size: 10, color: { argb: 'FF263246' } };
+      cell.alignment = { horizontal: column.align || (column.type === 'number' ? 'right' : 'left'), vertical: 'top', wrapText: Boolean(column.wrap) };
+      cell.border = { bottom: { style: 'thin', color: { argb: 'FFE5EAF1' } } };
+      if (column.type === 'date') cell.numFmt = 'yyyy-mm-dd';
+      if (column.numFmt) cell.numFmt = column.numFmt;
+      if (column.key === config.statusKey) exportExcelStatusStyle(cell, value);
+    });
+    if (rowIndex % 2 === 1) {
+      row.eachCell(cell => {
+        if (config.statusKey && config.columns[cell.col - 1]?.key === config.statusKey) return;
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+      });
+    }
+    row.height = config.rowHeight || 21;
+  });
+
+  const lastRow = Math.max(headerRowNumber, headerRowNumber + config.rows.length);
+  worksheet.autoFilter = `A${headerRowNumber}:${lastColumn}${lastRow}`;
+  worksheet.pageSetup = {
+    orientation: config.columns.length > 7 ? 'landscape' : 'portrait',
+    fitToPage: true,
+    fitToWidth: 1,
+    fitToHeight: 0,
+    paperSize: 9,
+    margins: { left: 0.35, right: 0.35, top: 0.55, bottom: 0.55, header: 0.2, footer: 0.2 }
+  };
+  worksheet.headerFooter.oddFooter = `&LAA Follow&RVersión ${data.meta.version}`;
+  return worksheet;
+}
+
+function exportExcelCreateSummary(workbook, data) {
+  const worksheet = workbook.addWorksheet('Resumen', {
+    properties: { defaultRowHeight: 19 },
+    views: [{ state: 'frozen', ySplit: 8, showGridLines: false }]
+  });
+  worksheet.mergeCells('A1:K1');
+  worksheet.getCell('A1').value = 'AA Follow · Informe de seguimiento';
+  worksheet.getCell('A1').font = { name: 'Arial', size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
+  worksheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF152137' } };
+  worksheet.getCell('A1').alignment = { vertical: 'middle' };
+  worksheet.getRow(1).height = 32;
+  worksheet.mergeCells('A2:K2');
+  worksheet.getCell('A2').value = `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`;
+  worksheet.getCell('A2').font = { name: 'Arial', size: 9, color: { argb: 'FF64748B' } };
+  worksheet.mergeCells('A3:K3');
+  worksheet.getCell('A3').value = `${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · ${data.summary.sessions} sesiones · ${data.summary.trainingVolume.toLocaleString('es-AR')} kg de volumen · versión ${data.meta.version}`;
+  worksheet.getCell('A3').font = { name: 'Arial', size: 9, color: { argb: 'FF94A3B8' } };
+
+  const cards = [
+    { range: 'A4:B4', valueRange: 'A5:B5', label: 'CALORÍAS', formula: '=SUM(B9:B4000)', result: data.summary.calories, numFmt: '#,##0 "kcal"' },
+    { range: 'C4:D4', valueRange: 'C5:D5', label: 'PROTEÍNAS', formula: '=SUM(C9:C4000)', result: data.summary.protein, numFmt: '#,##0.0 "g"' },
+    { range: 'E4:F4', valueRange: 'E5:F5', label: 'AGUA PROMEDIO', formula: '=IFERROR(AVERAGEIF(F9:F4000,">0"),0)', result: data.summary.waterAverage || data.summary.waterTotal || 0, numFmt: '#,##0 "ml"' },
+    { range: 'G4:H4', valueRange: 'G5:H5', label: 'PASOS PROMEDIO', formula: '=IFERROR(AVERAGEIF(G9:G4000,">0"),0)', result: data.summary.stepsAverage || data.summary.stepsTotal || 0, numFmt: '#,##0' },
+    { range: 'I4:K4', valueRange: 'I5:K5', label: 'CUMPLIMIENTO', formula: '=IFERROR(AVERAGE(K9:K4000),0)', result: (data.summary.compliance || 0) / 100, numFmt: '0%' }
+  ];
+  cards.forEach(card => {
+    worksheet.mergeCells(card.range);
+    worksheet.mergeCells(card.valueRange);
+    const labelCell = worksheet.getCell(card.range.split(':')[0]);
+    const valueCell = worksheet.getCell(card.valueRange.split(':')[0]);
+    labelCell.value = card.label;
+    labelCell.font = { name: 'Arial', size: 8, bold: true, color: { argb: 'FF64748B' } };
+    labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F6FB' } };
+    labelCell.alignment = { vertical: 'middle' };
+    valueCell.value = { formula: card.formula, result: card.result };
+    valueCell.numFmt = card.numFmt;
+    valueCell.font = { name: 'Arial', size: 15, bold: true, color: { argb: 'FF152137' } };
+    valueCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F6FB' } };
+    valueCell.alignment = { vertical: 'middle' };
+  });
+  worksheet.getRow(4).height = 19;
+  worksheet.getRow(5).height = 28;
+
+  const headers = ['Fecha','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Peso','Sueño','Sesiones','Cumplimiento'];
+  const headerRow = worksheet.getRow(8);
+  headers.forEach((header, index) => {
+    const cell = headerRow.getCell(index + 1);
+    cell.value = header;
+    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: 'FFFFFFFF' } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1683FF' } };
+    cell.alignment = { horizontal: index === 0 ? 'left' : 'right', vertical: 'middle', wrapText: true };
+  });
+  headerRow.height = 24;
+  data.daily.forEach((item, index) => {
+    const row = worksheet.getRow(9 + index);
+    row.values = [
+      localDate(item.date), item.calories, item.protein, item.carbs, item.fat,
+      item.water, item.steps, item.weight ?? '', item.sleep ?? '', item.sessions,
+      item.compliance == null ? '' : item.compliance / 100
+    ];
+    row.eachCell((cell, column) => {
+      cell.font = { name: 'Arial', size: 10, color: { argb: 'FF263246' } };
+      cell.alignment = { horizontal: column === 1 ? 'left' : 'right', vertical: 'middle' };
+      cell.border = { bottom: { style: 'thin', color: { argb: 'FFE5EAF1' } } };
+      if (index % 2 === 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+    });
+    row.getCell(1).numFmt = 'yyyy-mm-dd';
+    row.getCell(2).numFmt = '#,##0';
+    [3,4,5,8,9].forEach(column => row.getCell(column).numFmt = '#,##0.0');
+    [6,7,10].forEach(column => row.getCell(column).numFmt = '#,##0');
+    row.getCell(11).numFmt = '0%';
+  });
+  const widths = [13,13,13,16,11,12,14,11,11,11,16];
+  widths.forEach((width, index) => worksheet.getColumn(index + 1).width = width);
+  worksheet.autoFilter = `A8:K${Math.max(8, 8 + data.daily.length)}`;
+  worksheet.pageSetup = { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9, margins: { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 } };
+  worksheet.headerFooter.oddFooter = `&LAA Follow&RVersión ${data.meta.version}`;
+}
+
+function buildProfessionalExcelWorkbook(data) {
+  if (!window.ExcelJS?.Workbook) throw new Error('No se pudo cargar el generador de Excel');
+  const workbook = new window.ExcelJS.Workbook();
+  workbook.creator = 'AA Follow';
+  workbook.lastModifiedBy = 'AA Follow';
+  workbook.created = new Date(data.meta.generatedAt);
+  workbook.modified = new Date(data.meta.generatedAt);
+  workbook.subject = `Seguimiento ${data.meta.rangeLabel}`;
+  workbook.title = `AA Follow · ${data.meta.rangeLabel}`;
+  workbook.company = 'AA Follow';
+  workbook.calcProperties.fullCalcOnLoad = true;
+
+  exportExcelCreateSummary(workbook, data);
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Alimentación', title: 'Alimentación', statusKey: 'status',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Comida', key: 'meal', width: 17 },
+      { header: 'Alimento', key: 'food', width: 34, wrap: true },
+      { header: 'Calorías', key: 'calories', type: 'number', width: 13, numFmt: '#,##0' },
+      { header: 'Proteínas', key: 'protein', type: 'number', width: 13, numFmt: '#,##0.0' },
+      { header: 'Carbohidratos', key: 'carbs', type: 'number', width: 16, numFmt: '#,##0.0' },
+      { header: 'Grasas', key: 'fat', type: 'number', width: 11, numFmt: '#,##0.0' },
+      { header: 'Hora', key: 'time', width: 10, align: 'center' },
+      { header: 'Estado', key: 'status', width: 21, align: 'center' }
+    ],
+    rows: data.meals
+  });
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Suplementos', title: 'Suplementos', statusKey: 'status',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Nombre', key: 'name', width: 28 },
+      { header: 'Objetivo', key: 'objective', width: 16 },
+      { header: 'Consumido', key: 'consumed', width: 16 },
+      { header: 'Unidad', key: 'unit', width: 18 },
+      { header: 'Estado', key: 'status', width: 18, align: 'center' }
+    ],
+    rows: data.supplements
+  });
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Entrenamiento', title: 'Entrenamiento',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Sesión', key: 'session', width: 23 },
+      { header: 'Ejercicio', key: 'exercise', width: 27 },
+      { header: 'Serie', key: 'set', type: 'number', width: 9, numFmt: '#,##0' },
+      { header: 'Peso', key: 'weight', type: 'number', width: 11, numFmt: '#,##0.0' },
+      { header: 'Repeticiones', key: 'reps', type: 'number', width: 15, numFmt: '#,##0' },
+      { header: 'Volumen', key: 'volume', type: 'number', width: 14, numFmt: '#,##0.0' },
+      { header: 'Tiempo', key: 'time', type: 'number', width: 12, numFmt: '#,##0 "min"' },
+      { header: 'Notas', key: 'notes', width: 38, wrap: true, transform: (value, item) => [item.effort, value, item.isPr ? 'PR' : ''].filter(Boolean).join(' · ') }
+    ],
+    rows: data.training,
+    rowHeight: 28
+  });
+
+  const bodyColumns = [
+    { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+    ...data.bodyMeasurementKeys.map(key => ({
+      header: data.bodyMeasurementLabels[key] || key.replace(/_/g, ' '),
+      key,
+      type: 'number',
+      width: Math.max(12, Math.min(22, (data.bodyMeasurementLabels[key] || key).length + 3)),
+      numFmt: '#,##0.0'
+    })),
+    { header: 'Notas', key: 'notes', width: 38, wrap: true }
+  ];
+  exportExcelCreateSheet(workbook, data, { name: 'Peso y medidas', title: 'Peso y medidas', columns: bodyColumns, rows: data.body, rowHeight: 28 });
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Hábitos', title: 'Hábitos', statusKey: 'status',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Hábito', key: 'habit', width: 29 },
+      { header: 'Objetivo', key: 'objective', type: 'number', width: 14, numFmt: '#,##0.0' },
+      { header: 'Realizado', key: 'actual', type: 'number', width: 14, numFmt: '#,##0.0' },
+      { header: 'Unidad', key: 'unit', width: 14 },
+      { header: 'Estado', key: 'status', width: 17, align: 'center' },
+      { header: 'Origen', key: 'source', width: 20 }
+    ],
+    rows: data.habits
+  });
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Notas', title: 'Notas y contexto',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Título', key: 'title', width: 25 },
+      { header: 'Contenido', key: 'content', width: 58, wrap: true },
+      { header: 'Estado de ánimo', key: 'mood', width: 19 },
+      { header: 'Origen', key: 'source', width: 18 }
+    ],
+    rows: data.notes,
+    rowHeight: 34
+  });
+  return workbook;
+}
+
+function exportDownloadBlob(filename, blob) {
+  const anchor = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function exportSelectedExcel() {
+  const data = currentExportData();
+  if (!data) return;
+  const button = document.getElementById('export-excel-button');
+  const previousDisabled = button?.disabled;
+  if (button) button.disabled = true;
+  try {
+    await ensureExcelExportLibrary();
+    const workbook = buildProfessionalExcelWorkbook(data);
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const filename = `aa-follow-${data.meta.startDate}${data.meta.startDate === data.meta.endDate ? '' : `_a_${data.meta.endDate}`}.xlsx`;
+    exportDownloadBlob(filename, blob);
+    hideModal('modal-export');
+    toast('Excel descargado');
+  } catch (error) {
+    console.error(error);
+    toast(error.message || 'No se pudo generar el Excel', 'err');
+  } finally {
+    if (button) button.disabled = Boolean(previousDisabled);
+  }
+}
+
+// Modelo visual compartido por la hoja ODS compatible con Google Sheets.
+const GOOGLE_SHEETS_PALETTE = Object.freeze({
+  navy: '#152137', blue: '#1683ff', text: '#263246', muted: '#64748b',
+  dim: '#94a3b8', line: '#e5eaf1', surface: '#f8fafc', panel: '#f2f6fb',
+  white: '#ffffff', green: '#087a5b', greenBg: '#e6f6f0', amber: '#9a6700',
+  amberBg: '#fff4d8', red: '#b53a49', redBg: '#fdecef', neutral: '#667085',
+  neutralBg: '#edf1f5'
+});
+
+function googleSheetsColor(hex) {
+  const clean = String(hex || '#000000').replace('#', '');
+  return {
+    red: parseInt(clean.slice(0, 2), 16) / 255,
+    green: parseInt(clean.slice(2, 4), 16) / 255,
+    blue: parseInt(clean.slice(4, 6), 16) / 255
+  };
+}
+
+function googleSheetsFormat(options = {}) {
+  const format = {
+    verticalAlignment: 'MIDDLE',
+    textFormat: {
+      fontFamily: 'Arial',
+      fontSize: options.fontSize || 10,
+      bold: Boolean(options.bold),
+      foregroundColorStyle: { rgbColor: googleSheetsColor(options.color || GOOGLE_SHEETS_PALETTE.text) }
+    }
+  };
+  if (options.background) format.backgroundColorStyle = { rgbColor: googleSheetsColor(options.background) };
+  if (options.align) format.horizontalAlignment = options.align;
+  if (options.wrap) format.wrapStrategy = 'WRAP';
+  if (options.numberPattern) format.numberFormat = { type: options.numberType || 'NUMBER', pattern: options.numberPattern };
+  if (options.border !== false) {
+    format.borders = {
+      bottom: {
+        style: 'SOLID',
+        colorStyle: { rgbColor: googleSheetsColor(GOOGLE_SHEETS_PALETTE.line) }
+      }
+    };
+  }
+  return format;
+}
+
+function googleSheetsStatusFormat(status) {
+  const type = exportStatusClass(status);
+  const palette = {
+    complete: [GOOGLE_SHEETS_PALETTE.greenBg, GOOGLE_SHEETS_PALETTE.green],
+    partial: [GOOGLE_SHEETS_PALETTE.amberBg, GOOGLE_SHEETS_PALETTE.amber],
+    pending: [GOOGLE_SHEETS_PALETTE.redBg, GOOGLE_SHEETS_PALETTE.red],
+    neutral: [GOOGLE_SHEETS_PALETTE.neutralBg, GOOGLE_SHEETS_PALETTE.neutral]
+  }[type];
+  return googleSheetsFormat({ background: palette[0], color: palette[1], bold: true, align: 'CENTER' });
+}
+
+function googleSheetsDateSerial(date) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(date || ''));
+  if (!match) return null;
+  return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])) / 86400000 + 25569;
+}
+
+function googleSheetsCell(value, options = {}) {
+  let normalized = value;
+  if (options.type === 'date') normalized = googleSheetsDateSerial(value);
+  const cell = { userEnteredFormat: options.format || googleSheetsFormat() };
+  if (typeof normalized === 'string' && normalized.startsWith('=')) {
+    cell.userEnteredValue = { formulaValue: normalized };
+  } else if (typeof normalized === 'number' && Number.isFinite(normalized)) {
+    cell.userEnteredValue = { numberValue: normalized };
+  } else if (typeof normalized === 'boolean') {
+    cell.userEnteredValue = { boolValue: normalized };
+  } else {
+    cell.userEnteredValue = { stringValue: normalized == null ? '' : String(normalized) };
+  }
+  return cell;
+}
+
+function googleSheetsFilledRow(columnCount, value, format) {
+  return {
+    values: Array.from({ length: columnCount }, (_, index) => googleSheetsCell(index === 0 ? value : '', { format }))
+  };
+}
+
+function buildGoogleSheetsDataTab(data, config) {
+  const columnCount = config.columns.length;
+  const titleFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 16, border: false });
+  const metaFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, fontSize: 9, border: false });
+  const versionFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.dim, fontSize: 8, border: false });
+  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blue, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const rows = [
+    googleSheetsFilledRow(columnCount, config.title, titleFormat),
+    googleSheetsFilledRow(columnCount, `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`, metaFormat),
+    googleSheetsFilledRow(columnCount, `AA Follow · versión ${data.meta.version}`, versionFormat),
+    googleSheetsFilledRow(columnCount, '', googleSheetsFormat({ border: false })),
+    { values: config.columns.map(column => googleSheetsCell(column.header, { format: headerFormat })) }
+  ];
+
+  config.rows.forEach((item, rowIndex) => {
+    const alternate = rowIndex % 2 === 1;
+    rows.push({
+      values: config.columns.map(column => {
+        let value = item[column.key];
+        if (column.transform) value = column.transform(value, item);
+        let format = googleSheetsFormat({
+          background: alternate ? GOOGLE_SHEETS_PALETTE.surface : GOOGLE_SHEETS_PALETTE.white,
+          align: column.align || (column.type === 'number' ? 'RIGHT' : 'LEFT'),
+          wrap: Boolean(column.wrap),
+          numberPattern: column.numberPattern,
+          numberType: column.type === 'date' ? 'DATE' : 'NUMBER'
+        });
+        if (column.type === 'date') {
+          format.numberFormat = { type: 'DATE', pattern: 'dd/mm/yyyy' };
+        }
+        if (column.key === config.statusKey) format = googleSheetsStatusFormat(value);
+        return googleSheetsCell(value == null ? '' : value, { type: column.type, format });
+      })
+    });
+  });
+
+  return {
+    name: config.name,
+    rows,
+    columnCount,
+    widths: config.columns.map(column => column.width || 110),
+    freezeRows: 5,
+    filter: { startRowIndex: 4, endRowIndex: Math.max(5, rows.length), startColumnIndex: 0, endColumnIndex: columnCount },
+    merges: [0, 1, 2].map(row => ({ startRowIndex: row, endRowIndex: row + 1, startColumnIndex: 0, endColumnIndex: columnCount })),
+    rowHeights: { 0: 34, 1: 24, 2: 20, 3: 12, 4: 28 },
+    dataRowHeight: config.rowHeight || 25
+  };
+}
+
+function buildGoogleSheetsSummaryTab(data) {
+  const columnCount = 11;
+  const titleFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 16, border: false });
+  const metaFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, fontSize: 9, border: false });
+  const detailFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.dim, fontSize: 9, border: false });
+  const cardLabelFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.muted, bold: true, fontSize: 8, border: false });
+  const cardValueFormat = pattern => googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.navy, bold: true, fontSize: 14, numberPattern: pattern, border: false });
+  const sectionFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, bold: true, fontSize: 8, border: false });
+  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blue, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const rows = [
+    googleSheetsFilledRow(columnCount, 'AA Follow · Informe de seguimiento', titleFormat),
+    googleSheetsFilledRow(columnCount, `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`, metaFormat),
+    googleSheetsFilledRow(columnCount, `${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · ${data.summary.sessions} sesiones · ${data.summary.trainingVolume.toLocaleString('es-AR')} kg de volumen · versión ${data.meta.version}`, detailFormat),
+    { values: [
+      googleSheetsCell('CALORÍAS', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
+      googleSheetsCell('PROTEÍNAS', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
+      googleSheetsCell('AGUA PROMEDIO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
+      googleSheetsCell('PASOS PROMEDIO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
+      googleSheetsCell('CUMPLIMIENTO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat })
+    ] },
+    { values: [
+      googleSheetsCell('=SUM(B9:B)', { format: cardValueFormat('#,##0 "kcal"') }), googleSheetsCell('', { format: cardValueFormat() }),
+      googleSheetsCell('=SUM(C9:C)', { format: cardValueFormat('#,##0.0 "g"') }), googleSheetsCell('', { format: cardValueFormat() }),
+      googleSheetsCell('=IFERROR(AVERAGEIF(F9:F,">0"),0)', { format: cardValueFormat('#,##0 "ml"') }), googleSheetsCell('', { format: cardValueFormat() }),
+      googleSheetsCell('=IFERROR(AVERAGEIF(G9:G,">0"),0)', { format: cardValueFormat('#,##0') }), googleSheetsCell('', { format: cardValueFormat() }),
+      googleSheetsCell('=IFERROR(AVERAGE(K9:K),0)', { format: cardValueFormat('0%') }), googleSheetsCell('', { format: cardValueFormat() }), googleSheetsCell('', { format: cardValueFormat() })
+    ] },
+    googleSheetsFilledRow(columnCount, '', googleSheetsFormat({ border: false })),
+    googleSheetsFilledRow(columnCount, 'SEGUIMIENTO DIARIO', sectionFormat),
+    { values: ['Fecha','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Peso','Sueño','Sesiones','Cumplimiento'].map(value => googleSheetsCell(value, { format: headerFormat })) }
+  ];
+
+  data.daily.forEach((item, index) => {
+    const background = index % 2 === 1 ? GOOGLE_SHEETS_PALETTE.surface : GOOGLE_SHEETS_PALETTE.white;
+    const values = [
+      [item.date, 'date', 'dd/mm/yyyy'], [item.calories, 'number', '#,##0'],
+      [item.protein, 'number', '#,##0.0'], [item.carbs, 'number', '#,##0.0'],
+      [item.fat, 'number', '#,##0.0'], [item.water, 'number', '#,##0'],
+      [item.steps, 'number', '#,##0'], [item.weight ?? '', 'number', '#,##0.0'],
+      [item.sleep ?? '', 'number', '#,##0.0'], [item.sessions, 'number', '#,##0'],
+      [item.compliance == null ? '' : item.compliance / 100, 'number', '0%']
+    ];
+    rows.push({ values: values.map(([value, type, pattern], column) => {
+      const format = googleSheetsFormat({
+        background,
+        align: column === 0 ? 'LEFT' : 'RIGHT',
+        numberPattern: pattern,
+        numberType: type === 'date' ? 'DATE' : 'NUMBER'
+      });
+      if (type === 'date') format.numberFormat = { type: 'DATE', pattern };
+      return googleSheetsCell(value, { type, format });
+    }) });
+  });
+
+  return {
+    name: 'Resumen', rows, columnCount,
+    widths: [105, 95, 100, 120, 90, 95, 100, 90, 90, 90, 115],
+    freezeRows: 8,
+    filter: { startRowIndex: 7, endRowIndex: Math.max(8, rows.length), startColumnIndex: 0, endColumnIndex: columnCount },
+    merges: [
+      { startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 11 },
+      { startRowIndex: 1, endRowIndex: 2, startColumnIndex: 0, endColumnIndex: 11 },
+      { startRowIndex: 2, endRowIndex: 3, startColumnIndex: 0, endColumnIndex: 11 },
+      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 0, endColumnIndex: 2 },
+      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 2, endColumnIndex: 4 },
+      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 4, endColumnIndex: 6 },
+      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 6, endColumnIndex: 8 },
+      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 8, endColumnIndex: 11 },
+      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 0, endColumnIndex: 2 },
+      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 2, endColumnIndex: 4 },
+      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 4, endColumnIndex: 6 },
+      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 6, endColumnIndex: 8 },
+      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 8, endColumnIndex: 11 },
+      { startRowIndex: 6, endRowIndex: 7, startColumnIndex: 0, endColumnIndex: 11 }
+    ],
+    rowHeights: { 0: 36, 1: 24, 2: 22, 3: 21, 4: 32, 5: 12, 6: 22, 7: 28 },
+    dataRowHeight: 25
+  };
+}
+
+function buildProfessionalGoogleSheetsModel(data) {
+  const standard = (name, title, columns, rows, options = {}) => buildGoogleSheetsDataTab(data, { name, title, columns, rows, ...options });
+  const bodyColumns = [
+    { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+    ...data.bodyMeasurementKeys.map(key => ({
+      header: data.bodyMeasurementLabels[key] || key.replace(/_/g, ' '),
+      key, type: 'number', width: 115, numberPattern: '#,##0.0'
+    })),
+    { header: 'Notas', key: 'notes', width: 290, wrap: true }
+  ];
+  return [
+    buildGoogleSheetsSummaryTab(data),
+    standard('Alimentación', 'Alimentación', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Comida', key: 'meal', width: 125 },
+      { header: 'Alimento', key: 'food', width: 255, wrap: true },
+      { header: 'Calorías', key: 'calories', type: 'number', width: 95, numberPattern: '#,##0' },
+      { header: 'Proteínas', key: 'protein', type: 'number', width: 95, numberPattern: '#,##0.0' },
+      { header: 'Carbohidratos', key: 'carbs', type: 'number', width: 115, numberPattern: '#,##0.0' },
+      { header: 'Grasas', key: 'fat', type: 'number', width: 90, numberPattern: '#,##0.0' },
+      { header: 'Hora', key: 'time', width: 80, align: 'CENTER' },
+      { header: 'Estado', key: 'status', width: 145, align: 'CENTER' }
+    ], data.meals, { statusKey: 'status', rowHeight: 30 }),
+    standard('Suplementos', 'Suplementos', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Nombre', key: 'name', width: 190 },
+      { header: 'Objetivo', key: 'objective', width: 110 },
+      { header: 'Consumido', key: 'consumed', width: 110 },
+      { header: 'Unidad', key: 'unit', width: 110 },
+      { header: 'Estado', key: 'status', width: 120, align: 'CENTER' }
+    ], data.supplements, { statusKey: 'status' }),
+    standard('Entrenamiento', 'Entrenamiento', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Sesión', key: 'session', width: 155 },
+      { header: 'Ejercicio', key: 'exercise', width: 195 },
+      { header: 'Serie', key: 'set', type: 'number', width: 70, numberPattern: '#,##0' },
+      { header: 'Peso', key: 'weight', type: 'number', width: 85, numberPattern: '#,##0.0' },
+      { header: 'Repeticiones', key: 'reps', type: 'number', width: 105, numberPattern: '#,##0' },
+      { header: 'Volumen', key: 'volume', type: 'number', width: 100, numberPattern: '#,##0.0' },
+      { header: 'Tiempo', key: 'time', type: 'number', width: 90, numberPattern: '#,##0 "min"' },
+      { header: 'Notas', key: 'notes', width: 270, wrap: true, transform: (value, item) => [item.effort, value, item.isPr ? 'PR' : ''].filter(Boolean).join(' · ') }
+    ], data.training, { rowHeight: 32 }),
+    standard('Peso y medidas', 'Peso y medidas', bodyColumns, data.body, { rowHeight: 32 }),
+    standard('Hábitos', 'Hábitos', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Hábito', key: 'habit', width: 205 },
+      { header: 'Objetivo', key: 'objective', type: 'number', width: 100, numberPattern: '#,##0.0' },
+      { header: 'Realizado', key: 'actual', type: 'number', width: 100, numberPattern: '#,##0.0' },
+      { header: 'Unidad', key: 'unit', width: 100 },
+      { header: 'Estado', key: 'status', width: 115, align: 'CENTER' },
+      { header: 'Origen', key: 'source', width: 145 }
+    ], data.habits, { statusKey: 'status' }),
+    standard('Notas', 'Notas y contexto', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Título', key: 'title', width: 180 },
+      { header: 'Contenido', key: 'content', width: 390, wrap: true },
+      { header: 'Estado de ánimo', key: 'mood', width: 135 },
+      { header: 'Origen', key: 'source', width: 125 }
+    ], data.notes, { rowHeight: 38 })
+  ];
+}
+
+function googleSheetsDocumentTitle(data) {
+  return `AA Follow · ${data.meta.startDate}${data.meta.startDate === data.meta.endDate ? '' : ` a ${data.meta.endDate}`}`;
+}
+
+function odsRgbHex(styleColor) {
+  const rgb = styleColor?.rgbColor || styleColor;
+  if (!rgb || typeof rgb !== 'object') return null;
+  const channel = value => Math.max(0, Math.min(255, Math.round((Number(value) || 0) * 255))).toString(16).padStart(2, '0');
+  return `${channel(rgb.red)}${channel(rgb.green)}${channel(rgb.blue)}`.toUpperCase();
+}
+
+function odsFormulaResult(data, model, rowIndex, columnIndex) {
+  if (model.name !== 'Resumen' || rowIndex !== 4) return 0;
+  const values = {
+    0: data.summary.calories,
+    2: data.summary.protein,
+    4: data.summary.waterAverage ?? data.summary.waterTotal ?? 0,
+    6: data.summary.stepsAverage ?? data.summary.stepsTotal ?? 0,
+    8: (data.summary.compliance ?? 0) / 100
+  };
+  return values[columnIndex] ?? 0;
+}
+
+const JSZIP_ODS_URL = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+const ODS_MIME_TYPE = 'application/vnd.oasis.opendocument.spreadsheet';
+let jsZipOdsLibraryPromise = null;
+
+function ensureJsZipOdsLibrary() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  if (jsZipOdsLibraryPromise) return jsZipOdsLibraryPromise;
+  jsZipOdsLibraryPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = JSZIP_ODS_URL;
+    script.async = true;
+    script.dataset.jsZipOdsLibrary = 'true';
+    script.onload = () => window.JSZip
+      ? resolve(window.JSZip)
+      : reject(new Error('El empaquetador de hojas no respondió correctamente'));
+    script.onerror = () => reject(new Error('No se pudo cargar el generador de hojas. Revisa tu conexión.'));
+    document.head.appendChild(script);
+  }).catch(error => {
+    jsZipOdsLibraryPromise = null;
+    document.querySelector('[data-js-zip-ods-library="true"]')?.remove();
+    throw error;
+  });
+  return jsZipOdsLibraryPromise;
+}
+
+function odsXml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'
+  }[character]));
+}
+
+function odsParagraphs(value) {
+  const lines = String(value ?? '').split(/\r?\n/);
+  return lines.map(line => `<text:p>${odsXml(line)}</text:p>`).join('') || '<text:p/>';
+}
+
+function odsNumberStyleXml(name, numberFormat = {}) {
+  const pattern = String(numberFormat.pattern || '');
+  if (numberFormat.type === 'DATE') {
+    return `<number:date-style style:name="${name}"><number:day number:style="long"/><number:text>/</number:text><number:month number:style="long"/><number:text>/</number:text><number:year number:style="long"/></number:date-style>`;
+  }
+  const decimalPlaces = pattern.includes('.0') ? 1 : 0;
+  if (pattern.includes('%')) {
+    return `<number:percentage-style style:name="${name}"><number:number number:decimal-places="${decimalPlaces}" number:min-integer-digits="1"/><number:text>%</number:text></number:percentage-style>`;
+  }
+  const suffix = pattern.match(/"([^"]+)"/)?.[1] || '';
+  return `<number:number-style style:name="${name}"><number:number number:decimal-places="${decimalPlaces}" number:min-integer-digits="1" number:grouping="true"/>${suffix ? `<number:text> ${odsXml(suffix)}</number:text>` : ''}</number:number-style>`;
+}
+
+function odsAutomaticStyleRegistry(models) {
+  const cellStyles = new Map();
+  const numberStyles = new Map();
+  const registerNumber = numberFormat => {
+    if (!numberFormat?.pattern) return '';
+    const key = JSON.stringify(numberFormat);
+    if (!numberStyles.has(key)) numberStyles.set(key, { name: `N${numberStyles.size + 1}`, numberFormat });
+    return numberStyles.get(key).name;
+  };
+  const registerCell = format => {
+    const key = JSON.stringify(format || {});
+    if (!cellStyles.has(key)) {
+      cellStyles.set(key, {
+        name: `ce${cellStyles.size + 1}`,
+        format: format || {},
+        numberStyle: registerNumber(format?.numberFormat)
+      });
+    }
+    return cellStyles.get(key).name;
+  };
+  models.forEach(model => model.rows.forEach(row => row.values.forEach(cell => registerCell(cell.userEnteredFormat))));
+  return { cellStyles, numberStyles, registerCell };
+}
+
+function odsCellStyleXml(entry) {
+  const format = entry.format || {};
+  const text = format.textFormat || {};
+  const background = odsRgbHex(format.backgroundColorStyle);
+  const foreground = odsRgbHex(text.foregroundColorStyle);
+  const border = odsRgbHex(format.borders?.bottom?.colorStyle);
+  const attributes = [
+    `style:name="${entry.name}"`,
+    'style:family="table-cell"',
+    'style:parent-style-name="Default"',
+    entry.numberStyle ? `style:data-style-name="${entry.numberStyle}"` : ''
+  ].filter(Boolean).join(' ');
+  const cellProperties = [
+    background ? `fo:background-color="#${background}"` : '',
+    format.wrapStrategy === 'WRAP' ? 'fo:wrap-option="wrap"' : '',
+    format.verticalAlignment ? `style:vertical-align="${format.verticalAlignment === 'MIDDLE' ? 'middle' : String(format.verticalAlignment).toLowerCase()}"` : '',
+    format.borders?.bottom ? `fo:border-bottom="0.5pt solid #${border || 'E5EAF1'}"` : ''
+  ].filter(Boolean).join(' ');
+  const alignment = ({ LEFT: 'start', RIGHT: 'end', CENTER: 'center' })[format.horizontalAlignment] || 'start';
+  const textProperties = [
+    `style:font-name="${odsXml(text.fontFamily || 'Arial')}"`,
+    `fo:font-family="${odsXml(text.fontFamily || 'Arial')}"`,
+    `fo:font-size="${Number(text.fontSize) || 10}pt"`,
+    text.bold ? 'fo:font-weight="bold"' : '',
+    foreground ? `fo:color="#${foreground}"` : ''
+  ].filter(Boolean).join(' ');
+  return `<style:style ${attributes}><style:table-cell-properties ${cellProperties}/><style:paragraph-properties fo:text-align="${alignment}"/><style:text-properties ${textProperties}/></style:style>`;
+}
+
+function odsCellXml(sourceCell, styleName, options = {}) {
+  const entered = sourceCell.userEnteredValue || {};
+  const format = sourceCell.userEnteredFormat || {};
+  const span = [
+    options.columns > 1 ? `table:number-columns-spanned="${options.columns}"` : '',
+    options.rows > 1 ? `table:number-rows-spanned="${options.rows}"` : ''
+  ].filter(Boolean).join(' ');
+  const base = [`table:style-name="${styleName}"`, span].filter(Boolean).join(' ');
+  if (entered.numberValue != null || entered.formulaValue) {
+    const number = entered.formulaValue ? options.formulaResult : entered.numberValue;
+    if (format.numberFormat?.type === 'DATE') {
+      const date = new Date((Number(number) - 25569) * 86400000).toISOString().slice(0, 10);
+      const [year, month, day] = date.split('-');
+      return `<table:table-cell ${base} office:value-type="date" office:date-value="${date}"><text:p>${day}/${month}/${year}</text:p></table:table-cell>`;
+    }
+    const valueType = String(format.numberFormat?.pattern || '').includes('%') ? 'percentage' : 'float';
+    return `<table:table-cell ${base} office:value-type="${valueType}" office:value="${Number(number) || 0}"><text:p>${Number(number) || 0}</text:p></table:table-cell>`;
+  }
+  if (entered.boolValue != null) {
+    return `<table:table-cell ${base} office:value-type="boolean" office:boolean-value="${entered.boolValue ? 'true' : 'false'}"><text:p>${entered.boolValue ? 'TRUE' : 'FALSE'}</text:p></table:table-cell>`;
+  }
+  return `<table:table-cell ${base} office:value-type="string">${odsParagraphs(entered.stringValue)}</table:table-cell>`;
+}
+
+function odsSheetRangeAddress(model) {
+  const quote = name => `'${String(name).replace(/'/g, "''")}'`;
+  const start = `${exportExcelColumnLetter(model.filter.startColumnIndex + 1)}${model.filter.startRowIndex + 1}`;
+  const end = `${exportExcelColumnLetter(model.filter.endColumnIndex)}${model.filter.endRowIndex}`;
+  return `${quote(model.name)}.${start}:${quote(model.name)}.${end}`;
+}
+
+function buildProfessionalOdsContentXml(data, models) {
+  const registry = odsAutomaticStyleRegistry(models);
+  const numberStyles = [...registry.numberStyles.values()].map(entry => odsNumberStyleXml(entry.name, entry.numberFormat)).join('');
+  const cellStyles = [...registry.cellStyles.values()].map(odsCellStyleXml).join('');
+  const columnStyles = [];
+  const rowStyles = [];
+  const tables = models.map((model, modelIndex) => {
+    const mergeStarts = new Map();
+    const covered = new Set();
+    model.merges.forEach(range => {
+      mergeStarts.set(`${range.startRowIndex}:${range.startColumnIndex}`, {
+        rows: range.endRowIndex - range.startRowIndex,
+        columns: range.endColumnIndex - range.startColumnIndex
+      });
+      for (let row = range.startRowIndex; row < range.endRowIndex; row += 1) {
+        for (let column = range.startColumnIndex; column < range.endColumnIndex; column += 1) {
+          if (row !== range.startRowIndex || column !== range.startColumnIndex) covered.add(`${row}:${column}`);
+        }
+      }
+    });
+    const columns = model.widths.map((width, columnIndex) => {
+      const name = `co${modelIndex + 1}_${columnIndex + 1}`;
+      columnStyles.push(`<style:style style:name="${name}" style:family="table-column"><style:table-column-properties style:column-width="${Math.max(1.5, width * 0.026458).toFixed(3)}cm" style:use-optimal-column-width="false"/></style:style>`);
+      return `<table:table-column table:style-name="${name}"/>`;
+    }).join('');
+    const rows = model.rows.map((row, rowIndex) => {
+      const rowStyle = `ro${modelIndex + 1}_${rowIndex + 1}`;
+      const height = model.rowHeights[rowIndex] || (rowIndex >= model.freezeRows ? model.dataRowHeight : 22);
+      rowStyles.push(`<style:style style:name="${rowStyle}" style:family="table-row"><style:table-row-properties style:row-height="${Math.max(0.45, height * 0.026458).toFixed(3)}cm" style:use-optimal-row-height="false"/></style:style>`);
+      const cells = row.values.map((cell, columnIndex) => {
+        const key = `${rowIndex}:${columnIndex}`;
+        if (covered.has(key)) return '<table:covered-table-cell/>';
+        const merge = mergeStarts.get(key) || { rows: 1, columns: 1 };
+        return odsCellXml(cell, registry.registerCell(cell.userEnteredFormat), {
+          ...merge,
+          formulaResult: odsFormulaResult(data, model, rowIndex, columnIndex)
+        });
+      }).join('');
+      return `<table:table-row table:style-name="${rowStyle}">${cells}</table:table-row>`;
+    }).join('');
+    return `<table:table table:name="${odsXml(model.name)}">${columns}${rows}</table:table>`;
+  }).join('');
+  const filters = models.map((model, index) => `<table:database-range table:name="AAFollowFilter${index + 1}" table:target-range-address="${odsXml(odsSheetRangeAddress(model))}" table:display-filter-buttons="true" table:contains-header="true"/>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:automatic-styles>${numberStyles}${cellStyles}${columnStyles.join('')}${rowStyles.join('')}</office:automatic-styles><office:body><office:spreadsheet><table:calculation-settings table:automatic-find-labels="false"/>${tables}<table:database-ranges>${filters}</table:database-ranges></office:spreadsheet></office:body></office:document-content>`;
+}
+
+function buildProfessionalOdsStylesXml() {
+  return `<?xml version="1.0" encoding="UTF-8"?><office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:styles><style:default-style style:family="table-cell"><style:table-cell-properties style:vertical-align="middle"/><style:text-properties style:font-name="Arial" fo:font-family="Arial" fo:font-size="10pt"/></style:default-style><style:style style:name="Default" style:family="table-cell"/></office:styles><office:automatic-styles/><office:master-styles/></office:document-styles>`;
+}
+
+function buildProfessionalOdsManifestXml() {
+  return `<?xml version="1.0" encoding="UTF-8"?><manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.3"><manifest:file-entry manifest:full-path="/" manifest:version="1.3" manifest:media-type="${ODS_MIME_TYPE}"/><manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/></manifest:manifest>`;
+}
+
+function buildProfessionalOdsMetaXml(data) {
+  return `<?xml version="1.0" encoding="UTF-8"?><office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" office:version="1.3"><office:meta><dc:title>${odsXml(googleSheetsDocumentTitle(data))}</dc:title><dc:creator>AA Follow</dc:creator><meta:creation-date>${odsXml(data.meta.generatedAt)}</meta:creation-date><meta:generator>AA Follow ${odsXml(data.meta.version)}</meta:generator></office:meta></office:document-meta>`;
+}
+
+async function buildProfessionalOdsArchive(data) {
+  if (!window.JSZip) throw new Error('No se pudo cargar el generador de hojas');
+  const models = buildProfessionalGoogleSheetsModel(data);
+  const zip = new window.JSZip();
+  zip.file('mimetype', ODS_MIME_TYPE, { compression: 'STORE' });
+  zip.file('content.xml', buildProfessionalOdsContentXml(data, models));
+  zip.file('styles.xml', buildProfessionalOdsStylesXml());
+  zip.file('meta.xml', buildProfessionalOdsMetaXml(data));
+  zip.folder('META-INF').file('manifest.xml', buildProfessionalOdsManifestXml());
+  return zip.generateAsync({
+    type: 'arraybuffer', mimeType: ODS_MIME_TYPE, compression: 'DEFLATE', compressionOptions: { level: 6 }
+  });
+}
+
+async function exportSelectedGoogleSpreadsheet() {
+  const data = currentExportData();
+  if (!data) return;
+  const button = document.getElementById('export-ods-button');
+  const title = button?.querySelector('.export-format-copy strong');
+  const previousTitle = title?.textContent || 'Google Sheets (.ods)';
+  if (button) {
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+  }
+  if (title) title.textContent = 'Preparando hoja...';
+  try {
+    await ensureJsZipOdsLibrary();
+    const buffer = await buildProfessionalOdsArchive(data);
+    const blob = new Blob([buffer], { type: ODS_MIME_TYPE });
+    const filename = `aa-follow-${data.meta.startDate}${data.meta.startDate === data.meta.endDate ? '' : `_a_${data.meta.endDate}`}.ods`;
+    exportDownloadBlob(filename, blob);
+    hideModal('modal-export');
+    toast('Hoja compatible con Google descargada');
+  } catch (error) {
+    console.error(error);
+    toast(error.message || 'No se pudo generar la hoja', 'err');
+  } finally {
+    if (title) title.textContent = previousTitle;
+    if (button) {
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════
