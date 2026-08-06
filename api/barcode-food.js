@@ -1,3 +1,10 @@
+const {
+  findFoodIdByBarcode,
+  getFoodById,
+  isFatSecretConfigured,
+  publicFatSecretError
+} = require('../lib/fatsecret');
+
 const BARCODE_PATTERN = /^\d{8,14}$/;
 
 function sendJson(res, status, data) {
@@ -35,6 +42,21 @@ module.exports = async function handler(req, res) {
   const code = String(req.query?.code || requestUrl.searchParams.get('code') || '').trim();
   if (!BARCODE_PATTERN.test(code)) return sendJson(res, 400, { error: 'Codigo EAN o UPC invalido' });
 
+  let fatSecretWarning = '';
+  if (isFatSecretConfigured()) {
+    try {
+      const foodId = await findFoodIdByBarcode(code);
+      if (foodId) {
+        const product = await getFoodById(foodId, { code });
+        res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+        return sendJson(res, 200, { product, source: 'FatSecret' });
+      }
+    } catch (error) {
+      fatSecretWarning = publicFatSecretError(error).message;
+      console.warn('FatSecret barcode fallback:', publicFatSecretError(error).code);
+    }
+  }
+
   const fields = [
     'code', 'product_name', 'product_name_es', 'generic_name', 'brands',
     'serving_size', 'serving_quantity', 'serving_quantity_unit',
@@ -55,7 +77,11 @@ module.exports = async function handler(req, res) {
     const payload = await response.json().catch(() => ({}));
     const product = payload.product;
     if (!response.ok || payload.status !== 'success' || !product) {
-      return sendJson(res, 404, { error: 'Producto no encontrado en Open Food Facts' });
+      return sendJson(res, 404, {
+        error: isFatSecretConfigured()
+          ? 'Producto no encontrado en FatSecret ni Open Food Facts'
+          : 'Producto no encontrado en Open Food Facts'
+      });
     }
 
     const nutrients = product.nutriments || {};
@@ -68,6 +94,13 @@ module.exports = async function handler(req, res) {
     const carbs = numberOrNull(nutrients.carbohydrates_100g);
     const fat = numberOrNull(nutrients.fat_100g);
     const name = product.product_name_es || product.product_name || product.generic_name || `Producto ${code}`;
+    const per100g = {
+      calories: rounded(calories),
+      protein: rounded(protein),
+      carbs: rounded(carbs),
+      fat: rounded(fat)
+    };
+    const initialServingGrams = servingGrams(product) || 100;
 
     res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
     return sendJson(res, 200, {
@@ -76,17 +109,21 @@ module.exports = async function handler(req, res) {
         name: String(name).slice(0, 180),
         brands: String(product.brands || '').slice(0, 160),
         serving_size: String(product.serving_size || '').slice(0, 80),
-        serving_grams: servingGrams(product),
+        serving_grams: initialServingGrams,
+        serving_amount: initialServingGrams,
+        serving_unit: 'g',
         image_url: product.image_front_small_url || '',
-        per_100g: {
-          calories: rounded(calories),
-          protein: rounded(protein),
-          carbs: rounded(carbs),
-          fat: rounded(fat)
-        },
+        source: 'Open Food Facts',
+        reference_amount: 100,
+        reference_unit: 'g',
+        per_reference: per100g,
+        per_100g: per100g,
+        servings: [],
         nutrition_available: [calories, protein, carbs, fat].some(value => value != null)
       },
-      source: 'Open Food Facts'
+      source: 'Open Food Facts',
+      fallback: Boolean(isFatSecretConfigured()),
+      provider_warning: fatSecretWarning
     });
   } catch (err) {
     const message = err.name === 'AbortError' ? 'La consulta del producto tardo demasiado' : 'No se pudo consultar Open Food Facts';
