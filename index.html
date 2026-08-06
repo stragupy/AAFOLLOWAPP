@@ -11952,6 +11952,23 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
   font-size: 0.72rem;
 }
 
+.food-db-result .food-db-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.food-db-result .food-db-meta,
+.food-db-result .food-db-nutrition {
+  display: block;
+  color: #8f9491;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.food-db-result .food-db-nutrition {
+  color: #b2b7b4;
+}
+
 .food-db-result svg {
   width: 17px;
   height: 17px;
@@ -12629,17 +12646,17 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
         <div class="form-grid fg2 mt-3">
           <div class="form-row">
             <label class="form-label">Buscar por alimento o marca</label>
-            <input id="food-database-query" autocomplete="off" placeholder="Ej: yogur natural, avena o pechuga de pollo" onkeydown="if(event.key==='Enter') searchFoodDatabase()">
+            <input id="food-database-query" autocomplete="off" placeholder="Ej: Soprole, Colun, avena o huevo revuelto" onkeydown="if(event.key==='Enter') searchFoodDatabase()">
           </div>
           <div class="form-row">
-            <label class="form-label">Base nutricional</label>
-            <button class="btn btn-ghost" type="button" onclick="searchFoodDatabase()">Buscar en FatSecret</button>
+            <label class="form-label">Base regional</label>
+            <button class="btn btn-ghost" type="button" onclick="searchFoodDatabase()">Buscar alimento</button>
           </div>
         </div>
         <div id="food-database-results" class="food-db-results"></div>
         <div id="barcode-reader" style="display:none; width:100%; max-width:520px; min-height:280px; margin:16px auto 0; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-md); background:#0f1117"></div>
         <div id="barcode-result" class="mt-3"><div class="empty">Sin producto consultado.</div></div>
-        <div class="fatsecret-attribution"><a href="https://platform.fatsecret.com">Powered by fatsecret Platform API</a></div>
+        <div class="fatsecret-attribution"><a href="https://platform.fatsecret.com">Powered by fatsecret Platform API</a><span aria-hidden="true"> · </span><a href="https://cl.openfoodfacts.org">Productos chilenos: Open Food Facts</a></div>
       </div>
       <div class="g2 mb">
         <div class="card">
@@ -21121,8 +21138,12 @@ function renderFoodDatabaseResults(items, message = '') {
     el.innerHTML = '';
   } else {
     el.innerHTML = foodDatabaseResults.map(item => `
-      <button class="food-db-result" type="button" onclick="selectFoodDatabaseResult('${esc(item.food_id)}')">
-        <span><strong style="display:block;color:var(--text);font-size:.8rem">${esc(item.name)}</strong>${esc(item.brand || item.type || 'Alimento genérico')}</span>
+      <button class="food-db-result" type="button" onclick="selectFoodDatabaseResult('${esc(item.lookup_id || item.food_id)}')">
+        <span class="food-db-copy">
+          <strong style="display:block;color:var(--text);font-size:.8rem">${esc(item.name)}</strong>
+          <span class="food-db-meta">${esc([item.brand || item.type || 'Alimento genérico', item.source].filter(Boolean).join(' · '))}</span>
+          ${item.description ? `<span class="food-db-nutrition">${esc(item.description)}</span>` : ''}
+        </span>
         <i data-lucide="chevron-right" aria-hidden="true"></i>
       </button>`).join('');
   }
@@ -21134,27 +21155,35 @@ async function searchFoodDatabase() {
   const query = String(input?.value || '').trim();
   if (query.length < 2) return toast('Escribe al menos 2 caracteres', 'err');
   if (location.protocol === 'file:') return toast('La búsqueda funciona cuando la app está subida a Vercel', 'err');
-  renderFoodDatabaseResults([], 'Buscando en FatSecret...');
+  renderFoodDatabaseResults([], 'Buscando productos chilenos y alimentos genéricos...');
   try {
     const response = await fetch(`/api/food-search?q=${encodeURIComponent(query)}`);
     const raw = await response.text();
     let data = {};
     try { data = raw ? JSON.parse(raw) : {}; } catch {}
-    if (!response.ok) throw new Error(data.error || 'No se pudo consultar FatSecret');
+    if (!response.ok) throw new Error(data.error || 'No se pudo consultar la base nutricional');
     const results = Array.isArray(data.results) ? data.results : [];
-    renderFoodDatabaseResults(results, results.length ? '' : 'No se encontraron coincidencias. Prueba con otra marca o descripción.');
+    renderFoodDatabaseResults(results, results.length ? '' : 'No encontramos coincidencias chilenas con información nutricional completa. Prueba con la marca o el nombre exacto.');
   } catch (error) {
-    renderFoodDatabaseResults([], error.message || 'No se pudo consultar FatSecret');
-    toast(error.message || 'No se pudo consultar FatSecret', 'err');
+    renderFoodDatabaseResults([], error.message || 'No se pudo consultar la base nutricional');
+    toast(error.message || 'No se pudo consultar la base nutricional', 'err');
   }
 }
 
-async function selectFoodDatabaseResult(foodId) {
-  if (!/^\d+$/.test(String(foodId || ''))) return;
+async function selectFoodDatabaseResult(resultId) {
+  const id = String(resultId || '');
+  let endpoint = '';
+  if (/^off:\d{8,14}$/.test(id)) {
+    endpoint = `/api/barcode-food?code=${encodeURIComponent(id.slice(4))}`;
+  } else {
+    const foodId = id.replace(/^fs:/, '');
+    if (!/^\d+$/.test(foodId)) return;
+    endpoint = `/api/food-search?food_id=${encodeURIComponent(foodId)}`;
+  }
   const previousResults = foodDatabaseResults.slice();
   renderFoodDatabaseResults([], 'Cargando porciones y macronutrientes...');
   try {
-    const response = await fetch(`/api/food-search?food_id=${encodeURIComponent(foodId)}`);
+    const response = await fetch(endpoint);
     const raw = await response.text();
     let data = {};
     try { data = raw ? JSON.parse(raw) : {}; } catch {}
@@ -21162,7 +21191,7 @@ async function selectFoodDatabaseResult(foodId) {
     barcodeProduct = data.product;
     renderBarcodeProduct(barcodeProduct);
     renderFoodDatabaseResults([]);
-    toast('Alimento y porciones cargados desde FatSecret');
+    toast(`Alimento cargado desde ${barcodeProduct.source || data.source || 'la base nutricional'}`);
   } catch (error) {
     renderFoodDatabaseResults(previousResults, '');
     toast(error.message || 'No se pudo cargar el alimento', 'err');
