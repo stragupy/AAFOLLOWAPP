@@ -11976,6 +11976,111 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
   color: #8f9491;
 }
 
+.favorite-foods-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.favorite-foods-title svg {
+  width: 16px;
+  height: 16px;
+  color: #eab24b;
+  fill: rgba(234, 178, 75, 0.18);
+}
+
+.favorite-icon-button {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #3a3d3b;
+  border-radius: 50%;
+  background: #242625;
+  color: #a4aaa6;
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease, color .16s ease, transform .16s ease;
+}
+
+.favorite-icon-button:hover,
+.favorite-icon-button:focus-visible {
+  border-color: #6c706d;
+  background: #2b2e2c;
+  color: #f1f3f2;
+  transform: translateY(-1px);
+}
+
+.favorite-icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.favorite-icon-button.is-favorite {
+  border-color: rgba(234, 178, 75, 0.48);
+  background: rgba(234, 178, 75, 0.11);
+  color: #f2bd55;
+}
+
+.favorite-icon-button.is-favorite svg {
+  fill: currentColor;
+}
+
+.favorite-product-copy {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.favorite-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.favorite-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.nutrition-meal-actions .favorite-icon-button {
+  flex-basis: 34px;
+  width: 34px;
+  height: 34px;
+}
+
+@media (max-width: 600px) {
+  .favorite-foods-panel > .flex:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .favorite-foods-panel > .flex:first-child .btn {
+    width: 100%;
+  }
+
+  .nutrition-meal-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nutrition-meal-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .nutrition-meal-actions > span {
+    margin-right: auto;
+  }
+}
+
 
 </style>
 </head>
@@ -12658,6 +12763,13 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
         <div id="barcode-result" class="mt-3"><div class="empty">Sin producto consultado.</div></div>
         <div class="fatsecret-attribution"><a href="https://platform.fatsecret.com">Powered by fatsecret Platform API</a><span aria-hidden="true"> · </span><a href="https://cl.openfoodfacts.org">Productos chilenos: Open Food Facts</a></div>
       </div>
+      <div class="card mb favorite-foods-panel">
+        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
+          <div class="card-title favorite-foods-title" style="margin:0"><i data-lucide="star" aria-hidden="true"></i><span>Alimentos favoritos</span></div>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="showModal('modal-meal')">+ Agregar manualmente</button>
+        </div>
+        <div id="meal-templates"><div class="empty">Marca un alimento con la estrella para encontrarlo aquí.</div></div>
+      </div>
       <div class="g2 mb">
         <div class="card">
           <div class="card-title">Calorías</div>
@@ -12699,13 +12811,6 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
         </div>
         <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveSupplement()">Agregar suplemento</button></div>
         <div id="supplements-list" class="mt-3"><div class="empty">Agrega tu suplementación diaria.</div></div>
-      </div>
-      <div class="card mt-3">
-        <div class="flex jb ai-c" style="margin-bottom:14px">
-          <div class="card-title" style="margin:0">Plantillas de comida</div>
-          <button class="btn btn-ghost btn-sm" onclick="saveMealTemplate()">Guardar alimento actual</button>
-        </div>
-        <div id="meal-templates"><div class="empty">Guarda alimentos frecuentes para cargarlos rápido.</div></div>
       </div>
     </div>
   </div>
@@ -13026,8 +13131,8 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
     </div>
     <div class="form-grid fg2" style="margin-bottom:16px">
       <div class="form-row" style="grid-column: 1 / -1">
-        <label class="form-label">Usar plantilla</label>
-        <select id="m-template" onchange="applyMealTemplate()"><option value="">Selecciona una plantilla...</option></select>
+        <label class="form-label">Usar favorito</label>
+        <select id="m-template" onchange="applyMealTemplate()"><option value="">Selecciona un alimento favorito...</option></select>
       </div>
       <div class="form-row" style="grid-column: 1 / -1">
         <label class="form-label">Comida</label>
@@ -13044,7 +13149,7 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" style="flex: 1" onclick="hideModal('modal-meal')">Cancelar</button>
-      <button class="btn btn-ghost" style="flex: 1" onclick="saveMealTemplate()">Guardar plantilla</button>
+      <button class="btn btn-ghost" style="flex: 1" onclick="saveMealTemplate()"><i data-lucide="star" aria-hidden="true"></i> Guardar favorito</button>
       <button class="btn btn-primary" id="meal-save-btn" style="flex: 1" onclick="saveMeal()">Añadir</button>
     </div>
   </div>
@@ -13351,7 +13456,7 @@ const SAFETY_COLLECTIONS = new Set([
 
 const SAFETY_COLLECTION_LABELS = {
   bodylogs: 'Cuerpo', routines: 'Rutina', sessions: 'Entreno', meals: 'Comida',
-  meal_templates: 'Plantilla', goals: 'Objetivo', notes: 'Nota',
+  meal_templates: 'Favorito', goals: 'Objetivo', notes: 'Nota',
   checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
   progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio',
   calendar_events: 'Evento', checking_reviews: 'Revisión semanal'
@@ -14940,7 +15045,7 @@ function fillMealTemplates() {
   const sel = document.getElementById('m-template');
   if (!sel) return;
   const templates = DB.get('meal_templates') || [];
-  sel.innerHTML = '<option value="">Selecciona una plantilla...</option>' + templates.map(t => `<option value="${t.id}">${esc(t.food_item)} - ${t.calories} kcal</option>`).join('');
+  sel.innerHTML = '<option value="">Selecciona un alimento favorito...</option>' + templates.map(t => `<option value="${t.id}">${esc(t.food_item)} - ${t.calories} kcal</option>`).join('');
 }
 
 function cloudSetStatus(message) {
@@ -16096,7 +16201,7 @@ const APP_AI_MAP_COLLECTIONS = new Set([
 
 const APP_AI_COLLECTION_LABELS = {
   bodylogs: 'Cuerpo', routines: 'Rutinas', sessions: 'Entrenamientos', meals: 'Nutrición',
-  meal_templates: 'Plantillas de comida', goals: 'Objetivos', checking_cardio: 'Cardio',
+  meal_templates: 'Alimentos favoritos', goals: 'Objetivos', checking_cardio: 'Cardio',
   checking_goals: 'Check-in', supplements: 'Suplementos', calendar_events: 'Calendario',
   reminders: 'Recordatorios', checking_reviews: 'Revisión semanal', nutconfig: 'Metas nutricionales',
   daily_water: 'Agua', daily_wellness: 'Sueño y energía', free_days: 'Días libres',
@@ -18390,7 +18495,7 @@ function exportWeeklyProfessionalReportLegacy() {
 // ═══════════════════════════════════════════════════
 // EXPORTACIÓN PROFESIONAL — FUENTE ÚNICA DE DATOS
 // ═══════════════════════════════════════════════════
-const AA_FOLLOW_APP_VERSION = '1.0.0';
+const AA_FOLLOW_APP_VERSION = '1.1.0';
 const EXPORT_DAILY_TARGETS = Object.freeze({ water: 2500, steps: 10000, sleep: 8 });
 const EXPORT_BODY_LABELS = {
   weight: 'Peso', body_fat: 'Grasa corporal', muscle_mass: 'Masa muscular',
@@ -18498,9 +18603,9 @@ function exportSupplementProgress(checkValue, dose, freeDay = false) {
 }
 
 function exportStatusClass(status) {
-  if (status === 'Completado' || status === 'Cumplido' || status === 'Registrado') return 'complete';
-  if (status === 'Parcial' || status === 'En curso') return 'partial';
-  if (status === 'No evaluado') return 'neutral';
+  if (['Completado', 'Cumplido', 'Registrado', 'Mejora', 'Subió'].includes(status)) return 'complete';
+  if (['Parcial', 'En curso', 'Mixto', 'Ajuste de carga'].includes(status)) return 'partial';
+  if (['No evaluado', 'Sin cambio', 'Primera referencia'].includes(status)) return 'neutral';
   return 'pending';
 }
 
@@ -18515,6 +18620,76 @@ function exportComplianceScore(parts) {
   return valid.length ? Math.round((valid.reduce((sum, value) => sum + Math.max(0, Math.min(1, value)), 0) / valid.length) * 100) : null;
 }
 
+function exportDayName(date) {
+  const value = localDate(date).toLocaleDateString('es-AR', { weekday: 'long' });
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
+}
+
+function exportTrainingProgressRows(allSessions, dateSet, endDate) {
+  const history = new Map();
+  const rows = [];
+  const ordered = allSessions
+    .filter(session => session.date && session.date <= endDate)
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date) || String(a.created_at || a.id || '').localeCompare(String(b.created_at || b.id || '')));
+
+  ordered.forEach(session => {
+    const groups = new Map();
+    (session.sets || []).forEach(set => {
+      const key = exerciseGroupKey(set.exercise_name || set.exercise || set.name);
+      if (!key) return;
+      if (!groups.has(key)) groups.set(key, { name: set.exercise_name || set.exercise || set.name || 'Ejercicio', sets: [] });
+      groups.get(key).sets.push(set);
+    });
+
+    groups.forEach((group, key) => {
+      const stats = workoutStats(group.sets);
+      const current = {
+        date: session.date,
+        session: session.routine_name || session.day_name || 'Entrenamiento',
+        exercise: group.name,
+        sets: stats.sets,
+        reps: stats.reps,
+        maxWeight: exportRound(stats.maxWeight, 1),
+        maxReps: Math.max(0, ...group.sets.map(set => exportNumber(set.reps))),
+        volume: exportRound(stats.volume, 1),
+        estimated1rm: exportRound(Math.max(0, ...group.sets.map(set => estimatedOneRepMax(set.weight, set.reps))), 1),
+        isPr: group.sets.some(set => set.is_pr)
+      };
+      const previous = history.get(key) || null;
+      if (dateSet.has(session.date)) {
+        const deltaWeight = previous ? exportRound(current.maxWeight - previous.maxWeight, 1) : null;
+        const deltaReps = previous ? current.reps - previous.reps : null;
+        const deltaVolume = previous ? exportRound(current.volume - previous.volume, 1) : null;
+        const delta1rm = previous ? exportRound(current.estimated1rm - previous.estimated1rm, 1) : null;
+        let status = 'Primera referencia';
+        if (previous) {
+          if (deltaVolume > 0 || delta1rm > 0 || deltaWeight > 0) status = 'Mejora';
+          else if (deltaVolume < 0 || delta1rm < 0 || deltaWeight < 0) status = 'Bajó';
+          else if (deltaReps > 0) status = 'Subió';
+          else if (deltaReps < 0) status = 'Bajó';
+          else status = 'Sin cambio';
+          const positives = [deltaWeight, deltaReps, deltaVolume].some(value => value > 0);
+          const negatives = [deltaWeight, deltaReps, deltaVolume].some(value => value < 0);
+          if (positives && negatives && deltaVolume === 0 && delta1rm === 0) status = 'Mixto';
+        }
+        rows.push({
+          ...current,
+          previousDate: previous?.date || '',
+          deltaWeight,
+          deltaReps,
+          deltaVolume,
+          delta1rm,
+          status
+        });
+      }
+      history.set(key, current);
+    });
+  });
+
+  return rows.sort((a, b) => a.date.localeCompare(b.date) || a.exercise.localeCompare(b.exercise));
+}
+
 function collectExportData({ startDate, endDate, preset = 'custom' }) {
   const dates = exportRangeDays(startDate, endDate);
   if (!dates.length) throw new Error('Selecciona un rango de fechas válido');
@@ -18522,9 +18697,11 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
   const dateSet = new Set(dates);
   const freeDays = freeDaysMap();
   const nutritionConfig = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const allSessionsSource = DB.get('sessions') || [];
+  const allBodySource = DB.get('bodylogs') || [];
   const mealsSource = (DB.get('meals') || []).filter(item => dateSet.has(item.date));
-  const sessionsSource = (DB.get('sessions') || []).filter(item => dateSet.has(item.date));
-  const bodySource = (DB.get('bodylogs') || []).filter(item => dateSet.has(item.date));
+  const sessionsSource = allSessionsSource.filter(item => dateSet.has(item.date));
+  const bodySource = allBodySource.filter(item => dateSet.has(item.date));
   const cardioSource = (DB.get('checking_cardio') || []).filter(item => dateSet.has(item.date));
   const wellnessSource = DB.get('daily_wellness') || {};
   const waterSource = DB.get('daily_water') || {};
@@ -18560,6 +18737,7 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
       isPr: Boolean(set?.is_pr)
     }));
   }).sort((a, b) => a.date.localeCompare(b.date));
+  const trainingProgress = exportTrainingProgressRows(allSessionsSource, dateSet, endDate);
 
   const supplements = dates.flatMap(date => supplementsSource
     .filter(item => !item.created || item.created <= date)
@@ -18584,9 +18762,27 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
     if (!reservedBodyKeys.has(key) && item[key] !== '' && item[key] != null && typeof item[key] !== 'object') discoveredBodyKeys.add(key);
   }));
   const bodyMeasurementKeys = [...discoveredBodyKeys].filter(key => bodySource.some(item => item[key] !== '' && item[key] != null));
+  const bodyDeltas = new Map();
+  let previousWeight = null;
+  let previousBodyFat = null;
+  allBodySource
+    .filter(item => item.date && item.date <= endDate)
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .forEach(item => {
+      const weight = item.weight === '' || item.weight == null ? null : exportNumber(item.weight, null);
+      const bodyFat = item.body_fat === '' || item.body_fat == null ? null : exportNumber(item.body_fat, null);
+      bodyDeltas.set(item.date, {
+        weightChange: weight != null && previousWeight != null ? exportRound(weight - previousWeight, 1) : null,
+        bodyFatChange: bodyFat != null && previousBodyFat != null ? exportRound(bodyFat - previousBodyFat, 1) : null
+      });
+      if (weight != null) previousWeight = weight;
+      if (bodyFat != null) previousBodyFat = bodyFat;
+    });
   const body = bodySource.map(item => {
     const normalized = { date: item.date, notes: item.notes || '' };
     bodyMeasurementKeys.forEach(key => normalized[key] = item[key] === '' || item[key] == null ? null : exportNumber(item[key], item[key]));
+    Object.assign(normalized, bodyDeltas.get(item.date) || { weightChange: null, bodyFatChange: null });
     return normalized;
   }).sort((a, b) => a.date.localeCompare(b.date));
 
@@ -18660,6 +18856,8 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
   const daily = dates.map(date => {
     const dayMeals = meals.filter(item => item.date === date);
     const daySupplements = supplements.filter(item => item.date === date);
+    const daySessions = sessionsSource.filter(item => item.date === date);
+    const dayTraining = training.filter(item => item.date === date);
     const dayBody = [...body].reverse().find(item => item.date === date) || null;
     const wellness = wellnessSource[date] || {};
     const totals = dayMeals.reduce((sum, item) => ({
@@ -18681,14 +18879,23 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
     daySupplements.filter(item => item.status !== 'No evaluado').forEach(item => scoreParts.push(item.ratio));
     return {
       date,
+      day: exportDayName(date),
+      dayStatus: freeDays[date] ? 'Día libre' : 'Plan regular',
       freeDay: Boolean(freeDays[date]),
       meals: dayMeals.length,
-      sessions: sessionsSource.filter(item => item.date === date).length,
+      trained: daySessions.length ? 'Sí' : 'No',
+      sessions: daySessions.length,
+      trainingMinutes: exportRound(daySessions.reduce((sum, item) => sum + exportNumber(item.duration), 0)),
+      trainingVolume: exportRound(dayTraining.reduce((sum, item) => sum + item.volume, 0), 1),
+      supplementsDone: daySupplements.filter(item => item.status === 'Completado').length,
+      supplementsTotal: daySupplements.length,
+      supplementation: daySupplements.length ? `${daySupplements.filter(item => item.status === 'Completado').length}/${daySupplements.length}` : 'Sin plan',
       ...totals,
       water: exportNumber(waterSource[date]),
       steps: stepsByDate[date],
       cardioMinutes: cardioByDate[date],
       weight: dayBody?.weight ?? null,
+      weightChange: dayBody?.weightChange ?? null,
       bodyFat: dayBody?.body_fat ?? null,
       sleep: wellness.sleep == null || wellness.sleep === '' ? null : exportNumber(wellness.sleep),
       energy: wellness.energy == null || wellness.energy === '' ? null : exportNumber(wellness.energy),
@@ -18700,6 +18907,8 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
   const complianceParts = daily.filter(item => item.compliance != null).map(item => item.compliance / 100);
   checkingHabits.filter(item => item.status !== 'No evaluado').forEach(item => complianceParts.push(item.ratio));
   const latestBody = [...body].reverse().find(item => item.weight != null || item.body_fat != null) || null;
+  const bodyWeightChanges = body.map(item => item.weightChange).filter(value => value != null);
+  const bodyFatChanges = body.map(item => item.bodyFatChange).filter(value => value != null);
   const generatedAt = new Date();
   const activeUser = DB.get('activeUser');
   const userName = activeUser && String(activeUser).trim() ? String(activeUser).trim() : '';
@@ -18717,6 +18926,11 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
     bodyFat: latestBody?.body_fat ?? null,
     sessions: sessionsSource.length,
     trainingVolume: exportRound(training.reduce((sum, item) => sum + item.volume, 0), 1),
+    trainingMinutes: exportRound(sessionsSource.reduce((sum, item) => sum + exportNumber(item.duration), 0)),
+    trainingImprovements: trainingProgress.filter(item => ['Mejora', 'Subió'].includes(item.status)).length,
+    trainingRegressions: trainingProgress.filter(item => item.status === 'Bajó').length,
+    weightChange: bodyWeightChanges.length ? exportRound(bodyWeightChanges.reduce((sum, value) => sum + value, 0), 1) : null,
+    bodyFatChange: bodyFatChanges.length ? exportRound(bodyFatChanges.reduce((sum, value) => sum + value, 0), 1) : null,
     compliance: exportComplianceScore(complianceParts),
     freeDays: daily.filter(item => item.freeDay).length
   };
@@ -18742,6 +18956,7 @@ function collectExportData({ startDate, endDate, preset = 'custom' }) {
     meals,
     supplements,
     training,
+    trainingProgress,
     body,
     bodyMeasurementKeys,
     bodyMeasurementLabels: { ...EXPORT_BODY_LABELS },
@@ -18939,8 +19154,87 @@ function exportWeeklyProfessionalReport() {
   openProfessionalPdfReport(collectExportData({ ...range, preset: 'week' }));
 }
 
+let exportBrandLogoPromise = null;
+
+function exportLoadImage(source) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('No se pudo preparar el logo'));
+    image.src = source;
+  });
+}
+
+async function exportTransparentLogo(source) {
+  const image = await exportLoadImage(source);
+  const maxSide = 900;
+  const scale = Math.min(1, maxSide / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
+  const width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
+  const height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  if (!context) throw new Error('El navegador no pudo preparar el logo');
+  context.drawImage(image, 0, 0, width, height);
+  const pixels = context.getImageData(0, 0, width, height);
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+  for (let index = 0; index < pixels.data.length; index += 4) {
+    const luminance = pixels.data[index] * 0.2126 + pixels.data[index + 1] * 0.7152 + pixels.data[index + 2] * 0.0722;
+    const sourceAlpha = pixels.data[index + 3] / 255;
+    const alpha = Math.max(0, Math.min(255, Math.round((245 - luminance) * 5.1 * sourceAlpha)));
+    pixels.data[index] = 255;
+    pixels.data[index + 1] = 255;
+    pixels.data[index + 2] = 255;
+    pixels.data[index + 3] = alpha;
+    if (alpha > 24) {
+      const pixel = index / 4;
+      const x = pixel % width;
+      const y = Math.floor(pixel / width);
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  if (maxX < minX || maxY < minY) throw new Error('El logo no contiene píxeles visibles');
+  context.putImageData(pixels, 0, 0);
+  const padding = Math.max(4, Math.round(Math.max(maxX - minX, maxY - minY) * 0.025));
+  const cropX = Math.max(0, minX - padding);
+  const cropY = Math.max(0, minY - padding);
+  const cropWidth = Math.min(width - cropX, maxX - minX + 1 + padding * 2);
+  const cropHeight = Math.min(height - cropY, maxY - minY + 1 + padding * 2);
+  const output = document.createElement('canvas');
+  output.width = cropWidth;
+  output.height = cropHeight;
+  output.getContext('2d').drawImage(canvas, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+  return output.toDataURL('image/png');
+}
+
+async function prepareExportBranding(data) {
+  if (data.meta.exportLogo) return data.meta.exportLogo;
+  if (!exportBrandLogoPromise) {
+    const source = data.meta.logo;
+    exportBrandLogoPromise = source
+      ? exportTransparentLogo(source).catch(() => source)
+      : Promise.resolve('');
+  }
+  data.meta.exportLogo = await exportBrandLogoPromise;
+  return data.meta.exportLogo;
+}
+
 const EXCELJS_EXPORT_URL = 'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
 let excelExportLibraryPromise = null;
+
+const EXPORT_SHEET_PALETTE = Object.freeze({
+  ink: 'FF1C1E1D', inkSoft: 'FF252826', accent: 'FF287DF0', accentSoft: 'FFE8F1FF',
+  green: 'FF149B58', greenSoft: 'FFE4F6EC', amber: 'FFAA6D00', amberSoft: 'FFFFF2D6',
+  red: 'FFB83A4B', redSoft: 'FFFCE7EB', text: 'FF202422', muted: 'FF66706B',
+  dim: 'FF929B96', line: 'FFD9DEDB', surface: 'FFF7F9F8', panel: 'FFEEF2F0', white: 'FFFFFFFF'
+});
 
 function ensureExcelExportLibrary() {
   if (window.ExcelJS?.Workbook) return Promise.resolve(window.ExcelJS);
@@ -18980,45 +19274,91 @@ function exportExcelColumnLetter(index) {
 function exportExcelStatusStyle(cell, status) {
   const kind = exportStatusClass(status);
   const palette = {
-    complete: { fill: 'FFE6F6F0', font: 'FF087A5B' },
-    partial: { fill: 'FFFFF4D8', font: 'FF9A6700' },
-    pending: { fill: 'FFFDECEF', font: 'FFB53A49' },
-    neutral: { fill: 'FFEDF1F5', font: 'FF667085' }
+    complete: { fill: EXPORT_SHEET_PALETTE.greenSoft, font: EXPORT_SHEET_PALETTE.green },
+    partial: { fill: EXPORT_SHEET_PALETTE.amberSoft, font: EXPORT_SHEET_PALETTE.amber },
+    pending: { fill: EXPORT_SHEET_PALETTE.redSoft, font: EXPORT_SHEET_PALETTE.red },
+    neutral: { fill: EXPORT_SHEET_PALETTE.panel, font: EXPORT_SHEET_PALETTE.muted }
   }[kind];
   cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: palette.fill } };
   cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: palette.font } };
   cell.alignment = { horizontal: 'center', vertical: 'middle' };
 }
 
-function exportExcelCreateSheet(workbook, data, config) {
+function exportExcelGridBorder() {
+  return {
+    bottom: { style: 'thin', color: { argb: EXPORT_SHEET_PALETTE.line } },
+    right: { style: 'thin', color: { argb: EXPORT_SHEET_PALETTE.line } }
+  };
+}
+
+function exportExcelRegisterLogo(workbook, data) {
+  const source = data.meta.exportLogo || data.meta.logo || '';
+  const match = /^data:image\/(png|jpe?g);base64,/i.exec(source);
+  if (!match) return null;
+  return workbook.addImage({ base64: source, extension: match[1].toLowerCase() === 'png' ? 'png' : 'jpeg' });
+}
+
+function exportExcelBrandHeader(workbook, worksheet, data, columnCount, title, logoImageId) {
+  const lastColumn = exportExcelColumnLetter(columnCount);
+  [1, 2, 3].forEach(rowNumber => {
+    const row = worksheet.getRow(rowNumber);
+    row.height = rowNumber === 1 ? 29 : rowNumber === 2 ? 24 : 21;
+    for (let column = 1; column <= columnCount; column += 1) {
+      row.getCell(column).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.ink } };
+    }
+  });
+  worksheet.mergeCells('A1:B3');
+  worksheet.mergeCells(`C1:${lastColumn}1`);
+  worksheet.mergeCells(`C2:${lastColumn}2`);
+  worksheet.mergeCells(`C3:${lastColumn}3`);
+
+  const logoCell = worksheet.getCell('A1');
+  logoCell.value = logoImageId == null ? 'AA\nFOLLOW APP' : '';
+  logoCell.font = { name: 'Arial', size: 13, bold: true, color: { argb: EXPORT_SHEET_PALETTE.white } };
+  logoCell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+  if (logoImageId != null) {
+    worksheet.addImage(logoImageId, {
+      tl: { col: 0.18, row: 0.34 },
+      ext: { width: 142, height: 63 },
+      editAs: 'oneCell'
+    });
+  }
+
+  const titleCell = worksheet.getCell('C1');
+  titleCell.value = title;
+  titleCell.font = { name: 'Arial', size: 18, bold: true, color: { argb: EXPORT_SHEET_PALETTE.white } };
+  titleCell.alignment = { vertical: 'middle' };
+  const metaCell = worksheet.getCell('C2');
+  metaCell.value = `${data.meta.rangeLabel} · ${data.meta.userName || 'Perfil local'}`;
+  metaCell.font = { name: 'Arial', size: 10, color: { argb: 'FFD6DDD9' } };
+  metaCell.alignment = { vertical: 'middle' };
+  const detailCell = worksheet.getCell('C3');
+  detailCell.value = `Generado ${data.meta.generatedLabel} · ${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · Informe ${data.meta.version}`;
+  detailCell.font = { name: 'Arial', size: 8, color: { argb: 'FF9FA9A3' } };
+  detailCell.alignment = { vertical: 'middle' };
+  worksheet.getRow(4).height = 10;
+}
+
+function exportExcelCreateSheet(workbook, data, config, logoImageId) {
   const worksheet = workbook.addWorksheet(config.name, {
     properties: { defaultRowHeight: 19 },
     views: [{ state: 'frozen', ySplit: 5, showGridLines: false }]
   });
   const lastColumn = exportExcelColumnLetter(config.columns.length);
-  worksheet.mergeCells(`A1:${lastColumn}1`);
-  worksheet.getCell('A1').value = config.title;
-  worksheet.getCell('A1').font = { name: 'Arial', size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
-  worksheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF152137' } };
-  worksheet.getCell('A1').alignment = { vertical: 'middle' };
-  worksheet.getRow(1).height = 32;
-  worksheet.mergeCells(`A2:${lastColumn}2`);
-  worksheet.getCell('A2').value = `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`;
-  worksheet.getCell('A2').font = { name: 'Arial', size: 9, color: { argb: 'FF64748B' } };
-  worksheet.getCell('A2').alignment = { vertical: 'middle' };
-  worksheet.getRow(2).height = 22;
-  worksheet.mergeCells(`A3:${lastColumn}3`);
-  worksheet.getCell('A3').value = `AA Follow · versión ${data.meta.version}`;
-  worksheet.getCell('A3').font = { name: 'Arial', size: 8, italic: true, color: { argb: 'FF94A3B8' } };
+  exportExcelBrandHeader(workbook, worksheet, data, config.columns.length, config.title, logoImageId);
 
   const headerRowNumber = 5;
   const headerRow = worksheet.getRow(headerRowNumber);
   config.columns.forEach((column, index) => {
     const cell = headerRow.getCell(index + 1);
     cell.value = column.header;
-    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: 'FFFFFFFF' } };
-    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1683FF' } };
+    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: EXPORT_SHEET_PALETTE.white } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.inkSoft } };
     cell.alignment = { horizontal: column.align || 'left', vertical: 'middle', wrapText: true };
+    cell.border = {
+      bottom: { style: 'medium', color: { argb: EXPORT_SHEET_PALETTE.accent } },
+      right: { style: 'thin', color: { argb: 'FF444946' } }
+    };
     worksheet.getColumn(index + 1).width = column.width || 14;
   });
   headerRow.height = 24;
@@ -19031,23 +19371,35 @@ function exportExcelCreateSheet(workbook, data, config) {
       if (column.type === 'date' && value) value = localDate(value);
       if (column.transform) value = column.transform(value, item);
       cell.value = value == null ? '' : value;
-      cell.font = { name: 'Arial', size: 10, color: { argb: 'FF263246' } };
+      cell.font = { name: 'Arial', size: 10, color: { argb: EXPORT_SHEET_PALETTE.text } };
       cell.alignment = { horizontal: column.align || (column.type === 'number' ? 'right' : 'left'), vertical: 'top', wrapText: Boolean(column.wrap) };
-      cell.border = { bottom: { style: 'thin', color: { argb: 'FFE5EAF1' } } };
+      cell.border = exportExcelGridBorder();
       if (column.type === 'date') cell.numFmt = 'yyyy-mm-dd';
       if (column.numFmt) cell.numFmt = column.numFmt;
+      if (column.delta && Number.isFinite(Number(value)) && Number(value) !== 0) {
+        cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: Number(value) > 0 ? EXPORT_SHEET_PALETTE.green : EXPORT_SHEET_PALETTE.red } };
+      }
       if (column.key === config.statusKey) exportExcelStatusStyle(cell, value);
     });
     if (rowIndex % 2 === 1) {
       row.eachCell(cell => {
         if (config.statusKey && config.columns[cell.col - 1]?.key === config.statusKey) return;
-        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.surface } };
       });
     }
     row.height = config.rowHeight || 21;
   });
 
   const lastRow = Math.max(headerRowNumber, headerRowNumber + config.rows.length);
+  if (!config.rows.length) {
+    worksheet.mergeCells(`A6:${lastColumn}6`);
+    const emptyCell = worksheet.getCell('A6');
+    emptyCell.value = config.emptyText || 'Sin registros para el período seleccionado';
+    emptyCell.font = { name: 'Arial', size: 10, italic: true, color: { argb: EXPORT_SHEET_PALETTE.dim } };
+    emptyCell.alignment = { horizontal: 'center', vertical: 'middle' };
+    emptyCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.surface } };
+    worksheet.getRow(6).height = 34;
+  }
   worksheet.autoFilter = `A${headerRowNumber}:${lastColumn}${lastRow}`;
   worksheet.pageSetup = {
     orientation: config.columns.length > 7 ? 'landscape' : 'portrait',
@@ -19057,34 +19409,25 @@ function exportExcelCreateSheet(workbook, data, config) {
     paperSize: 9,
     margins: { left: 0.35, right: 0.35, top: 0.55, bottom: 0.55, header: 0.2, footer: 0.2 }
   };
-  worksheet.headerFooter.oddFooter = `&LAA Follow&RVersión ${data.meta.version}`;
+  worksheet.headerFooter.oddFooter = `&LAA Follow App&C${data.meta.rangeLabel}&RInforme ${data.meta.version}`;
   return worksheet;
 }
 
-function exportExcelCreateSummary(workbook, data) {
+function exportExcelCreateSummary(workbook, data, logoImageId) {
   const worksheet = workbook.addWorksheet('Resumen', {
     properties: { defaultRowHeight: 19 },
-    views: [{ state: 'frozen', ySplit: 8, showGridLines: false }]
+    views: [{ state: 'frozen', ySplit: 9, showGridLines: false }]
   });
-  worksheet.mergeCells('A1:K1');
-  worksheet.getCell('A1').value = 'AA Follow · Informe de seguimiento';
-  worksheet.getCell('A1').font = { name: 'Arial', size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
-  worksheet.getCell('A1').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF152137' } };
-  worksheet.getCell('A1').alignment = { vertical: 'middle' };
-  worksheet.getRow(1).height = 32;
-  worksheet.mergeCells('A2:K2');
-  worksheet.getCell('A2').value = `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`;
-  worksheet.getCell('A2').font = { name: 'Arial', size: 9, color: { argb: 'FF64748B' } };
-  worksheet.mergeCells('A3:K3');
-  worksheet.getCell('A3').value = `${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · ${data.summary.sessions} sesiones · ${data.summary.trainingVolume.toLocaleString('es-AR')} kg de volumen · versión ${data.meta.version}`;
-  worksheet.getCell('A3').font = { name: 'Arial', size: 9, color: { argb: 'FF94A3B8' } };
+  exportExcelBrandHeader(workbook, worksheet, data, 19, 'Informe integral de rendimiento', logoImageId);
 
   const cards = [
-    { range: 'A4:B4', valueRange: 'A5:B5', label: 'CALORÍAS', formula: '=SUM(B9:B4000)', result: data.summary.calories, numFmt: '#,##0 "kcal"' },
-    { range: 'C4:D4', valueRange: 'C5:D5', label: 'PROTEÍNAS', formula: '=SUM(C9:C4000)', result: data.summary.protein, numFmt: '#,##0.0 "g"' },
-    { range: 'E4:F4', valueRange: 'E5:F5', label: 'AGUA PROMEDIO', formula: '=IFERROR(AVERAGEIF(F9:F4000,">0"),0)', result: data.summary.waterAverage || data.summary.waterTotal || 0, numFmt: '#,##0 "ml"' },
-    { range: 'G4:H4', valueRange: 'G5:H5', label: 'PASOS PROMEDIO', formula: '=IFERROR(AVERAGEIF(G9:G4000,">0"),0)', result: data.summary.stepsAverage || data.summary.stepsTotal || 0, numFmt: '#,##0' },
-    { range: 'I4:K4', valueRange: 'I5:K5', label: 'CUMPLIMIENTO', formula: '=IFERROR(AVERAGE(K9:K4000),0)', result: (data.summary.compliance || 0) / 100, numFmt: '0%' }
+    { range: 'A5:B5', valueRange: 'A6:B6', label: 'CALORÍAS', formula: '=SUM(D10:D4000)', result: data.summary.calories, numFmt: '#,##0 "kcal"' },
+    { range: 'C5:D5', valueRange: 'C6:D6', label: 'PROTEÍNAS', formula: '=SUM(E10:E4000)', result: data.summary.protein, numFmt: '#,##0.0 "g"' },
+    { range: 'E5:G5', valueRange: 'E6:G6', label: 'PASOS PROMEDIO', formula: '=IFERROR(AVERAGEIF(I10:I4000,">0"),0)', result: data.summary.stepsAverage || data.summary.stepsTotal || 0, numFmt: '#,##0' },
+    { range: 'H5:I5', valueRange: 'H6:I6', label: 'SESIONES', formula: '=SUM(L10:L4000)', result: data.summary.sessions, numFmt: '#,##0' },
+    { range: 'J5:L5', valueRange: 'J6:L6', label: 'VOLUMEN', formula: '=SUM(N10:N4000)', result: data.summary.trainingVolume, numFmt: '#,##0.0 "kg"' },
+    { range: 'M5:O5', valueRange: 'M6:O6', label: 'CAMBIO DE PESO', formula: '=IF(COUNT(Q10:Q4000)=0,"",SUM(Q10:Q4000))', result: data.summary.weightChange ?? '', numFmt: '+0.0 "kg";-0.0 "kg";0.0 "kg"' },
+    { range: 'P5:S5', valueRange: 'P6:S6', label: 'CUMPLIMIENTO', formula: '=IFERROR(AVERAGE(S10:S4000),0)', result: (data.summary.compliance || 0) / 100, numFmt: '0%' }
   ];
   cards.forEach(card => {
     worksheet.mergeCells(card.range);
@@ -19092,52 +19435,72 @@ function exportExcelCreateSummary(workbook, data) {
     const labelCell = worksheet.getCell(card.range.split(':')[0]);
     const valueCell = worksheet.getCell(card.valueRange.split(':')[0]);
     labelCell.value = card.label;
-    labelCell.font = { name: 'Arial', size: 8, bold: true, color: { argb: 'FF64748B' } };
-    labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F6FB' } };
+    labelCell.font = { name: 'Arial', size: 8, bold: true, color: { argb: EXPORT_SHEET_PALETTE.muted } };
+    labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.panel } };
     labelCell.alignment = { vertical: 'middle' };
     valueCell.value = { formula: card.formula, result: card.result };
     valueCell.numFmt = card.numFmt;
-    valueCell.font = { name: 'Arial', size: 15, bold: true, color: { argb: 'FF152137' } };
-    valueCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F6FB' } };
+    valueCell.font = { name: 'Arial', size: 15, bold: true, color: { argb: EXPORT_SHEET_PALETTE.ink } };
+    valueCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.panel } };
     valueCell.alignment = { vertical: 'middle' };
   });
-  worksheet.getRow(4).height = 19;
-  worksheet.getRow(5).height = 28;
+  worksheet.getRow(5).height = 19;
+  worksheet.getRow(6).height = 30;
+  worksheet.getRow(7).height = 10;
 
-  const headers = ['Fecha','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Peso','Sueño','Sesiones','Cumplimiento'];
-  const headerRow = worksheet.getRow(8);
+  worksheet.mergeCells('A8:S8');
+  const sectionCell = worksheet.getCell('A8');
+  sectionCell.value = 'SEGUIMIENTO DIARIO';
+  sectionCell.font = { name: 'Arial', size: 9, bold: true, color: { argb: EXPORT_SHEET_PALETTE.accent } };
+  sectionCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.accentSoft } };
+  sectionCell.alignment = { vertical: 'middle' };
+  worksheet.getRow(8).height = 22;
+
+  const headers = ['Fecha','Estado','Comidas','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Cardio','Entrenó','Sesiones','Minutos','Volumen','Suplementos','Peso','Δ peso','Sueño','Cumplimiento'];
+  const headerRow = worksheet.getRow(9);
   headers.forEach((header, index) => {
     const cell = headerRow.getCell(index + 1);
     cell.value = header;
-    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: 'FFFFFFFF' } };
-    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1683FF' } };
-    cell.alignment = { horizontal: index === 0 ? 'left' : 'right', vertical: 'middle', wrapText: true };
+    cell.font = { name: 'Arial', size: 9, bold: true, color: { argb: EXPORT_SHEET_PALETTE.white } };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.inkSoft } };
+    cell.alignment = { horizontal: [0, 1, 10, 14].includes(index) ? 'left' : 'right', vertical: 'middle', wrapText: true };
+    cell.border = {
+      bottom: { style: 'medium', color: { argb: EXPORT_SHEET_PALETTE.accent } },
+      right: { style: 'thin', color: { argb: 'FF444946' } }
+    };
   });
-  headerRow.height = 24;
+  headerRow.height = 30;
   data.daily.forEach((item, index) => {
-    const row = worksheet.getRow(9 + index);
+    const row = worksheet.getRow(10 + index);
     row.values = [
-      localDate(item.date), item.calories, item.protein, item.carbs, item.fat,
-      item.water, item.steps, item.weight ?? '', item.sleep ?? '', item.sessions,
-      item.compliance == null ? '' : item.compliance / 100
+      localDate(item.date), item.dayStatus, item.meals, item.calories, item.protein,
+      item.carbs, item.fat, item.water, item.steps, item.cardioMinutes, item.trained, item.sessions,
+      item.trainingMinutes, item.trainingVolume, item.supplementation, item.weight ?? '',
+      item.weightChange ?? '', item.sleep ?? '', item.compliance == null ? '' : item.compliance / 100
     ];
     row.eachCell((cell, column) => {
-      cell.font = { name: 'Arial', size: 10, color: { argb: 'FF263246' } };
-      cell.alignment = { horizontal: column === 1 ? 'left' : 'right', vertical: 'middle' };
-      cell.border = { bottom: { style: 'thin', color: { argb: 'FFE5EAF1' } } };
-      if (index % 2 === 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+      cell.font = { name: 'Arial', size: 10, color: { argb: EXPORT_SHEET_PALETTE.text } };
+      cell.alignment = { horizontal: [1, 2, 11, 15].includes(column) ? 'left' : 'right', vertical: 'middle' };
+      cell.border = exportExcelGridBorder();
+      if (index % 2 === 1) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: EXPORT_SHEET_PALETTE.surface } };
     });
     row.getCell(1).numFmt = 'yyyy-mm-dd';
-    row.getCell(2).numFmt = '#,##0';
-    [3,4,5,8,9].forEach(column => row.getCell(column).numFmt = '#,##0.0');
-    [6,7,10].forEach(column => row.getCell(column).numFmt = '#,##0');
-    row.getCell(11).numFmt = '0%';
+    [3,4,8,9,10,12,13].forEach(column => row.getCell(column).numFmt = '#,##0');
+    [5,6,7,14,16,18].forEach(column => row.getCell(column).numFmt = '#,##0.0');
+    row.getCell(17).numFmt = '+0.0;-0.0;0.0';
+    row.getCell(19).numFmt = '0%';
+    if (item.dayStatus === 'Día libre') exportExcelStatusStyle(row.getCell(2), 'Ajuste de carga');
+    exportExcelStatusStyle(row.getCell(11), item.trained === 'Sí' ? 'Completado' : 'No evaluado');
+    if (item.weightChange != null && item.weightChange !== 0) {
+      row.getCell(17).font = { name: 'Arial', size: 10, bold: true, color: { argb: item.weightChange > 0 ? EXPORT_SHEET_PALETTE.green : EXPORT_SHEET_PALETTE.red } };
+    }
+    row.height = 24;
   });
-  const widths = [13,13,13,16,11,12,14,11,11,11,16];
+  const widths = [13,14,10,12,12,15,11,12,12,11,11,10,11,14,14,11,12,10,16];
   widths.forEach((width, index) => worksheet.getColumn(index + 1).width = width);
-  worksheet.autoFilter = `A8:K${Math.max(8, 8 + data.daily.length)}`;
+  worksheet.autoFilter = `A9:S${Math.max(9, 9 + data.daily.length)}`;
   worksheet.pageSetup = { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9, margins: { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 } };
-  worksheet.headerFooter.oddFooter = `&LAA Follow&RVersión ${data.meta.version}`;
+  worksheet.headerFooter.oddFooter = `&LAA Follow App&C${data.meta.rangeLabel}&RInforme ${data.meta.version}`;
 }
 
 function buildProfessionalExcelWorkbook(data) {
@@ -19151,8 +19514,9 @@ function buildProfessionalExcelWorkbook(data) {
   workbook.title = `AA Follow · ${data.meta.rangeLabel}`;
   workbook.company = 'AA Follow';
   workbook.calcProperties.fullCalcOnLoad = true;
+  const logoImageId = exportExcelRegisterLogo(workbook, data);
 
-  exportExcelCreateSummary(workbook, data);
+  exportExcelCreateSummary(workbook, data, logoImageId);
   exportExcelCreateSheet(workbook, data, {
     name: 'Alimentación', title: 'Alimentación', statusKey: 'status',
     columns: [
@@ -19166,8 +19530,9 @@ function buildProfessionalExcelWorkbook(data) {
       { header: 'Hora', key: 'time', width: 10, align: 'center' },
       { header: 'Estado', key: 'status', width: 21, align: 'center' }
     ],
-    rows: data.meals
-  });
+    rows: data.meals,
+    emptyText: 'No hay comidas registradas en el período seleccionado'
+  }, logoImageId);
   exportExcelCreateSheet(workbook, data, {
     name: 'Suplementos', title: 'Suplementos', statusKey: 'status',
     columns: [
@@ -19178,8 +19543,9 @@ function buildProfessionalExcelWorkbook(data) {
       { header: 'Unidad', key: 'unit', width: 18 },
       { header: 'Estado', key: 'status', width: 18, align: 'center' }
     ],
-    rows: data.supplements
-  });
+    rows: data.supplements,
+    emptyText: 'No hay suplementos configurados para este período'
+  }, logoImageId);
   exportExcelCreateSheet(workbook, data, {
     name: 'Entrenamiento', title: 'Entrenamiento',
     columns: [
@@ -19194,8 +19560,32 @@ function buildProfessionalExcelWorkbook(data) {
       { header: 'Notas', key: 'notes', width: 38, wrap: true, transform: (value, item) => [item.effort, value, item.isPr ? 'PR' : ''].filter(Boolean).join(' · ') }
     ],
     rows: data.training,
-    rowHeight: 28
-  });
+    rowHeight: 28,
+    emptyText: 'No hay sesiones de entrenamiento registradas en este período'
+  }, logoImageId);
+
+  exportExcelCreateSheet(workbook, data, {
+    name: 'Progresión', title: 'Progresión de fuerza y rendimiento', statusKey: 'status',
+    columns: [
+      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
+      { header: 'Sesión', key: 'session', width: 22 },
+      { header: 'Ejercicio', key: 'exercise', width: 26 },
+      { header: 'Series', key: 'sets', type: 'number', width: 9, numFmt: '#,##0' },
+      { header: 'Reps totales', key: 'reps', type: 'number', width: 14, numFmt: '#,##0' },
+      { header: 'Peso máximo', key: 'maxWeight', type: 'number', width: 14, numFmt: '#,##0.0 "kg"' },
+      { header: 'Volumen', key: 'volume', type: 'number', width: 14, numFmt: '#,##0.0 "kg"' },
+      { header: '1RM estimado', key: 'estimated1rm', type: 'number', width: 15, numFmt: '#,##0.0 "kg"' },
+      { header: 'Comparado con', key: 'previousDate', type: 'date', width: 14 },
+      { header: 'Δ peso', key: 'deltaWeight', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Δ reps', key: 'deltaReps', type: 'number', width: 11, numFmt: '+0;-0;0', delta: true },
+      { header: 'Δ volumen', key: 'deltaVolume', type: 'number', width: 14, numFmt: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Δ 1RM', key: 'delta1rm', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Tendencia', key: 'status', width: 18, align: 'center' }
+    ],
+    rows: data.trainingProgress,
+    rowHeight: 26,
+    emptyText: 'Se necesitan sesiones comparables para mostrar la progresión'
+  }, logoImageId);
 
   const bodyColumns = [
     { header: 'Fecha', key: 'date', type: 'date', width: 13 },
@@ -19206,9 +19596,11 @@ function buildProfessionalExcelWorkbook(data) {
       width: Math.max(12, Math.min(22, (data.bodyMeasurementLabels[key] || key).length + 3)),
       numFmt: '#,##0.0'
     })),
+    { header: 'Δ peso', key: 'weightChange', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
+    { header: 'Δ grasa', key: 'bodyFatChange', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
     { header: 'Notas', key: 'notes', width: 38, wrap: true }
   ];
-  exportExcelCreateSheet(workbook, data, { name: 'Peso y medidas', title: 'Peso y medidas', columns: bodyColumns, rows: data.body, rowHeight: 28 });
+  exportExcelCreateSheet(workbook, data, { name: 'Peso y medidas', title: 'Peso, composición y medidas', columns: bodyColumns, rows: data.body, rowHeight: 28, emptyText: 'No hay mediciones corporales en este período' }, logoImageId);
   exportExcelCreateSheet(workbook, data, {
     name: 'Hábitos', title: 'Hábitos', statusKey: 'status',
     columns: [
@@ -19220,8 +19612,9 @@ function buildProfessionalExcelWorkbook(data) {
       { header: 'Estado', key: 'status', width: 17, align: 'center' },
       { header: 'Origen', key: 'source', width: 20 }
     ],
-    rows: data.habits
-  });
+    rows: data.habits,
+    emptyText: 'No hay hábitos medibles en este período'
+  }, logoImageId);
   exportExcelCreateSheet(workbook, data, {
     name: 'Notas', title: 'Notas y contexto',
     columns: [
@@ -19232,8 +19625,9 @@ function buildProfessionalExcelWorkbook(data) {
       { header: 'Origen', key: 'source', width: 18 }
     ],
     rows: data.notes,
-    rowHeight: 34
-  });
+    rowHeight: 34,
+    emptyText: 'No hay notas o eventos en este período'
+  }, logoImageId);
   return workbook;
 }
 
@@ -19255,6 +19649,7 @@ async function exportSelectedExcel() {
   const previousDisabled = button?.disabled;
   if (button) button.disabled = true;
   try {
+    await prepareExportBranding(data);
     await ensureExcelExportLibrary();
     const workbook = buildProfessionalExcelWorkbook(data);
     const buffer = await workbook.xlsx.writeBuffer();
@@ -19273,11 +19668,11 @@ async function exportSelectedExcel() {
 
 // Modelo visual compartido por la hoja ODS compatible con Google Sheets.
 const GOOGLE_SHEETS_PALETTE = Object.freeze({
-  navy: '#152137', blue: '#1683ff', text: '#263246', muted: '#64748b',
-  dim: '#94a3b8', line: '#e5eaf1', surface: '#f8fafc', panel: '#f2f6fb',
-  white: '#ffffff', green: '#087a5b', greenBg: '#e6f6f0', amber: '#9a6700',
-  amberBg: '#fff4d8', red: '#b53a49', redBg: '#fdecef', neutral: '#667085',
-  neutralBg: '#edf1f5'
+  navy: '#1c1e1d', navySoft: '#252826', blue: '#287df0', blueBg: '#e8f1ff',
+  text: '#202422', muted: '#66706b', dim: '#929b96', line: '#d9dedb',
+  surface: '#f7f9f8', panel: '#eef2f0', white: '#ffffff', green: '#149b58',
+  greenBg: '#e4f6ec', amber: '#aa6d00', amberBg: '#fff2d6', red: '#b83a4b',
+  redBg: '#fce7eb', neutral: '#66706b', neutralBg: '#eef2f0'
 });
 
 function googleSheetsColor(hex) {
@@ -19306,6 +19701,10 @@ function googleSheetsFormat(options = {}) {
   if (options.border !== false) {
     format.borders = {
       bottom: {
+        style: 'SOLID',
+        colorStyle: { rgbColor: googleSheetsColor(GOOGLE_SHEETS_PALETTE.line) }
+      },
+      right: {
         style: 'SOLID',
         colorStyle: { rgbColor: googleSheetsColor(GOOGLE_SHEETS_PALETTE.line) }
       }
@@ -19356,13 +19755,19 @@ function googleSheetsFilledRow(columnCount, value, format) {
 function buildGoogleSheetsDataTab(data, config) {
   const columnCount = config.columns.length;
   const titleFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 16, border: false });
-  const metaFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, fontSize: 9, border: false });
-  const versionFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.dim, fontSize: 8, border: false });
-  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blue, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const metaFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#d6ddd9', fontSize: 9, border: false });
+  const versionFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#9fa9a3', fontSize: 8, border: false });
+  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navySoft, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const brandRow = (value, format, rowIndex) => ({
+    values: Array.from({ length: columnCount }, (_, columnIndex) => googleSheetsCell(
+      columnIndex === 0 && rowIndex === 0 ? 'AA FOLLOW APP' : columnIndex === 2 ? value : '',
+      { format }
+    ))
+  });
   const rows = [
-    googleSheetsFilledRow(columnCount, config.title, titleFormat),
-    googleSheetsFilledRow(columnCount, `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`, metaFormat),
-    googleSheetsFilledRow(columnCount, `AA Follow · versión ${data.meta.version}`, versionFormat),
+    brandRow(config.title, titleFormat, 0),
+    brandRow(`${data.meta.rangeLabel} · ${data.meta.userName || 'Perfil local'}`, metaFormat, 1),
+    brandRow(`Generado ${data.meta.generatedLabel} · ${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · Informe ${data.meta.version}`, versionFormat, 2),
     googleSheetsFilledRow(columnCount, '', googleSheetsFormat({ border: false })),
     { values: config.columns.map(column => googleSheetsCell(column.header, { format: headerFormat })) }
   ];
@@ -19383,6 +19788,15 @@ function buildGoogleSheetsDataTab(data, config) {
         if (column.type === 'date') {
           format.numberFormat = { type: 'DATE', pattern: 'dd/mm/yyyy' };
         }
+        if (column.delta && Number.isFinite(Number(value)) && Number(value) !== 0) {
+          format = googleSheetsFormat({
+            background: alternate ? GOOGLE_SHEETS_PALETTE.surface : GOOGLE_SHEETS_PALETTE.white,
+            color: Number(value) > 0 ? GOOGLE_SHEETS_PALETTE.green : GOOGLE_SHEETS_PALETTE.red,
+            bold: true,
+            align: 'RIGHT',
+            numberPattern: column.numberPattern
+          });
+        }
         if (column.key === config.statusKey) format = googleSheetsStatusFormat(value);
         return googleSheetsCell(value == null ? '' : value, { type: column.type, format });
       })
@@ -19396,89 +19810,113 @@ function buildGoogleSheetsDataTab(data, config) {
     widths: config.columns.map(column => column.width || 110),
     freezeRows: 5,
     filter: { startRowIndex: 4, endRowIndex: Math.max(5, rows.length), startColumnIndex: 0, endColumnIndex: columnCount },
-    merges: [0, 1, 2].map(row => ({ startRowIndex: row, endRowIndex: row + 1, startColumnIndex: 0, endColumnIndex: columnCount })),
-    rowHeights: { 0: 34, 1: 24, 2: 20, 3: 12, 4: 28 },
-    dataRowHeight: config.rowHeight || 25
+    merges: [
+      { startRowIndex: 0, endRowIndex: 3, startColumnIndex: 0, endColumnIndex: 2 },
+      ...[0, 1, 2].map(row => ({ startRowIndex: row, endRowIndex: row + 1, startColumnIndex: 2, endColumnIndex: columnCount }))
+    ],
+    rowHeights: { 0: 29, 1: 24, 2: 21, 3: 12, 4: 30 },
+    dataRowHeight: config.rowHeight || 25,
+    logoCell: { rowIndex: 0, columnIndex: 0 }
   };
 }
 
 function buildGoogleSheetsSummaryTab(data) {
-  const columnCount = 11;
+  const columnCount = 19;
   const titleFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 16, border: false });
-  const metaFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, fontSize: 9, border: false });
-  const detailFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.dim, fontSize: 9, border: false });
+  const metaFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#d6ddd9', fontSize: 9, border: false });
+  const detailFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#9fa9a3', fontSize: 8, border: false });
   const cardLabelFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.muted, bold: true, fontSize: 8, border: false });
   const cardValueFormat = pattern => googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.navy, bold: true, fontSize: 14, numberPattern: pattern, border: false });
-  const sectionFormat = googleSheetsFormat({ color: GOOGLE_SHEETS_PALETTE.muted, bold: true, fontSize: 8, border: false });
-  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blue, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const sectionFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blueBg, color: GOOGLE_SHEETS_PALETTE.blue, bold: true, fontSize: 9, border: false });
+  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navySoft, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const brandRow = (value, format, rowIndex) => ({
+    values: Array.from({ length: columnCount }, (_, columnIndex) => googleSheetsCell(
+      columnIndex === 0 && rowIndex === 0 ? 'AA FOLLOW APP' : columnIndex === 2 ? value : '',
+      { format }
+    ))
+  });
+  const cardStarts = [0, 2, 4, 7, 9, 12, 15];
+  const cardLabels = ['CALORÍAS', 'PROTEÍNAS', 'PASOS PROMEDIO', 'SESIONES', 'VOLUMEN', 'CAMBIO DE PESO', 'CUMPLIMIENTO'];
+  const cardValues = [
+    ['=SUM(D10:D)', '#,##0 "kcal"'],
+    ['=SUM(E10:E)', '#,##0.0 "g"'],
+    ['=IFERROR(AVERAGEIF(I10:I,">0"),0)', '#,##0'],
+    ['=SUM(L10:L)', '#,##0'],
+    ['=SUM(N10:N)', '#,##0.0 "kg"'],
+    ['=IF(COUNT(Q10:Q)=0,"",SUM(Q10:Q))', '+0.0 "kg";-0.0 "kg";0.0 "kg"'],
+    ['=IFERROR(AVERAGE(S10:S),0)', '0%']
+  ];
   const rows = [
-    googleSheetsFilledRow(columnCount, 'AA Follow · Informe de seguimiento', titleFormat),
-    googleSheetsFilledRow(columnCount, `${data.meta.rangeLabel} · ${data.meta.userName || 'Sin nombre registrado'} · Generado ${data.meta.generatedLabel}`, metaFormat),
-    googleSheetsFilledRow(columnCount, `${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · ${data.summary.sessions} sesiones · ${data.summary.trainingVolume.toLocaleString('es-AR')} kg de volumen · versión ${data.meta.version}`, detailFormat),
-    { values: [
-      googleSheetsCell('CALORÍAS', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
-      googleSheetsCell('PROTEÍNAS', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
-      googleSheetsCell('AGUA PROMEDIO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
-      googleSheetsCell('PASOS PROMEDIO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }),
-      googleSheetsCell('CUMPLIMIENTO', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat }), googleSheetsCell('', { format: cardLabelFormat })
-    ] },
-    { values: [
-      googleSheetsCell('=SUM(B9:B)', { format: cardValueFormat('#,##0 "kcal"') }), googleSheetsCell('', { format: cardValueFormat() }),
-      googleSheetsCell('=SUM(C9:C)', { format: cardValueFormat('#,##0.0 "g"') }), googleSheetsCell('', { format: cardValueFormat() }),
-      googleSheetsCell('=IFERROR(AVERAGEIF(F9:F,">0"),0)', { format: cardValueFormat('#,##0 "ml"') }), googleSheetsCell('', { format: cardValueFormat() }),
-      googleSheetsCell('=IFERROR(AVERAGEIF(G9:G,">0"),0)', { format: cardValueFormat('#,##0') }), googleSheetsCell('', { format: cardValueFormat() }),
-      googleSheetsCell('=IFERROR(AVERAGE(K9:K),0)', { format: cardValueFormat('0%') }), googleSheetsCell('', { format: cardValueFormat() }), googleSheetsCell('', { format: cardValueFormat() })
-    ] },
+    brandRow('Informe integral de rendimiento', titleFormat, 0),
+    brandRow(`${data.meta.rangeLabel} · ${data.meta.userName || 'Perfil local'}`, metaFormat, 1),
+    brandRow(`Generado ${data.meta.generatedLabel} · ${data.meta.dayCount} día${data.meta.dayCount === 1 ? '' : 's'} · Informe ${data.meta.version}`, detailFormat, 2),
+    googleSheetsFilledRow(columnCount, '', googleSheetsFormat({ border: false })),
+    { values: Array.from({ length: columnCount }, (_, columnIndex) => {
+      const cardIndex = cardStarts.indexOf(columnIndex);
+      return googleSheetsCell(cardIndex >= 0 ? cardLabels[cardIndex] : '', { format: cardLabelFormat });
+    }) },
+    { values: Array.from({ length: columnCount }, (_, columnIndex) => {
+      const cardIndex = cardStarts.indexOf(columnIndex);
+      return googleSheetsCell(cardIndex >= 0 ? cardValues[cardIndex][0] : '', { format: cardValueFormat(cardIndex >= 0 ? cardValues[cardIndex][1] : undefined) });
+    }) },
     googleSheetsFilledRow(columnCount, '', googleSheetsFormat({ border: false })),
     googleSheetsFilledRow(columnCount, 'SEGUIMIENTO DIARIO', sectionFormat),
-    { values: ['Fecha','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Peso','Sueño','Sesiones','Cumplimiento'].map(value => googleSheetsCell(value, { format: headerFormat })) }
+    { values: ['Fecha','Estado','Comidas','Calorías','Proteínas','Carbohidratos','Grasas','Agua','Pasos','Cardio','Entrenó','Sesiones','Minutos','Volumen','Suplementos','Peso','Δ peso','Sueño','Cumplimiento'].map(value => googleSheetsCell(value, { format: headerFormat })) }
   ];
 
   data.daily.forEach((item, index) => {
     const background = index % 2 === 1 ? GOOGLE_SHEETS_PALETTE.surface : GOOGLE_SHEETS_PALETTE.white;
     const values = [
-      [item.date, 'date', 'dd/mm/yyyy'], [item.calories, 'number', '#,##0'],
-      [item.protein, 'number', '#,##0.0'], [item.carbs, 'number', '#,##0.0'],
-      [item.fat, 'number', '#,##0.0'], [item.water, 'number', '#,##0'],
-      [item.steps, 'number', '#,##0'], [item.weight ?? '', 'number', '#,##0.0'],
-      [item.sleep ?? '', 'number', '#,##0.0'], [item.sessions, 'number', '#,##0'],
-      [item.compliance == null ? '' : item.compliance / 100, 'number', '0%']
+      [item.date, 'date', 'dd/mm/yyyy', 'LEFT'], [item.dayStatus, 'text', '', 'LEFT'],
+      [item.meals, 'number', '#,##0', 'RIGHT'], [item.calories, 'number', '#,##0', 'RIGHT'],
+      [item.protein, 'number', '#,##0.0', 'RIGHT'], [item.carbs, 'number', '#,##0.0', 'RIGHT'],
+      [item.fat, 'number', '#,##0.0', 'RIGHT'], [item.water, 'number', '#,##0', 'RIGHT'],
+      [item.steps, 'number', '#,##0', 'RIGHT'], [item.cardioMinutes, 'number', '#,##0', 'RIGHT'],
+      [item.trained, 'text', '', 'CENTER'], [item.sessions, 'number', '#,##0', 'RIGHT'],
+      [item.trainingMinutes, 'number', '#,##0', 'RIGHT'], [item.trainingVolume, 'number', '#,##0.0', 'RIGHT'],
+      [item.supplementation, 'text', '', 'CENTER'], [item.weight ?? '', 'number', '#,##0.0', 'RIGHT'],
+      [item.weightChange ?? '', 'number', '+0.0;-0.0;0.0', 'RIGHT'], [item.sleep ?? '', 'number', '#,##0.0', 'RIGHT'],
+      [item.compliance == null ? '' : item.compliance / 100, 'number', '0%', 'RIGHT']
     ];
-    rows.push({ values: values.map(([value, type, pattern], column) => {
-      const format = googleSheetsFormat({
+    rows.push({ values: values.map(([value, type, pattern, align], column) => {
+      let format = googleSheetsFormat({
         background,
-        align: column === 0 ? 'LEFT' : 'RIGHT',
+        align,
         numberPattern: pattern,
         numberType: type === 'date' ? 'DATE' : 'NUMBER'
       });
       if (type === 'date') format.numberFormat = { type: 'DATE', pattern };
+      if (column === 1 && item.dayStatus === 'Día libre') format = googleSheetsStatusFormat('Ajuste de carga');
+      if (column === 10) format = googleSheetsStatusFormat(item.trained === 'Sí' ? 'Completado' : 'No evaluado');
+      if (column === 16 && item.weightChange != null && item.weightChange !== 0) {
+        format = googleSheetsFormat({ background, color: item.weightChange > 0 ? GOOGLE_SHEETS_PALETTE.green : GOOGLE_SHEETS_PALETTE.red, bold: true, align: 'RIGHT', numberPattern: pattern });
+      }
       return googleSheetsCell(value, { type, format });
     }) });
   });
 
   return {
     name: 'Resumen', rows, columnCount,
-    widths: [105, 95, 100, 120, 90, 95, 100, 90, 90, 90, 115],
-    freezeRows: 8,
-    filter: { startRowIndex: 7, endRowIndex: Math.max(8, rows.length), startColumnIndex: 0, endColumnIndex: columnCount },
+    widths: [105,105,75,90,95,110,85,90,95,85,85,75,85,105,105,85,95,80,115],
+    freezeRows: 9,
+    filter: { startRowIndex: 8, endRowIndex: Math.max(9, rows.length), startColumnIndex: 0, endColumnIndex: columnCount },
     merges: [
-      { startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 11 },
-      { startRowIndex: 1, endRowIndex: 2, startColumnIndex: 0, endColumnIndex: 11 },
-      { startRowIndex: 2, endRowIndex: 3, startColumnIndex: 0, endColumnIndex: 11 },
-      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 0, endColumnIndex: 2 },
-      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 2, endColumnIndex: 4 },
-      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 4, endColumnIndex: 6 },
-      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 6, endColumnIndex: 8 },
-      { startRowIndex: 3, endRowIndex: 4, startColumnIndex: 8, endColumnIndex: 11 },
-      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 0, endColumnIndex: 2 },
-      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 2, endColumnIndex: 4 },
-      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 4, endColumnIndex: 6 },
-      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 6, endColumnIndex: 8 },
-      { startRowIndex: 4, endRowIndex: 5, startColumnIndex: 8, endColumnIndex: 11 },
-      { startRowIndex: 6, endRowIndex: 7, startColumnIndex: 0, endColumnIndex: 11 }
+      { startRowIndex: 0, endRowIndex: 3, startColumnIndex: 0, endColumnIndex: 2 },
+      { startRowIndex: 0, endRowIndex: 1, startColumnIndex: 2, endColumnIndex: 19 },
+      { startRowIndex: 1, endRowIndex: 2, startColumnIndex: 2, endColumnIndex: 19 },
+      { startRowIndex: 2, endRowIndex: 3, startColumnIndex: 2, endColumnIndex: 19 },
+      ...cardStarts.flatMap((start, index) => {
+        const end = cardStarts[index + 1] ?? columnCount;
+        return [
+          { startRowIndex: 4, endRowIndex: 5, startColumnIndex: start, endColumnIndex: end },
+          { startRowIndex: 5, endRowIndex: 6, startColumnIndex: start, endColumnIndex: end }
+        ];
+      }),
+      { startRowIndex: 7, endRowIndex: 8, startColumnIndex: 0, endColumnIndex: 19 }
     ],
-    rowHeights: { 0: 36, 1: 24, 2: 22, 3: 21, 4: 32, 5: 12, 6: 22, 7: 28 },
-    dataRowHeight: 25
+    rowHeights: { 0: 29, 1: 24, 2: 21, 3: 12, 4: 20, 5: 32, 6: 12, 7: 23, 8: 30 },
+    dataRowHeight: 25,
+    logoCell: { rowIndex: 0, columnIndex: 0 }
   };
 }
 
@@ -19490,6 +19928,8 @@ function buildProfessionalGoogleSheetsModel(data) {
       header: data.bodyMeasurementLabels[key] || key.replace(/_/g, ' '),
       key, type: 'number', width: 115, numberPattern: '#,##0.0'
     })),
+    { header: 'Δ peso', key: 'weightChange', type: 'number', width: 95, numberPattern: '+0.0;-0.0;0.0', delta: true },
+    { header: 'Δ grasa', key: 'bodyFatChange', type: 'number', width: 95, numberPattern: '+0.0;-0.0;0.0', delta: true },
     { header: 'Notas', key: 'notes', width: 290, wrap: true }
   ];
   return [
@@ -19524,7 +19964,23 @@ function buildProfessionalGoogleSheetsModel(data) {
       { header: 'Tiempo', key: 'time', type: 'number', width: 90, numberPattern: '#,##0 "min"' },
       { header: 'Notas', key: 'notes', width: 270, wrap: true, transform: (value, item) => [item.effort, value, item.isPr ? 'PR' : ''].filter(Boolean).join(' · ') }
     ], data.training, { rowHeight: 32 }),
-    standard('Peso y medidas', 'Peso y medidas', bodyColumns, data.body, { rowHeight: 32 }),
+    standard('Progresión', 'Progresión de fuerza y rendimiento', [
+      { header: 'Fecha', key: 'date', type: 'date', width: 105 },
+      { header: 'Sesión', key: 'session', width: 155 },
+      { header: 'Ejercicio', key: 'exercise', width: 190 },
+      { header: 'Series', key: 'sets', type: 'number', width: 70, numberPattern: '#,##0' },
+      { header: 'Reps totales', key: 'reps', type: 'number', width: 100, numberPattern: '#,##0' },
+      { header: 'Peso máximo', key: 'maxWeight', type: 'number', width: 110, numberPattern: '#,##0.0 "kg"' },
+      { header: 'Volumen', key: 'volume', type: 'number', width: 110, numberPattern: '#,##0.0 "kg"' },
+      { header: '1RM estimado', key: 'estimated1rm', type: 'number', width: 110, numberPattern: '#,##0.0 "kg"' },
+      { header: 'Comparado con', key: 'previousDate', type: 'date', width: 110 },
+      { header: 'Δ peso', key: 'deltaWeight', type: 'number', width: 90, numberPattern: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Δ reps', key: 'deltaReps', type: 'number', width: 85, numberPattern: '+0;-0;0', delta: true },
+      { header: 'Δ volumen', key: 'deltaVolume', type: 'number', width: 105, numberPattern: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Δ 1RM', key: 'delta1rm', type: 'number', width: 90, numberPattern: '+0.0;-0.0;0.0', delta: true },
+      { header: 'Tendencia', key: 'status', width: 125, align: 'CENTER' }
+    ], data.trainingProgress, { statusKey: 'status', rowHeight: 29 }),
+    standard('Peso y medidas', 'Peso, composición y medidas', bodyColumns, data.body, { rowHeight: 32 }),
     standard('Hábitos', 'Hábitos', [
       { header: 'Fecha', key: 'date', type: 'date', width: 105 },
       { header: 'Hábito', key: 'habit', width: 205 },
@@ -19556,13 +20012,15 @@ function odsRgbHex(styleColor) {
 }
 
 function odsFormulaResult(data, model, rowIndex, columnIndex) {
-  if (model.name !== 'Resumen' || rowIndex !== 4) return 0;
+  if (model.name !== 'Resumen' || rowIndex !== 5) return 0;
   const values = {
     0: data.summary.calories,
     2: data.summary.protein,
-    4: data.summary.waterAverage ?? data.summary.waterTotal ?? 0,
-    6: data.summary.stepsAverage ?? data.summary.stepsTotal ?? 0,
-    8: (data.summary.compliance ?? 0) / 100
+    4: data.summary.stepsAverage ?? data.summary.stepsTotal ?? 0,
+    7: data.summary.sessions,
+    9: data.summary.trainingVolume,
+    12: data.summary.weightChange ?? null,
+    15: (data.summary.compliance ?? 0) / 100
   };
   return values[columnIndex] ?? 0;
 }
@@ -19645,7 +20103,8 @@ function odsCellStyleXml(entry) {
   const text = format.textFormat || {};
   const background = odsRgbHex(format.backgroundColorStyle);
   const foreground = odsRgbHex(text.foregroundColorStyle);
-  const border = odsRgbHex(format.borders?.bottom?.colorStyle);
+  const bottomBorder = odsRgbHex(format.borders?.bottom?.colorStyle);
+  const rightBorder = odsRgbHex(format.borders?.right?.colorStyle);
   const attributes = [
     `style:name="${entry.name}"`,
     'style:family="table-cell"',
@@ -19656,7 +20115,8 @@ function odsCellStyleXml(entry) {
     background ? `fo:background-color="#${background}"` : '',
     format.wrapStrategy === 'WRAP' ? 'fo:wrap-option="wrap"' : '',
     format.verticalAlignment ? `style:vertical-align="${format.verticalAlignment === 'MIDDLE' ? 'middle' : String(format.verticalAlignment).toLowerCase()}"` : '',
-    format.borders?.bottom ? `fo:border-bottom="0.5pt solid #${border || 'E5EAF1'}"` : ''
+    format.borders?.bottom ? `fo:border-bottom="0.5pt solid #${bottomBorder || 'D9DEDB'}"` : '',
+    format.borders?.right ? `fo:border-right="0.5pt solid #${rightBorder || 'D9DEDB'}"` : ''
   ].filter(Boolean).join(' ');
   const alignment = ({ LEFT: 'start', RIGHT: 'end', CENTER: 'center' })[format.horizontalAlignment] || 'start';
   const textProperties = [
@@ -19679,6 +20139,9 @@ function odsCellXml(sourceCell, styleName, options = {}) {
   const base = [`table:style-name="${styleName}"`, span].filter(Boolean).join(' ');
   if (entered.numberValue != null || entered.formulaValue) {
     const number = entered.formulaValue ? options.formulaResult : entered.numberValue;
+    if (entered.formulaValue && (number == null || number === '')) {
+      return `<table:table-cell ${base} office:value-type="string"><text:p/></table:table-cell>`;
+    }
     if (format.numberFormat?.type === 'DATE') {
       const date = new Date((Number(number) - 25569) * 86400000).toISOString().slice(0, 10);
       const [year, month, day] = date.split('-');
@@ -19690,7 +20153,11 @@ function odsCellXml(sourceCell, styleName, options = {}) {
   if (entered.boolValue != null) {
     return `<table:table-cell ${base} office:value-type="boolean" office:boolean-value="${entered.boolValue ? 'true' : 'false'}"><text:p>${entered.boolValue ? 'TRUE' : 'FALSE'}</text:p></table:table-cell>`;
   }
-  return `<table:table-cell ${base} office:value-type="string">${odsParagraphs(entered.stringValue)}</table:table-cell>`;
+  const image = options.image
+    ? `<draw:frame draw:name="AAFollowLogo${options.imageIndex || 1}" text:anchor-type="paragraph" svg:width="3.70cm" svg:height="1.65cm" draw:z-index="1"><draw:image xlink:href="Pictures/aa-follow-logo.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>`
+    : '';
+  const text = options.image ? '<text:p/>' : odsParagraphs(entered.stringValue);
+  return `<table:table-cell ${base} office:value-type="string">${text}${image}</table:table-cell>`;
 }
 
 function odsSheetRangeAddress(model) {
@@ -19700,7 +20167,7 @@ function odsSheetRangeAddress(model) {
   return `${quote(model.name)}.${start}:${quote(model.name)}.${end}`;
 }
 
-function buildProfessionalOdsContentXml(data, models) {
+function buildProfessionalOdsContentXml(data, models, hasLogo = false) {
   const registry = odsAutomaticStyleRegistry(models);
   const numberStyles = [...registry.numberStyles.values()].map(entry => odsNumberStyleXml(entry.name, entry.numberFormat)).join('');
   const cellStyles = [...registry.cellStyles.values()].map(odsCellStyleXml).join('');
@@ -19735,7 +20202,9 @@ function buildProfessionalOdsContentXml(data, models) {
         const merge = mergeStarts.get(key) || { rows: 1, columns: 1 };
         return odsCellXml(cell, registry.registerCell(cell.userEnteredFormat), {
           ...merge,
-          formulaResult: odsFormulaResult(data, model, rowIndex, columnIndex)
+          formulaResult: odsFormulaResult(data, model, rowIndex, columnIndex),
+          image: hasLogo && model.logoCell?.rowIndex === rowIndex && model.logoCell?.columnIndex === columnIndex,
+          imageIndex: modelIndex + 1
         });
       }).join('');
       return `<table:table-row table:style-name="${rowStyle}">${cells}</table:table-row>`;
@@ -19743,15 +20212,16 @@ function buildProfessionalOdsContentXml(data, models) {
     return `<table:table table:name="${odsXml(model.name)}">${columns}${rows}</table:table>`;
   }).join('');
   const filters = models.map((model, index) => `<table:database-range table:name="AAFollowFilter${index + 1}" table:target-range-address="${odsXml(odsSheetRangeAddress(model))}" table:display-filter-buttons="true" table:contains-header="true"/>`).join('');
-  return `<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:automatic-styles>${numberStyles}${cellStyles}${columnStyles.join('')}${rowStyles.join('')}</office:automatic-styles><office:body><office:spreadsheet><table:calculation-settings table:automatic-find-labels="false"/>${tables}<table:database-ranges>${filters}</table:database-ranges></office:spreadsheet></office:body></office:document-content>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:automatic-styles>${numberStyles}${cellStyles}${columnStyles.join('')}${rowStyles.join('')}</office:automatic-styles><office:body><office:spreadsheet><table:calculation-settings table:automatic-find-labels="false"/>${tables}<table:database-ranges>${filters}</table:database-ranges></office:spreadsheet></office:body></office:document-content>`;
 }
 
 function buildProfessionalOdsStylesXml() {
   return `<?xml version="1.0" encoding="UTF-8"?><office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:styles><style:default-style style:family="table-cell"><style:table-cell-properties style:vertical-align="middle"/><style:text-properties style:font-name="Arial" fo:font-family="Arial" fo:font-size="10pt"/></style:default-style><style:style style:name="Default" style:family="table-cell"/></office:styles><office:automatic-styles/><office:master-styles/></office:document-styles>`;
 }
 
-function buildProfessionalOdsManifestXml() {
-  return `<?xml version="1.0" encoding="UTF-8"?><manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.3"><manifest:file-entry manifest:full-path="/" manifest:version="1.3" manifest:media-type="${ODS_MIME_TYPE}"/><manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/></manifest:manifest>`;
+function buildProfessionalOdsManifestXml(hasLogo = false) {
+  const logoEntry = hasLogo ? '<manifest:file-entry manifest:full-path="Pictures/aa-follow-logo.png" manifest:media-type="image/png"/>' : '';
+  return `<?xml version="1.0" encoding="UTF-8"?><manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.3"><manifest:file-entry manifest:full-path="/" manifest:version="1.3" manifest:media-type="${ODS_MIME_TYPE}"/><manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/><manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/>${logoEntry}</manifest:manifest>`;
 }
 
 function buildProfessionalOdsMetaXml(data) {
@@ -19762,13 +20232,16 @@ async function buildProfessionalOdsArchive(data) {
   if (!window.JSZip) throw new Error('No se pudo cargar el generador de hojas');
   const models = buildProfessionalGoogleSheetsModel(data);
   const zip = new window.JSZip();
+  const logoMatch = /^data:image\/png;base64,([\s\S]+)$/i.exec(data.meta.exportLogo || '');
+  const hasLogo = Boolean(logoMatch);
   zip.file('mimetype', ODS_MIME_TYPE, { compression: 'STORE' });
-  zip.file('content.xml', buildProfessionalOdsContentXml(data, models));
+  zip.file('content.xml', buildProfessionalOdsContentXml(data, models, hasLogo));
   zip.file('styles.xml', buildProfessionalOdsStylesXml());
   zip.file('meta.xml', buildProfessionalOdsMetaXml(data));
-  zip.folder('META-INF').file('manifest.xml', buildProfessionalOdsManifestXml());
+  if (hasLogo) zip.folder('Pictures').file('aa-follow-logo.png', logoMatch[1], { base64: true });
+  zip.folder('META-INF').file('manifest.xml', buildProfessionalOdsManifestXml(hasLogo));
   return zip.generateAsync({
-    type: 'arraybuffer', mimeType: ODS_MIME_TYPE, compression: 'DEFLATE', compressionOptions: { level: 6 }
+    type: 'arraybuffer', mimeType: ODS_MIME_TYPE, compression: 'STORE'
   });
 }
 
@@ -19784,6 +20257,7 @@ async function exportSelectedGoogleSpreadsheet() {
   }
   if (title) title.textContent = 'Preparando hoja...';
   try {
+    await prepareExportBranding(data);
     await ensureJsZipOdsLibrary();
     const buffer = await buildProfessionalOdsArchive(data);
     const blob = new Blob([buffer], { type: ODS_MIME_TYPE });
@@ -21039,6 +21513,72 @@ function barcodeMacroValues(product, amount) {
   };
 }
 
+function normalizeFavoriteFoodName(value) {
+  return String(value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+}
+
+function favoriteForFoodItem(foodItem) {
+  const normalized = normalizeFavoriteFoodName(foodItem);
+  if (!normalized) return null;
+  return (DB.get('meal_templates') || []).find(item => normalizeFavoriteFoodName(item.food_item) === normalized) || null;
+}
+
+function barcodeFavoriteKey(product) {
+  const source = String(product?.source || 'base').trim().toLocaleLowerCase();
+  const identity = String(product?.code || product?.food_id || product?.name || '').trim().toLocaleLowerCase();
+  return `${source}:${identity}`;
+}
+
+function barcodeProductMealData(product = barcodeProduct, requestedAmount) {
+  if (!product) return null;
+  const amountInput = document.getElementById('barcode-grams');
+  const amount = Math.max(foodAmount(requestedAmount ?? amountInput?.value ?? product.serving_amount ?? product.reference_amount ?? 100), 0.01);
+  const unit = foodUnitLabel(product.reference_unit || product.serving_unit || 'g');
+  const compactUnit = unit === 'g' || unit === 'ml' || unit === 'oz';
+  const values = barcodeMacroValues(product, amount);
+  return {
+    meal_name: '',
+    food_item: `${foodAmount(amount)}${compactUnit ? unit : ` ${unit}`} ${product.name}`,
+    calories: values.calories,
+    protein: values.protein,
+    carbs: values.carbs,
+    fat: values.fat
+  };
+}
+
+function barcodeProductFavorite(product = barcodeProduct, requestedAmount) {
+  if (!product) return null;
+  const key = barcodeFavoriteKey(product);
+  const foodItem = barcodeProductMealData(product, requestedAmount)?.food_item || '';
+  return (DB.get('meal_templates') || []).find(item =>
+    item.favorite_key === key || normalizeFavoriteFoodName(item.food_item) === normalizeFavoriteFoodName(foodItem)
+  ) || null;
+}
+
+function toggleBarcodeProductFavorite() {
+  if (!barcodeProduct) return toast('Primero busca o escanea un alimento', 'err');
+  const existing = barcodeProductFavorite(barcodeProduct);
+  if (existing) {
+    DB.del('meal_templates', existing.id);
+    toast('Alimento quitado de favoritos');
+  } else {
+    const data = barcodeProductMealData(barcodeProduct);
+    DB.push('meal_templates', {
+      id: uid(),
+      ...data,
+      favorite_key: barcodeFavoriteKey(barcodeProduct),
+      product_code: String(barcodeProduct.code || ''),
+      product_source: String(barcodeProduct.source || ''),
+      created: today()
+    });
+    toast('Alimento guardado en favoritos');
+  }
+  fillMealTemplates();
+  renderMealTemplates();
+  renderBarcodeProduct(barcodeProduct);
+  loadMeals();
+}
+
 function renderBarcodeProduct(product) {
   const el = document.getElementById('barcode-result');
   if (!el) return;
@@ -21053,6 +21593,7 @@ function renderBarcodeProduct(product) {
   const servings = Array.isArray(product.servings) ? product.servings : [];
   const details = [product.brands, product.code].filter(Boolean).map(esc).join(' · ');
   const source = product.source || 'Open Food Facts';
+  const favorite = Boolean(barcodeProductFavorite(product, amount));
   const servingSelector = servings.length > 1 ? `
     <div class="form-row">
       <label class="form-label">Porción de referencia</label>
@@ -21061,9 +21602,12 @@ function renderBarcodeProduct(product) {
       </select>
     </div>` : '';
   el.innerHTML = `
-    <div class="flex gap-3 ai-c" style="margin-bottom:14px">
-      ${product.image_url ? `<img src="${esc(product.image_url)}" alt="${esc(product.name)}" style="width:72px;height:72px;object-fit:contain;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff">` : ''}
-      <div><strong>${esc(product.name)}</strong><div class="mini-muted">${details || 'Producto genérico'}</div><div class="mini-muted mt-2">Datos: ${esc(source)}</div></div>
+    <div class="flex jb ai-c gap-3" style="margin-bottom:14px">
+      <div class="favorite-product-copy">
+        ${product.image_url ? `<img src="${esc(product.image_url)}" alt="${esc(product.name)}" style="width:72px;height:72px;object-fit:contain;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff">` : ''}
+        <div><strong>${esc(product.name)}</strong><div class="mini-muted">${details || 'Producto genérico'}</div><div class="mini-muted mt-2">Datos: ${esc(source)}</div></div>
+      </div>
+      <button class="favorite-icon-button ${favorite ? 'is-favorite' : ''}" type="button" onclick="toggleBarcodeProductFavorite()" aria-label="${favorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${favorite}" title="${favorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}"><i data-lucide="star" aria-hidden="true"></i></button>
     </div>
     <div class="form-grid fg2">
       ${servingSelector}
@@ -21076,6 +21620,7 @@ function renderBarcodeProduct(product) {
       <div class="quick-card"><div class="quick-label">Carbos</div><div class="quick-value" id="barcode-carbs">${values.carbs}g</div></div>
       <div class="quick-card"><div class="quick-label">Grasas</div><div class="quick-value" id="barcode-fat">${values.fat}g</div></div>
     </div>`;
+  refreshInterfaceIcons();
 }
 
 function changeBarcodeServing(servingId) {
@@ -21200,15 +21745,13 @@ async function selectFoodDatabaseResult(resultId) {
 
 function useBarcodeProduct() {
   if (!barcodeProduct) return toast('Primero busca un producto', 'err');
-  const amount = Math.max(+document.getElementById('barcode-grams')?.value || 0, 0.01);
-  const unit = foodUnitLabel(barcodeProduct.reference_unit || barcodeProduct.serving_unit || 'g');
-  const values = barcodeMacroValues(barcodeProduct, amount);
+  const data = barcodeProductMealData(barcodeProduct);
   showModal('modal-meal');
-  document.getElementById('m-food').value = `${foodAmount(amount)}${unit === 'g' || unit === 'ml' || unit === 'oz' ? unit : ` ${unit}`} ${barcodeProduct.name}`;
-  document.getElementById('m-cal').value = values.calories;
-  document.getElementById('m-prot').value = values.protein;
-  document.getElementById('m-carbs').value = values.carbs;
-  document.getElementById('m-fat').value = values.fat;
+  document.getElementById('m-food').value = data.food_item;
+  document.getElementById('m-cal').value = data.calories;
+  document.getElementById('m-prot').value = data.protein;
+  document.getElementById('m-carbs').value = data.carbs;
+  document.getElementById('m-fat').value = data.fat;
 }
 
 function readFileAsDataUrl(file) {
@@ -21514,23 +22057,28 @@ function currentMealForm() {
 
 function saveMealTemplate() {
   const data = currentMealForm();
-  if (!data.food_item) return toast('Escribe el alimento para guardarlo como plantilla', 'err');
+  if (!data.food_item) return toast('Escribe el alimento para guardarlo como favorito', 'err');
   const templates = DB.get('meal_templates') || [];
-  const existing = templates.find(t => t.food_item.toLowerCase() === data.food_item.toLowerCase());
-  if (existing) Object.assign(existing, data);
-  else templates.unshift({ id: uid(), ...data, created: today() });
+  const normalizedFood = normalizeFavoriteFoodName(data.food_item);
+  const existing = templates.find(item => normalizeFavoriteFoodName(item.food_item) === normalizedFood);
+  if (existing) {
+    Object.assign(existing, data, { favorite_key: existing.favorite_key || `food:${normalizeFavoriteFoodName(data.food_item)}` });
+  } else {
+    templates.unshift({ id: uid(), ...data, favorite_key: `food:${normalizeFavoriteFoodName(data.food_item)}`, created: today() });
+  }
   DB.set('meal_templates', templates);
-  toast(existing ? 'Plantilla actualizada' : 'Plantilla guardada');
+  toast(existing ? 'Favorito actualizado' : 'Alimento guardado en favoritos');
   fillMealTemplates();
   renderMealTemplates();
+  loadMeals();
 }
 
 function applyMealTemplate() {
   const id = document.getElementById('m-template').value;
   if (!id) return;
-  const t = (DB.get('meal_templates') || []).find(x => x.id === id);
+  const t = (DB.get('meal_templates') || []).find(x => String(x.id) === String(id));
   if (!t) return;
-  document.getElementById('m-meal').value = t.meal_name || 'Desayuno';
+  if (t.meal_name) document.getElementById('m-meal').value = t.meal_name;
   document.getElementById('m-food').value = t.food_item || '';
   document.getElementById('m-cal').value = t.calories || 0;
   document.getElementById('m-prot').value = t.protein || 0;
@@ -21545,10 +22093,12 @@ function useMealTemplate(id) {
 }
 
 function deleteMealTemplate(id) {
-  DB.del('meal_templates', id);
-  toast('Plantilla enviada a la papelera');
+  const favorite = (DB.get('meal_templates') || []).find(item => String(item.id) === String(id));
+  if (favorite) DB.del('meal_templates', favorite.id);
+  toast('Alimento quitado de favoritos');
   fillMealTemplates();
   renderMealTemplates();
+  loadMeals();
 }
 
 function renderMealTemplates() {
@@ -21556,18 +22106,49 @@ function renderMealTemplates() {
   if (!el) return;
   const templates = DB.get('meal_templates') || [];
   if (!templates.length) {
-    el.innerHTML = '<div class="empty">Guarda alimentos frecuentes para cargarlos rápido.</div>';
+    el.innerHTML = '<div class="empty">Marca un alimento con la estrella para encontrarlo aquí.</div>';
     return;
   }
   el.innerHTML = `<div class="template-grid">${templates.map(t => `
     <div class="template-card">
-      <div style="font-weight:800; color:var(--text)">${esc(t.food_item)}</div>
-      <div class="mini-muted mt-2">${esc(t.meal_name || 'Comida')} · ${t.calories || 0} kcal · P:${t.protein || 0} C:${t.carbs || 0} G:${t.fat || 0}</div>
-      <div class="btn-row">
+      <div class="favorite-card-head">
+        <div>
+          <div style="font-weight:800; color:var(--text)">${esc(t.food_item)}</div>
+          <div class="mini-muted mt-2">${t.calories || 0} kcal · P:${t.protein || 0} C:${t.carbs || 0} G:${t.fat || 0}${t.product_source ? ` · ${esc(t.product_source)}` : ''}</div>
+        </div>
+        <button class="favorite-icon-button is-favorite" type="button" onclick="deleteMealTemplate('${t.id}')" aria-label="Quitar ${esc(t.food_item)} de favoritos" title="Quitar de favoritos"><i data-lucide="star" aria-hidden="true"></i></button>
+      </div>
+      <div class="favorite-card-actions">
         <button class="btn btn-primary btn-sm" onclick="useMealTemplate('${t.id}')">Usar</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteMealTemplate('${t.id}')">Eliminar</button>
       </div>
     </div>`).join('')}</div>`;
+  refreshInterfaceIcons();
+}
+
+function toggleMealFavorite(id) {
+  const meal = (DB.get('meals') || []).find(item => String(item.id) === String(id));
+  if (!meal) return toast('No encontré ese alimento', 'err');
+  const existing = favoriteForFoodItem(meal.food_item);
+  if (existing) {
+    DB.del('meal_templates', existing.id);
+    toast('Alimento quitado de favoritos');
+  } else {
+    DB.push('meal_templates', {
+      id: uid(),
+      meal_name: meal.meal_name || '',
+      food_item: meal.food_item,
+      calories: +meal.calories || 0,
+      protein: +meal.protein || 0,
+      carbs: +meal.carbs || 0,
+      fat: +meal.fat || 0,
+      favorite_key: `food:${normalizeFavoriteFoodName(meal.food_item)}`,
+      created: today()
+    });
+    toast('Alimento guardado en favoritos');
+  }
+  fillMealTemplates();
+  renderMealTemplates();
+  loadMeals();
 }
 
 function loadMeals() {
@@ -21590,6 +22171,7 @@ function loadMeals() {
 
   const mealTypes = ['Desayuno','Almuerzo','Merienda','Cena','Pre-entreno','Post-entreno','Snack'];
   const grouped = {};
+  const favoriteNames = new Set((DB.get('meal_templates') || []).map(item => normalizeFavoriteFoodName(item.food_item)));
   meals.forEach(m => { if (!grouped[m.meal_name]) grouped[m.meal_name] = []; grouped[m.meal_name].push(m); });
 
   const el = document.getElementById('meals-list');
@@ -21598,18 +22180,20 @@ function loadMeals() {
     <div style="margin-bottom:16px">
       <div style="font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:8px">${mealName}</div>
       ${grouped[mealName].map(item => `
-        <div class="flex jb ai-c" style="padding:10px 14px; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px">
+        <div class="flex jb ai-c nutrition-meal-row" style="padding:10px 14px; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:6px">
           <div>
             <div style="font-size:0.9rem; font-weight:600; color:var(--text)">${esc(item.food_item)}</div>
             <div style="font-size:0.75rem; color:var(--muted); margin-top: 2px">P:${item.protein}g   C:${item.carbs}g   G:${item.fat}g</div>
           </div>
-          <div class="flex ai-c gap-3">
+          <div class="flex ai-c gap-3 nutrition-meal-actions">
             <span style="font-weight:700; color:var(--accent-l); font-size:0.95rem">${item.calories} kcal</span>
+            <button class="favorite-icon-button ${favoriteNames.has(normalizeFavoriteFoodName(item.food_item)) ? 'is-favorite' : ''}" type="button" onclick="toggleMealFavorite('${item.id}')" aria-label="${favoriteNames.has(normalizeFavoriteFoodName(item.food_item)) ? 'Quitar de favoritos' : 'Guardar en favoritos'}" aria-pressed="${favoriteNames.has(normalizeFavoriteFoodName(item.food_item))}" title="${favoriteNames.has(normalizeFavoriteFoodName(item.food_item)) ? 'Quitar de favoritos' : 'Guardar en favoritos'}"><i data-lucide="star" aria-hidden="true"></i></button>
             <button class="btn btn-ghost btn-sm" onclick="editMeal('${item.id}')">Editar</button>
             <button class="btn btn-ghost btn-sm" onclick="deleteMeal('${item.id}')">✕</button>
           </div>
         </div>`).join('')}
     </div>`).join('');
+  refreshInterfaceIcons();
 }
 
 function deleteMeal(id) {
