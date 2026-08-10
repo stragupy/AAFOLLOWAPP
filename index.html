@@ -8312,7 +8312,7 @@ input[type="radio"] {
 
 .export-range-options {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 6px;
   padding: 5px;
   background: var(--elevated);
@@ -13388,20 +13388,8 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
       <section>
         <span class="export-section-label">Período</span>
         <div class="export-range-options" role="group" aria-label="Período de exportación">
-          <button class="export-range-option active" type="button" data-export-preset="day" onclick="setExportPreset('day')">Un día</button>
-          <button class="export-range-option" type="button" data-export-preset="week" onclick="setExportPreset('week')">Una semana</button>
-          <button class="export-range-option" type="button" data-export-preset="month" onclick="setExportPreset('month')">Un mes</button>
-          <button class="export-range-option" type="button" data-export-preset="custom" onclick="setExportPreset('custom')">Personalizado</button>
-        </div>
-        <div class="export-custom-range" id="export-custom-range">
-          <div class="form-row">
-            <label class="form-label" for="export-start-date">Desde</label>
-            <input type="date" id="export-start-date" onchange="refreshExportPreview()">
-          </div>
-          <div class="form-row">
-            <label class="form-label" for="export-end-date">Hasta</label>
-            <input type="date" id="export-end-date" onchange="refreshExportPreview()">
-          </div>
+          <button class="export-range-option active" type="button" data-export-preset="day" onclick="setExportPreset('day')">Día</button>
+          <button class="export-range-option" type="button" data-export-preset="week" onclick="setExportPreset('week')">Semana</button>
         </div>
       </section>
 
@@ -13410,7 +13398,7 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
           <strong id="export-range-title">Día seleccionado</strong>
           <span id="export-range-dates">—</span>
         </div>
-        <div class="export-range-days"><span id="export-range-days">1</span> <small>días</small></div>
+        <div class="export-range-days"><span id="export-range-days">1</span> <small id="export-range-unit">pestaña</small></div>
       </div>
 
       <div class="export-data-preview" id="export-data-preview">
@@ -18495,7 +18483,7 @@ function exportWeeklyProfessionalReportLegacy() {
 // ═══════════════════════════════════════════════════
 // EXPORTACIÓN PROFESIONAL — FUENTE ÚNICA DE DATOS
 // ═══════════════════════════════════════════════════
-const AA_FOLLOW_APP_VERSION = '1.1.0';
+const AA_FOLLOW_APP_VERSION = '1.2.0';
 const EXPORT_DAILY_TARGETS = Object.freeze({ water: 2500, steps: 10000, sleep: 8 });
 const EXPORT_BODY_LABELS = {
   weight: 'Peso', body_fat: 'Grasa corporal', muscle_mass: 'Masa muscular',
@@ -18551,19 +18539,6 @@ function exportPresetRange(preset = activeExportPreset, anchorDate = selectedDat
     const dates = getWeekDates(weekValueFromDate(anchorDate));
     return { startDate: dates[0], endDate: dates[6], title: 'Semana seleccionada' };
   }
-  if (preset === 'month') {
-    const [year, month] = anchorDate.split('-').map(Number);
-    const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
-    const endDate = dateKey(new Date(year, month, 0));
-    return { startDate, endDate, title: 'Mes seleccionado' };
-  }
-  if (preset === 'custom') {
-    return {
-      startDate: document.getElementById('export-start-date')?.value || '',
-      endDate: document.getElementById('export-end-date')?.value || '',
-      title: 'Rango personalizado'
-    };
-  }
   return { startDate: anchorDate, endDate: anchorDate, title: 'Día seleccionado' };
 }
 
@@ -18605,7 +18580,7 @@ function exportSupplementProgress(checkValue, dose, freeDay = false) {
 function exportStatusClass(status) {
   if (['Completado', 'Cumplido', 'Registrado', 'Mejora', 'Subió'].includes(status)) return 'complete';
   if (['Parcial', 'En curso', 'Mixto', 'Ajuste de carga'].includes(status)) return 'partial';
-  if (['No evaluado', 'Sin cambio', 'Primera referencia'].includes(status)) return 'neutral';
+  if (['No evaluado', 'Sin cambio', 'Primera referencia', 'Inicial'].includes(status)) return 'neutral';
   return 'pending';
 }
 
@@ -18976,17 +18951,13 @@ function currentExportData(showError = true) {
 }
 
 function openExportModal(preset = 'day') {
-  const anchor = selectedDate();
-  document.getElementById('export-start-date').value = anchor;
-  document.getElementById('export-end-date').value = anchor;
   showModal('modal-export');
   setExportPreset(preset);
 }
 
 function setExportPreset(preset) {
-  activeExportPreset = ['day', 'week', 'month', 'custom'].includes(preset) ? preset : 'day';
+  activeExportPreset = ['day', 'week'].includes(preset) ? preset : 'day';
   document.querySelectorAll('[data-export-preset]').forEach(button => button.classList.toggle('active', button.dataset.exportPreset === activeExportPreset));
-  document.getElementById('export-custom-range')?.classList.toggle('show', activeExportPreset === 'custom');
   refreshExportPreview();
 }
 
@@ -18996,6 +18967,7 @@ function refreshExportPreview() {
   const title = document.getElementById('export-range-title');
   const dates = document.getElementById('export-range-dates');
   const days = document.getElementById('export-range-days');
+  const unit = document.getElementById('export-range-unit');
   if (!data) {
     if (title) title.textContent = 'Revisa el período';
     if (dates) dates.textContent = range.startDate && range.endDate ? `${range.startDate} - ${range.endDate}` : 'Selecciona ambas fechas';
@@ -19006,6 +18978,7 @@ function refreshExportPreview() {
   if (title) title.textContent = range.title;
   if (dates) dates.textContent = data.meta.rangeLabel;
   if (days) days.textContent = data.meta.dayCount;
+  if (unit) unit.textContent = data.meta.dayCount === 1 ? 'pestaña' : 'pestañas';
   document.getElementById('export-preview-meals').textContent = data.meals.length;
   document.getElementById('export-preview-sessions').textContent = data.summary.sessions;
   document.getElementById('export-preview-body').textContent = data.body.length;
@@ -19503,6 +19476,81 @@ function exportExcelCreateSummary(workbook, data, logoImageId) {
   worksheet.headerFooter.oddFooter = `&LAA Follow App&C${data.meta.rangeLabel}&RInforme ${data.meta.version}`;
 }
 
+function exportExcelApplyModelCell(cell, sourceCell, data, model, rowIndex, columnIndex) {
+  const entered = sourceCell.userEnteredValue || {};
+  const format = sourceCell.userEnteredFormat || {};
+  const text = format.textFormat || {};
+  if (entered.formulaValue) {
+    cell.value = { formula: String(entered.formulaValue).replace(/^=/, ''), result: odsFormulaResult(data, model, rowIndex, columnIndex) };
+  } else if (entered.numberValue != null) {
+    cell.value = entered.numberValue;
+  } else if (entered.boolValue != null) {
+    cell.value = entered.boolValue;
+  } else {
+    cell.value = entered.stringValue || '';
+  }
+  const fontColor = odsRgbHex(text.foregroundColorStyle);
+  cell.font = {
+    name: text.fontFamily || 'Arial',
+    size: Number(text.fontSize) || 10,
+    bold: Boolean(text.bold),
+    italic: Boolean(text.italic),
+    color: fontColor ? { argb: `FF${fontColor}` } : undefined
+  };
+  const background = odsRgbHex(format.backgroundColorStyle);
+  if (background) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: `FF${background}` } };
+  cell.alignment = {
+    horizontal: ({ LEFT: 'left', RIGHT: 'right', CENTER: 'center' })[format.horizontalAlignment] || 'left',
+    vertical: format.verticalAlignment === 'TOP' ? 'top' : 'middle',
+    wrapText: format.wrapStrategy === 'WRAP'
+  };
+  const border = {};
+  ['bottom', 'right'].forEach(side => {
+    const source = format.borders?.[side];
+    if (!source) return;
+    const color = odsRgbHex(source.colorStyle) || 'D9DEDB';
+    border[side] = { style: source.style === 'SOLID_MEDIUM' ? 'medium' : 'thin', color: { argb: `FF${color}` } };
+  });
+  if (Object.keys(border).length) cell.border = border;
+  if (format.numberFormat?.pattern) cell.numFmt = format.numberFormat.pattern;
+}
+
+function exportExcelCreateModelSheet(workbook, data, model, logoImageId) {
+  const worksheet = workbook.addWorksheet(model.name, {
+    properties: { defaultRowHeight: model.dataRowHeight || 23 },
+    views: [{ state: 'frozen', ySplit: model.freezeRows || 0, showGridLines: false }]
+  });
+  model.widths.forEach((width, index) => {
+    worksheet.getColumn(index + 1).width = Math.max(8, Math.min(42, (Number(width) - 5) / 7));
+  });
+  model.rows.forEach((sourceRow, rowIndex) => {
+    const row = worksheet.getRow(rowIndex + 1);
+    row.height = model.rowHeights[rowIndex] || model.dataRowHeight || 23;
+    sourceRow.values.forEach((sourceCell, columnIndex) => {
+      exportExcelApplyModelCell(row.getCell(columnIndex + 1), sourceCell, data, model, rowIndex, columnIndex);
+    });
+  });
+  model.merges.forEach(range => {
+    const start = `${exportExcelColumnLetter(range.startColumnIndex + 1)}${range.startRowIndex + 1}`;
+    const end = `${exportExcelColumnLetter(range.endColumnIndex)}${range.endRowIndex}`;
+    worksheet.mergeCells(`${start}:${end}`);
+  });
+  if (logoImageId != null && model.logoCell) {
+    worksheet.getCell(model.logoCell.rowIndex + 1, model.logoCell.columnIndex + 1).value = '';
+    worksheet.addImage(logoImageId, {
+      tl: { col: model.logoCell.columnIndex + 0.15, row: model.logoCell.rowIndex + 0.32 },
+      ext: { width: 112, height: 50 },
+      editAs: 'oneCell'
+    });
+  }
+  worksheet.pageSetup = {
+    orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9,
+    margins: { left: 0.3, right: 0.3, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+  };
+  worksheet.headerFooter.oddFooter = `&LAA Follow App&C${model.name}&RInforme ${data.meta.version}`;
+  return worksheet;
+}
+
 function buildProfessionalExcelWorkbook(data) {
   if (!window.ExcelJS?.Workbook) throw new Error('No se pudo cargar el generador de Excel');
   const workbook = new window.ExcelJS.Workbook();
@@ -19515,119 +19563,7 @@ function buildProfessionalExcelWorkbook(data) {
   workbook.company = 'AA Follow';
   workbook.calcProperties.fullCalcOnLoad = true;
   const logoImageId = exportExcelRegisterLogo(workbook, data);
-
-  exportExcelCreateSummary(workbook, data, logoImageId);
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Alimentación', title: 'Alimentación', statusKey: 'status',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Comida', key: 'meal', width: 17 },
-      { header: 'Alimento', key: 'food', width: 34, wrap: true },
-      { header: 'Calorías', key: 'calories', type: 'number', width: 13, numFmt: '#,##0' },
-      { header: 'Proteínas', key: 'protein', type: 'number', width: 13, numFmt: '#,##0.0' },
-      { header: 'Carbohidratos', key: 'carbs', type: 'number', width: 16, numFmt: '#,##0.0' },
-      { header: 'Grasas', key: 'fat', type: 'number', width: 11, numFmt: '#,##0.0' },
-      { header: 'Hora', key: 'time', width: 10, align: 'center' },
-      { header: 'Estado', key: 'status', width: 21, align: 'center' }
-    ],
-    rows: data.meals,
-    emptyText: 'No hay comidas registradas en el período seleccionado'
-  }, logoImageId);
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Suplementos', title: 'Suplementos', statusKey: 'status',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Nombre', key: 'name', width: 28 },
-      { header: 'Objetivo', key: 'objective', width: 16 },
-      { header: 'Consumido', key: 'consumed', width: 16 },
-      { header: 'Unidad', key: 'unit', width: 18 },
-      { header: 'Estado', key: 'status', width: 18, align: 'center' }
-    ],
-    rows: data.supplements,
-    emptyText: 'No hay suplementos configurados para este período'
-  }, logoImageId);
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Entrenamiento', title: 'Entrenamiento',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Sesión', key: 'session', width: 23 },
-      { header: 'Ejercicio', key: 'exercise', width: 27 },
-      { header: 'Serie', key: 'set', type: 'number', width: 9, numFmt: '#,##0' },
-      { header: 'Peso', key: 'weight', type: 'number', width: 11, numFmt: '#,##0.0' },
-      { header: 'Repeticiones', key: 'reps', type: 'number', width: 15, numFmt: '#,##0' },
-      { header: 'Volumen', key: 'volume', type: 'number', width: 14, numFmt: '#,##0.0' },
-      { header: 'Tiempo', key: 'time', type: 'number', width: 12, numFmt: '#,##0 "min"' },
-      { header: 'Notas', key: 'notes', width: 38, wrap: true, transform: (value, item) => [item.effort, value, item.isPr ? 'PR' : ''].filter(Boolean).join(' · ') }
-    ],
-    rows: data.training,
-    rowHeight: 28,
-    emptyText: 'No hay sesiones de entrenamiento registradas en este período'
-  }, logoImageId);
-
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Progresión', title: 'Progresión de fuerza y rendimiento', statusKey: 'status',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Sesión', key: 'session', width: 22 },
-      { header: 'Ejercicio', key: 'exercise', width: 26 },
-      { header: 'Series', key: 'sets', type: 'number', width: 9, numFmt: '#,##0' },
-      { header: 'Reps totales', key: 'reps', type: 'number', width: 14, numFmt: '#,##0' },
-      { header: 'Peso máximo', key: 'maxWeight', type: 'number', width: 14, numFmt: '#,##0.0 "kg"' },
-      { header: 'Volumen', key: 'volume', type: 'number', width: 14, numFmt: '#,##0.0 "kg"' },
-      { header: '1RM estimado', key: 'estimated1rm', type: 'number', width: 15, numFmt: '#,##0.0 "kg"' },
-      { header: 'Comparado con', key: 'previousDate', type: 'date', width: 14 },
-      { header: 'Δ peso', key: 'deltaWeight', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
-      { header: 'Δ reps', key: 'deltaReps', type: 'number', width: 11, numFmt: '+0;-0;0', delta: true },
-      { header: 'Δ volumen', key: 'deltaVolume', type: 'number', width: 14, numFmt: '+0.0;-0.0;0.0', delta: true },
-      { header: 'Δ 1RM', key: 'delta1rm', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
-      { header: 'Tendencia', key: 'status', width: 18, align: 'center' }
-    ],
-    rows: data.trainingProgress,
-    rowHeight: 26,
-    emptyText: 'Se necesitan sesiones comparables para mostrar la progresión'
-  }, logoImageId);
-
-  const bodyColumns = [
-    { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-    ...data.bodyMeasurementKeys.map(key => ({
-      header: data.bodyMeasurementLabels[key] || key.replace(/_/g, ' '),
-      key,
-      type: 'number',
-      width: Math.max(12, Math.min(22, (data.bodyMeasurementLabels[key] || key).length + 3)),
-      numFmt: '#,##0.0'
-    })),
-    { header: 'Δ peso', key: 'weightChange', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
-    { header: 'Δ grasa', key: 'bodyFatChange', type: 'number', width: 12, numFmt: '+0.0;-0.0;0.0', delta: true },
-    { header: 'Notas', key: 'notes', width: 38, wrap: true }
-  ];
-  exportExcelCreateSheet(workbook, data, { name: 'Peso y medidas', title: 'Peso, composición y medidas', columns: bodyColumns, rows: data.body, rowHeight: 28, emptyText: 'No hay mediciones corporales en este período' }, logoImageId);
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Hábitos', title: 'Hábitos', statusKey: 'status',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Hábito', key: 'habit', width: 29 },
-      { header: 'Objetivo', key: 'objective', type: 'number', width: 14, numFmt: '#,##0.0' },
-      { header: 'Realizado', key: 'actual', type: 'number', width: 14, numFmt: '#,##0.0' },
-      { header: 'Unidad', key: 'unit', width: 14 },
-      { header: 'Estado', key: 'status', width: 17, align: 'center' },
-      { header: 'Origen', key: 'source', width: 20 }
-    ],
-    rows: data.habits,
-    emptyText: 'No hay hábitos medibles en este período'
-  }, logoImageId);
-  exportExcelCreateSheet(workbook, data, {
-    name: 'Notas', title: 'Notas y contexto',
-    columns: [
-      { header: 'Fecha', key: 'date', type: 'date', width: 13 },
-      { header: 'Título', key: 'title', width: 25 },
-      { header: 'Contenido', key: 'content', width: 58, wrap: true },
-      { header: 'Estado de ánimo', key: 'mood', width: 19 },
-      { header: 'Origen', key: 'source', width: 18 }
-    ],
-    rows: data.notes,
-    rowHeight: 34,
-    emptyText: 'No hay notas o eventos en este período'
-  }, logoImageId);
+  buildProfessionalGoogleSheetsModel(data).forEach(model => exportExcelCreateModelSheet(workbook, data, model, logoImageId));
   return workbook;
 }
 
@@ -19920,7 +19856,7 @@ function buildGoogleSheetsSummaryTab(data) {
   };
 }
 
-function buildProfessionalGoogleSheetsModel(data) {
+function buildLegacyProfessionalGoogleSheetsModel(data) {
   const standard = (name, title, columns, rows, options = {}) => buildGoogleSheetsDataTab(data, { name, title, columns, rows, ...options });
   const bodyColumns = [
     { header: 'Fecha', key: 'date', type: 'date', width: 105 },
@@ -19998,6 +19934,345 @@ function buildProfessionalGoogleSheetsModel(data) {
       { header: 'Origen', key: 'source', width: 125 }
     ], data.notes, { rowHeight: 38 })
   ];
+}
+
+function exportDailyDataSlice(data, date) {
+  const daily = data.daily.find(item => item.date === date) || {
+    date, day: exportDayName(date), dayStatus: 'Plan regular', freeDay: false,
+    meals: 0, trained: 'No', sessions: 0, trainingMinutes: 0, trainingVolume: 0,
+    supplementsDone: 0, supplementsTotal: 0, supplementation: 'Sin plan',
+    calories: 0, protein: 0, carbs: 0, fat: 0, water: 0, steps: 0,
+    cardioMinutes: 0, weight: null, weightChange: null, bodyFat: null,
+    sleep: null, energy: null, mood: null, compliance: null
+  };
+  const filterDate = items => items.filter(item => item.date === date);
+  const meals = filterDate(data.meals);
+  const supplements = filterDate(data.supplements);
+  const training = filterDate(data.training);
+  const trainingProgress = filterDate(data.trainingProgress);
+  const body = filterDate(data.body);
+  const habits = filterDate(data.habits);
+  const notes = filterDate(data.notes);
+  const bodyEntry = body[body.length - 1] || null;
+  return {
+    ...data,
+    meta: {
+      ...data.meta,
+      preset: 'day', startDate: date, endDate: date,
+      rangeLabel: exportDateLabel(date), dayCount: 1
+    },
+    dates: [date],
+    daily: [daily],
+    meals,
+    supplements,
+    training,
+    trainingProgress,
+    body,
+    habits,
+    notes,
+    summary: {
+      calories: daily.calories,
+      protein: daily.protein,
+      carbs: daily.carbs,
+      fat: daily.fat,
+      waterTotal: daily.water,
+      waterAverage: daily.water > 0 ? daily.water : null,
+      stepsTotal: daily.steps,
+      stepsAverage: daily.steps > 0 ? daily.steps : null,
+      sleepAverage: daily.sleep,
+      weight: daily.weight,
+      bodyFat: daily.bodyFat,
+      sessions: daily.sessions,
+      trainingVolume: daily.trainingVolume,
+      trainingMinutes: daily.trainingMinutes,
+      trainingImprovements: trainingProgress.filter(item => ['Mejora', 'Subió'].includes(item.status)).length,
+      trainingRegressions: trainingProgress.filter(item => item.status === 'Bajó').length,
+      weightChange: daily.weightChange,
+      bodyFatChange: bodyEntry?.bodyFatChange ?? null,
+      compliance: daily.compliance,
+      freeDays: daily.freeDay ? 1 : 0
+    }
+  };
+}
+
+function exportDailySheetName(date, singleDay = false) {
+  const [, month, day] = String(date).split('-');
+  const shortDay = exportDayName(date).slice(0, 3);
+  return singleDay ? `Día ${day}-${month}` : `${shortDay} ${day}-${month}`;
+}
+
+function exportBodyMeasurementUnit(key) {
+  if (['weight', 'muscle_mass'].includes(key)) return 'kg';
+  if (key === 'body_fat') return '%';
+  return 'cm';
+}
+
+function buildGoogleSheetsDailyTab(data, date, sheetName) {
+  const dayData = exportDailyDataSlice(data, date);
+  const day = dayData.daily[0];
+  const columnCount = 10;
+  const rows = [];
+  const merges = [];
+  const rowHeights = {};
+  const blankFormat = googleSheetsFormat({ border: false });
+  const titleFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 16, border: false });
+  const metaFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#d6ddd9', fontSize: 9, border: false });
+  const detailFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navy, color: '#9fa9a3', fontSize: 8, border: false });
+  const sectionFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.blueBg, color: GOOGLE_SHEETS_PALETTE.blue, bold: true, fontSize: 9, border: false });
+  const headerFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.navySoft, color: GOOGLE_SHEETS_PALETTE.white, bold: true, fontSize: 9, wrap: true });
+  const cardLabelFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.muted, bold: true, fontSize: 8, border: false });
+  const cardValueFormat = pattern => googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.panel, color: GOOGLE_SHEETS_PALETTE.navy, bold: true, fontSize: 14, numberPattern: pattern, border: false });
+  const emptyFormat = googleSheetsFormat({ background: GOOGLE_SHEETS_PALETTE.surface, color: GOOGLE_SHEETS_PALETTE.dim, align: 'CENTER', wrap: true });
+
+  const addRow = (cells = [], height = 25) => {
+    const rowIndex = rows.length;
+    rows.push({
+      values: Array.from({ length: columnCount }, (_, columnIndex) => cells[columnIndex] || googleSheetsCell('', { format: blankFormat }))
+    });
+    rowHeights[rowIndex] = height;
+    return rowIndex;
+  };
+  const addMergedRow = (value, format, height = 24) => {
+    const rowIndex = addRow(Array.from({ length: columnCount }, (_, index) => googleSheetsCell(index === 0 ? value : '', { format })), height);
+    merges.push({ startRowIndex: rowIndex, endRowIndex: rowIndex + 1, startColumnIndex: 0, endColumnIndex: columnCount });
+    return rowIndex;
+  };
+  const addSpacer = (height = 11) => addRow([], height);
+  const addSection = title => {
+    addSpacer();
+    return addMergedRow(title, sectionFormat, 23);
+  };
+  const addCardPair = (cards, labelRowHeight = 19, valueRowHeight = 31) => {
+    const labelCells = Array.from({ length: columnCount }, () => googleSheetsCell('', { format: cardLabelFormat }));
+    const valueCells = Array.from({ length: columnCount }, () => googleSheetsCell('', { format: cardValueFormat() }));
+    cards.forEach((card, index) => {
+      const start = index * 2;
+      labelCells[start] = googleSheetsCell(card.label, { format: cardLabelFormat });
+      valueCells[start] = googleSheetsCell(card.value == null ? '' : card.value, { format: cardValueFormat(card.pattern) });
+    });
+    const labelRow = addRow(labelCells, labelRowHeight);
+    const valueRow = addRow(valueCells, valueRowHeight);
+    cards.forEach((card, index) => {
+      const start = index * 2;
+      merges.push({ startRowIndex: labelRow, endRowIndex: labelRow + 1, startColumnIndex: start, endColumnIndex: start + 2 });
+      merges.push({ startRowIndex: valueRow, endRowIndex: valueRow + 1, startColumnIndex: start, endColumnIndex: start + 2 });
+    });
+  };
+  const addTable = (title, fields, items, emptyText, options = {}) => {
+    addSection(title);
+    const headerCells = Array.from({ length: columnCount }, () => googleSheetsCell('', { format: headerFormat }));
+    let cursor = 0;
+    fields.forEach(field => {
+      const span = field.span || 1;
+      headerCells[cursor] = googleSheetsCell(field.header, { format: headerFormat });
+      cursor += span;
+    });
+    const headerRow = addRow(headerCells, 28);
+    cursor = 0;
+    fields.forEach(field => {
+      const span = field.span || 1;
+      if (span > 1) merges.push({ startRowIndex: headerRow, endRowIndex: headerRow + 1, startColumnIndex: cursor, endColumnIndex: cursor + span });
+      cursor += span;
+    });
+    if (!items.length) {
+      const emptyRow = addRow(Array.from({ length: columnCount }, (_, index) => googleSheetsCell(index === 0 ? emptyText : '', { format: emptyFormat })), 34);
+      merges.push({ startRowIndex: emptyRow, endRowIndex: emptyRow + 1, startColumnIndex: 0, endColumnIndex: columnCount });
+      return;
+    }
+    items.forEach((item, itemIndex) => {
+      const background = itemIndex % 2 === 1 ? GOOGLE_SHEETS_PALETTE.surface : GOOGLE_SHEETS_PALETTE.white;
+      const cells = Array.from({ length: columnCount }, () => googleSheetsCell('', { format: googleSheetsFormat({ background }) }));
+      let columnIndex = 0;
+      fields.forEach(field => {
+        const span = field.span || 1;
+        let value = typeof field.get === 'function' ? field.get(item) : item[field.key];
+        if (field.transform) value = field.transform(value, item);
+        let format = googleSheetsFormat({
+          background,
+          align: field.align || (field.type === 'number' ? 'RIGHT' : 'LEFT'),
+          wrap: Boolean(field.wrap),
+          numberPattern: field.numberPattern,
+          numberType: field.type === 'date' ? 'DATE' : 'NUMBER'
+        });
+        if (field.type === 'date') format.numberFormat = { type: 'DATE', pattern: field.numberPattern || 'dd/mm/yyyy' };
+        if (field.status) {
+          const styleValue = String(value).startsWith('Registrado') ? 'Registrado' : value;
+          format = googleSheetsStatusFormat(styleValue);
+          if (field.wrap) format.wrapStrategy = 'WRAP';
+        }
+        if (field.delta && Number.isFinite(Number(value)) && Number(value) !== 0) {
+          format = googleSheetsFormat({
+            background, color: Number(value) > 0 ? GOOGLE_SHEETS_PALETTE.green : GOOGLE_SHEETS_PALETTE.red,
+            bold: true, align: 'RIGHT', numberPattern: field.numberPattern
+          });
+        }
+        cells[columnIndex] = googleSheetsCell(value == null ? '' : value, { type: field.type, format });
+        columnIndex += span;
+      });
+      const rowIndex = addRow(cells, options.rowHeight || (fields.some(field => field.wrap) ? 34 : 26));
+      columnIndex = 0;
+      fields.forEach(field => {
+        const span = field.span || 1;
+        if (span > 1) merges.push({ startRowIndex: rowIndex, endRowIndex: rowIndex + 1, startColumnIndex: columnIndex, endColumnIndex: columnIndex + span });
+        columnIndex += span;
+      });
+    });
+  };
+
+  const brandRow = (value, format, rowIndex) => addRow(Array.from({ length: columnCount }, (_, columnIndex) => googleSheetsCell(
+    columnIndex === 0 && rowIndex === 0 ? 'AA FOLLOW APP' : columnIndex === 2 ? value : '', { format }
+  )), rowIndex === 0 ? 29 : rowIndex === 1 ? 24 : 21);
+  brandRow(`Informe diario · ${day.day}`, titleFormat, 0);
+  brandRow(`${exportDateLabel(date)} · ${data.meta.userName || 'Perfil local'}`, metaFormat, 1);
+  brandRow(`Generado ${data.meta.generatedLabel} · ${day.dayStatus} · Informe ${data.meta.version}`, detailFormat, 2);
+  merges.push(
+    { startRowIndex: 0, endRowIndex: 3, startColumnIndex: 0, endColumnIndex: 2 },
+    { startRowIndex: 0, endRowIndex: 1, startColumnIndex: 2, endColumnIndex: columnCount },
+    { startRowIndex: 1, endRowIndex: 2, startColumnIndex: 2, endColumnIndex: columnCount },
+    { startRowIndex: 2, endRowIndex: 3, startColumnIndex: 2, endColumnIndex: columnCount }
+  );
+  addSpacer();
+  addMergedRow('RESUMEN DEL DÍA', sectionFormat, 23);
+  addCardPair([
+    { label: 'CALORÍAS', value: day.calories, pattern: '#,##0 "kcal"' },
+    { label: 'PROTEÍNAS', value: day.protein, pattern: '#,##0.0 "g"' },
+    { label: 'PASOS', value: day.steps, pattern: '#,##0' },
+    { label: 'SESIONES', value: day.sessions, pattern: '#,##0' },
+    { label: 'VOLUMEN', value: day.trainingVolume, pattern: '#,##0.0 "kg"' }
+  ]);
+  addCardPair([
+    { label: 'AGUA', value: day.water, pattern: '#,##0 "ml"' },
+    { label: 'SUPLEMENTOS', value: day.supplementation },
+    { label: 'PESO', value: day.weight, pattern: '#,##0.0 "kg"' },
+    { label: 'SUEÑO', value: day.sleep, pattern: '#,##0.0 "h"' },
+    { label: 'CUMPLIMIENTO', value: day.compliance == null ? null : day.compliance / 100, pattern: '0%' }
+  ]);
+
+  const indicatorStatus = (actual, target, recordedOnly = false) => {
+    if (actual == null || actual === '' || Number(actual) <= 0) return day.freeDay ? 'No evaluado' : 'Pendiente';
+    if (recordedOnly || !target) return 'Registrado';
+    return Number(actual) >= Number(target) ? 'Cumplido' : 'En curso';
+  };
+  const indicators = [
+    { metric: 'Estado del día', actual: day.dayStatus, target: '—', unit: '', status: day.freeDay ? 'No evaluado' : 'Registrado' },
+    { metric: 'Calorías', actual: day.calories, target: dayData.targets.nutrition.calories, unit: 'kcal', status: indicatorStatus(day.calories, null, true) },
+    { metric: 'Proteínas', actual: day.protein, target: dayData.targets.nutrition.protein, unit: 'g', status: indicatorStatus(day.protein, null, true) },
+    { metric: 'Carbohidratos', actual: day.carbs, target: dayData.targets.nutrition.carbs, unit: 'g', status: indicatorStatus(day.carbs, null, true) },
+    { metric: 'Grasas', actual: day.fat, target: dayData.targets.nutrition.fat, unit: 'g', status: indicatorStatus(day.fat, null, true) },
+    { metric: 'Agua', actual: day.water, target: dayData.targets.water, unit: 'ml', status: indicatorStatus(day.water, dayData.targets.water) },
+    { metric: 'Pasos', actual: day.steps, target: dayData.targets.steps, unit: 'pasos', status: indicatorStatus(day.steps, dayData.targets.steps) },
+    { metric: 'Cardio', actual: day.cardioMinutes, target: '—', unit: 'min', status: indicatorStatus(day.cardioMinutes, null, true) },
+    { metric: 'Entrenamiento', actual: day.trained, target: day.sessions ? `${day.sessions} sesión${day.sessions === 1 ? '' : 'es'}` : '—', unit: '', status: day.sessions ? 'Completado' : 'No evaluado' },
+    { metric: 'Minutos de entrenamiento', actual: day.trainingMinutes, target: '—', unit: 'min', status: indicatorStatus(day.trainingMinutes, null, true) },
+    { metric: 'Sueño', actual: day.sleep ?? '—', target: dayData.targets.sleep, unit: 'h', status: indicatorStatus(day.sleep, dayData.targets.sleep) },
+    { metric: 'Energía', actual: day.energy ?? '—', target: 5, unit: '/5', status: indicatorStatus(day.energy, null, true) },
+    { metric: 'Ánimo', actual: day.mood ?? '—', target: '—', unit: '', status: indicatorStatus(day.mood, null, true) }
+  ];
+  addTable('INDICADORES DEL DÍA', [
+    { header: 'Indicador', key: 'metric', span: 3 },
+    { header: 'Realizado', key: 'actual', span: 2 },
+    { header: 'Objetivo', key: 'target', span: 2 },
+    { header: 'Unidad', key: 'unit', span: 1, align: 'CENTER' },
+    { header: 'Estado', key: 'status', span: 2, status: true, align: 'CENTER' }
+  ], indicators, 'Sin indicadores para este día');
+
+  addTable('COMIDAS DEL DÍA', [
+    { header: 'Hora', key: 'time', span: 1, align: 'CENTER' },
+    { header: 'Comida', key: 'meal', span: 2 },
+    { header: 'Alimento', key: 'food', span: 2, wrap: true },
+    { header: 'Kcal', key: 'calories', span: 1, type: 'number', numberPattern: '#,##0' },
+    { header: 'Prot.', key: 'protein', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Carbs', key: 'carbs', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Grasas', key: 'fat', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Estado', key: 'status', span: 1, status: true, align: 'CENTER' }
+  ], dayData.meals, 'Sin comidas registradas en este día', { rowHeight: 32 });
+
+  addTable('SUPLEMENTACIÓN', [
+    { header: 'Suplemento', key: 'name', span: 3 },
+    { header: 'Objetivo', key: 'objective', span: 2 },
+    { header: 'Consumido', key: 'consumed', span: 2 },
+    { header: 'Unidad', key: 'unit', span: 1, align: 'CENTER' },
+    { header: 'Estado', key: 'status', span: 2, status: true, align: 'CENTER' }
+  ], dayData.supplements, 'Sin suplementos configurados para este día');
+
+  addTable('ENTRENAMIENTO', [
+    { header: 'Sesión', key: 'session', span: 1 },
+    { header: 'Ejercicio', key: 'exercise', span: 2, wrap: true },
+    { header: 'Serie', key: 'set', span: 1, type: 'number', numberPattern: '#,##0' },
+    { header: 'Peso', key: 'weight', span: 1, type: 'number', numberPattern: '#,##0.0 "kg"' },
+    { header: 'Reps', key: 'reps', span: 1, type: 'number', numberPattern: '#,##0' },
+    { header: 'Volumen', key: 'volume', span: 1, type: 'number', numberPattern: '#,##0.0 "kg"' },
+    { header: 'Esfuerzo', key: 'effort', span: 1, align: 'CENTER' },
+    { header: 'PR', key: 'isPr', span: 1, transform: value => value ? 'Sí' : '', align: 'CENTER' },
+    { header: 'Notas', key: 'notes', span: 1, wrap: true }
+  ], dayData.training, 'Sin entrenamiento registrado en este día', { rowHeight: 34 });
+
+  addTable('PROGRESIÓN DE FUERZA', [
+    { header: 'Ejercicio', key: 'exercise', span: 2, wrap: true },
+    { header: 'Peso máx.', key: 'maxWeight', span: 1, type: 'number', numberPattern: '#,##0.0 "kg"' },
+    { header: 'Reps', key: 'reps', span: 1, type: 'number', numberPattern: '#,##0' },
+    { header: 'Vol. kg', key: 'volume', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Comparado', key: 'previousDate', span: 1, transform: value => value ? `${String(value).slice(8, 10)}/${String(value).slice(5, 7)}` : '—', align: 'CENTER' },
+    { header: 'Δ peso', key: 'deltaWeight', span: 1, type: 'number', numberPattern: '+0.0;-0.0;0.0', delta: true },
+    { header: 'Δ reps', key: 'deltaReps', span: 1, type: 'number', numberPattern: '+0;-0;0', delta: true },
+    { header: 'Δ volumen', key: 'deltaVolume', span: 1, type: 'number', numberPattern: '+0.0;-0.0;0.0', delta: true },
+    { header: 'Tendencia', key: 'status', span: 1, status: true, align: 'CENTER', transform: value => value === 'Primera referencia' ? 'Inicial' : value }
+  ], dayData.trainingProgress, 'Aún no hay sesiones comparables para mostrar progresión', { rowHeight: 32 });
+
+  const bodyRows = dayData.body.flatMap(entry => {
+    const keys = dayData.bodyMeasurementKeys.filter(key => entry[key] != null && entry[key] !== '');
+    if (!keys.length && entry.notes) return [{ measurement: 'Observación corporal', value: '', unit: '', change: null, notes: entry.notes }];
+    return keys.map((key, index) => ({
+      measurement: dayData.bodyMeasurementLabels[key] || key.replace(/_/g, ' '),
+      value: entry[key],
+      unit: exportBodyMeasurementUnit(key),
+      change: key === 'weight' ? entry.weightChange : key === 'body_fat' ? entry.bodyFatChange : null,
+      notes: index === 0 ? entry.notes : ''
+    }));
+  });
+  addTable('CUERPO Y MEDIDAS', [
+    { header: 'Medición', key: 'measurement', span: 3 },
+    { header: 'Valor', key: 'value', span: 2, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Unidad', key: 'unit', span: 1, align: 'CENTER' },
+    { header: 'Cambio', key: 'change', span: 2, type: 'number', numberPattern: '+0.0;-0.0;0.0', delta: true },
+    { header: 'Notas', key: 'notes', span: 2, wrap: true }
+  ], bodyRows, 'Sin mediciones corporales registradas en este día', { rowHeight: 32 });
+
+  addTable('HÁBITOS Y RECUPERACIÓN', [
+    { header: 'Hábito', key: 'habit', span: 3 },
+    { header: 'Objetivo', key: 'objective', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Realizado', key: 'actual', span: 1, type: 'number', numberPattern: '#,##0.0' },
+    { header: 'Unidad', key: 'unit', span: 1, align: 'CENTER' },
+    { header: 'Estado', key: 'status', span: 2, status: true, align: 'CENTER' },
+    { header: 'Origen', key: 'source', span: 2 }
+  ], dayData.habits, 'Sin hábitos medibles para este día');
+
+  addTable('NOTAS Y AGENDA', [
+    { header: 'Título', key: 'title', span: 2, wrap: true },
+    { header: 'Contenido', key: 'content', span: 5, wrap: true },
+    { header: 'Ánimo', key: 'mood', span: 1, align: 'CENTER' },
+    { header: 'Origen', key: 'source', span: 2 }
+  ], dayData.notes, 'Sin notas ni eventos para este día', { rowHeight: 38 });
+  addSpacer(14);
+  addMergedRow(`AA Follow · ${exportDateLabel(date)} · Todos los registros de este día en una sola pestaña`, detailFormat, 22);
+
+  return {
+    name: sheetName,
+    rows,
+    columnCount,
+    widths: [54, 61, 70, 52, 58, 52, 56, 54, 60, 70],
+    freezeRows: 4,
+    filter: null,
+    merges,
+    rowHeights,
+    dataRowHeight: 26,
+    logoCell: { rowIndex: 0, columnIndex: 0 }
+  };
+}
+
+function buildProfessionalGoogleSheetsModel(data) {
+  const singleDay = data.meta.dayCount === 1;
+  return data.dates.map(date => buildGoogleSheetsDailyTab(data, date, exportDailySheetName(date, singleDay)));
 }
 
 function googleSheetsDocumentTitle(data) {
@@ -20154,7 +20429,7 @@ function odsCellXml(sourceCell, styleName, options = {}) {
     return `<table:table-cell ${base} office:value-type="boolean" office:boolean-value="${entered.boolValue ? 'true' : 'false'}"><text:p>${entered.boolValue ? 'TRUE' : 'FALSE'}</text:p></table:table-cell>`;
   }
   const image = options.image
-    ? `<draw:frame draw:name="AAFollowLogo${options.imageIndex || 1}" text:anchor-type="paragraph" svg:width="3.70cm" svg:height="1.65cm" draw:z-index="1"><draw:image xlink:href="Pictures/aa-follow-logo.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>`
+    ? `<draw:frame draw:name="AAFollowLogo${options.imageIndex || 1}" text:anchor-type="paragraph" svg:width="3.10cm" svg:height="1.35cm" draw:z-index="1"><draw:image xlink:href="Pictures/aa-follow-logo.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame>`
     : '';
   const text = options.image ? '<text:p/>' : odsParagraphs(entered.stringValue);
   return `<table:table-cell ${base} office:value-type="string">${text}${image}</table:table-cell>`;
@@ -20165,6 +20440,11 @@ function odsSheetRangeAddress(model) {
   const start = `${exportExcelColumnLetter(model.filter.startColumnIndex + 1)}${model.filter.startRowIndex + 1}`;
   const end = `${exportExcelColumnLetter(model.filter.endColumnIndex)}${model.filter.endRowIndex}`;
   return `${quote(model.name)}.${start}:${quote(model.name)}.${end}`;
+}
+
+function odsSheetPrintRangeAddress(model) {
+  const quote = name => `'${String(name).replace(/'/g, "''")}'`;
+  return `${quote(model.name)}.A1:${quote(model.name)}.${exportExcelColumnLetter(model.columnCount)}${model.rows.length}`;
 }
 
 function buildProfessionalOdsContentXml(data, models, hasLogo = false) {
@@ -20209,9 +20489,9 @@ function buildProfessionalOdsContentXml(data, models, hasLogo = false) {
       }).join('');
       return `<table:table-row table:style-name="${rowStyle}">${cells}</table:table-row>`;
     }).join('');
-    return `<table:table table:name="${odsXml(model.name)}">${columns}${rows}</table:table>`;
+    return `<table:table table:name="${odsXml(model.name)}" table:print-ranges="${odsXml(odsSheetPrintRangeAddress(model))}">${columns}${rows}</table:table>`;
   }).join('');
-  const filters = models.map((model, index) => `<table:database-range table:name="AAFollowFilter${index + 1}" table:target-range-address="${odsXml(odsSheetRangeAddress(model))}" table:display-filter-buttons="true" table:contains-header="true"/>`).join('');
+  const filters = models.filter(model => model.filter).map((model, index) => `<table:database-range table:name="AAFollowFilter${index + 1}" table:target-range-address="${odsXml(odsSheetRangeAddress(model))}" table:display-filter-buttons="true" table:contains-header="true"/>`).join('');
   return `<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" office:version="1.3"><office:font-face-decls><style:font-face style:name="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/></office:font-face-decls><office:automatic-styles>${numberStyles}${cellStyles}${columnStyles.join('')}${rowStyles.join('')}</office:automatic-styles><office:body><office:spreadsheet><table:calculation-settings table:automatic-find-labels="false"/>${tables}<table:database-ranges>${filters}</table:database-ranges></office:spreadsheet></office:body></office:document-content>`;
 }
 
