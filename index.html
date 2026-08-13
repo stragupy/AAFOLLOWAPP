@@ -12081,6 +12081,1329 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
   }
 }
 
+/* Preparation phase: periodization workspace */
+#page-preparation {
+  min-height: calc(100dvh - 64px);
+  color-scheme: dark;
+}
+
+#page-preparation .phase-page-head {
+  min-height: 78px;
+  gap: 18px;
+}
+
+#page-preparation .phase-page-head-copy {
+  min-width: 0;
+}
+
+#page-preparation .phase-page-head-copy p {
+  max-width: 760px;
+}
+
+.phase-head-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.phase-plan-picker {
+  width: min(320px, 28vw);
+  min-width: 210px;
+  height: 42px;
+  padding: 0 36px 0 12px;
+  border: 1px solid #3a3d3b;
+  border-radius: 8px;
+  background: #202221;
+  color: #f4f5f4;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 650;
+  outline: none;
+}
+
+.phase-plan-picker:focus {
+  border-color: rgba(66, 217, 139, 0.66);
+  box-shadow: 0 0 0 3px rgba(66, 217, 139, 0.1);
+}
+
+.phase-content {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  padding-bottom: 108px !important;
+}
+
+.phase-panel {
+  min-width: 0;
+  border: 1px solid #373a38;
+  border-radius: 9px;
+  background: #222423;
+  box-shadow: none;
+}
+
+.phase-setup {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(250px, 0.58fr) minmax(0, 1.42fr);
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.phase-setup-intro {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 24px;
+  border-right: 1px solid #373a38;
+  background: #1d201e;
+}
+
+.phase-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #67dfa0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.phase-kicker::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+  box-shadow: 0 0 0 4px rgba(66, 217, 139, 0.08);
+}
+
+.phase-setup-intro h2 {
+  max-width: 420px;
+  margin: 14px 0 10px;
+  color: #f7f8f7;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.phase-setup-intro p {
+  max-width: 450px;
+  margin: 0;
+  color: #9ba09d;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.phase-data-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid #363937;
+}
+
+.phase-data-strip div {
+  min-width: 0;
+  padding: 13px 10px 0 0;
+}
+
+.phase-data-strip div + div {
+  padding-left: 12px;
+  border-left: 1px solid #363937;
+}
+
+.phase-data-strip span,
+.phase-section-label,
+.phase-field label,
+.phase-metric span,
+.phase-cycle-stat span,
+.phase-status-meta span,
+.phase-current-kpi span {
+  display: block;
+  color: #858b87;
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.phase-data-strip strong {
+  display: block;
+  min-width: 0;
+  margin-top: 5px;
+  overflow: hidden;
+  color: #f3f5f3;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phase-setup-form {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 18px;
+  padding: 24px;
+}
+
+.phase-objective-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.phase-objective {
+  position: relative;
+  display: grid;
+  min-height: 72px;
+  align-content: center;
+  gap: 5px;
+  padding: 12px 13px;
+  border: 1px solid #3a3d3b;
+  border-radius: 8px;
+  background: #1e201f;
+  color: #a6aba8;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, color .16s ease;
+}
+
+.phase-objective strong {
+  color: #eef0ef;
+  font-size: 0.82rem;
+}
+
+.phase-objective small {
+  color: #818783;
+  font-size: 0.64rem;
+  line-height: 1.35;
+}
+
+.phase-objective:hover {
+  border-color: #555a57;
+  background: #252826;
+}
+
+.phase-objective.active {
+  border-color: rgba(66, 217, 139, 0.68);
+  background: rgba(48, 135, 87, 0.14);
+}
+
+.phase-objective.active::after {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #42d98b;
+  content: '';
+}
+
+.phase-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.phase-field {
+  min-width: 0;
+}
+
+.phase-field.wide {
+  grid-column: span 2;
+}
+
+.phase-manual-group {
+  display: grid;
+  min-width: 0;
+  gap: 9px;
+  padding-top: 2px;
+}
+
+.phase-sequence-preview {
+  display: grid;
+  min-width: 0;
+  gap: 11px;
+  padding: 13px;
+  border: 1px solid #373a38;
+  border-radius: 8px;
+  background: #1d201e;
+}
+
+.phase-sequence-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.phase-sequence-heading strong {
+  color: #e8ebe9;
+  font-size: 0.7rem;
+}
+
+.phase-sequence-list {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.phase-sequence-list button {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border: 1px solid #393d3a;
+  border-radius: 7px;
+  background: #202321;
+  color: #c8cdca;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, color .16s ease;
+}
+
+.phase-sequence-list button:hover {
+  border-color: #555b57;
+  background: #272a28;
+  color: #ffffff;
+}
+
+.phase-sequence-list button.active {
+  border-color: rgba(66, 217, 139, 0.7);
+  background: rgba(48, 135, 87, 0.16);
+  color: #f1f5f2;
+}
+
+.phase-sequence-list button span {
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.phase-sequence-list b {
+  display: inline-grid;
+  width: 21px;
+  height: 21px;
+  place-items: center;
+  border: 1px solid rgba(66, 217, 139, 0.45);
+  border-radius: 50%;
+  background: rgba(66, 217, 139, 0.09);
+  color: #67dfa0;
+  font-size: 0.58rem;
+}
+
+.phase-field label {
+  margin-bottom: 7px;
+}
+
+.phase-field input,
+.phase-field select,
+.phase-field textarea {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 0 11px;
+  border: 1px solid #3b3e3c;
+  border-radius: 7px;
+  background: #191b1a;
+  color: #f3f5f3;
+  font: inherit;
+  font-size: 0.76rem;
+  outline: none;
+}
+
+.phase-field textarea {
+  height: 70px;
+  padding-top: 10px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.phase-field input:focus,
+.phase-field select:focus,
+.phase-field textarea:focus {
+  border-color: rgba(66, 217, 139, 0.72);
+  box-shadow: 0 0 0 3px rgba(66, 217, 139, 0.09);
+}
+
+
+.phase-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 2px;
+}
+
+.phase-form-footer p {
+  max-width: 520px;
+  margin: 0;
+  color: #858b87;
+  font-size: 0.66rem;
+  line-height: 1.45;
+}
+
+.phase-ai-generate {
+  display: inline-flex;
+  min-width: 178px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid #4de398;
+  border-radius: 7px;
+  background: #42d98b;
+  color: #102018;
+  font-size: 0.74rem;
+  font-weight: 850;
+  cursor: pointer;
+  transition: transform .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+.phase-ai-generate:hover {
+  background: #58e79f;
+  box-shadow: 0 8px 22px rgba(29, 151, 89, 0.18);
+  transform: translateY(-1px);
+}
+
+.phase-ai-generate:disabled {
+  opacity: 0.58;
+  cursor: wait;
+  transform: none;
+}
+
+.phase-ai-generate svg {
+  width: 16px;
+  height: 16px;
+}
+
+.phase-empty-state {
+  display: grid;
+  min-height: 190px;
+  place-items: center;
+  padding: 28px;
+  text-align: center;
+}
+
+.phase-empty-state > div {
+  max-width: 520px;
+}
+
+.phase-empty-icon {
+  display: inline-grid;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 14px;
+  place-items: center;
+  border: 1px solid #3d413e;
+  border-radius: 50%;
+  color: #42d98b;
+}
+
+.phase-empty-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.phase-empty-state strong {
+  display: block;
+  color: #f4f6f4;
+  font-size: 0.96rem;
+}
+
+.phase-empty-state p {
+  margin: 8px 0 0;
+  color: #8f9591;
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.phase-plan-workspace {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: 14px;
+}
+
+.phase-status {
+  display: grid;
+  grid-template-columns: minmax(340px, 1.15fr) minmax(0, 0.85fr);
+  overflow: hidden;
+  background: #1b1e1c;
+}
+
+.phase-status-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  padding: 24px;
+  border-right: 1px solid #373a38;
+}
+
+.phase-ring {
+  --phase-progress: 0deg;
+  position: relative;
+  display: grid;
+  width: 112px;
+  height: 112px;
+  flex: 0 0 112px;
+  place-items: center;
+  border-radius: 50%;
+  background: conic-gradient(#42d98b var(--phase-progress), #343835 0);
+}
+
+.phase-ring::before {
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background: #1b1e1c;
+  content: '';
+}
+
+.phase-ring > div {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.phase-ring strong {
+  display: block;
+  color: #f8faf8;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.phase-ring span {
+  display: block;
+  margin-top: 6px;
+  color: #8f9691;
+  font-size: 0.56rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.phase-status-copy h2 {
+  margin: 8px 0 7px;
+  color: #f8faf8;
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+
+.phase-status-copy p {
+  max-width: 620px;
+  margin: 0;
+  color: #9ba09d;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.phase-status-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 17px;
+}
+
+.phase-status-meta strong {
+  display: block;
+  margin-top: 4px;
+  color: #e9ecea;
+  font-size: 0.73rem;
+}
+
+.phase-current-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.phase-current-kpi {
+  min-width: 0;
+  padding: 22px 18px;
+  border-right: 1px solid #343735;
+  border-bottom: 1px solid #343735;
+}
+
+.phase-current-kpi:nth-child(2n) {
+  border-right: 0;
+}
+
+.phase-current-kpi:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.phase-current-kpi strong {
+  display: block;
+  margin-top: 9px;
+  overflow-wrap: anywhere;
+  color: #f4f6f4;
+  font-size: 1.12rem;
+}
+
+.phase-current-kpi small {
+  display: block;
+  margin-top: 4px;
+  color: #858b87;
+  font-size: 0.64rem;
+}
+
+.phase-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.phase-toolbar-copy strong {
+  color: #eef0ef;
+  font-size: 0.78rem;
+}
+
+.phase-toolbar-copy span {
+  display: block;
+  margin-top: 3px;
+  color: #858b87;
+  font-size: 0.65rem;
+}
+
+.phase-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.phase-action-btn {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #3c403d;
+  border-radius: 7px;
+  background: #272a28;
+  color: #d8dcda;
+  font-size: 0.67rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.phase-action-btn:hover {
+  border-color: #5b605c;
+  background: #303330;
+  color: #ffffff;
+}
+
+.phase-action-btn.primary {
+  border-color: #42d98b;
+  background: #42d98b;
+  color: #102018;
+}
+
+.phase-action-btn.danger {
+  color: #f18a91;
+}
+
+.phase-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.phase-timeline-panel,
+.phase-monitor-panel,
+.phase-ai-panel {
+  min-width: 0;
+  padding: 18px;
+}
+
+.phase-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.phase-section-head h2 {
+  margin: 5px 0 0;
+  color: #f3f5f3;
+  font-size: 0.98rem;
+  letter-spacing: 0;
+}
+
+.phase-section-head p {
+  max-width: 620px;
+  margin: 5px 0 0;
+  color: #858b87;
+  font-size: 0.66rem;
+  line-height: 1.45;
+}
+
+.phase-timeline {
+  display: flex;
+  min-width: 0;
+  gap: 4px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.phase-timeline-step {
+  position: relative;
+  min-width: 122px;
+  flex: var(--cycle-weeks, 1) 1 0;
+  padding: 12px;
+  border: 1px solid #373a38;
+  border-radius: 7px;
+  background: #1d201e;
+  text-align: left;
+}
+
+.phase-timeline-step::before {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  left: 10px;
+  height: 2px;
+  background: #4a4e4b;
+  content: '';
+}
+
+.phase-timeline-step.current {
+  border-color: rgba(66, 217, 139, 0.64);
+  background: rgba(40, 101, 68, 0.16);
+}
+
+.phase-timeline-step.current::before {
+  background: #42d98b;
+}
+
+.phase-timeline-step.done::before {
+  background: #3185e8;
+}
+
+.phase-timeline-step span {
+  display: block;
+  color: #858b87;
+  font-size: 0.57rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.phase-timeline-step strong {
+  display: block;
+  margin-top: 6px;
+  color: #eef0ef;
+  font-size: 0.71rem;
+}
+
+.phase-cycles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phase-cycles.manual {
+  grid-template-columns: 1fr;
+}
+
+.phase-cycles.manual .phase-cycle-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.phase-cycle-card {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #373a38;
+  border-radius: 8px;
+  background: #1d201e;
+}
+
+.phase-cycle-card.current {
+  border-color: rgba(66, 217, 139, 0.62);
+  background: rgba(43, 94, 65, 0.12);
+}
+
+.phase-cycle-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #343735;
+}
+
+.phase-cycle-index {
+  display: block;
+  color: #69dda0;
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.phase-cycle-head h3 {
+  margin: 5px 0 0;
+  color: #f4f6f4;
+  font-size: 0.88rem;
+  letter-spacing: 0;
+}
+
+.phase-cycle-edit {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #3b3f3c;
+  border-radius: 7px;
+  background: #252825;
+  color: #aeb3b0;
+  cursor: pointer;
+}
+
+.phase-cycle-edit:hover {
+  color: #ffffff;
+  border-color: #5b605c;
+}
+
+.phase-cycle-edit svg {
+  width: 14px;
+  height: 14px;
+}
+
+.phase-cycle-dates {
+  margin: 10px 0 0;
+  color: #858b87;
+  font-size: 0.64rem;
+}
+
+.phase-cycle-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px 8px;
+  padding: 14px 0 12px;
+}
+
+.phase-cycle-stat strong {
+  display: block;
+  margin-top: 5px;
+  color: #eef0ef;
+  font-size: 0.75rem;
+}
+
+.phase-cycle-focus {
+  margin: 0;
+  color: #a0a5a2;
+  font-size: 0.67rem;
+  line-height: 1.48;
+}
+
+.phase-projection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid #343735;
+  color: #8f9591;
+  font-size: 0.64rem;
+}
+
+.phase-projection strong {
+  margin-left: auto;
+  color: #f1f3f1;
+}
+
+.phase-monitor-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.phase-metric {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #363937;
+  border-radius: 7px;
+  background: #1d201e;
+}
+
+.phase-metric strong {
+  display: block;
+  margin-top: 7px;
+  color: #f3f5f3;
+  font-size: 1rem;
+}
+
+.phase-metric small {
+  display: block;
+  margin-top: 4px;
+  color: #858b87;
+  font-size: 0.61rem;
+  line-height: 1.35;
+}
+
+.phase-triggers {
+  display: grid;
+  gap: 7px;
+}
+
+.phase-trigger {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 13px;
+  border: 1px solid #373a38;
+  border-radius: 8px;
+  background: #1d201e;
+}
+
+.phase-trigger-marker {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6f7671;
+}
+
+.phase-trigger.good .phase-trigger-marker { background: #42d98b; }
+.phase-trigger.warn .phase-trigger-marker { background: #e7a348; }
+.phase-trigger.danger .phase-trigger-marker { background: #ef626a; }
+.phase-trigger.info .phase-trigger-marker { background: #5da7f7; }
+
+.phase-trigger-copy strong {
+  display: block;
+  color: #edf0ee;
+  font-size: 0.76rem;
+}
+
+.phase-trigger-copy p {
+  margin: 4px 0 0;
+  color: #8e9490;
+  font-size: 0.65rem;
+  line-height: 1.45;
+}
+
+.phase-trigger button {
+  min-height: 33px;
+  padding: 0 10px;
+  border: 1px solid #424642;
+  border-radius: 7px;
+  background: #292c2a;
+  color: #e1e4e2;
+  font-size: 0.63rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.phase-trigger button:hover {
+  border-color: #666c67;
+  background: #323532;
+}
+
+.phase-two-column {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 14px;
+}
+
+.phase-ai-reading {
+  display: grid;
+  gap: 12px;
+}
+
+.phase-ai-reading blockquote {
+  margin: 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid #42d98b;
+  color: #dfe3e0;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.phase-ai-reading p {
+  margin: 0;
+  color: #929793;
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+.phase-review-empty {
+  display: grid;
+  min-height: 176px;
+  align-content: center;
+  justify-items: start;
+  gap: 9px;
+  padding: 16px;
+  border: 1px dashed #414542;
+  border-radius: 8px;
+  background: #1d201e;
+}
+
+.phase-review-empty strong,
+.phase-review-headline strong {
+  color: #f1f4f2;
+  font-size: 0.88rem;
+}
+
+.phase-review-empty p,
+.phase-review-headline p {
+  margin: 0;
+  color: #919793;
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+
+.phase-review {
+  display: grid;
+  gap: 13px;
+}
+
+.phase-review-headline {
+  display: grid;
+  gap: 7px;
+  padding: 14px;
+  border: 1px solid #373b38;
+  border-radius: 8px;
+  background: #1d201e;
+}
+
+.phase-review-status {
+  display: inline-flex;
+  width: max-content;
+  min-height: 23px;
+  align-items: center;
+  padding: 0 8px;
+  border: 1px solid #4a4f4b;
+  border-radius: 999px;
+  color: #c7ccc9;
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.phase-review-status.on_track { border-color: rgba(66, 217, 139, 0.45); color: #67dfa0; }
+.phase-review-status.watch { border-color: rgba(231, 163, 72, 0.5); color: #e7b264; }
+.phase-review-status.adjust { border-color: rgba(239, 98, 106, 0.48); color: #f18a91; }
+.phase-review-status.data_needed { border-color: rgba(93, 167, 247, 0.48); color: #7bb8fa; }
+
+.phase-review-evidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.phase-review-evidence > div {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #363a37;
+  border-radius: 7px;
+  background: #1d201e;
+}
+
+.phase-review-evidence span {
+  display: block;
+  color: #858b87;
+  font-size: 0.57rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.phase-review-evidence strong {
+  display: block;
+  margin-top: 5px;
+  color: #eef1ef;
+  font-size: 0.73rem;
+}
+
+.phase-review-evidence p {
+  margin: 5px 0 0;
+  color: #8f9591;
+  font-size: 0.61rem;
+  line-height: 1.4;
+}
+
+.phase-review-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.phase-review-column {
+  min-width: 0;
+  padding: 11px;
+  border-top: 2px solid #4d524e;
+  background: #1d201e;
+}
+
+.phase-review-column.good { border-top-color: #42d98b; }
+.phase-review-column.warn { border-top-color: #e7a348; }
+.phase-review-column.info { border-top-color: #5da7f7; }
+
+.phase-review-column strong {
+  color: #dfe3e0;
+  font-size: 0.65rem;
+}
+
+.phase-review-column ul {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phase-review-column li {
+  color: #939995;
+  font-size: 0.61rem;
+  line-height: 1.42;
+}
+
+.phase-review-meta {
+  color: #737a75;
+  font-size: 0.58rem;
+}
+
+.phase-guardrails {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phase-guardrails li {
+  position: relative;
+  padding-left: 15px;
+  color: #9da29f;
+  font-size: 0.66rem;
+  line-height: 1.45;
+}
+
+.phase-guardrails li::before {
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #e7a348;
+  content: '';
+}
+
+.phase-routine-control {
+  display: grid;
+  gap: 10px;
+}
+
+.phase-routine-control select {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #3a3d3b;
+  border-radius: 7px;
+  background: #191b1a;
+  color: #f2f4f2;
+  font: inherit;
+  font-size: 0.7rem;
+}
+
+.phase-routine-control p,
+.phase-disclaimer {
+  margin: 0;
+  color: #7f8581;
+  font-size: 0.61rem;
+  line-height: 1.45;
+}
+
+.phase-cycle-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 1180px) {
+  .phase-setup,
+  .phase-status,
+  .phase-two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-setup-intro,
+  .phase-status-main {
+    border-right: 0;
+    border-bottom: 1px solid #373a38;
+  }
+
+  .phase-cycles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phase-monitor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #bottom-nav .bnav-btn {
+    min-width: 104px !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+}
+
+@media (max-width: 800px) {
+  #bottom-nav .bnav-btn {
+    min-width: 0 !important;
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+  }
+
+  #page-preparation .phase-page-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .phase-head-actions,
+  .phase-plan-picker {
+    width: 100%;
+  }
+
+  .phase-objective-selector,
+  .phase-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phase-sequence-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .phase-objective:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .phase-fields .wide {
+    grid-column: 1 / -1;
+  }
+
+  .phase-form-footer,
+  .phase-toolbar,
+  .phase-section-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .phase-ai-generate {
+    width: 100%;
+  }
+
+  .phase-toolbar-actions {
+    justify-content: flex-start;
+  }
+
+  .phase-cycles {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-review-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-trigger {
+    grid-template-columns: 8px minmax(0, 1fr);
+  }
+
+  .phase-trigger button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 520px) {
+  #page-preparation .phase-page-head {
+    padding: 12px 10px !important;
+  }
+
+  .phase-content {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+  }
+
+  .phase-setup-intro,
+  .phase-setup-form,
+  .phase-status-main,
+  .phase-timeline-panel,
+  .phase-monitor-panel,
+  .phase-ai-panel {
+    padding: 15px;
+  }
+
+  .phase-objective-selector,
+  .phase-fields,
+  .phase-current-grid,
+  .phase-monitor-grid,
+  .phase-review-evidence,
+  .phase-cycle-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-sequence-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phase-objective:last-child,
+  .phase-field.wide {
+    grid-column: auto;
+  }
+
+  .phase-cycles.manual .phase-cycle-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .phase-status-main {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .phase-current-kpi,
+  .phase-current-kpi:nth-child(2n),
+  .phase-current-kpi:nth-last-child(-n + 2) {
+    border-right: 0;
+    border-bottom: 1px solid #343735;
+  }
+
+  .phase-current-kpi:last-child {
+    border-bottom: 0;
+  }
+
+  .phase-toolbar-actions .phase-action-btn {
+    flex: 1 1 calc(50% - 4px);
+  }
+
+  #bottom-nav .bnav-btn {
+    font-size: 0.46rem !important;
+  }
+}
+
 
 </style>
 </head>
@@ -12880,6 +14203,113 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
     </div>
   </div>
 
+  <!-- FASE DE PREPARACION -->
+  <div id="page-preparation" class="page">
+    <div class="page-head flex jb ai-c phase-page-head">
+      <div class="phase-page-head-copy">
+        <h1>Fase de preparación</h1>
+        <p>Periodización de nutrición, peso y entrenamiento basada en tus registros reales</p>
+      </div>
+      <div class="phase-head-actions">
+        <select id="phase-plan-select" class="phase-plan-picker" onchange="selectPreparationPlan(this.value)" aria-label="Seleccionar fase guardada">
+          <option value="">Sin fases guardadas</option>
+        </select>
+        <button class="phase-action-btn" type="button" onclick="resetPreparationForm(true)"><i data-lucide="plus"></i><span>Nueva fase</span></button>
+      </div>
+    </div>
+
+    <div class="content phase-content">
+      <section id="phase-setup" class="phase-panel phase-setup">
+        <div class="phase-setup-intro">
+          <div>
+            <span class="phase-kicker">Configuración manual</span>
+            <h2>Tú defines la fase y todos sus valores.</h2>
+            <p>Elige tu objetivo principal, marca en qué intra fase estás y escribe personalmente cada referencia. La IA no completa ni modifica ningún campo: solo compara después estos valores con tus registros reales.</p>
+          </div>
+          <div class="phase-data-strip">
+            <div><span>Peso actual</span><strong id="phase-setup-weight">— kg</strong></div>
+            <div><span>Base nutricional</span><strong id="phase-setup-calories">— kcal</strong></div>
+            <div><span>Datos recientes</span><strong id="phase-setup-data">Sin evaluar</strong></div>
+          </div>
+        </div>
+
+        <div class="phase-setup-form">
+          <input id="phase-edit-plan-id" type="hidden" value="">
+          <div>
+            <span class="phase-section-label">Objetivo principal</span>
+            <input id="phase-objective" type="hidden" value="recomposition">
+            <div class="phase-objective-selector" role="group" aria-label="Objetivo de la fase">
+              <button class="phase-objective" type="button" data-phase-objective="volume" onclick="setPreparationObjective('volume')"><strong>Volumen</strong><small>Crecimiento controlado y rendimiento</small></button>
+              <button class="phase-objective active" type="button" data-phase-objective="recomposition" onclick="setPreparationObjective('recomposition')"><strong>Recomposición</strong><small>Mejorar composición con peso estable</small></button>
+              <button class="phase-objective" type="button" data-phase-objective="definition" onclick="setPreparationObjective('definition')"><strong>Definición</strong><small>Déficit medido y fuerza protegida</small></button>
+            </div>
+          </div>
+
+          <div class="phase-sequence-preview">
+            <div class="phase-sequence-heading"><span class="phase-section-label">Intra fase actual</span><strong>Elige una</strong></div>
+            <input id="phase-intraphase" type="hidden" value="maintenance">
+            <div class="phase-sequence-list" role="group" aria-label="Elegir intra fase actual">
+              <button type="button" data-phase-intraphase="adaptation" onclick="setPreparationIntraphase('adaptation')"><b>1</b><span>Adaptación</span></button>
+              <button type="button" data-phase-intraphase="sustained_deficit" onclick="setPreparationIntraphase('sustained_deficit')"><b>2</b><span>Déficit sostenido</span></button>
+              <button type="button" class="active" data-phase-intraphase="maintenance" onclick="setPreparationIntraphase('maintenance')"><b>3</b><span>Mantenimiento</span></button>
+              <button type="button" data-phase-intraphase="growth_1" onclick="setPreparationIntraphase('growth_1')"><b>4</b><span>Crecimiento I</span></button>
+              <button type="button" data-phase-intraphase="mini_cut" onclick="setPreparationIntraphase('mini_cut')"><b>5</b><span>Mini cut</span></button>
+              <button type="button" data-phase-intraphase="growth_2" onclick="setPreparationIntraphase('growth_2')"><b>6</b><span>Crecimiento II</span></button>
+              <button type="button" data-phase-intraphase="final_deficit" onclick="setPreparationIntraphase('final_deficit')"><b>7</b><span>Déficit</span></button>
+            </div>
+          </div>
+
+          <div class="phase-manual-group">
+            <span class="phase-section-label">Datos de la intra fase</span>
+            <div class="phase-fields">
+              <div class="phase-field"><label for="phase-start-date">Inicio</label><input id="phase-start-date" type="date"></div>
+              <div class="phase-field"><label for="phase-duration">Duración (semanas)</label><input id="phase-duration" type="number" min="1" max="52" step="1" value="4" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-target-weight">Peso objetivo (kg)</label><input id="phase-target-weight" type="number" min="30" max="350" step="0.1" placeholder="Opcional" inputmode="decimal"></div>
+              <div class="phase-field"><label for="phase-training-days">Entrenos / semana</label><input id="phase-training-days" type="number" min="0" max="7" step="1" value="4" inputmode="numeric"></div>
+            </div>
+          </div>
+
+          <div class="phase-manual-group">
+            <span class="phase-section-label">Nutrición definida por ti</span>
+            <div class="phase-fields">
+              <div class="phase-field"><label for="phase-calories">Calorías (kcal)</label><input id="phase-calories" type="number" min="800" max="6000" step="10" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-protein">Proteínas (g)</label><input id="phase-protein" type="number" min="20" max="400" step="1" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-carbs">Carbohidratos (g)</label><input id="phase-carbs" type="number" min="20" max="800" step="1" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-fat">Grasas (g)</label><input id="phase-fat" type="number" min="15" max="250" step="1" inputmode="numeric"></div>
+            </div>
+          </div>
+
+          <div class="phase-manual-group">
+            <span class="phase-section-label">Entrenamiento definido por ti</span>
+            <div class="phase-fields">
+              <div class="phase-field"><label for="phase-weekly-volume">Volumen semanal (kg)</label><input id="phase-weekly-volume" type="number" min="0" max="10000000" step="1" placeholder="Opcional" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-training-volume">Volumen de rutina (%)</label><input id="phase-training-volume" type="number" min="10" max="200" step="1" value="100" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-load-min">Carga mínima (%)</label><input id="phase-load-min" type="number" min="0" max="100" step="1" value="60" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-load-max">Carga máxima (%)</label><input id="phase-load-max" type="number" min="0" max="100" step="1" value="85" inputmode="numeric"></div>
+              <div class="phase-field"><label for="phase-weight-rate">Ritmo de peso (%/sem)</label><input id="phase-weight-rate" type="number" min="-5" max="5" step="0.05" value="0" inputmode="decimal"></div>
+              <div class="phase-field wide"><label for="phase-notes">Notas y enfoque</label><textarea id="phase-notes" maxlength="900" placeholder="Escribe el enfoque, condiciones o decisiones que tú definiste..."></textarea></div>
+            </div>
+          </div>
+
+          <div class="phase-form-footer">
+            <p>Guardar esta ficha no modifica comidas, macros de Nutrición ni rutinas. Todo cambio externo requiere una acción y confirmación tuya.</p>
+            <button id="phase-generate-btn" class="phase-ai-generate" type="button" onclick="savePreparationPlanManual()"><i data-lucide="save"></i><span>Guardar fase manual</span></button>
+          </div>
+        </div>
+      </section>
+
+      <div id="phase-plan-output">
+        <section class="phase-panel phase-empty-state">
+          <div>
+            <span class="phase-empty-icon"><i data-lucide="route"></i></span>
+            <strong>Todavía no hay una fase creada</strong>
+            <p>Elige tu fase, la intra fase actual y completa tus referencias manuales.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
   <!-- OBJETIVOS -->
   <div id="page-goals" class="page">
     <div class="page-head flex jb ai-c">
@@ -13035,6 +14465,7 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
 <nav id="bottom-nav">
   <button class="bnav-btn" onclick="go('today')"><i data-lucide="database"></i><span>Datos</span></button>
   <button class="bnav-btn" onclick="go('goals')"><i data-lucide="target"></i><span>Objetivos</span></button>
+  <button class="bnav-btn" onclick="go('preparation')"><i data-lucide="route"></i><span>Fase</span></button>
   <button class="bnav-btn" onclick="go('stats')"><i data-lucide="chart-column"></i><span>Estadísticas</span></button>
   <button class="bnav-btn" onclick="go('checking')"><i data-lucide="clipboard-check"></i><span>Check-in</span></button>
   <button class="bnav-btn" onclick="go('assistant')"><i data-lucide="sparkles"></i><span>Crear con IA</span></button>
@@ -13439,7 +14870,7 @@ let cloudRestoreActive = false;
 const SAFETY_COLLECTIONS = new Set([
   'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals', 'notes',
   'checking_cardio', 'checking_goals', 'supplements', 'progress_photos',
-  'week_plans', 'reminders', 'calendar_events', 'checking_reviews'
+  'week_plans', 'reminders', 'calendar_events', 'checking_reviews', 'preparation_plans'
 ]);
 
 const SAFETY_COLLECTION_LABELS = {
@@ -13447,7 +14878,7 @@ const SAFETY_COLLECTION_LABELS = {
   meal_templates: 'Favorito', goals: 'Objetivo', notes: 'Nota',
   checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
   progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio',
-  calendar_events: 'Evento', checking_reviews: 'Revisión semanal'
+  calendar_events: 'Evento', checking_reviews: 'Revisión semanal', preparation_plans: 'Fase de preparación'
 };
 
 function safetyId() {
@@ -13612,7 +15043,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking };
   loaders[page]?.();
   closeMobileMenu();
   refreshInterfaceIcons();
@@ -13993,6 +15424,16 @@ function dailyAlerts(date = selectedDate()) {
   if (totals.cal < cfg.calories * 0.55) alerts.push({ type: 'warn', title: 'Calorías bajas', copy: `Vas en ${totals.cal} kcal de ${cfg.calories}. Puede faltar energía para cerrar el día.` });
   if (totals.p < cfg.protein * 0.5) alerts.push({ type: 'warn', title: 'Proteína por completar', copy: `Llevas ${Math.round(totals.p)}g de ${cfg.protein}g. Conviene asegurar una comida fuerte en proteína.` });
   if (check.total && check.pending) alerts.push({ type: 'warn', title: 'Check-in abierto', copy: `${check.pending} objetivo semanal sigue pendiente.` });
+  const phase = preparationActivePlan();
+  if (phase?.status === 'active' && phase.cycles?.length) {
+    const phaseEnd = addDays(phase.start_date, preparationPlanWeeks(phase) * 7 - 1);
+    if (date >= phase.start_date && date <= phaseEnd) {
+      const cycle = phase.cycles[preparationCurrentCycleIndex(phase, date)];
+      const phaseSignal = preparationTriggers(phase, preparationPeriodSummary(), cycle, preparationCycleTargets(phase, cycle))
+        .find(item => item.type === 'danger' || item.type === 'warn');
+      if (phaseSignal) alerts.unshift({ type: phaseSignal.type, title: `Fase: ${phaseSignal.title}`, copy: `${phaseSignal.detail} Revisa la comparación en Fase.` });
+    }
+  }
   if (!alerts.length) alerts.push({ type: 'good', title: 'Día en control', copy: 'No hay señales urgentes. Sigue registrando para mantener el mapa claro.' });
   return alerts.slice(0, 4);
 }
@@ -23169,6 +24610,906 @@ function renderCheckingTrend() {
       <div><i style="height:${item.total ? Math.max(item.rate, 5) : 0}%"></i></div>
       <small>S${item.week.slice(6)}</small>
     </div>`).join('');
+}
+
+// ── PREPARATION PHASE ────────────────────────────────
+const PREPARATION_OBJECTIVES = {
+  volume: { label: 'Volumen' },
+  recomposition: { label: 'Recomposición' },
+  definition: { label: 'Definición' }
+};
+
+const PREPARATION_STRUCTURE_VERSION = 3;
+const PREPARATION_INTRAPHASES = [
+  { key: 'adaptation', name: 'Adaptación', meaning: 'Calibrar técnica, tolerancia al trabajo, recuperación y calidad de los registros antes de exigir una tendencia.' },
+  { key: 'sustained_deficit', name: 'Déficit sostenido', meaning: 'Sostener una reducción energética controlada y observar que el peso baje sin deteriorar de forma marcada el rendimiento.' },
+  { key: 'maintenance', name: 'Mantenimiento', meaning: 'Estabilizar peso, energía, recuperación y adherencia para consolidar lo conseguido antes del siguiente bloque.' },
+  { key: 'growth_1', name: 'Crecimiento', meaning: 'Buscar progreso de fuerza y volumen con una subida corporal lenta, controlada y respaldada por buena recuperación.' },
+  { key: 'mini_cut', name: 'Mini cut', meaning: 'Aplicar un déficit breve y medido para reducir parte de la ganancia acumulada sin convertirlo en una definición prolongada.' },
+  { key: 'growth_2', name: 'Crecimiento', meaning: 'Retomar la progresión productiva desde la nueva base, vigilando rendimiento, adherencia y velocidad de subida.' },
+  { key: 'final_deficit', name: 'Déficit', meaning: 'Cerrar con una reducción controlada, priorizando la conservación del rendimiento y una transición medible.' }
+];
+
+function preparationPlans() {
+  const stored = DB.get('preparation_plans') || [];
+  let changed = false;
+  const plans = stored.map(item => {
+    const result = preparationUpgradePlan(item);
+    if (result.changed) changed = true;
+    return result.plan;
+  });
+  if (changed) DB.set('preparation_plans', plans);
+  return plans;
+}
+
+function preparationActivePlan() {
+  const plans = preparationPlans();
+  const activeId = DB.get('preparation_active_id');
+  return plans.find(plan => plan.id === activeId) || plans.find(plan => plan.status === 'active') || plans[0] || null;
+}
+
+function preparationNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function preparationClamp(value, min, max, fallback = min) {
+  const number = preparationNumber(value, fallback);
+  return Math.min(max, Math.max(min, number));
+}
+
+function preparationRound(value, digits = 0) {
+  const factor = 10 ** digits;
+  return Math.round(preparationNumber(value) * factor) / factor;
+}
+
+function preparationLatestWeight() {
+  const logs = (DB.get('bodylogs') || [])
+    .filter(item => item.weight && (!item.date || item.date <= selectedDate()))
+    .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+  const latest = logs[logs.length - 1];
+  return latest ? preparationNumber(latest.weight) : 0;
+}
+
+function preparationWeightTrend(days = 21) {
+  const endDate = selectedDate();
+  const startDate = addDays(endDate, -(days - 1));
+  const logs = (DB.get('bodylogs') || [])
+    .filter(item => item.weight && item.date >= startDate && item.date <= endDate)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  if (logs.length < 2) return { entries: logs.length, rate: 0, start: logs[0]?.weight || null, end: logs[logs.length - 1]?.weight || null };
+  const values = logs.map(item => preparationNumber(item.weight)).filter(Boolean);
+  const split = Math.max(1, Math.min(3, Math.floor(values.length / 2)));
+  const firstValues = values.slice(0, split);
+  const lastValues = values.slice(-split);
+  const first = firstValues.reduce((sum, value) => sum + value, 0) / firstValues.length;
+  const last = lastValues.reduce((sum, value) => sum + value, 0) / lastValues.length;
+  const dateSpan = Math.max(1, (localDate(logs[logs.length - 1].date) - localDate(logs[0].date)) / 86400000);
+  const weeklyChange = (last - first) * (7 / dateSpan);
+  const rate = first ? (weeklyChange / first) * 100 : 0;
+  return { entries: logs.length, rate: preparationRound(rate, 2), start: preparationRound(first, 2), end: preparationRound(last, 2) };
+}
+
+function preparationPeriodSummary() {
+  const dates7 = Array.from({ length: 7 }, (_, index) => addDays(selectedDate(), index - 6));
+  const dates14 = Array.from({ length: 14 }, (_, index) => addDays(selectedDate(), index - 13));
+  const dateSet7 = new Set(dates7);
+  const dateSet14 = new Set(dates14);
+  const meals = DB.get('meals') || [];
+  const sessions = DB.get('sessions') || [];
+  const wellness = DB.get('daily_wellness') || {};
+  const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const mealDays = dates7.filter(date => meals.some(item => item.date === date));
+  const nutritionExpectedDates = dates7.filter(date => !isFreeDay(date) || mealDays.includes(date));
+  const mealTotals = mealDays.map(date => meals
+    .filter(item => item.date === date)
+    .reduce((sum, item) => sum + preparationNumber(item.calories), 0));
+  const averageCalories = mealTotals.length ? mealTotals.reduce((sum, value) => sum + value, 0) / mealTotals.length : 0;
+  const calorieAdherence = averageCalories && cfg.calories
+    ? Math.max(0, 100 - Math.min(100, Math.abs(averageCalories - cfg.calories) / cfg.calories * 100))
+    : 0;
+  const recentSessions = sessions.filter(item => dateSet7.has(item.date));
+  const previousSessions = sessions.filter(item => dateSet14.has(item.date) && !dateSet7.has(item.date));
+  const sessionVolume = list => list.reduce((sum, session) => sum + workoutStats(session.sets || []).volume, 0);
+  const recentVolume = sessionVolume(recentSessions);
+  const previousVolume = sessionVolume(previousSessions);
+  const volumeChange = previousVolume ? ((recentVolume - previousVolume) / previousVolume) * 100 : 0;
+  const sleepValues = dates7
+    .map(date => preparationNumber(wellness[date]?.sleep, NaN))
+    .filter(Number.isFinite);
+  const energyValues = dates7
+    .map(date => preparationNumber(wellness[date]?.energy, NaN))
+    .filter(Number.isFinite);
+  const average = values => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+  const weightTrend = preparationWeightTrend(21);
+  return {
+    weight_entries_21d: weightTrend.entries,
+    weight_rate_pct_week: weightTrend.rate,
+    nutrition_logging_pct: Math.round((mealDays.length / Math.max(nutritionExpectedDates.length, 1)) * 100),
+    calorie_adherence_pct: Math.round(calorieAdherence),
+    average_calories: Math.round(averageCalories),
+    training_sessions_7d: recentSessions.length,
+    previous_training_sessions_7d: previousSessions.length,
+    training_volume_7d: Math.round(recentVolume),
+    training_volume_change_pct: preparationRound(volumeChange, 1),
+    average_sleep: preparationRound(average(sleepValues), 1),
+    sleep_entries_7d: sleepValues.length,
+    average_energy: preparationRound(average(energyValues), 1),
+    energy_entries_7d: energyValues.length
+  };
+}
+
+function setPreparationObjective(objective) {
+  if (!PREPARATION_OBJECTIVES[objective]) objective = 'recomposition';
+  const input = document.getElementById('phase-objective');
+  if (input) input.value = objective;
+  document.querySelectorAll('[data-phase-objective]').forEach(button => {
+    button.classList.toggle('active', button.dataset.phaseObjective === objective);
+  });
+}
+
+function preparationIntraphaseIndex(value, fallback = 2) {
+  if (Number.isInteger(value) && PREPARATION_INTRAPHASES[value]) return value;
+  const key = String(value || '');
+  const byKey = PREPARATION_INTRAPHASES.findIndex(item => item.key === key);
+  return byKey >= 0 ? byKey : fallback;
+}
+
+function setPreparationIntraphase(stageKey) {
+  const index = preparationIntraphaseIndex(stageKey);
+  const definition = PREPARATION_INTRAPHASES[index];
+  const input = document.getElementById('phase-intraphase');
+  if (input) input.value = definition.key;
+  document.querySelectorAll('[data-phase-intraphase]').forEach(button => {
+    button.classList.toggle('active', button.dataset.phaseIntraphase === definition.key);
+  });
+}
+
+function preparationCycleDates(plan) {
+  const start = plan.start_date || selectedDate();
+  const end = addDays(start, preparationPlanWeeks(plan) * 7 - 1);
+  return { start, end };
+}
+
+function preparationCurrentCycleIndex() {
+  return 0;
+}
+
+function preparationPlanWeeks(plan) {
+  return Math.round(preparationClamp(plan?.cycles?.[0]?.weeks || plan?.duration_weeks, 1, 52, 4));
+}
+
+function preparationProjectedWeightAtCycle(plan, _cycleIndex = 0, endOfCycle = true) {
+  const current = preparationNumber(plan.current_weight, preparationLatestWeight() || 0);
+  if (!endOfCycle) return preparationRound(current, 1);
+  if (preparationNumber(plan.target_weight) > 0) return preparationRound(plan.target_weight, 1);
+  const cycle = plan?.cycles?.[0] || {};
+  const projected = current * Math.pow(1 + preparationNumber(cycle.target_weight_rate_pct) / 100, preparationPlanWeeks(plan));
+  return preparationRound(projected, 1);
+}
+
+function preparationCycleTargets(plan, cycle) {
+  const cfg = plan?.baseline || DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  return {
+    calories: Math.round(preparationClamp(cycle?.calories, 800, 6000, cfg.calories || 2000)),
+    protein: Math.round(preparationClamp(cycle?.protein, 20, 400, cfg.protein || 150)),
+    carbs: Math.round(preparationClamp(cycle?.carbs, 20, 800, cfg.carbs || 200)),
+    fat: Math.round(preparationClamp(cycle?.fat, 15, 250, cfg.fat || 70))
+  };
+}
+
+function preparationCycleStatus(_plan, index) {
+  return index === 0 ? 'current' : '';
+}
+
+function preparationFormatDate(value) {
+  if (!value) return '—';
+  return localDate(value).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function preparationNormalizedName(value) {
+  return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+}
+
+function preparationLegacyHasFullSequence(cycles) {
+  return Array.isArray(cycles)
+    && cycles.length === PREPARATION_INTRAPHASES.length
+    && cycles.every((cycle, index) => preparationNormalizedName(cycle.name) === preparationNormalizedName(PREPARATION_INTRAPHASES[index].name));
+}
+
+function preparationLegacyCurrentIndex(plan, date = selectedDate()) {
+  const cycles = Array.isArray(plan?.cycles) ? plan.cycles : [];
+  if (!cycles.length || !plan.start_date || date < plan.start_date) return 0;
+  let cursor = plan.start_date;
+  for (let index = 0; index < cycles.length; index++) {
+    const end = addDays(cursor, Math.round(preparationClamp(cycles[index]?.weeks, 1, 52, 1)) * 7 - 1);
+    if (date <= end) return index;
+    cursor = addDays(end, 1);
+  }
+  return cycles.length - 1;
+}
+
+function preparationLegacyCycleStart(plan, cycleIndex) {
+  let start = plan?.start_date || selectedDate();
+  for (let index = 0; index < cycleIndex; index++) {
+    start = addDays(start, Math.round(preparationClamp(plan.cycles[index]?.weeks, 1, 52, 1)) * 7);
+  }
+  return start;
+}
+
+function preparationResolveLegacyIntraphase(cycle = {}, oldIndex = 0, isFullSequence = false) {
+  const byKey = preparationIntraphaseIndex(cycle.stage_key, -1);
+  if (byKey >= 0) return byKey;
+  if (Number.isInteger(cycle.sequence_index) && PREPARATION_INTRAPHASES[cycle.sequence_index]) return cycle.sequence_index;
+  if (isFullSequence && PREPARATION_INTRAPHASES[oldIndex]) return oldIndex;
+  const rawName = preparationNormalizedName(cycle.name);
+  if (rawName === 'crecimiento') return 3;
+  const byName = PREPARATION_INTRAPHASES.findIndex(item => preparationNormalizedName(item.name) === rawName);
+  return byName >= 0 ? byName : 2;
+}
+
+function preparationNormalizeCycle(cycle = {}, sequenceIndex = null, baseline = {}) {
+  const index = preparationIntraphaseIndex(sequenceIndex, preparationResolveLegacyIntraphase(cycle));
+  const definition = PREPARATION_INTRAPHASES[index];
+  const base = {
+    calories: preparationNumber(baseline.calories, 2000),
+    protein: preparationNumber(baseline.protein, 150),
+    carbs: preparationNumber(baseline.carbs, 200),
+    fat: preparationNumber(baseline.fat, 70)
+  };
+  const legacyFactor = 1 + preparationClamp(cycle.calorie_adjustment_pct, -50, 50, 0) / 100;
+  const legacyCalories = Math.round(base.calories * legacyFactor / 10) * 10;
+  const legacyProtein = Math.round(base.protein);
+  const legacyFat = Math.round(base.fat * legacyFactor);
+  const legacyCarbs = Math.max(20, Math.round((legacyCalories - legacyProtein * 4 - legacyFat * 9) / 4));
+  const loadMin = Math.round(preparationClamp(cycle.load_min_pct, 0, 100, 60));
+  return {
+    sequence_index: index,
+    stage_key: definition.key,
+    name: definition.name,
+    meaning: definition.meaning,
+    weeks: Math.round(preparationClamp(cycle.weeks, 1, 52, 4)),
+    calories: Math.round(preparationClamp(cycle.calories, 800, 6000, legacyCalories)),
+    protein: Math.round(preparationClamp(cycle.protein, 20, 400, legacyProtein)),
+    carbs: Math.round(preparationClamp(cycle.carbs, 20, 800, legacyCarbs)),
+    fat: Math.round(preparationClamp(cycle.fat, 15, 250, legacyFat)),
+    weekly_volume_target: Math.round(preparationClamp(cycle.weekly_volume_target, 0, 10000000, 0)),
+    training_volume_pct: Math.round(preparationClamp(cycle.training_volume_pct, 10, 200, 100)),
+    load_min_pct: loadMin,
+    load_max_pct: Math.round(preparationClamp(cycle.load_max_pct, loadMin, 100, Math.max(loadMin, 85))),
+    target_weight_rate_pct: preparationRound(preparationClamp(cycle.target_weight_rate_pct, -5, 5, 0), 2),
+    focus: String(cycle.focus || '').slice(0, 900)
+  };
+}
+
+function preparationUpgradePlan(source = {}) {
+  const original = source && typeof source === 'object' ? source : {};
+  const objective = PREPARATION_OBJECTIVES[original.objective] ? original.objective : 'recomposition';
+  const oldCycles = Array.isArray(original.cycles) ? original.cycles : [];
+  const baseline = original.baseline || DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const alreadyManual = original.structure_version === PREPARATION_STRUCTURE_VERSION
+    && original.manual_configuration === true
+    && oldCycles.length === 1;
+  const legacyFullSequence = preparationLegacyHasFullSequence(oldCycles);
+  const oldIndex = alreadyManual ? 0 : preparationLegacyCurrentIndex(original);
+  const oldCycle = oldCycles[oldIndex] || oldCycles[0] || {};
+  const sequenceIndex = alreadyManual
+    ? preparationResolveLegacyIntraphase(oldCycle)
+    : preparationResolveLegacyIntraphase(oldCycle, oldIndex, legacyFullSequence);
+  const cycle = preparationNormalizeCycle(oldCycle, sequenceIndex, baseline);
+  const migratedStart = alreadyManual ? (original.start_date || selectedDate()) : preparationLegacyCycleStart(original, oldIndex);
+  const plan = {
+    ...original,
+    objective,
+    structure_version: PREPARATION_STRUCTURE_VERSION,
+    manual_configuration: true,
+    selected_intraphase_key: cycle.stage_key,
+    start_date: migratedStart,
+    duration_weeks: cycle.weeks,
+    current_weight: preparationNumber(original.current_weight, preparationLatestWeight() || 0),
+    target_weight: preparationNumber(original.target_weight, 0),
+    training_days: Math.round(preparationClamp(original.training_days, 0, 7, 4)),
+    baseline: { calories: cycle.calories, protein: cycle.protein, carbs: cycle.carbs, fat: cycle.fat },
+    cycles: [cycle]
+  };
+  if (!alreadyManual && !plan.structure_backup) {
+    plan.structure_backup = {
+      migrated_at: new Date().toISOString(),
+      start_date: original.start_date || '',
+      duration_weeks: original.duration_weeks || 0,
+      cycles: oldCycles.map(item => ({ ...item })),
+      ai_review: original.ai_review || null
+    };
+    plan.ai_review = null;
+  }
+  delete plan.experience;
+  delete plan.summary;
+  delete plan.strategy;
+  delete plan.guardrails;
+  delete plan.source;
+  delete plan.generated_at;
+  const changed = JSON.stringify(plan) !== JSON.stringify(original);
+  return { plan, changed };
+}
+
+function preparationSavePlan(plan, message = 'Fase guardada') {
+  const plans = preparationPlans();
+  const index = plans.findIndex(item => item.id === plan.id);
+  plan.updated_at = new Date().toISOString();
+  if (index >= 0) plans[index] = plan;
+  else plans.unshift(plan);
+  DB.set('preparation_plans', plans);
+  DB.set('preparation_active_id', plan.id);
+  if (message) toast(message);
+  loadPreparation();
+  populatePreparationForm(plan, false);
+}
+
+function preparationPlanPayload() {
+  const objective = document.getElementById('phase-objective')?.value || 'recomposition';
+  const stageKey = document.getElementById('phase-intraphase')?.value || 'maintenance';
+  const sequenceIndex = preparationIntraphaseIndex(stageKey);
+  const definition = PREPARATION_INTRAPHASES[sequenceIndex];
+  const currentWeight = preparationLatestWeight();
+  const duration = Math.round(preparationClamp(document.getElementById('phase-duration')?.value, 1, 52, 4));
+  const targetInput = preparationNumber(document.getElementById('phase-target-weight')?.value);
+  const calories = Math.round(preparationNumber(document.getElementById('phase-calories')?.value));
+  const protein = Math.round(preparationNumber(document.getElementById('phase-protein')?.value));
+  const carbs = Math.round(preparationNumber(document.getElementById('phase-carbs')?.value));
+  const fat = Math.round(preparationNumber(document.getElementById('phase-fat')?.value));
+  const notes = document.getElementById('phase-notes')?.value.trim() || '';
+  const cycle = preparationNormalizeCycle({
+    stage_key: definition.key,
+    weeks: duration,
+    calories,
+    protein,
+    carbs,
+    fat,
+    weekly_volume_target: document.getElementById('phase-weekly-volume')?.value,
+    training_volume_pct: document.getElementById('phase-training-volume')?.value,
+    load_min_pct: document.getElementById('phase-load-min')?.value,
+    load_max_pct: document.getElementById('phase-load-max')?.value,
+    target_weight_rate_pct: document.getElementById('phase-weight-rate')?.value,
+    focus: notes
+  }, sequenceIndex, { calories, protein, carbs, fat });
+  return {
+    objective,
+    selected_intraphase_key: definition.key,
+    start_date: document.getElementById('phase-start-date')?.value || selectedDate(),
+    duration_weeks: duration,
+    current_weight: currentWeight,
+    target_weight: targetInput > 0 ? targetInput : 0,
+    training_days: Math.round(preparationClamp(document.getElementById('phase-training-days')?.value, 0, 7, 4)),
+    notes,
+    baseline: { calories: cycle.calories, protein: cycle.protein, carbs: cycle.carbs, fat: cycle.fat },
+    cycle
+  };
+}
+
+function resetPreparationForm(scrollToForm = false) {
+  const cfg = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const values = {
+    'phase-edit-plan-id': '',
+    'phase-start-date': selectedDate(),
+    'phase-duration': 4,
+    'phase-target-weight': '',
+    'phase-training-days': 4,
+    'phase-calories': cfg.calories || 2000,
+    'phase-protein': cfg.protein || 150,
+    'phase-carbs': cfg.carbs || 200,
+    'phase-fat': cfg.fat || 70,
+    'phase-weekly-volume': '',
+    'phase-training-volume': 100,
+    'phase-load-min': 60,
+    'phase-load-max': 85,
+    'phase-weight-rate': 0,
+    'phase-notes': ''
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const input = document.getElementById(id);
+    if (input) input.value = value;
+  });
+  setPreparationObjective('recomposition');
+  setPreparationIntraphase('maintenance');
+  const button = document.getElementById('phase-generate-btn');
+  if (button) button.innerHTML = '<i data-lucide="save"></i><span>Guardar fase manual</span>';
+  refreshInterfaceIcons();
+  if (scrollToForm) document.getElementById('phase-setup')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function populatePreparationForm(plan, scrollToForm = false) {
+  const cycle = plan?.cycles?.[0];
+  if (!plan || !cycle) return;
+  const targets = preparationCycleTargets(plan, cycle);
+  const values = {
+    'phase-edit-plan-id': plan.id,
+    'phase-start-date': plan.start_date,
+    'phase-duration': cycle.weeks,
+    'phase-target-weight': plan.target_weight || '',
+    'phase-training-days': plan.training_days,
+    'phase-calories': targets.calories,
+    'phase-protein': targets.protein,
+    'phase-carbs': targets.carbs,
+    'phase-fat': targets.fat,
+    'phase-weekly-volume': cycle.weekly_volume_target || '',
+    'phase-training-volume': cycle.training_volume_pct,
+    'phase-load-min': cycle.load_min_pct,
+    'phase-load-max': cycle.load_max_pct,
+    'phase-weight-rate': cycle.target_weight_rate_pct,
+    'phase-notes': plan.notes || cycle.focus || ''
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const input = document.getElementById(id);
+    if (input) input.value = value;
+  });
+  setPreparationObjective(plan.objective);
+  setPreparationIntraphase(cycle.stage_key);
+  const button = document.getElementById('phase-generate-btn');
+  if (button) button.innerHTML = '<i data-lucide="save"></i><span>Guardar cambios manuales</span>';
+  refreshInterfaceIcons();
+  if (scrollToForm) document.getElementById('phase-setup')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function editPreparationPlan(planId) {
+  const plan = preparationPlans().find(item => item.id === planId);
+  populatePreparationForm(plan, true);
+}
+
+function savePreparationPlanManual() {
+  const requiredValues = [
+    ['phase-calories', 800, 6000],
+    ['phase-protein', 20, 400],
+    ['phase-carbs', 20, 800],
+    ['phase-fat', 15, 250],
+    ['phase-duration', 1, 52],
+    ['phase-training-days', 0, 7],
+    ['phase-training-volume', 10, 200],
+    ['phase-load-min', 0, 100],
+    ['phase-load-max', 0, 100],
+    ['phase-weight-rate', -5, 5]
+  ];
+  const invalid = requiredValues.some(([id, min, max]) => {
+    const raw = document.getElementById(id)?.value;
+    const value = Number(raw);
+    return raw === '' || !Number.isFinite(value) || value < min || value > max;
+  });
+  if (invalid) return toast('Revisa los campos manuales: hay un valor vacío o fuera de rango', 'err');
+  const loadMin = Number(document.getElementById('phase-load-min')?.value);
+  const loadMax = Number(document.getElementById('phase-load-max')?.value);
+  if (loadMin > loadMax) return toast('La carga mínima no puede superar la máxima', 'err');
+  const targetRaw = document.getElementById('phase-target-weight')?.value || '';
+  const targetWeight = Number(targetRaw);
+  if (targetRaw && (!Number.isFinite(targetWeight) || targetWeight < 30 || targetWeight > 350)) {
+    return toast('El peso objetivo debe estar entre 30 y 350 kg, o quedar vacío', 'err');
+  }
+  const weeklyVolumeRaw = document.getElementById('phase-weekly-volume')?.value || '';
+  const weeklyVolume = Number(weeklyVolumeRaw);
+  if (weeklyVolumeRaw && (!Number.isFinite(weeklyVolume) || weeklyVolume < 0 || weeklyVolume > 10000000)) {
+    return toast('El volumen semanal debe ser un número válido', 'err');
+  }
+  const payload = preparationPlanPayload();
+  const editId = document.getElementById('phase-edit-plan-id')?.value || '';
+  const existing = preparationPlans().find(item => item.id === editId);
+  const definition = PREPARATION_INTRAPHASES[payload.cycle.sequence_index];
+  const plan = {
+    ...(existing || {}),
+    id: existing?.id || uid(),
+    name: `${PREPARATION_OBJECTIVES[payload.objective].label} · ${definition.name}${definition.key === 'growth_1' ? ' I' : definition.key === 'growth_2' ? ' II' : ''} · ${payload.start_date}`,
+    status: existing?.status || 'draft',
+    ...payload,
+    structure_version: PREPARATION_STRUCTURE_VERSION,
+    manual_configuration: true,
+    cycles: [payload.cycle],
+    ai_review: null,
+    created_at: existing?.created_at || new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  delete plan.cycle;
+  preparationSavePlan(plan, existing ? 'Cambios manuales guardados' : 'Fase manual guardada');
+}
+
+function preparationTriggers(plan, metrics, cycle, targets) {
+  const triggers = [];
+  const expected = preparationNumber(cycle.target_weight_rate_pct);
+  const actual = preparationNumber(metrics.weight_rate_pct_week);
+  const sufficientWeight = metrics.weight_entries_21d >= 3;
+  const add = (type, title, detail) => triggers.push({ type, title, detail });
+
+  if (!sufficientWeight) {
+    add('info', 'Faltan pesajes para comparar', `Hay ${metrics.weight_entries_21d} registro(s) en 21 días; todavía no alcanza para contrastar tu ritmo manual de ${expected}%/sem.`);
+  } else if (Math.abs(actual - expected) > 0.3) {
+    add('warn', 'El peso difiere de tu referencia', `Tendencia observada ${actual}%/sem frente al ${expected}%/sem que tú configuraste.`);
+  } else if (sufficientWeight) {
+    add('good', 'Peso cercano a tu referencia', `Tendencia observada ${actual}%/sem frente a tu objetivo manual de ${expected}%/sem.`);
+  }
+
+  if (metrics.nutrition_logging_pct < 57) {
+    add('info', 'Faltan días de alimentación', `Hay comidas en ${metrics.nutrition_logging_pct}% de los últimos 7 días; la comparación con tus ${targets.calories} kcal aún es parcial.`);
+  } else {
+    const difference = targets.calories ? Math.round((metrics.average_calories - targets.calories) / targets.calories * 100) : 0;
+    add(Math.abs(difference) <= 10 ? 'good' : 'warn', 'Calorías frente a tu objetivo', `${metrics.average_calories} kcal promedio frente a las ${targets.calories} kcal que tú configuraste (${difference > 0 ? '+' : ''}${difference}%).`);
+  }
+
+  if (plan.training_days > 0 && metrics.training_sessions_7d < plan.training_days) {
+    add('warn', 'Faltan sesiones para evaluar el bloque', `Registraste ${metrics.training_sessions_7d} de ${plan.training_days} sesiones previstas esta semana.`);
+  } else if (plan.training_days > 0) {
+    add('good', 'Frecuencia de entrenamiento cumplida', `${metrics.training_sessions_7d} sesiones registradas para una meta de ${plan.training_days}.`);
+  }
+
+  if (cycle.weekly_volume_target > 0) {
+    const volumeDifference = Math.round((metrics.training_volume_7d - cycle.weekly_volume_target) / cycle.weekly_volume_target * 100);
+    add(Math.abs(volumeDifference) <= 15 ? 'good' : 'warn', 'Volumen frente a tu objetivo', `${metrics.training_volume_7d.toLocaleString('es-CL')} kg registrados frente a ${cycle.weekly_volume_target.toLocaleString('es-CL')} kg configurados (${volumeDifference > 0 ? '+' : ''}${volumeDifference}%).`);
+  }
+
+  if (metrics.sleep_entries_7d >= 3 && metrics.average_sleep < 6.5 && metrics.training_volume_change_pct > 5) {
+    add('danger', 'Recuperación baja con carga creciente', `${metrics.average_sleep} h de sueño promedio y volumen ${metrics.training_volume_change_pct > 0 ? '+' : ''}${metrics.training_volume_change_pct}% frente a la semana anterior.`);
+  } else if (metrics.energy_entries_7d >= 3 && metrics.average_energy <= 2.2) {
+    add('warn', 'Energía baja registrada', `Promedio de energía ${metrics.average_energy}/5 con ${metrics.energy_entries_7d} registros.`);
+  }
+
+  if (!triggers.length) add('info', 'Sin comparación suficiente', 'Sigue registrando para poder contrastar tus referencias manuales.');
+  return triggers.slice(0, 6);
+}
+
+function preparationReviewPayload(plan) {
+  const currentCycle = plan.cycles[0];
+  const currentRange = preparationCycleDates(plan);
+  const totalWeeks = preparationPlanWeeks(plan);
+  const elapsedDays = Math.max(0, Math.floor((localDate(selectedDate()) - localDate(plan.start_date)) / 86400000) + 1);
+  return {
+    objective: plan.objective,
+    current_weight: preparationLatestWeight() || plan.current_weight,
+    target_weight: preparationNumber(plan.target_weight) || null,
+    training_days: plan.training_days,
+    notes: plan.notes || '',
+    metrics: preparationPeriodSummary(),
+    plan: {
+      name: plan.name,
+      status: plan.status,
+      start_date: plan.start_date,
+      current_week: Math.min(totalWeeks, Math.max(1, Math.floor(elapsedDays / 7) + 1)),
+      total_weeks: totalWeeks,
+      current_cycle: {
+        sequence_index: currentCycle.sequence_index,
+        stage_key: currentCycle.stage_key,
+        name: currentCycle.name,
+        meaning: currentCycle.meaning,
+        start_date: currentRange.start,
+        end_date: currentRange.end,
+        weeks: currentCycle.weeks,
+        targets: {
+          ...preparationCycleTargets(plan, currentCycle),
+          training_volume_pct: currentCycle.training_volume_pct,
+          weekly_volume_target: currentCycle.weekly_volume_target,
+          load_min_pct: currentCycle.load_min_pct,
+          load_max_pct: currentCycle.load_max_pct,
+          target_weight_rate_pct: currentCycle.target_weight_rate_pct
+        }
+      },
+      all_cycles: PREPARATION_INTRAPHASES.map((cycle, index) => ({ sequence_index: index, stage_key: cycle.key, name: cycle.name }))
+    }
+  };
+}
+
+function preparationReviewColumn(title, items, tone) {
+  const rows = (Array.isArray(items) ? items : []).filter(Boolean);
+  if (!rows.length) return '';
+  return `<div class="phase-review-column ${tone}"><strong>${esc(title)}</strong><ul>${rows.map(item => `<li>${esc(item)}</li>`).join('')}</ul></div>`;
+}
+
+function preparationRenderAiReview(plan) {
+  const review = plan.ai_review;
+  if (!review) return `<div class="phase-review-empty"><strong>Sin lectura todavía</strong><p>La IA comparará tus registros con la fase, intra fase y valores que tú escribiste. No completará campos, propondrá números ni aplicará cambios.</p></div>`;
+  const statusLabels = { on_track: 'En rumbo', watch: 'Observar', adjust: 'Revisar', data_needed: 'Faltan datos' };
+  const status = statusLabels[review.status] ? review.status : 'data_needed';
+  const evidence = (Array.isArray(review.evidence) ? review.evidence : []).slice(0, 6);
+  const generated = String(review.generated_at || '').slice(0, 16).replace('T', ' ');
+  return `<div class="phase-review">
+    <div class="phase-review-headline">
+      <span class="phase-review-status ${status}">${statusLabels[status]}</span>
+      <strong>${esc(review.headline || 'Lectura de progreso')}</strong>
+      <p>${esc(review.analysis || '')}</p>
+    </div>
+    ${evidence.length ? `<div class="phase-review-evidence">${evidence.map(item => `<div><span>${esc(item.label || 'Dato')}</span><strong>${esc(item.value || '—')}</strong><p>${esc(item.interpretation || '')}</p></div>`).join('')}</div>` : ''}
+    <div class="phase-review-columns">
+      ${preparationReviewColumn('A favor', review.positives, 'good')}
+      ${preparationReviewColumn('A vigilar', review.concerns, 'warn')}
+      ${preparationReviewColumn('Qué seguir observando', review.watch_next || review.recommendations, 'info')}
+    </div>
+    ${review.next_check ? `<p class="phase-review-meta">Próxima revisión: ${esc(review.next_check)}</p>` : ''}
+    <p class="phase-review-meta">Datos hasta ${esc(review.data_as_of || '—')}${generated ? ` · lectura ${esc(generated)}` : ''}</p>
+  </div>`;
+}
+
+async function requestPreparationReview(planId) {
+  const plan = preparationPlans().find(item => item.id === planId);
+  if (!plan) return;
+  const button = document.getElementById('phase-review-btn');
+  if (button) {
+    button.disabled = true;
+    button.innerHTML = '<i data-lucide="loader-circle"></i><span>Analizando...</span>';
+    refreshInterfaceIcons();
+  }
+  try {
+    const response = await fetch('/api/phase-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(preparationReviewPayload(plan))
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'La IA no pudo analizar el progreso');
+    if (!data.headline || !data.status) throw new Error('La IA devolvió una lectura incompleta');
+    const plans = preparationPlans();
+    const target = plans.find(item => item.id === planId);
+    if (!target) return;
+    target.ai_review = {
+      ...data,
+      data_as_of: selectedDate(),
+      generated_at: data.generated_at || new Date().toISOString()
+    };
+    target.updated_at = new Date().toISOString();
+    DB.set('preparation_plans', plans);
+    toast('Lectura de progreso actualizada');
+    loadPreparation();
+  } catch (error) {
+    toast(error.message || 'No se pudo actualizar la lectura', 'err');
+    if (button) {
+      button.disabled = false;
+      button.innerHTML = '<i data-lucide="scan-search"></i><span>Analizar progreso</span>';
+      refreshInterfaceIcons();
+    }
+  }
+}
+
+function renderPreparationPlan(plan) {
+  const output = document.getElementById('phase-plan-output');
+  if (!output) return;
+  const metrics = preparationPeriodSummary();
+  const currentCycle = plan.cycles[0];
+  const currentRange = preparationCycleDates(plan);
+  const targets = preparationCycleTargets(plan, currentCycle);
+  const totalWeeks = preparationPlanWeeks(plan);
+  const elapsedDays = Math.max(0, Math.min(totalWeeks * 7, Math.floor((localDate(selectedDate()) - localDate(plan.start_date)) / 86400000) + 1));
+  const progress = plan.status === 'completed' ? 100 : Math.round((elapsedDays / Math.max(totalWeeks * 7, 1)) * 100);
+  const endDate = currentRange.end;
+  const currentWeek = Math.min(totalWeeks, Math.max(1, Math.floor(elapsedDays / 7) + 1));
+  const triggers = preparationTriggers(plan, metrics, currentCycle, targets);
+  const routines = DB.get('routines') || [];
+  const actualWeight = preparationLatestWeight() || plan.current_weight;
+  const selectedStage = preparationIntraphaseIndex(currentCycle.stage_key);
+  const selectedStageLabel = currentCycle.stage_key === 'growth_1' ? 'Crecimiento I' : currentCycle.stage_key === 'growth_2' ? 'Crecimiento II' : currentCycle.name;
+  const sequenceTimeline = PREPARATION_INTRAPHASES.map((stage, index) => {
+    const label = stage.key === 'growth_1' ? 'Crecimiento I' : stage.key === 'growth_2' ? 'Crecimiento II' : stage.name;
+    return `<div class="phase-timeline-step ${index === selectedStage ? 'current' : ''}"><span>Posición ${index + 1}</span><strong>${esc(label)}</strong></div>`;
+  }).join('');
+
+  output.innerHTML = `<div class="phase-plan-workspace">
+    <section class="phase-panel phase-status">
+      <div class="phase-status-main">
+        <div class="phase-ring" style="--phase-progress:${progress * 3.6}deg"><div><strong>${progress}%</strong><span>de la fase</span></div></div>
+        <div class="phase-status-copy">
+          <span class="phase-kicker">${esc(PREPARATION_OBJECTIVES[plan.objective]?.label || 'Fase')} · ${plan.status === 'active' ? 'activa' : plan.status === 'completed' ? 'cerrada' : 'borrador'}</span>
+          <h2>${esc(selectedStageLabel)}</h2>
+          <p>${esc(currentCycle.meaning || 'Registra y revisa la tendencia antes de ajustar parámetros.')}</p>
+          <div class="phase-status-meta">
+            <div><span>Semana</span><strong>${currentWeek} de ${totalWeeks}</strong></div>
+            <div><span>Rango actual</span><strong>${preparationFormatDate(currentRange.start)} — ${preparationFormatDate(currentRange.end)}</strong></div>
+            <div><span>Fin previsto</span><strong>${preparationFormatDate(endDate)}</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="phase-current-grid">
+        <div class="phase-current-kpi"><span>Peso real</span><strong>${actualWeight ? preparationRound(actualWeight, 1) + ' kg' : '—'}</strong><small>${metrics.weight_entries_21d} registros en 21 días</small></div>
+        <div class="phase-current-kpi"><span>Peso objetivo manual</span><strong>${plan.target_weight ? preparationRound(plan.target_weight, 1) + ' kg' : 'Sin definir'}</strong><small>${currentCycle.target_weight_rate_pct > 0 ? '+' : ''}${currentCycle.target_weight_rate_pct}% por semana configurado</small></div>
+        <div class="phase-current-kpi"><span>Macros escritos por ti</span><strong>${targets.calories} kcal</strong><small>${targets.protein}P · ${targets.carbs}C · ${targets.fat}G</small></div>
+        <div class="phase-current-kpi"><span>Entrenamiento manual</span><strong>${currentCycle.training_volume_pct}% vol.</strong><small>${currentCycle.weekly_volume_target ? currentCycle.weekly_volume_target.toLocaleString('es-CL') + ' kg/sem · ' : ''}${currentCycle.load_min_pct}–${currentCycle.load_max_pct}% carga</small></div>
+      </div>
+    </section>
+
+    <section class="phase-panel phase-toolbar">
+      <div class="phase-toolbar-copy"><strong>${esc(plan.name)}</strong><span>Configuración manual · editada ${String(plan.updated_at || plan.created_at || '').slice(0, 10)}</span></div>
+      <div class="phase-toolbar-actions">
+        <button class="phase-action-btn" type="button" onclick="editPreparationPlan('${plan.id}')"><i data-lucide="pencil"></i><span>Editar mis valores</span></button>
+        <button class="phase-action-btn primary" type="button" onclick="togglePreparationPlanStatus('${plan.id}')"><i data-lucide="${plan.status === 'active' ? 'pause' : 'play'}"></i><span>${plan.status === 'active' ? 'Pausar fase' : 'Activar fase'}</span></button>
+        <button class="phase-action-btn" type="button" onclick="applyPreparationMacros('${plan.id}')"><i data-lucide="utensils"></i><span>Copiar macros a Nutrición</span></button>
+        <button class="phase-action-btn danger" type="button" onclick="archivePreparationPlan('${plan.id}')"><i data-lucide="archive"></i><span>Archivar</span></button>
+      </div>
+    </section>
+
+    <section class="phase-panel phase-timeline-panel">
+      <div class="phase-section-head"><div><span class="phase-section-label">Selección manual</span><h2>Tu posición dentro de las intra fases</h2><p>La posición resaltada es la que elegiste. La app no avanza ni cambia de intra fase automáticamente.</p></div></div>
+      <div class="phase-timeline">${sequenceTimeline}</div>
+      <div class="phase-cycles manual"><article class="phase-cycle-card current">
+        <div class="phase-cycle-head"><div><span class="phase-cycle-index">Intra fase declarada · posición ${selectedStage + 1}</span><h3>${esc(selectedStageLabel)}</h3></div><button class="phase-cycle-edit" type="button" onclick="editPreparationPlan('${plan.id}')" aria-label="Editar configuración manual" title="Editar mis valores"><i data-lucide="pencil"></i></button></div>
+        <p class="phase-cycle-dates">${preparationFormatDate(currentRange.start)} — ${preparationFormatDate(currentRange.end)} · ${currentCycle.weeks} semana${currentCycle.weeks === 1 ? '' : 's'}</p>
+        <div class="phase-cycle-stats">
+          <div class="phase-cycle-stat"><span>Calorías</span><strong>${targets.calories} kcal</strong></div>
+          <div class="phase-cycle-stat"><span>Macros</span><strong>${targets.protein}P · ${targets.carbs}C · ${targets.fat}G</strong></div>
+          <div class="phase-cycle-stat"><span>Volumen semanal</span><strong>${currentCycle.weekly_volume_target ? currentCycle.weekly_volume_target.toLocaleString('es-CL') + ' kg' : 'Sin definir'}</strong></div>
+          <div class="phase-cycle-stat"><span>Volumen de rutina</span><strong>${currentCycle.training_volume_pct}%</strong></div>
+          <div class="phase-cycle-stat"><span>Carga</span><strong>${currentCycle.load_min_pct}–${currentCycle.load_max_pct}%</strong></div>
+          <div class="phase-cycle-stat"><span>Ritmo de peso</span><strong>${currentCycle.target_weight_rate_pct > 0 ? '+' : ''}${currentCycle.target_weight_rate_pct}%/sem</strong></div>
+        </div>
+        <p class="phase-cycle-focus">${esc(plan.notes || 'Sin notas manuales.')}</p>
+      </article></div>
+    </section>
+
+    <section class="phase-panel phase-monitor-panel">
+      <div class="phase-section-head"><div><span class="phase-section-label">Comparación de datos</span><h2>Real frente a lo que escribiste</h2><p>Solo muestra diferencias. Esta sección no propone ni ejecuta cambios sobre tus valores.</p></div></div>
+      <div class="phase-monitor-grid">
+        <div class="phase-metric"><span>Peso / semana</span><strong>${metrics.weight_entries_21d >= 2 ? (metrics.weight_rate_pct_week > 0 ? '+' : '') + metrics.weight_rate_pct_week + '%' : '—'}</strong><small>${metrics.weight_entries_21d} pesajes en 21 días</small></div>
+        <div class="phase-metric"><span>Registro nutricional</span><strong>${metrics.nutrition_logging_pct}%</strong><small>${metrics.average_calories || 0} kcal promedio cargado</small></div>
+        <div class="phase-metric"><span>Entrenamiento</span><strong>${metrics.training_sessions_7d}/${plan.training_days}</strong><small>${metrics.training_volume_7d.toLocaleString('es-CL')} kg de volumen</small></div>
+        <div class="phase-metric"><span>Recuperación</span><strong>${metrics.average_sleep ? metrics.average_sleep + ' h' : '—'}</strong><small>${metrics.average_energy ? metrics.average_energy + '/5 de energía' : 'sin energía suficiente'}</small></div>
+      </div>
+      <div class="phase-triggers">${triggers.map(trigger => `<article class="phase-trigger ${trigger.type}"><span class="phase-trigger-marker"></span><div class="phase-trigger-copy"><strong>${esc(trigger.title)}</strong><p>${esc(trigger.detail)}</p></div></article>`).join('')}</div>
+    </section>
+
+    <div class="phase-two-column">
+      <section class="phase-panel phase-ai-panel">
+        <div class="phase-section-head"><div><span class="phase-section-label">IA de seguimiento</span><h2>Cómo vas según tus valores</h2><p>Lee tus registros frente a lo que tú configuraste; no propone números ni modifica nada.</p></div><button id="phase-review-btn" class="phase-action-btn" type="button" onclick="requestPreparationReview('${plan.id}')"><i data-lucide="scan-search"></i><span>${plan.ai_review ? 'Actualizar lectura' : 'Analizar progreso'}</span></button></div>
+        ${preparationRenderAiReview(plan)}
+      </section>
+      <section class="phase-panel phase-ai-panel">
+        <div class="phase-section-head"><div><span class="phase-section-label">Acción manual</span><h2>Crear una copia ajustada</h2><p>Solo ocurre si tú eliges una rutina y confirmas.</p></div></div>
+        <div class="phase-routine-control">
+          <select id="phase-routine-select" aria-label="Rutina base"><option value="">Selecciona una rutina base</option>${routines.map(routine => `<option value="${routine.id}">${esc(routine.name)}</option>`).join('')}</select>
+          <button class="phase-action-btn" type="button" onclick="createPreparationRoutine('${plan.id}')"><i data-lucide="copy-plus"></i><span>Crear copia al ${currentCycle.training_volume_pct}%</span></button>
+          <p>Se ajusta el número de series de cada ejercicio. Las repeticiones y la rutina original no se reemplazan.</p>
+        </div>
+      </section>
+    </div>
+    <p class="phase-disclaimer">Planificación orientativa para seguimiento personal. Si hay síntomas, lesión, trastornos alimentarios o una condición médica, consulta a un profesional habilitado antes de aplicar cambios.</p>
+  </div>`;
+  refreshInterfaceIcons();
+}
+
+function loadPreparation() {
+  const plans = preparationPlans();
+  const active = preparationActivePlan();
+  const picker = document.getElementById('phase-plan-select');
+  const cfg = DB.get('nutconfig') || { calories: 2000 };
+  const weight = preparationLatestWeight();
+  const metrics = preparationPeriodSummary();
+  const startInput = document.getElementById('phase-start-date');
+  if (startInput && !startInput.value) {
+    if (active) populatePreparationForm(active, false);
+    else resetPreparationForm(false);
+  }
+  const weightEl = document.getElementById('phase-setup-weight');
+  const caloriesEl = document.getElementById('phase-setup-calories');
+  const dataEl = document.getElementById('phase-setup-data');
+  if (weightEl) weightEl.textContent = weight ? `${preparationRound(weight, 1)} kg` : 'Sin registro';
+  if (caloriesEl) caloriesEl.textContent = `${cfg.calories || 2000} kcal`;
+  if (dataEl) dataEl.textContent = `${metrics.training_sessions_7d} entrenos · ${metrics.nutrition_logging_pct}% nut.`;
+  if (picker) {
+    picker.innerHTML = plans.length
+      ? plans.map(plan => `<option value="${plan.id}" ${active?.id === plan.id ? 'selected' : ''}>${esc(plan.name)}${plan.status === 'active' ? ' · activa' : ''}</option>`).join('')
+      : '<option value="">Sin fases guardadas</option>';
+  }
+  if (active) renderPreparationPlan(active);
+  else {
+    const output = document.getElementById('phase-plan-output');
+    if (output) output.innerHTML = '<section class="phase-panel phase-empty-state"><div><span class="phase-empty-icon"><i data-lucide="route"></i></span><strong>Todavía no hay una fase creada</strong><p>Elige la fase, la intra fase actual y completa tus referencias manuales.</p></div></section>';
+  }
+  refreshInterfaceIcons();
+}
+
+function selectPreparationPlan(id) {
+  const plan = preparationPlans().find(item => item.id === id);
+  if (!plan) return;
+  DB.set('preparation_active_id', id);
+  loadPreparation();
+  populatePreparationForm(plan, false);
+}
+
+function togglePreparationPlanStatus(id) {
+  const plans = preparationPlans();
+  const plan = plans.find(item => item.id === id);
+  if (!plan) return;
+  const activate = plan.status !== 'active';
+  if (activate && !confirm(`¿Activar la fase "${plan.name}"? Esto no cambia todavía tus macros ni tu rutina.`)) return;
+  plans.forEach(item => {
+    if (item.id !== id && item.status === 'active') item.status = 'paused';
+  });
+  plan.status = activate ? 'active' : 'paused';
+  plan.updated_at = new Date().toISOString();
+  DB.set('preparation_plans', plans);
+  DB.set('preparation_active_id', id);
+  toast(activate ? 'Fase activada' : 'Fase pausada');
+  loadPreparation();
+}
+
+function archivePreparationPlan(id) {
+  const plan = preparationPlans().find(item => item.id === id);
+  if (!plan || !confirm(`¿Archivar "${plan.name}"? Sus datos quedarán guardados en el historial.`)) return;
+  plan.status = 'archived';
+  plan.updated_at = new Date().toISOString();
+  const plans = preparationPlans();
+  const index = plans.findIndex(item => item.id === id);
+  plans[index] = plan;
+  DB.set('preparation_plans', plans);
+  toast('Fase archivada; no se borró ningún dato');
+  loadPreparation();
+}
+
+function applyPreparationMacros(planId) {
+  const plan = preparationPlans().find(item => item.id === planId);
+  if (!plan) return;
+  const cycle = plan.cycles[0];
+  const targets = preparationCycleTargets(plan, cycle);
+  const current = DB.get('nutconfig') || {};
+  const manual = { ...targets };
+  const message = `Objetivos actuales: ${current.calories || '—'} kcal, ${current.protein || '—'}P, ${current.carbs || '—'}C, ${current.fat || '—'}G.\n\nValores que tú escribiste: ${manual.calories} kcal, ${manual.protein}P, ${manual.carbs}C, ${manual.fat}G.\n\n¿Copiarlos a Nutrición? Tus comidas registradas no se modificarán.`;
+  if (!confirm(message)) return;
+  DB.set('preparation_macro_history', [
+    { id: uid(), plan_id: plan.id, cycle: cycle.name, previous: current, next: manual, applied_at: new Date().toISOString(), source: 'manual' },
+    ...(DB.get('preparation_macro_history') || [])
+  ].slice(0, 80));
+  DB.set('nutconfig', manual);
+  toast('Tus macros manuales se copiaron a Nutrición');
+  loadPreparation();
+  if (document.getElementById('page-nutrition')?.classList.contains('active')) loadNutrition();
+}
+
+function createPreparationRoutine(planId) {
+  const plan = preparationPlans().find(item => item.id === planId);
+  const routineId = document.getElementById('phase-routine-select')?.value;
+  const routine = (DB.get('routines') || []).find(item => item.id === routineId);
+  if (!plan) return;
+  if (!routine) return toast('Selecciona una rutina base', 'err');
+  const cycle = plan.cycles[0];
+  const volumePct = Math.round(preparationClamp(cycle.training_volume_pct, 10, 200, 100));
+  const days = (routine.days || []).map(day => ({
+    ...day,
+    id: uid(),
+    exercises: (day.exercises || []).map(exercise => ({
+      ...exercise,
+      target_sets: Math.max(1, Math.round(preparationNumber(exercise.target_sets || exercise.sets, 1)))
+    }))
+  }));
+  const exercises = days.flatMap((day, dayIndex) => (day.exercises || []).map((exercise, exerciseIndex) => {
+    const original = Math.max(1, preparationNumber(exercise.target_sets || exercise.sets, 1));
+    const raw = original * volumePct / 100;
+    exercise.target_sets = Math.max(1, Math.floor(raw));
+    return { dayIndex, exerciseIndex, exercise, original, raw };
+  }));
+  const originalTotal = exercises.reduce((sum, item) => sum + item.original, 0);
+  const targetTotal = Math.max(exercises.length, Math.round(originalTotal * volumePct / 100));
+  let adjustedTotal = exercises.reduce((sum, item) => sum + item.exercise.target_sets, 0);
+  while (adjustedTotal < targetTotal && exercises.length) {
+    const candidate = [...exercises].sort((a, b) => {
+      const fractionDifference = (b.raw - b.exercise.target_sets) - (a.raw - a.exercise.target_sets);
+      return fractionDifference || b.original - a.original;
+    })[0];
+    candidate.exercise.target_sets += 1;
+    adjustedTotal += 1;
+  }
+  while (adjustedTotal > targetTotal) {
+    const candidate = [...exercises]
+      .filter(item => item.exercise.target_sets > 1)
+      .sort((a, b) => (b.exercise.target_sets - b.raw) - (a.exercise.target_sets - a.raw))[0];
+    if (!candidate) break;
+    candidate.exercise.target_sets -= 1;
+    adjustedTotal -= 1;
+  }
+  const name = `${routine.name} · ${cycle.name} ${volumePct}%`;
+  if (!confirm(`Se creará una rutina nueva llamada "${name}" con ${adjustedTotal} series objetivo en lugar de ${originalTotal}.\n\nLa original "${routine.name}" quedará intacta. ¿Continuar?`)) return;
+  DB.push('routines', {
+    id: uid(),
+    name,
+    days,
+    created: today(),
+    source_routine_id: routine.id,
+    preparation_plan_id: plan.id,
+    preparation_cycle: cycle.name,
+    volume_pct: volumePct,
+    load_min_pct: cycle.load_min_pct,
+    load_max_pct: cycle.load_max_pct
+  });
+  toast('Copia ajustada de la rutina creada');
+  fillLiveRoutines();
+  renderRoutinesList();
 }
 
 // ── INITIALIZATION ─────────────────────────────────
