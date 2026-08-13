@@ -25157,6 +25157,7 @@ function preparationReviewPayload(plan) {
   const totalWeeks = preparationPlanWeeks(plan);
   const elapsedDays = Math.max(0, Math.floor((localDate(selectedDate()) - localDate(plan.start_date)) / 86400000) + 1);
   return {
+    mode: 'preparation_review',
     objective: plan.objective,
     current_weight: preparationLatestWeight() || plan.current_weight,
     target_weight: preparationNumber(plan.target_weight) || null,
@@ -25231,7 +25232,7 @@ async function requestPreparationReview(planId) {
     refreshInterfaceIcons();
   }
   try {
-    const response = await fetch('/api/phase-plan', {
+    const response = await fetch('/api/app-assistant', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(preparationReviewPayload(plan))
