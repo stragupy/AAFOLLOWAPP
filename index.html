@@ -14292,7 +14292,7 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
           </div>
 
           <div class="phase-form-footer">
-            <p>Guardar esta ficha no modifica comidas, macros de Nutrición ni rutinas. Todo cambio externo requiere una acción y confirmación tuya.</p>
+            <p>Al guardar, estas kcal y macros se aplican automáticamente a Nutrición y a todas las lecturas relacionadas. Tus comidas, favoritos e historial no se modifican.</p>
             <button id="phase-generate-btn" class="phase-ai-generate" type="button" onclick="savePreparationPlanManual()"><i data-lucide="save"></i><span>Guardar fase manual</span></button>
           </div>
         </div>
@@ -24932,15 +24932,72 @@ function preparationUpgradePlan(source = {}) {
   return { plan, changed };
 }
 
+function preparationNutritionTargets(plan) {
+  const cycle = plan?.cycles?.[0];
+  if (!cycle) return null;
+  const targets = preparationCycleTargets(plan, cycle);
+  return {
+    calories: targets.calories,
+    protein: targets.protein,
+    carbs: targets.carbs,
+    fat: targets.fat
+  };
+}
+
+function preparationNutritionMatches(left = {}, right = {}) {
+  return ['calories', 'protein', 'carbs', 'fat']
+    .every(key => preparationNumber(left[key], NaN) === preparationNumber(right[key], NaN));
+}
+
+function refreshPreparationNutritionSurfaces() {
+  const activePage = document.querySelector('.page.active')?.id;
+  if (activePage === 'page-nutrition') loadNutrition();
+  else if (activePage === 'page-dashboard') loadDashboard();
+  else if (activePage === 'page-today') loadToday();
+  else if (activePage === 'page-goals') loadGoals();
+}
+
+function syncPreparationNutrition(plan, source = 'phase_save') {
+  const next = preparationNutritionTargets(plan);
+  if (!next) return false;
+  const previous = DB.get('nutconfig') || {};
+  if (preparationNutritionMatches(previous, next)) return false;
+  const cycle = plan.cycles[0];
+  DB.set('preparation_macro_history', [
+    {
+      id: uid(),
+      plan_id: plan.id,
+      cycle: cycle.name,
+      previous: {
+        calories: preparationNumber(previous.calories, 0),
+        protein: preparationNumber(previous.protein, 0),
+        carbs: preparationNumber(previous.carbs, 0),
+        fat: preparationNumber(previous.fat, 0)
+      },
+      next: { ...next },
+      applied_at: new Date().toISOString(),
+      source
+    },
+    ...(DB.get('preparation_macro_history') || [])
+  ].slice(0, 80));
+  DB.set('nutconfig', next);
+  mealSuggestionOptions = [];
+  renderMealSuggestions(null);
+  refreshPreparationNutritionSurfaces();
+  return true;
+}
+
 function preparationSavePlan(plan, message = 'Fase guardada') {
   const plans = preparationPlans();
   const index = plans.findIndex(item => item.id === plan.id);
+  const source = index >= 0 ? 'phase_edit' : 'phase_create';
   plan.updated_at = new Date().toISOString();
   if (index >= 0) plans[index] = plan;
   else plans.unshift(plan);
   DB.set('preparation_plans', plans);
   DB.set('preparation_active_id', plan.id);
-  if (message) toast(message);
+  const nutritionChanged = syncPreparationNutrition(plan, source);
+  if (message) toast(nutritionChanged ? `${message} · Nutrición sincronizada` : message);
   loadPreparation();
   populatePreparationForm(plan, false);
 }
@@ -25277,6 +25334,7 @@ function renderPreparationPlan(plan) {
   const triggers = preparationTriggers(plan, metrics, currentCycle, targets);
   const routines = DB.get('routines') || [];
   const actualWeight = preparationLatestWeight() || plan.current_weight;
+  const nutritionSynced = preparationNutritionMatches(DB.get('nutconfig') || {}, targets);
   const selectedStage = preparationIntraphaseIndex(currentCycle.stage_key);
   const selectedStageLabel = currentCycle.stage_key === 'growth_1' ? 'Crecimiento I' : currentCycle.stage_key === 'growth_2' ? 'Crecimiento II' : currentCycle.name;
   const sequenceTimeline = PREPARATION_INTRAPHASES.map((stage, index) => {
@@ -25312,7 +25370,7 @@ function renderPreparationPlan(plan) {
       <div class="phase-toolbar-actions">
         <button class="phase-action-btn" type="button" onclick="editPreparationPlan('${plan.id}')"><i data-lucide="pencil"></i><span>Editar mis valores</span></button>
         <button class="phase-action-btn primary" type="button" onclick="togglePreparationPlanStatus('${plan.id}')"><i data-lucide="${plan.status === 'active' ? 'pause' : 'play'}"></i><span>${plan.status === 'active' ? 'Pausar fase' : 'Activar fase'}</span></button>
-        <button class="phase-action-btn" type="button" onclick="applyPreparationMacros('${plan.id}')"><i data-lucide="utensils"></i><span>Copiar macros a Nutrición</span></button>
+        <button class="phase-action-btn" type="button" onclick="applyPreparationMacros('${plan.id}')" title="${nutritionSynced ? 'Los objetivos de Nutrición coinciden con esta fase' : 'Volver a aplicar los objetivos de esta fase'}"><i data-lucide="${nutritionSynced ? 'circle-check' : 'refresh-cw'}"></i><span>${nutritionSynced ? 'Nutrición sincronizada' : 'Sincronizar Nutrición'}</span></button>
         <button class="phase-action-btn danger" type="button" onclick="archivePreparationPlan('${plan.id}')"><i data-lucide="archive"></i><span>Archivar</span></button>
       </div>
     </section>
@@ -25409,7 +25467,7 @@ function togglePreparationPlanStatus(id) {
   const plan = plans.find(item => item.id === id);
   if (!plan) return;
   const activate = plan.status !== 'active';
-  if (activate && !confirm(`¿Activar la fase "${plan.name}"? Esto no cambia todavía tus macros ni tu rutina.`)) return;
+  if (activate && !confirm(`¿Activar la fase "${plan.name}"? Sus kcal y macros se aplicarán a Nutrición; tus comidas y tu rutina no se modificarán.`)) return;
   plans.forEach(item => {
     if (item.id !== id && item.status === 'active') item.status = 'paused';
   });
@@ -25417,7 +25475,8 @@ function togglePreparationPlanStatus(id) {
   plan.updated_at = new Date().toISOString();
   DB.set('preparation_plans', plans);
   DB.set('preparation_active_id', id);
-  toast(activate ? 'Fase activada' : 'Fase pausada');
+  const nutritionChanged = activate ? syncPreparationNutrition(plan, 'phase_activation') : false;
+  toast(activate ? (nutritionChanged ? 'Fase activada · Nutrición sincronizada' : 'Fase activada') : 'Fase pausada');
   loadPreparation();
 }
 
@@ -25437,20 +25496,14 @@ function archivePreparationPlan(id) {
 function applyPreparationMacros(planId) {
   const plan = preparationPlans().find(item => item.id === planId);
   if (!plan) return;
-  const cycle = plan.cycles[0];
-  const targets = preparationCycleTargets(plan, cycle);
+  const targets = preparationNutritionTargets(plan);
   const current = DB.get('nutconfig') || {};
-  const manual = { ...targets };
-  const message = `Objetivos actuales: ${current.calories || '—'} kcal, ${current.protein || '—'}P, ${current.carbs || '—'}C, ${current.fat || '—'}G.\n\nValores que tú escribiste: ${manual.calories} kcal, ${manual.protein}P, ${manual.carbs}C, ${manual.fat}G.\n\n¿Copiarlos a Nutrición? Tus comidas registradas no se modificarán.`;
+  if (preparationNutritionMatches(current, targets)) return toast('Nutrición ya está sincronizada con esta fase');
+  const message = `Objetivos actuales: ${current.calories || '—'} kcal, ${current.protein || '—'}P, ${current.carbs || '—'}C, ${current.fat || '—'}G.\n\nValores de esta fase: ${targets.calories} kcal, ${targets.protein}P, ${targets.carbs}C, ${targets.fat}G.\n\n¿Volver a aplicarlos a Nutrición? Tus comidas registradas no se modificarán.`;
   if (!confirm(message)) return;
-  DB.set('preparation_macro_history', [
-    { id: uid(), plan_id: plan.id, cycle: cycle.name, previous: current, next: manual, applied_at: new Date().toISOString(), source: 'manual' },
-    ...(DB.get('preparation_macro_history') || [])
-  ].slice(0, 80));
-  DB.set('nutconfig', manual);
-  toast('Tus macros manuales se copiaron a Nutrición');
+  syncPreparationNutrition(plan, 'manual_resync');
+  toast('Nutrición sincronizada con la fase');
   loadPreparation();
-  if (document.getElementById('page-nutrition')?.classList.contains('active')) loadNutrition();
 }
 
 function createPreparationRoutine(planId) {
