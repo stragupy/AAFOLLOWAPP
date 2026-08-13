@@ -13404,6 +13404,707 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
   }
 }
 
+/* Calendar day, week and month views */
+.aa-calendar-toolbar {
+  grid-template-columns: minmax(150px, 1fr) auto auto minmax(270px, 1fr) !important;
+}
+
+.aa-calendar-view-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(54px, 1fr));
+  min-width: 180px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid #3b3e3c;
+  border-radius: 8px;
+  background: #191b1a;
+}
+
+.aa-calendar-view-btn {
+  min-width: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #8f9491;
+  font-size: 0.61rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.aa-calendar-view-btn:hover {
+  color: #eef0ee;
+  background: #292c2a;
+}
+
+.aa-calendar-view-btn.active {
+  background: #287df0;
+  color: #ffffff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.24);
+}
+
+.aa-calendar-view-btn:focus-visible {
+  outline: 2px solid rgba(82, 151, 246, 0.8);
+  outline-offset: 1px;
+}
+
+#calendar-month-draft[data-view="day"] {
+  overflow-x: hidden !important;
+}
+
+.aa-calendar-day-view {
+  width: 100%;
+  min-height: 100%;
+  background: #1d1f1e;
+}
+
+.aa-calendar-day-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-height: 52px;
+  border-bottom: 1px solid #353736;
+  background: #202221;
+}
+
+.aa-calendar-day-strip-item {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-content: center;
+  column-gap: 6px;
+  padding: 5px 7px;
+  border: 0;
+  border-right: 1px solid #353736;
+  background: transparent;
+  color: #929793;
+  cursor: pointer;
+}
+
+.aa-calendar-day-strip-item:last-child {
+  border-right: 0;
+}
+
+.aa-calendar-day-strip-item span {
+  align-self: center;
+  font-size: 0.57rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.aa-calendar-day-strip-item strong {
+  color: #d9dcda;
+  font-size: 0.82rem;
+}
+
+.aa-calendar-day-strip-item i {
+  grid-column: 1 / -1;
+  min-height: 8px;
+  color: #6f7571;
+  font-size: 0.51rem;
+  font-style: normal;
+  text-align: center;
+}
+
+.aa-calendar-day-strip-item:hover {
+  background: #272a28;
+  color: #f3f4f3;
+}
+
+.aa-calendar-day-strip-item.selected {
+  background: #287df0;
+  color: #ffffff;
+}
+
+.aa-calendar-day-strip-item.selected strong,
+.aa-calendar-day-strip-item.selected i {
+  color: #ffffff;
+}
+
+.aa-calendar-day-strip-item.today:not(.selected)::after {
+  position: absolute;
+  right: 7px;
+  bottom: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #35d77f;
+  content: '';
+}
+
+.aa-calendar-day-board {
+  min-height: calc(100% - 52px);
+  background: #202221;
+}
+
+.aa-calendar-day-head {
+  display: grid;
+  min-height: 74px;
+  grid-template-columns: 70px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  border-bottom: 1px solid #353736;
+}
+
+.aa-calendar-day-head > div:first-child {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  justify-content: start;
+  gap: 7px;
+}
+
+.aa-calendar-day-head > div:first-child span {
+  color: #8e9490;
+  font-size: 0.59rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.aa-calendar-day-head > div:first-child strong {
+  color: #f5f6f5;
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.aa-calendar-day-head-copy {
+  min-width: 0;
+}
+
+.aa-calendar-day-head-copy small,
+.aa-calendar-day-head-copy h3 {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-day-head-copy small {
+  margin-bottom: 3px;
+  color: #5ea1ff;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aa-calendar-day-head-copy h3 {
+  margin: 0;
+  color: #e9ebe9;
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.aa-calendar-day-head > button {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 11px;
+  border: 1px solid #3d403e;
+  border-radius: 7px;
+  background: #2a2d2b;
+  color: #eef0ee;
+  font-size: 0.62rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.aa-calendar-day-head > button:hover {
+  border-color: #287df0;
+  background: #287df0;
+}
+
+.aa-calendar-day-head > button svg {
+  width: 13px;
+  height: 13px;
+}
+
+.aa-calendar-day-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid #353736;
+}
+
+.aa-calendar-day-kpis > div {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  padding: 11px 16px;
+  border-right: 1px solid #353736;
+}
+
+.aa-calendar-day-kpis > div:last-child {
+  border-right: 0;
+}
+
+.aa-calendar-day-kpis span {
+  color: #7f8581;
+  font-size: 0.54rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.aa-calendar-day-kpis strong {
+  overflow: hidden;
+  color: #f4f5f4;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-day-lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.aa-calendar-day-lanes > section {
+  min-width: 0;
+  min-height: 280px;
+  padding: 14px;
+  border-right: 1px solid #353736;
+}
+
+.aa-calendar-day-lanes > section:last-child {
+  border-right: 0;
+}
+
+.aa-calendar-lane-title {
+  display: flex;
+  min-height: 26px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #343735;
+  color: #aeb3af;
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.aa-calendar-lane-title i {
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 10px;
+  background: #2c2f2d;
+  color: #8d938f;
+  font-size: 0.55rem;
+  font-style: normal;
+}
+
+.aa-calendar-day-items {
+  display: grid;
+  gap: 9px;
+}
+
+.aa-calendar-day-empty {
+  display: flex;
+  min-height: 92px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 9px;
+  border: 1px dashed #3a3d3b;
+  border-radius: 9px;
+  color: #777d79;
+  font-size: 0.66rem;
+}
+
+.aa-calendar-day-empty button {
+  border: 0;
+  background: transparent;
+  color: #5ea1ff;
+  font-size: 0.61rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.aa-calendar-month-view {
+  width: 100%;
+  min-width: 980px;
+  min-height: 100%;
+  background: #1d1f1e;
+}
+
+.aa-calendar-month-weekdays {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: grid;
+  height: 29px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-bottom: 1px solid #353736;
+  background: #1b1d1c;
+}
+
+.aa-calendar-month-weekdays span {
+  display: flex;
+  align-items: center;
+  padding: 0 9px;
+  border-right: 1px solid #353736;
+  color: #7f8581;
+  font-size: 0.54rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aa-calendar-month-weekdays span:last-child {
+  border-right: 0;
+}
+
+.aa-calendar-month-grid {
+  display: grid;
+  min-height: calc(100% - 29px);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-auto-rows: minmax(126px, auto);
+}
+
+.aa-calendar-month-cell {
+  min-width: 0;
+  padding: 7px;
+  border-right: 1px solid #353736;
+  border-bottom: 1px solid #353736;
+  background: #202221;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.aa-calendar-month-cell:nth-child(7n) {
+  border-right: 0;
+}
+
+.aa-calendar-month-cell.outside {
+  background: #1b1d1c;
+}
+
+.aa-calendar-month-cell.outside .aa-calendar-month-cell-head,
+.aa-calendar-month-cell.outside .aa-calendar-month-items {
+  opacity: 0.48;
+}
+
+.aa-calendar-month-cell.selected {
+  background: rgba(40, 125, 240, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(40, 125, 240, 0.58);
+}
+
+.aa-calendar-month-cell-head {
+  display: flex;
+  height: 25px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.aa-calendar-month-cell-head button {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #aeb3b0;
+  font-size: 0.62rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.aa-calendar-month-cell-head button:last-child {
+  color: #6f7471;
+  opacity: 0;
+}
+
+.aa-calendar-month-cell:hover .aa-calendar-month-cell-head button:last-child,
+.aa-calendar-month-cell.selected .aa-calendar-month-cell-head button:last-child {
+  opacity: 1;
+}
+
+.aa-calendar-month-cell-head button:last-child:hover {
+  background: #303331;
+  color: #ffffff;
+}
+
+.aa-calendar-month-cell-head svg {
+  width: 12px;
+  height: 12px;
+}
+
+.aa-calendar-month-cell.today .aa-calendar-month-cell-head button:first-child,
+.aa-calendar-month-cell.selected .aa-calendar-month-cell-head button:first-child {
+  background: #287df0;
+  color: #ffffff;
+}
+
+.aa-calendar-month-items {
+  display: grid;
+  gap: 4px;
+}
+
+.aa-calendar-month-item {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: 6px 43px minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  padding: 4px 6px;
+  overflow: hidden;
+  border: 1px solid #383b39;
+  border-radius: 6px;
+  background: #292c2a;
+  color: #c9cdca;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aa-calendar-month-item:hover {
+  border-color: #525653;
+  background: #303331;
+}
+
+.aa-calendar-month-item > i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7c8480;
+}
+
+.aa-calendar-month-item > span,
+.aa-calendar-month-item > strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-calendar-month-item > span {
+  color: #8b918d;
+  font-size: 0.5rem;
+}
+
+.aa-calendar-month-item > strong {
+  color: #e1e4e2;
+  font-size: 0.55rem;
+  font-weight: 600;
+}
+
+.aa-calendar-month-item.color-blue > i { background: #4b95ff; }
+.aa-calendar-month-item.color-green > i,
+.aa-calendar-month-item.training > i { background: #35d77f; }
+.aa-calendar-month-item.color-amber > i,
+.aa-calendar-month-item.nutrition > i { background: #f0aa42; }
+.aa-calendar-month-item.color-red > i { background: #ef5a6f; }
+.aa-calendar-month-item.color-violet > i { background: #a980f5; }
+.aa-calendar-month-item.color-slate > i,
+.aa-calendar-month-item.tracking > i { background: #8da0b7; }
+.aa-calendar-month-item.free > i { background: #e6c25c; }
+
+.aa-calendar-month-item.training,
+.aa-calendar-month-item.nutrition {
+  border-color: rgba(53, 215, 127, 0.38);
+  background: rgba(33, 49, 40, 0.68);
+}
+
+.aa-calendar-month-item.nutrition {
+  border-color: rgba(240, 170, 66, 0.38);
+  background: rgba(55, 45, 28, 0.62);
+}
+
+.aa-calendar-month-item[draggable="true"] {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.aa-calendar-month-item[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+body.calendar-dragging .aa-calendar-drop-zone {
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.aa-calendar-drop-zone.drag-target {
+  background: rgba(40, 125, 240, 0.14) !important;
+  box-shadow: inset 0 0 0 2px #287df0 !important;
+}
+
+.aa-calendar-day-strip-item.drag-target {
+  background: #287df0 !important;
+  color: #ffffff !important;
+}
+
+.aa-calendar-day-board.drag-target .aa-calendar-day-head,
+.aa-calendar-month-cell.drag-target .aa-calendar-month-cell-head {
+  background: rgba(40, 125, 240, 0.22);
+}
+
+@media (max-width: 1180px) and (min-width: 769px) {
+  .aa-calendar-toolbar {
+    min-height: 76px !important;
+    grid-template-columns: minmax(140px, 1fr) auto auto !important;
+    grid-template-rows: 34px 32px !important;
+    padding: 4px 10px !important;
+  }
+
+  .aa-calendar-period-title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .aa-calendar-view-switch {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .aa-calendar-nav {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .aa-calendar-toolbar-end {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .aa-calendar-workspace {
+    height: calc(100% - 76px) !important;
+  }
+
+  .aa-calendar-event-count {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .aa-calendar-toolbar {
+    min-height: 112px !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-rows: 34px 32px 34px !important;
+    gap: 2px 8px !important;
+  }
+
+  .aa-calendar-period-title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .aa-calendar-nav {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .aa-calendar-view-switch {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .aa-calendar-toolbar-end {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .aa-calendar-workspace {
+    height: calc(100% - 112px) !important;
+  }
+
+  .aa-calendar-month-view {
+    min-width: 700px;
+  }
+
+  .aa-calendar-month-grid {
+    grid-auto-rows: minmax(112px, auto);
+  }
+
+  .aa-calendar-day-head {
+    min-height: 65px;
+    grid-template-columns: 52px minmax(0, 1fr) 32px;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .aa-calendar-day-head > div:first-child {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+
+  .aa-calendar-day-head > div:first-child strong {
+    font-size: 1.35rem;
+  }
+
+  .aa-calendar-day-head > button {
+    width: 32px;
+    min-height: 30px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .aa-calendar-day-head > button span {
+    display: none;
+  }
+
+  .aa-calendar-day-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .aa-calendar-day-kpis > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .aa-calendar-day-kpis > div:nth-child(-n + 2) {
+    border-bottom: 1px solid #353736;
+  }
+
+  .aa-calendar-day-lanes {
+    grid-template-columns: 1fr;
+  }
+
+  .aa-calendar-day-lanes > section {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid #353736;
+  }
+
+  .aa-calendar-day-strip-item {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 1px;
+    padding: 4px 2px;
+  }
+
+  .aa-calendar-day-strip-item i {
+    display: none;
+  }
+
+  .aa-calendar-day-strip-item span {
+    font-size: 0.48rem;
+  }
+
+  .aa-calendar-day-strip-item strong {
+    font-size: 0.72rem;
+  }
+}
+
+@media (pointer: coarse) {
+  .aa-calendar-month-item[draggable="true"] {
+    cursor: pointer;
+  }
+}
+
 
 </style>
 </head>
@@ -14141,21 +14842,26 @@ body.sidebar-collapsed #sidebar-toggle .sidebar-toggle-show {
   <!-- CALENDARIO -->
   <div id="page-calendar" class="page">
     <div class="content aa-calendar-content">
-      <section class="aa-calendar-shell" aria-label="Calendario semanal">
+      <section class="aa-calendar-shell" aria-label="Calendario">
         <header class="aa-calendar-toolbar">
           <div class="aa-calendar-period-title">
             <span id="calendar-week-label">Semana</span>
             <h2 id="calendar-month-title" class="aa-calendar-month-title">Período</h2>
           </div>
+          <div class="aa-calendar-view-switch" role="tablist" aria-label="Vista del calendario">
+            <button id="calendar-view-day" class="aa-calendar-view-btn" type="button" role="tab" aria-selected="false" onclick="setCalendarView('day')">Día</button>
+            <button id="calendar-view-week" class="aa-calendar-view-btn active" type="button" role="tab" aria-selected="true" onclick="setCalendarView('week')">Semana</button>
+            <button id="calendar-view-month" class="aa-calendar-view-btn" type="button" role="tab" aria-selected="false" onclick="setCalendarView('month')">Mes</button>
+          </div>
           <div class="aa-calendar-nav">
             <button class="aa-calendar-today" type="button" onclick="calendarGoToday()">Hoy</button>
-            <button class="aa-calendar-arrow" type="button" onclick="moveCalendarWeek(-1)" aria-label="Semana anterior" title="Semana anterior"><i data-lucide="chevron-left"></i></button>
-            <button class="aa-calendar-arrow" type="button" onclick="moveCalendarWeek(1)" aria-label="Semana siguiente" title="Semana siguiente"><i data-lucide="chevron-right"></i></button>
+            <button id="calendar-prev-btn" class="aa-calendar-arrow" type="button" onclick="moveCalendarPeriod(-1)" aria-label="Período anterior" title="Período anterior"><i data-lucide="chevron-left"></i></button>
+            <button id="calendar-next-btn" class="aa-calendar-arrow" type="button" onclick="moveCalendarPeriod(1)" aria-label="Período siguiente" title="Período siguiente"><i data-lucide="chevron-right"></i></button>
           </div>
           <div class="aa-calendar-toolbar-end">
             <label class="aa-calendar-week-picker">
-              <span>Ir a semana</span>
-              <input type="week" id="calendar-week" onchange="calendarWeekChanged()">
+              <span id="calendar-period-picker-label">Ir a semana</span>
+              <input type="week" id="calendar-week" onchange="calendarPeriodChanged()" aria-label="Ir a semana">
             </label>
             <div id="calendar-event-count" class="aa-calendar-event-count">0 eventos</div>
             <button class="btn btn-primary aa-calendar-new-btn" type="button" onclick="openCalendarEventModal()"><i data-lucide="plus"></i><span>Crear evento</span></button>
@@ -15067,7 +15773,13 @@ function syncDateControls(date = selectedDate()) {
   const week = weekValueFromDate(date);
   const calendarWeek = document.getElementById('calendar-week');
   const checkingWeek = document.getElementById('c-week');
-  if (calendarWeek) calendarWeek.value = week;
+  if (calendarWeek) {
+    calendarWeek.value = calendarViewMode === 'day'
+      ? date
+      : calendarViewMode === 'month'
+        ? date.slice(0, 7)
+        : week;
+  }
   if (checkingWeek) checkingWeek.value = week;
   renderFreeDayStatus(date);
 }
@@ -15172,6 +15884,16 @@ const CHECKING_METRIC_CONFIG = {
 };
 let calendarCursorMonth = '';
 let calendarSelectedDay = '';
+const CALENDAR_VIEW_MODES = ['day', 'week', 'month'];
+const CALENDAR_VIEW_STORAGE_KEY = 'aa_calendar_view';
+let calendarViewMode = (() => {
+  try {
+    const saved = localStorage.getItem(CALENDAR_VIEW_STORAGE_KEY);
+    return CALENDAR_VIEW_MODES.includes(saved) ? saved : 'week';
+  } catch {
+    return 'week';
+  }
+})();
 let editingCalendarEventId = null;
 let calendarDragPayload = null;
 let calendarDragSuppressClickUntil = 0;
@@ -16018,7 +16740,7 @@ function calendarEventTimeLabel(item) {
 
 function calendarClearDragStyles() {
   document.body.classList.remove('calendar-dragging');
-  document.querySelectorAll('.aa-calendar-week-column.drag-target').forEach(column => column.classList.remove('drag-target'));
+  document.querySelectorAll('.aa-calendar-drop-zone.drag-target, .aa-calendar-week-column.drag-target').forEach(column => column.classList.remove('drag-target'));
   document.querySelectorAll('.aa-calendar-move-source').forEach(card => card.classList.remove('aa-calendar-move-source'));
 }
 
@@ -16050,11 +16772,11 @@ function calendarEndDrag() {
 }
 
 function calendarDragOver(event) {
-  const targetDate = event.currentTarget?.dataset.calendarWeekDate;
+  const targetDate = event.currentTarget?.dataset.calendarDropDate || event.currentTarget?.dataset.calendarWeekDate;
   if (!calendarDragPayload || !targetDate || targetDate === calendarDragPayload.sourceDate) return;
   event.preventDefault();
   if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
-  document.querySelectorAll('.aa-calendar-week-column.drag-target').forEach(column => {
+  document.querySelectorAll('.aa-calendar-drop-zone.drag-target, .aa-calendar-week-column.drag-target').forEach(column => {
     if (column !== event.currentTarget) column.classList.remove('drag-target');
   });
   event.currentTarget.classList.add('drag-target');
@@ -16128,7 +16850,7 @@ function moveCalendarPayload(payload, targetDate) {
 function calendarDrop(event) {
   event.preventDefault();
   event.stopPropagation();
-  const targetDate = event.currentTarget?.dataset.calendarWeekDate;
+  const targetDate = event.currentTarget?.dataset.calendarDropDate || event.currentTarget?.dataset.calendarWeekDate;
   let payload = calendarDragPayload;
   if (!payload && event.dataTransfer) {
     try {
@@ -16319,68 +17041,334 @@ function renderCalendarAgenda() {
     </div>`;
 }
 
-function renderCalendarMonthDraft() {
-  const el = document.getElementById('calendar-month-draft');
-  if (!el) return;
-  ensureCalendarState();
-  const weekInput = document.getElementById('calendar-week');
-  const weekValue = weekInput?.value || weekValueFromDate(calendarSelectedDay);
-  const dates = getWeekDates(weekValue);
+function calendarFreeCardHtml(date) {
+  if (!isFreeDay(date)) return '';
+  return `<div class="aa-calendar-entry free-entry">
+    <span class="aa-calendar-source-tag"><i data-lucide="coffee"></i>Día libre</span>
+    <button class="aa-calendar-work-card free" type="button" data-date="${date}" data-page="today"
+      onclick="event.stopPropagation();openCalendarRecordFromElement(this)">
+      <span class="aa-calendar-title-row"><i></i><strong>Solo cuenta lo registrado</strong></span>
+    </button>
+  </div>`;
+}
+
+function calendarWeekColumnHtml(date, index, bodyLogs, cardioLogs) {
+  const day = localDate(date);
+  const events = calendarEventsForDate(date);
+  const sessions = sessionsForDate(date);
+  const nutrition = nutritionForDate(date);
+  const body = bodyLogs.find(item => item.date === date);
+  const cardio = cardioLogs.filter(item => item.date === date);
+  const trackingCard = calendarTrackingCardHtml(date, body, cardio);
+  const classes = [
+    'aa-calendar-week-column',
+    'aa-calendar-drop-zone',
+    date === today() ? 'today' : '',
+    date === calendarSelectedDay ? 'selected' : ''
+  ].filter(Boolean).join(' ');
+  return `<section class="${classes}" data-calendar-week-date="${date}" data-calendar-drop-date="${date}"
+    ondragover="calendarDragOver(event)" ondragleave="calendarDragLeave(event)" ondrop="calendarDrop(event)"
+    onclick="selectCalendarDay('${date}')">
+    <header class="aa-calendar-column-head">
+      <div>
+        <span>${dayNamesShort[index]}</span>
+        <strong>${day.getDate()}</strong>
+      </div>
+      <button type="button" data-date="${date}" onclick="event.stopPropagation();openCalendarEventForDay(this)"
+        aria-label="Crear evento el ${date}" title="Crear evento"><i data-lucide="plus"></i></button>
+    </header>
+    <div class="aa-calendar-column-body">
+      ${calendarFreeCardHtml(date)}
+      ${events.map(calendarEventChipHtml).join('')}
+      ${sessions.map(session => calendarSessionCardHtml(session, date)).join('')}
+      ${nutrition.meals.length ? calendarNutritionCardHtml(date, nutrition) : ''}
+      ${trackingCard}
+    </div>
+  </section>`;
+}
+
+function calendarMonthGridDates(monthStart = calendarCursorMonth) {
+  const first = localDate(monthStart);
+  const gridStart = mondayOfDate(dateKey(first));
+  const last = new Date(first.getFullYear(), first.getMonth() + 1, 0);
+  const lastOffset = (7 - ((last.getDay() + 6) % 7) - 1 + 7) % 7;
+  const gridEnd = new Date(last);
+  gridEnd.setDate(last.getDate() + lastOffset);
+  const totalDays = Math.round((gridEnd - gridStart) / 86400000) + 1;
+  return Array.from({ length: totalDays }, (_, index) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + index);
+    return dateKey(date);
+  });
+}
+
+function calendarMonthEventHtml(item) {
+  const color = calendarEventColor(item.color);
+  const time = item.all_day ? 'Todo el día' : (item.start_time || 'Evento');
+  return `<button class="aa-calendar-month-item event color-${color}" type="button" draggable="true"
+      data-calendar-event-id="${esc(item.id)}"
+      data-calendar-move-type="event" data-calendar-move-id="${esc(item.id)}"
+      data-calendar-source-date="${esc(item.date)}" data-calendar-move-label="${esc(item.title)}"
+      ondragstart="calendarStartDrag(event,this)" ondragend="calendarEndDrag()"
+      onclick="event.stopPropagation();openCalendarEventFromElement(this)"
+      title="${esc(`${calendarEventTimeLabel(item)} · ${item.title} · Arrastra para mover`)}">
+      <i></i><span>${esc(time)}</span><strong>${esc(item.title)}</strong>
+    </button>`;
+}
+
+function calendarMonthSessionHtml(session, date) {
+  const title = session.routine_name || session.day_name || 'Sesión registrada';
+  const sets = Array.isArray(session.sets) ? session.sets.length : 0;
+  return `<button class="aa-calendar-month-item training" type="button" draggable="true"
+      data-date="${date}" data-page="training"
+      data-calendar-move-type="session" data-calendar-move-id="${esc(session.id)}"
+      data-calendar-source-date="${date}" data-calendar-move-label="${esc(title)}"
+      ondragstart="calendarStartDrag(event,this)" ondragend="calendarEndDrag()"
+      onclick="event.stopPropagation();openCalendarRecordFromElement(this)"
+      title="${esc(`${title} · Arrastra para mover`)}">
+      <i></i><span>Entreno</span><strong>${esc(title)}${sets ? ` · ${sets} series` : ''}</strong>
+    </button>`;
+}
+
+function calendarMonthNutritionHtml(date, nutrition) {
+  return `<button class="aa-calendar-month-item nutrition" type="button" draggable="true"
+      data-date="${date}" data-page="nutrition"
+      data-calendar-move-type="meals" data-calendar-source-date="${date}"
+      data-calendar-move-label="Comidas" data-calendar-move-count="${nutrition.meals.length}"
+      ondragstart="calendarStartDrag(event,this)" ondragend="calendarEndDrag()"
+      onclick="event.stopPropagation();openCalendarRecordFromElement(this)"
+      title="${nutrition.meals.length} comida${nutrition.meals.length === 1 ? '' : 's'} · Arrastra para mover">
+      <i></i><span>Nutrición</span><strong>${nutrition.totals.cal.toLocaleString('es-AR')} kcal</strong>
+    </button>`;
+}
+
+function calendarMonthTrackingHtml(date, body, cardio) {
+  const steps = cardio.filter(item => item.type === 'steps').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const minutes = cardio.filter(item => item.type === 'minutes').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const details = [
+    body?.weight ? `${body.weight} kg` : '',
+    steps ? `${steps.toLocaleString('es-AR')} pasos` : '',
+    minutes ? `${minutes} min` : ''
+  ].filter(Boolean).join(' · ');
+  if (!details) return '';
+  return `<button class="aa-calendar-month-item tracking" type="button" data-date="${date}" data-page="today"
+      onclick="event.stopPropagation();openCalendarRecordFromElement(this)" title="${esc(details)}">
+      <i></i><span>Datos</span><strong>${esc(details)}</strong>
+    </button>`;
+}
+
+function calendarMonthFreeHtml(date) {
+  if (!isFreeDay(date)) return '';
+  return `<button class="aa-calendar-month-item free" type="button" data-date="${date}" data-page="today"
+      onclick="event.stopPropagation();openCalendarRecordFromElement(this)">
+      <i></i><span>Estado</span><strong>Día libre</strong>
+    </button>`;
+}
+
+function calendarDayActivityCount(date) {
+  const cardio = (DB.get('checking_cardio') || []).some(item => item.date === date);
+  const body = (DB.get('bodylogs') || []).some(item => item.date === date);
+  return calendarEventsForDate(date).length
+    + sessionsForDate(date).length
+    + (nutritionForDate(date).meals.length ? 1 : 0)
+    + (cardio || body ? 1 : 0)
+    + (isFreeDay(date) ? 1 : 0);
+}
+
+function renderCalendarWeekView() {
+  const dates = getWeekDates(weekValueFromDate(calendarSelectedDay));
   const bodyLogs = DB.get('bodylogs') || [];
   const cardioLogs = DB.get('checking_cardio') || [];
-  const weekEvents = calendarEvents().filter(item => dates.includes(item.date));
-  const columns = dates.map((date, index) => {
+  const columns = dates.map((date, index) => calendarWeekColumnHtml(date, index, bodyLogs, cardioLogs)).join('');
+  const eventCount = calendarEvents().filter(item => dates.includes(item.date)).length;
+  return {
+    html: `<div class="aa-calendar-board-grid">${columns}</div>`,
+    label: `Semana ${weekValueFromDate(calendarSelectedDay).slice(6)}`,
+    title: calendarWeekRangeTitle(dates),
+    eventCount,
+    selectedSelector: '.aa-calendar-week-column.selected'
+  };
+}
+
+function renderCalendarDayView() {
+  const date = calendarSelectedDay;
+  const events = calendarEventsForDate(date);
+  const sessions = sessionsForDate(date);
+  const nutrition = nutritionForDate(date);
+  const body = (DB.get('bodylogs') || []).find(item => item.date === date);
+  const cardio = (DB.get('checking_cardio') || []).filter(item => item.date === date);
+  const steps = cardio.filter(item => item.type === 'steps').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const minutes = cardio.filter(item => item.type === 'minutes').reduce((sum, item) => sum + (+item.value || 0), 0);
+  const trackingCard = calendarTrackingCardHtml(date, body, cardio);
+  const recorded = [
+    calendarFreeCardHtml(date),
+    ...sessions.map(session => calendarSessionCardHtml(session, date)),
+    nutrition.meals.length ? calendarNutritionCardHtml(date, nutrition) : '',
+    trackingCard
+  ].filter(Boolean).join('');
+  const weekDates = getWeekDates(weekValueFromDate(date));
+  const strip = weekDates.map((stripDate, index) => {
+    const stripDay = localDate(stripDate);
+    const count = calendarDayActivityCount(stripDate);
+    const classes = [
+      'aa-calendar-day-strip-item',
+      'aa-calendar-drop-zone',
+      stripDate === date ? 'selected' : '',
+      stripDate === today() ? 'today' : ''
+    ].filter(Boolean).join(' ');
+    return `<button class="${classes}" type="button" data-calendar-drop-date="${stripDate}"
+      ondragover="calendarDragOver(event)" ondragleave="calendarDragLeave(event)" ondrop="calendarDrop(event)"
+      onclick="selectCalendarDay('${stripDate}')">
+      <span>${dayNamesShort[index]}</span><strong>${stripDay.getDate()}</strong><i>${count || ''}</i>
+    </button>`;
+  }).join('');
+  const activityLabel = steps
+    ? `${steps.toLocaleString('es-AR')} pasos`
+    : minutes
+      ? `${minutes} min`
+      : 'Sin registro';
+  return {
+    html: `<div class="aa-calendar-day-view">
+      <div class="aa-calendar-day-strip" aria-label="Días de la semana">${strip}</div>
+      <section class="aa-calendar-day-board aa-calendar-drop-zone ${date === today() ? 'today' : ''}"
+        data-calendar-drop-date="${date}" ondragover="calendarDragOver(event)"
+        ondragleave="calendarDragLeave(event)" ondrop="calendarDrop(event)">
+        <header class="aa-calendar-day-head">
+          <div><span>${esc(new Intl.DateTimeFormat('es-AR', { weekday: 'long' }).format(localDate(date)))}</span><strong>${localDate(date).getDate()}</strong></div>
+          <div class="aa-calendar-day-head-copy"><small>Agenda diaria</small><h3>${esc(calendarDayName(date))}</h3></div>
+          <button type="button" data-date="${date}" onclick="openCalendarEventForDay(this)" aria-label="Crear evento"><i data-lucide="plus"></i><span>Crear evento</span></button>
+        </header>
+        <div class="aa-calendar-day-kpis">
+          <div><span>Eventos</span><strong>${events.length}</strong></div>
+          <div><span>Entrenamientos</span><strong>${sessions.length}</strong></div>
+          <div><span>Nutrición</span><strong>${nutrition.totals.cal.toLocaleString('es-AR')} kcal</strong></div>
+          <div><span>Actividad</span><strong>${esc(activityLabel)}</strong></div>
+        </div>
+        <div class="aa-calendar-day-lanes">
+          <section>
+            <div class="aa-calendar-lane-title"><span>Agenda</span><i>${events.length}</i></div>
+            <div class="aa-calendar-day-items">
+              ${events.length ? events.map(calendarEventChipHtml).join('') : `<div class="aa-calendar-day-empty"><span>Sin eventos programados</span><button type="button" data-date="${date}" onclick="openCalendarEventForDay(this)">Agregar evento</button></div>`}
+            </div>
+          </section>
+          <section>
+            <div class="aa-calendar-lane-title"><span>Registros de la app</span><i>${sessions.length + (nutrition.meals.length ? 1 : 0) + (trackingCard ? 1 : 0)}</i></div>
+            <div class="aa-calendar-day-items">${recorded || '<div class="aa-calendar-day-empty"><span>Sin actividad registrada</span></div>'}</div>
+          </section>
+        </div>
+      </section>
+    </div>`,
+    label: 'Día',
+    title: calendarDayName(date),
+    eventCount: events.length,
+    selectedSelector: '.aa-calendar-day-strip-item.selected'
+  };
+}
+
+function renderCalendarMonthView() {
+  const monthStart = calendarCursorMonth || calendarMonthStart(calendarSelectedDay);
+  const monthPrefix = monthStart.slice(0, 7);
+  const dates = calendarMonthGridDates(monthStart);
+  const bodyLogs = DB.get('bodylogs') || [];
+  const cardioLogs = DB.get('checking_cardio') || [];
+  const cells = dates.map(date => {
     const day = localDate(date);
     const events = calendarEventsForDate(date);
     const sessions = sessionsForDate(date);
     const nutrition = nutritionForDate(date);
     const body = bodyLogs.find(item => item.date === date);
     const cardio = cardioLogs.filter(item => item.date === date);
-    const free = isFreeDay(date);
-    const trackingCard = calendarTrackingCardHtml(date, body, cardio);
     const classes = [
-      'aa-calendar-week-column',
+      'aa-calendar-month-cell',
+      'aa-calendar-drop-zone',
+      date.slice(0, 7) !== monthPrefix ? 'outside' : '',
       date === today() ? 'today' : '',
       date === calendarSelectedDay ? 'selected' : ''
     ].filter(Boolean).join(' ');
-    return `<section class="${classes}" data-calendar-week-date="${date}"
+    return `<section class="${classes}" data-calendar-drop-date="${date}"
       ondragover="calendarDragOver(event)" ondragleave="calendarDragLeave(event)" ondrop="calendarDrop(event)"
       onclick="selectCalendarDay('${date}')">
-      <header class="aa-calendar-column-head">
-        <div>
-          <span>${dayNamesShort[index]}</span>
-          <strong>${day.getDate()}</strong>
-        </div>
+      <header class="aa-calendar-month-cell-head">
+        <button type="button" onclick="event.stopPropagation();selectCalendarDay('${date}')" aria-label="Ver ${calendarDayName(date)}">${day.getDate()}</button>
         <button type="button" data-date="${date}" onclick="event.stopPropagation();openCalendarEventForDay(this)"
           aria-label="Crear evento el ${date}" title="Crear evento"><i data-lucide="plus"></i></button>
       </header>
-      <div class="aa-calendar-column-body">
-        ${free ? `<div class="aa-calendar-entry free-entry">
-          <span class="aa-calendar-source-tag"><i data-lucide="coffee"></i>Día libre</span>
-          <button class="aa-calendar-work-card free" type="button" data-date="${date}" data-page="today"
-            onclick="event.stopPropagation();openCalendarRecordFromElement(this)">
-            <span class="aa-calendar-title-row"><i></i><strong>Solo cuenta lo registrado</strong></span>
-          </button>
-        </div>` : ''}
-        ${events.map(calendarEventChipHtml).join('')}
-        ${sessions.map(session => calendarSessionCardHtml(session, date)).join('')}
-        ${nutrition.meals.length ? calendarNutritionCardHtml(date, nutrition) : ''}
-        ${trackingCard}
+      <div class="aa-calendar-month-items">
+        ${calendarMonthFreeHtml(date)}
+        ${events.map(calendarMonthEventHtml).join('')}
+        ${sessions.map(session => calendarMonthSessionHtml(session, date)).join('')}
+        ${nutrition.meals.length ? calendarMonthNutritionHtml(date, nutrition) : ''}
+        ${calendarMonthTrackingHtml(date, body, cardio)}
       </div>
     </section>`;
   }).join('');
+  const eventCount = calendarEvents().filter(item => item.date.startsWith(monthPrefix)).length;
+  return {
+    html: `<div class="aa-calendar-month-view">
+      <div class="aa-calendar-month-weekdays">${dayNamesShort.map(day => `<span>${day}</span>`).join('')}</div>
+      <div class="aa-calendar-month-grid">${cells}</div>
+    </div>`,
+    label: 'Mes',
+    title: calendarMonthName(monthStart),
+    eventCount,
+    selectedSelector: '.aa-calendar-month-cell.selected'
+  };
+}
+
+function updateCalendarViewControls() {
+  const input = document.getElementById('calendar-week');
+  const pickerLabel = document.getElementById('calendar-period-picker-label');
+  const previous = document.getElementById('calendar-prev-btn');
+  const next = document.getElementById('calendar-next-btn');
+  const labels = { day: 'día', week: 'semana', month: 'mes' };
+  document.querySelectorAll('.aa-calendar-view-btn').forEach(button => {
+    const active = button.id === `calendar-view-${calendarViewMode}`;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', String(active));
+  });
+  if (input) {
+    input.type = calendarViewMode === 'day' ? 'date' : calendarViewMode === 'month' ? 'month' : 'week';
+    input.value = calendarViewMode === 'day'
+      ? calendarSelectedDay
+      : calendarViewMode === 'month'
+        ? (calendarCursorMonth || calendarMonthStart(calendarSelectedDay)).slice(0, 7)
+        : weekValueFromDate(calendarSelectedDay);
+    input.setAttribute('aria-label', `Ir a ${labels[calendarViewMode]}`);
+  }
+  if (pickerLabel) pickerLabel.textContent = `Ir a ${labels[calendarViewMode]}`;
+  if (previous) {
+    previous.title = `${labels[calendarViewMode][0].toUpperCase()}${labels[calendarViewMode].slice(1)} anterior`;
+    previous.setAttribute('aria-label', previous.title);
+  }
+  if (next) {
+    next.title = `${labels[calendarViewMode][0].toUpperCase()}${labels[calendarViewMode].slice(1)} siguiente`;
+    next.setAttribute('aria-label', next.title);
+  }
+}
+
+function renderCalendarMonthDraft() {
+  const el = document.getElementById('calendar-month-draft');
+  if (!el) return;
+  ensureCalendarState();
+  updateCalendarViewControls();
+  const view = calendarViewMode === 'day'
+    ? renderCalendarDayView()
+    : calendarViewMode === 'month'
+      ? renderCalendarMonthView()
+      : renderCalendarWeekView();
   const monthTitle = document.getElementById('calendar-month-title');
   const eventCount = document.getElementById('calendar-event-count');
   const weekLabel = document.getElementById('calendar-week-label');
-  if (monthTitle) monthTitle.textContent = calendarWeekRangeTitle(dates);
-  if (weekLabel) weekLabel.textContent = `Semana ${String(weekValue).slice(6)}`;
-  if (eventCount) eventCount.textContent = `${weekEvents.length} evento${weekEvents.length === 1 ? '' : 's'}`;
-
-  el.innerHTML = `<div class="aa-calendar-board-grid">${columns}</div>`;
+  if (monthTitle) monthTitle.textContent = view.title;
+  if (weekLabel) weekLabel.textContent = view.label;
+  if (eventCount) eventCount.textContent = `${view.eventCount} evento${view.eventCount === 1 ? '' : 's'}`;
+  el.dataset.view = calendarViewMode;
+  el.innerHTML = view.html;
   renderCalendarAgenda();
   refreshInterfaceIcons();
+  if (calendarViewMode !== 'week') return;
   requestAnimationFrame(() => {
-    const selected = el.querySelector('.aa-calendar-week-column.selected');
+    const selected = el.querySelector(view.selectedSelector);
     if (!selected) return;
     const left = selected.offsetLeft - Math.max(0, (el.clientWidth - selected.offsetWidth) / 2);
     el.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
@@ -19304,8 +20292,14 @@ function selectCalendarDay(date) {
   if (!date) return;
   calendarSelectedDay = date;
   calendarCursorMonth = calendarMonthStart(date);
-  const weekInput = document.getElementById('calendar-week');
-  if (weekInput) weekInput.value = weekValueFromDate(date);
+  loadCalendar({ preserveCursor: true });
+}
+
+function setCalendarView(mode) {
+  if (!CALENDAR_VIEW_MODES.includes(mode) || mode === calendarViewMode) return;
+  calendarViewMode = mode;
+  calendarCursorMonth = calendarMonthStart(calendarSelectedDay || selectedDate());
+  try { localStorage.setItem(CALENDAR_VIEW_STORAGE_KEY, mode); } catch {}
   loadCalendar({ preserveCursor: true });
 }
 
@@ -19313,8 +20307,6 @@ function moveCalendarWeek(direction) {
   ensureCalendarState();
   calendarSelectedDay = addDays(calendarSelectedDay, Number(direction || 0) * 7);
   calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
-  const weekInput = document.getElementById('calendar-week');
-  if (weekInput) weekInput.value = weekValueFromDate(calendarSelectedDay);
   loadCalendar({ preserveCursor: true });
 }
 
@@ -19331,25 +20323,46 @@ function moveCalendarMonth(direction) {
     nextMonth.getMonth(),
     Math.min(preferredDay, lastDay)
   ));
-  const weekInput = document.getElementById('calendar-week');
-  if (weekInput) weekInput.value = weekValueFromDate(calendarSelectedDay);
+  loadCalendar({ preserveCursor: true });
+}
+
+function moveCalendarPeriod(direction) {
+  const amount = Number(direction || 0);
+  if (!amount) return;
+  if (calendarViewMode === 'month') return moveCalendarMonth(amount);
+  if (calendarViewMode === 'week') return moveCalendarWeek(amount);
+  ensureCalendarState();
+  calendarSelectedDay = addDays(calendarSelectedDay, amount);
+  calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
   loadCalendar({ preserveCursor: true });
 }
 
 function calendarGoToday() {
   calendarSelectedDay = today();
   calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
-  const weekInput = document.getElementById('calendar-week');
-  if (weekInput) weekInput.value = weekValueFromDate(calendarSelectedDay);
+  loadCalendar({ preserveCursor: true });
+}
+
+function calendarPeriodChanged() {
+  const input = document.getElementById('calendar-week');
+  if (!input?.value) return;
+  if (calendarViewMode === 'day') {
+    calendarSelectedDay = input.value;
+  } else if (calendarViewMode === 'month') {
+    const [year, month] = input.value.split('-').map(Number);
+    if (!year || !month) return;
+    const preferredDay = localDate(calendarSelectedDay).getDate();
+    const lastDay = new Date(year, month, 0).getDate();
+    calendarSelectedDay = dateKey(new Date(year, month - 1, Math.min(preferredDay, lastDay)));
+  } else {
+    calendarSelectedDay = getWeekDates(input.value)[0];
+  }
+  calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
   loadCalendar({ preserveCursor: true });
 }
 
 function calendarWeekChanged() {
-  const input = document.getElementById('calendar-week');
-  if (!input?.value) return;
-  calendarSelectedDay = getWeekDates(input.value)[0];
-  calendarCursorMonth = calendarMonthStart(calendarSelectedDay);
-  loadCalendar({ preserveCursor: true });
+  calendarPeriodChanged();
 }
 
 function selectCalendarEventColor(color) {
@@ -19432,8 +20445,6 @@ function saveCalendarEvent() {
   DB.set('calendar_events', next);
   calendarSelectedDay = date;
   calendarCursorMonth = calendarMonthStart(date);
-  const weekInput = document.getElementById('calendar-week');
-  if (weekInput) weekInput.value = weekValueFromDate(date);
   const wasEditing = Boolean(previous);
   hideModal('modal-calendar-event');
   loadCalendar({ preserveCursor: true });
@@ -19455,9 +20466,7 @@ function deleteCalendarEvent() {
 function loadCalendar(options = {}) {
   const preserveCursor = Boolean(options?.preserveCursor);
   ensureCalendarState(!preserveCursor);
-  const input = document.getElementById('calendar-week');
-  if (!preserveCursor || !input.value) input.value = weekValueFromDate(calendarSelectedDay || selectedDate());
-  const summary = weekSummary(input.value);
+  const summary = weekSummary(weekValueFromDate(calendarSelectedDay || selectedDate()));
   document.getElementById('calendar-summary').innerHTML = `
     <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">${summary.sessions.length}</div><div class="stat-sub">esta semana</div></div>
     <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">${summary.avgCalories}</div><div class="stat-sub">promedio diario</div></div>
