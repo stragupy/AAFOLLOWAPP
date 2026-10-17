@@ -18501,7 +18501,7 @@ function openCalendarRecordFromElement(button) {
 
 function calendarSessionCardHtml(session, date) {
   const sets = Array.isArray(session.sets) ? session.sets : [];
-  const exercises = [...new Set(sets.map(set => set.exercise_name || set.exercise).filter(Boolean))].slice(0, 5);
+  const exercises = [...new Set(sets.map(set => set.exercise_name || set.exercise).filter(Boolean))];
   const volume = Math.round(sets.reduce((sum, set) => sum + (+set.weight || 0) * (+set.reps || 0), 0));
   const title = session.routine_name || session.day_name || 'Sesión registrada';
   const meta = [
