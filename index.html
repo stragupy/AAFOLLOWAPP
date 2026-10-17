@@ -15311,6 +15311,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn" onclick="go('profile')"><i data-lucide="user-circle"></i><span>Perfil</span></button>
     <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
@@ -15329,6 +15330,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn" onclick="go('profile')"><i data-lucide="user-circle"></i><span>Perfil</span></button>
     <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
@@ -15913,6 +15915,30 @@ body.calendar-dragging .aa-calendar-drop-zone {
             <tbody id="body-table"></tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div id="page-profile" class="page">
+    <div class="page-head">
+      <div><h1>Perfil</h1><p>Foto, nombre y datos personales</p></div>
+    </div>
+    <div class="content">
+      <div class="card mb">
+        <div class="card-title">Mi perfil</div>
+        <div class="form-grid fg2">
+          <div class="form-row" style="grid-column:1 / -1; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            <div id="profile-avatar-preview" style="width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg, #1d4ed8, #2563eb); color:white; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; box-shadow:0 10px 22px rgba(37,99,235,0.25)">U</div>
+            <label class="btn btn-ghost btn-sm" for="profile-photo-input" style="cursor:pointer">Elegir foto</label>
+            <input id="profile-photo-input" type="file" accept="image/*" style="display:none">
+          </div>
+          <div class="form-row" style="grid-column:1 / -1">
+            <label class="form-label">Nombre de usuario</label>
+            <input id="profile-name-input" type="text" placeholder="Tu nombre o apodo" maxlength="40">
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" onclick="saveProfileDetails()">Guardar perfil</button></div>
       </div>
     </div>
   </div>
@@ -17314,7 +17340,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, hevy: loadHevy };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, profile: loadProfile, hevy: loadHevy };
   loaders[page]?.();
   closeMobileMenu();
   refreshInterfaceIcons();
@@ -17354,7 +17380,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, hevy: loadHevy };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, profile: loadProfile, hevy: loadHevy };
   loaders[activePage]?.();
 }
 
@@ -24754,10 +24780,18 @@ function renderRoutinesList() {
   const routines = DB.get('routines') || [];
   const el = document.getElementById('routines-list');
   if (!routines.length) { el.innerHTML = '<div class="empty">Crea tu primera rutina de entrenamiento</div>'; return; }
-  el.innerHTML = `<div class="g2">${routines.map(r => `
+  el.innerHTML = `<div class="g2">${routines.map(r => {
+    let trendLabel = '';
+    if (r.source === 'hevy' && r.lastHevyTrend === 'progreso') trendLabel = '<span class="badge b-green" style="margin-left:8px">↑ Progreso</span>';
+    else if (r.source === 'hevy' && r.lastHevyTrend === 'disminucion') trendLabel = '<span class="badge b-red" style="margin-left:8px">↓ Disminuyó</span>';
+    else if (r.source === 'hevy' && r.lastHevyTrend === 'igual') trendLabel = '<span class="badge" style="margin-left:8px">= Igual</span>';
+
+    return `
     <div class="card">
       <div class="flex jb ai-c" style="margin-bottom:14px">
-        <div style="font-weight:700; font-size:1.05rem; color:var(--text)">${esc(r.name)}</div>
+        <div style="font-weight:700; font-size:1.05rem; color:var(--text); display:flex; align-items:center; flex-wrap:wrap; gap:8px">
+          ${esc(r.name)}${trendLabel}
+        </div>
         <button class="btn btn-danger btn-sm" onclick="deleteRoutine('${r.id}')">✕</button>
       </div>
       ${(r.days || []).map(d => `
@@ -24765,7 +24799,8 @@ function renderRoutinesList() {
           <div style="font-weight:600; font-size:0.85rem; margin-bottom:4px; color:var(--text)">${esc(d.name)}</div>
           <div style="font-size:0.75rem; color:var(--muted)">${(d.exercises || []).map(e => `${esc(e.name)} (${e.target_sets || e.sets || 1}x${e.reps || e.target_reps || 10})`).join(' · ')}</div>
         </div>`).join('')}
-    </div>`).join('')}</div>`;
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function deleteRoutine(id) {
@@ -26499,6 +26534,15 @@ function switchHevyTab(btn, tabId) {
 }
 
 // ── HEVY IMPORT HELPERS ─────────────────────────────────
+function routineVolumeFromExercises(exercises) {
+  return (exercises || []).reduce((sum, ex) => {
+    const reps = Number(ex.reps || ex.target_reps || 0) || 0;
+    const sets = Number(ex.target_sets || ex.sets || 1) || 1;
+    const weight = Number(ex.weight || 0) || 0;
+    return sum + (weight * reps * sets);
+  }, 0);
+}
+
 function syncHevyImportedRoutine(sessionLike) {
   const routines = DB.get('routines') || [];
   const label = sessionLike?.routine_name || sessionLike?.day_name || 'Entrenamiento Hevy';
@@ -26515,21 +26559,25 @@ function syncHevyImportedRoutine(sessionLike) {
       exerciseMap.set(name, {
         name,
         target_sets: Math.max(Number(set.target_sets || set.set_number || 1), 1),
-        reps: Math.max(Number(set.target_reps || set.reps || 10), 1)
+        reps: Math.max(Number(set.target_reps || set.reps || 10), 1),
+        weight: Number(set.weight || 0) || 0
       });
       return;
     }
     const current = exerciseMap.get(name);
     const target = Number(set.target_sets || set.set_number || 1) || 1;
     const reps = Number(set.target_reps || set.reps || current.reps || 10) || 10;
+    const weight = Number(set.weight || current.weight || 0) || 0;
     current.target_sets = Math.max(current.target_sets, target);
     current.reps = Math.max(current.reps, reps);
+    current.weight = Math.max(current.weight, weight);
   });
 
   const incomingExercises = Array.from(exerciseMap.values()).map(ex => ({
     name: ex.name,
     target_sets: Math.max(1, Number(ex.target_sets) || 1),
-    reps: Math.max(1, Number(ex.reps) || 10)
+    reps: Math.max(1, Number(ex.reps) || 10),
+    weight: Number(ex.weight) || 0
   }));
 
   const incomingDay = {
@@ -26540,6 +26588,21 @@ function syncHevyImportedRoutine(sessionLike) {
 
   if (existingIdx >= 0) {
     const existing = routines[existingIdx];
+    const previousVolume = Number(existing.lastHevyVolume || 0) || 0;
+    const currentVolume = routineVolumeFromExercises(incomingExercises);
+    if (previousVolume > 0 && currentVolume > previousVolume) {
+      existing.lastHevyTrend = 'progreso';
+      existing.lastHevyVolume = currentVolume;
+      toast(`Rutina "${label}" — Progresó respecto al último import`, 'ok');
+    } else if (previousVolume > 0 && currentVolume < previousVolume) {
+      existing.lastHevyTrend = 'disminucion';
+      existing.lastHevyVolume = currentVolume;
+      toast(`Rutina "${label}" — Disminuyó respecto al último import`, 'warn');
+    } else {
+      existing.lastHevyTrend = previousVolume > 0 ? 'igual' : 'nuevo';
+      existing.lastHevyVolume = currentVolume || previousVolume;
+    }
+
     const dayName = incomingDay.name;
     const currentDays = Array.isArray(existing.days) ? existing.days : [];
     const dayIdx = currentDays.findIndex(day => day.name && day.name.toLowerCase() === dayName.toLowerCase());
@@ -26555,6 +26618,7 @@ function syncHevyImportedRoutine(sessionLike) {
           const current = mergedByName.get(key);
           current.target_sets = Math.max(Number(current.target_sets) || 1, Number(ex.target_sets) || 1);
           current.reps = Math.max(Number(current.reps) || 1, Number(ex.reps) || 1);
+          current.weight = Math.max(Number(current.weight) || 0, Number(ex.weight) || 0);
         }
       });
       currentDays[dayIdx].exercises = Array.from(mergedByName.values());
@@ -26576,7 +26640,9 @@ function syncHevyImportedRoutine(sessionLike) {
       source: 'hevy',
       name: label,
       days: [incomingDay],
-      created: today()
+      created: today(),
+      lastHevyVolume: routineVolumeFromExercises(incomingExercises),
+      lastHevyTrend: 'nuevo'
     });
   }
 
@@ -30470,6 +30536,84 @@ function saveProfile(name) {
   DB.set('activeUser', name);
 }
 
+function getProfileDetails() {
+  const details = DB.get('profile_details') || {};
+  return {
+    name: String(details.name || '').trim(),
+    avatar: String(details.avatar || '').trim()
+  };
+}
+
+function saveProfileDetails() {
+  const nameInput = document.getElementById('profile-name-input');
+  const photoInput = document.getElementById('profile-photo-input');
+  const details = getProfileDetails();
+  const nextName = (nameInput?.value || '').trim() || details.name || 'Usuario';
+  const photoValue = details.avatar || '';
+  const profile = { name: nextName, avatar: photoValue };
+
+  if (photoInput && photoInput.files && photoInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function () {
+      profile.avatar = String(reader.result || '');
+      DB.set('profile_details', profile);
+      renderProfilePage();
+      refreshUserProfileDisplay();
+      toast('Perfil guardado');
+    };
+    reader.readAsDataURL(photoInput.files[0]);
+    return;
+  }
+
+  DB.set('profile_details', profile);
+  renderProfilePage();
+  refreshUserProfileDisplay();
+  toast('Perfil guardado');
+}
+
+function renderProfilePage() {
+  const profile = getProfileDetails();
+  const nameInput = document.getElementById('profile-name-input');
+  const avatarEl = document.getElementById('profile-avatar-preview');
+  if (nameInput) nameInput.value = profile.name || '';
+  if (avatarEl) {
+    if (profile.avatar) {
+      avatarEl.style.backgroundImage = `url(${profile.avatar})`;
+      avatarEl.style.backgroundSize = 'cover';
+      avatarEl.style.backgroundPosition = 'center';
+      avatarEl.textContent = '';
+    } else {
+      avatarEl.style.backgroundImage = 'none';
+      avatarEl.style.background = 'linear-gradient(135deg, #1d4ed8, #2563eb)';
+      avatarEl.textContent = (profile.name || 'U').charAt(0).toUpperCase();
+    }
+  }
+}
+
+function refreshUserProfileDisplay() {
+  const profile = getProfileDetails();
+  const activeUser = DB.get('activeUser') || 'AA Follow';
+  const displayName = profile.name || String(activeUser || 'AA Follow').trim() || 'AA Follow';
+  const avatarEl = document.getElementById('sidebar-user-avatar');
+  const nameEl = document.getElementById('sidebar-user-name');
+  const workspaceNameEl = document.getElementById('workspace-owner-name');
+
+  if (nameEl) nameEl.textContent = displayName;
+  if (workspaceNameEl) workspaceNameEl.textContent = displayName;
+  if (avatarEl) {
+    if (profile.avatar) {
+      avatarEl.innerHTML = `<img src="${profile.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      avatarEl.innerHTML = '';
+      avatarEl.textContent = displayName.charAt(0).toUpperCase();
+    }
+  }
+}
+
+function loadProfile() {
+  renderProfilePage();
+}
+
 async function startCloudAutoSync() {
   cloudAutoSyncReady = false;
   await cloudDownloadData({ silent: true });
@@ -30479,13 +30623,21 @@ async function startCloudAutoSync() {
 }
 
 function enterApp(name, animate) {
-  // Actualizar sidebar
-  var nameEl = document.getElementById('sidebar-user-name');
-  var avatarEl = document.getElementById('sidebar-user-avatar');
-  var workspaceNameEl = document.getElementById('workspace-owner-name');
-  if (nameEl) nameEl.textContent = name;
-  if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
-  if (workspaceNameEl) workspaceNameEl.textContent = name;
+  const profile = getProfileDetails();
+  const displayName = profile.name || name || 'AA Follow';
+  const avatarEl = document.getElementById('sidebar-user-avatar');
+  const nameEl = document.getElementById('sidebar-user-name');
+  const workspaceNameEl = document.getElementById('workspace-owner-name');
+  if (nameEl) nameEl.textContent = displayName;
+  if (workspaceNameEl) workspaceNameEl.textContent = displayName;
+  if (avatarEl) {
+    if (profile.avatar) {
+      avatarEl.innerHTML = `<img src="${profile.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    } else {
+      avatarEl.innerHTML = '';
+      avatarEl.textContent = displayName.charAt(0).toUpperCase();
+    }
+  }
 
   var ls = document.getElementById('login-screen');
   if (animate) {
