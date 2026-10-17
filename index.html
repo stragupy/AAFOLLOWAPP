@@ -14105,6 +14105,1181 @@ body.calendar-dragging .aa-calendar-drop-zone {
   }
 }
 
+/* Protected coach workspace */
+#page-coach {
+  min-height: calc(100dvh - 52px);
+  background: #1d1f1e;
+}
+
+.coach-page-head {
+  display: flex;
+  min-height: 104px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 28px;
+  border-bottom: 1px solid #353736;
+  background: #202221;
+}
+
+.coach-eyebrow,
+.coach-access-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+  color: #4fdd91;
+  font-size: 0.58rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.coach-eyebrow svg,
+.coach-access-kicker svg {
+  width: 13px;
+  height: 13px;
+}
+
+.coach-page-head h1 {
+  margin: 0;
+  color: #f2f4f2;
+  font-size: 1.62rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.coach-page-head p {
+  margin: 5px 0 0;
+  color: #929792;
+  font-size: 0.76rem;
+}
+
+.coach-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coach-identity,
+.coach-exit-button {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #3b3e3c;
+  border-radius: 7px;
+  background: #292b2a;
+  color: #aeb3af;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.coach-identity {
+  max-width: 260px;
+  padding: 0 10px;
+}
+
+.coach-identity span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-identity svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  color: #4fdd91;
+}
+
+.coach-exit-button {
+  padding: 0 10px;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.coach-exit-button svg {
+  width: 13px;
+  height: 13px;
+}
+
+.coach-exit-button:hover {
+  border-color: #ee6070;
+  background: #38262a;
+  color: #f1a3ac;
+}
+
+.coach-content {
+  max-width: 1460px;
+  padding-top: 18px !important;
+}
+
+.coach-command-shell {
+  overflow: hidden;
+  border: 1px solid #353736;
+  border-radius: 10px;
+  background: #202221;
+}
+
+.coach-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  min-height: 51px;
+  border-bottom: 1px solid #353736;
+  background: #1b1d1c;
+}
+
+.coach-tab {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 0;
+  border-right: 1px solid #353736;
+  background: transparent;
+  color: #8f9491;
+  font-size: 0.66rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+
+.coach-tab:last-child {
+  border-right: 0;
+}
+
+.coach-tab svg {
+  width: 15px;
+  height: 15px;
+}
+
+.coach-tab:hover {
+  background: #282b29;
+  color: #e9ebe9;
+}
+
+.coach-tab.active {
+  background: #252f2a;
+  color: #4fdd91;
+}
+
+.coach-tab.active::after {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  left: 16px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: #4fdd91;
+  content: '';
+}
+
+.coach-tab:focus-visible,
+.coach-exit-button:focus-visible,
+.coach-map-select:focus-visible,
+.coach-guideline-toggle:focus-visible {
+  outline: 2px solid #287df0;
+  outline-offset: -2px;
+}
+
+.coach-workspace {
+  min-height: 550px;
+  padding: 18px;
+  background: #202221;
+}
+
+.coach-view-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.coach-view-head > div:first-child {
+  min-width: 0;
+}
+
+.coach-view-kicker,
+.coach-section-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #7f8581;
+  font-size: 0.57rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.coach-view-head h2,
+.coach-panel-title {
+  margin: 0;
+  color: #f0f2f0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.coach-view-head p,
+.coach-panel-subcopy {
+  margin: 5px 0 0;
+  color: #8d938f;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.coach-date-chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid #3a3d3b;
+  border-radius: 7px;
+  background: #292b2a;
+  color: #c1c6c2;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.coach-date-chip svg {
+  width: 13px;
+  height: 13px;
+  color: #4fdd91;
+}
+
+.coach-monitor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(270px, 0.72fr);
+  gap: 14px;
+}
+
+.coach-monitor-main,
+.coach-monitor-side,
+.coach-analysis-layout,
+.coach-planning-layout,
+.coach-maps-layout,
+.coach-guidelines-layout {
+  display: grid;
+  gap: 14px;
+}
+
+.coach-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid #373a38;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #1c1e1d;
+}
+
+.coach-metric {
+  min-width: 0;
+  padding: 14px;
+  border-right: 1px solid #373a38;
+}
+
+.coach-metric:last-child {
+  border-right: 0;
+}
+
+.coach-metric > span,
+.coach-kpi-label {
+  display: block;
+  margin-bottom: 7px;
+  color: #7e8580;
+  font-size: 0.55rem;
+  font-weight: 750;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.coach-metric strong {
+  display: block;
+  overflow: hidden;
+  color: #f3f4f3;
+  font-size: 1.3rem;
+  font-weight: 750;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-metric small {
+  display: block;
+  min-height: 16px;
+  margin-top: 7px;
+  overflow: hidden;
+  color: #8c938e;
+  font-size: 0.59rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-metric.tone-green strong { color: #54df99; }
+.coach-metric.tone-blue strong { color: #68a8ff; }
+.coach-metric.tone-amber strong { color: #eeb75a; }
+.coach-metric.tone-violet strong { color: #ba98fb; }
+
+.coach-panel {
+  min-width: 0;
+  border: 1px solid #373a38;
+  border-radius: 9px;
+  background: #222423;
+}
+
+.coach-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid #353736;
+}
+
+.coach-panel-head .btn,
+.coach-panel-head .coach-compact-action {
+  flex: 0 0 auto;
+}
+
+.coach-status-list {
+  display: grid;
+  gap: 0;
+}
+
+.coach-status-row {
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid #343735;
+}
+
+.coach-status-row:last-child {
+  border-bottom: 0;
+}
+
+.coach-status-row > i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #757c77;
+}
+
+.coach-status-row.good > i { background: #4fdd91; }
+.coach-status-row.warn > i { background: #f0b652; }
+.coach-status-row.attention > i { background: #ef6472; }
+.coach-status-row.info > i { background: #5b9dff; }
+
+.coach-status-row strong,
+.coach-status-row span {
+  min-width: 0;
+}
+
+.coach-status-row strong {
+  display: block;
+  overflow: hidden;
+  color: #e9ece9;
+  font-size: 0.7rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-status-row span {
+  display: block;
+  margin-top: 3px;
+  color: #858b87;
+  font-size: 0.62rem;
+  line-height: 1.4;
+}
+
+.coach-status-row em {
+  padding: 4px 6px;
+  border-radius: 5px;
+  background: #2c2f2d;
+  color: #aeb3af;
+  font-size: 0.55rem;
+  font-style: normal;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.coach-coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.coach-coverage-item {
+  min-width: 0;
+  padding: 13px 14px;
+  border-right: 1px solid #343735;
+  border-bottom: 1px solid #343735;
+}
+
+.coach-coverage-item:nth-child(2n) { border-right: 0; }
+.coach-coverage-item:nth-last-child(-n + 2) { border-bottom: 0; }
+
+.coach-coverage-item span {
+  display: block;
+  color: #868c88;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.coach-coverage-item strong {
+  display: block;
+  margin-top: 6px;
+  overflow: hidden;
+  color: #e7eae8;
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coach-phase-note {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  padding: 14px;
+}
+
+.coach-phase-note > i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 7px;
+  background: #2a3430;
+  color: #4fdd91;
+}
+
+.coach-phase-note svg { width: 15px; height: 15px; }
+.coach-phase-note strong { display:block; color:#e9ece9; font-size:.7rem; }
+.coach-phase-note span { display:block; margin-top:4px; color:#8b918d; font-size:.62rem; line-height:1.45; }
+
+.coach-analysis-layout {
+  grid-template-columns: minmax(0, 1.28fr) minmax(290px, 0.72fr);
+}
+
+.coach-analysis-verdict {
+  position: relative;
+  min-height: 230px;
+  padding: 22px;
+  overflow: hidden;
+  border: 1px solid #3a3e3b;
+  border-radius: 9px;
+  background: #1d2520;
+}
+
+.coach-analysis-verdict::after {
+  position: absolute;
+  top: -45px;
+  right: -25px;
+  width: 170px;
+  height: 170px;
+  border: 1px solid rgba(79, 221, 145, 0.18);
+  border-radius: 50%;
+  content: '';
+}
+
+.coach-analysis-status {
+  display: inline-flex;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: rgba(79, 221, 145, 0.12);
+  color: #55df9a;
+  font-size: 0.57rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.coach-analysis-status.warn { background: rgba(240, 182, 82, 0.12); color: #f0b652; }
+.coach-analysis-status.attention { background: rgba(239, 100, 114, 0.12); color: #ef7c89; }
+.coach-analysis-status.info { background: rgba(91, 157, 255, 0.12); color: #76adff; }
+
+.coach-analysis-verdict h3 {
+  position: relative;
+  z-index: 1;
+  max-width: 660px;
+  margin: 15px 0 8px;
+  color: #f0f2f0;
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.coach-analysis-verdict p {
+  position: relative;
+  z-index: 1;
+  max-width: 690px;
+  margin: 0;
+  color: #abb1ad;
+  font-size: 0.73rem;
+  line-height: 1.6;
+}
+
+.coach-analysis-evidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.coach-analysis-evidence > div {
+  min-width: 0;
+  padding: 14px;
+  border-right: 1px solid #353736;
+  border-bottom: 1px solid #353736;
+}
+
+.coach-analysis-evidence > div:nth-child(2n) { border-right: 0; }
+.coach-analysis-evidence > div:nth-last-child(-n + 2) { border-bottom: 0; }
+.coach-analysis-evidence span { display:block;color:#838985;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase; }
+.coach-analysis-evidence strong { display:block;margin-top:7px;color:#edf0ed;font-size:.8rem;font-weight:650; }
+.coach-analysis-evidence p { margin:4px 0 0;color:#8b918d;font-size:.61rem;line-height:1.45; }
+
+.coach-list-panel {
+  padding: 14px;
+}
+
+.coach-bullet-list {
+  display: grid;
+  gap: 8px;
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.coach-bullet-list li {
+  position: relative;
+  padding-left: 13px;
+  color: #a2a8a4;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.coach-bullet-list li::before {
+  position: absolute;
+  top: 0.52em;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5b9dff;
+  content: '';
+}
+
+.coach-list-panel.good li::before { background: #4fdd91; }
+.coach-list-panel.warn li::before { background: #f0b652; }
+
+.coach-analysis-actions {
+  display: flex;
+  gap: 8px;
+  padding: 13px 14px;
+  border-top: 1px solid #353736;
+}
+
+.coach-analysis-actions .btn {
+  flex: 1;
+}
+
+.coach-planning-layout {
+  grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
+}
+
+.coach-plan-form,
+.coach-guideline-form,
+.coach-map-form {
+  padding: 14px;
+}
+
+.coach-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin-top: 13px;
+}
+
+.coach-form-grid .wide { grid-column: 1 / -1; }
+
+.coach-form-grid label,
+.coach-map-branch label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: #8b918d;
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.coach-form-grid input,
+.coach-form-grid textarea,
+.coach-form-grid select,
+.coach-map-branch input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid #3a3d3b;
+  border-radius: 7px;
+  background: #1c1e1d;
+  color: #ecefec;
+  font: inherit;
+  font-size: 0.7rem;
+}
+
+.coach-form-grid input,
+.coach-form-grid select,
+.coach-map-branch input { min-height: 35px; padding: 0 10px; }
+.coach-form-grid textarea { min-height: 77px; padding: 9px 10px; resize: vertical; }
+
+.coach-form-grid input:focus,
+.coach-form-grid textarea:focus,
+.coach-form-grid select:focus,
+.coach-map-branch input:focus {
+  border-color: #287df0;
+  outline: 0;
+}
+
+.coach-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px solid #343735;
+}
+
+.coach-form-footer small { color:#808783; font-size:.6rem; line-height:1.4; }
+
+.coach-plan-list {
+  display: grid;
+  gap: 0;
+}
+
+.coach-plan-item {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #353736;
+}
+
+.coach-plan-item:last-child { border-bottom: 0; }
+.coach-plan-item > i { width:6px;height:6px;border-radius:50%;background:#4fdd91; }
+.coach-plan-item strong { display:block;overflow:hidden;color:#e9ece9;font-size:.7rem;font-weight:650;text-overflow:ellipsis;white-space:nowrap; }
+.coach-plan-item span { display:block;margin-top:4px;overflow:hidden;color:#858b87;font-size:.6rem;text-overflow:ellipsis;white-space:nowrap; }
+.coach-delete-icon { display:grid;width:28px;height:28px;place-items:center;border:0;border-radius:6px;background:transparent;color:#7e8580;cursor:pointer; }
+.coach-delete-icon:hover { background:#38262a;color:#f18b96; }
+.coach-delete-icon svg { width:14px;height:14px; }
+
+.coach-maps-layout { grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr); }
+
+.coach-map-stage {
+  position: relative;
+  min-height: 346px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.coach-map-stage::before {
+  position: absolute;
+  inset: 50% 10% auto;
+  height: 1px;
+  background: #3a4a40;
+  content: '';
+}
+
+.coach-map-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.coach-map-title-line h3 { margin:0;color:#edf0ed;font-size:.88rem; }
+.coach-map-title-line span { color:#7d8480;font-size:.6rem; }
+
+.coach-map-visual {
+  position: relative;
+  display: grid;
+  min-height: 250px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: space-between;
+  gap: 26px 46px;
+}
+
+.coach-map-central {
+  z-index: 1;
+  grid-column: 1 / -1;
+  justify-self: center;
+  display: grid;
+  width: min(100%, 290px);
+  min-height: 70px;
+  place-items: center;
+  padding: 10px 14px;
+  border: 1px solid rgba(79, 221, 145, 0.64);
+  border-radius: 9px;
+  background: #20352a;
+  box-shadow: 0 0 0 6px rgba(79, 221, 145, 0.045);
+  color: #effbf4;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.coach-map-node {
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  min-height: 56px;
+  align-content: center;
+  gap: 4px;
+  padding: 9px 11px;
+  border: 1px solid #3d4440;
+  border-radius: 8px;
+  background: #282c29;
+}
+
+.coach-map-node span { color:#75b1ff;font-size:.53rem;font-weight:750;letter-spacing:.065em;text-transform:uppercase; }
+.coach-map-node strong { overflow:hidden;color:#e5e9e6;font-size:.66rem;font-weight:600;text-overflow:ellipsis;white-space:nowrap; }
+.coach-map-node:nth-child(3n) span { color:#f0b652; }
+.coach-map-node:nth-child(4n) span { color:#55df9a; }
+.coach-map-node:nth-child(5n) span { color:#bd9bfd; }
+
+.coach-map-empty {
+  display: grid;
+  min-height: 270px;
+  place-items: center;
+  border: 1px dashed #3b403d;
+  border-radius: 8px;
+  color: #7e8580;
+  font-size: .7rem;
+  text-align: center;
+}
+
+.coach-map-branches {
+  display: grid;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.coach-map-branch {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+.coach-map-branch > i {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 6px;
+  background: #2b2f2c;
+  color: #77aeff;
+  font-size: .58rem;
+  font-style: normal;
+  font-weight: 750;
+}
+
+.coach-map-branch label { margin:0; }
+
+.coach-map-select-row {
+  display: flex;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.coach-map-select {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid #3b3e3c;
+  border-radius: 7px;
+  background: #1c1e1d;
+  color: #ced2cf;
+  font-size: .64rem;
+}
+
+.coach-guidelines-layout { grid-template-columns: minmax(315px, .86fr) minmax(0, 1.14fr); }
+
+.coach-guideline-list {
+  display: grid;
+  gap: 8px;
+  padding: 13px;
+}
+
+.coach-guideline-card {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 11px;
+  border: 1px solid #393d3a;
+  border-radius: 7px;
+  background: #1d1f1e;
+}
+
+.coach-guideline-card > i {
+  width: 6px;
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: #5b9dff;
+}
+
+.coach-guideline-card.training > i { background:#55df9a; }
+.coach-guideline-card.nutrition > i { background:#f0b652; }
+.coach-guideline-card.recovery > i { background:#bd9bfd; }
+.coach-guideline-card.habits > i { background:#76adff; }
+.coach-guideline-card.inactive { opacity:.48; }
+.coach-guideline-card strong { display:block;color:#e9ecea;font-size:.7rem;font-weight:650; }
+.coach-guideline-card p { margin:4px 0 0;color:#919792;font-size:.62rem;line-height:1.45; }
+.coach-guideline-card small { display:block;margin-top:7px;color:#757c78;font-size:.56rem; }
+
+.coach-guideline-actions { display:flex;gap:4px; }
+.coach-guideline-toggle { display:grid;width:28px;height:28px;place-items:center;border:1px solid #3a3e3b;border-radius:6px;background:#292c2a;color:#b6bcb8;cursor:pointer; }
+.coach-guideline-toggle.active { border-color:rgba(79,221,145,.6);color:#55df9a;background:#213229; }
+.coach-guideline-toggle svg { width:14px;height:14px; }
+
+.coach-empty {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  padding: 22px;
+  color: #7f8581;
+  font-size: .7rem;
+  text-align: center;
+}
+
+.coach-empty strong { display:block;color:#b9bfba;font-size:.76rem; }
+.coach-empty span { display:block;margin-top:5px;line-height:1.45; }
+
+.coach-access-modal {
+  width: min(100% - 28px, 440px) !important;
+}
+
+.coach-access-copy {
+  margin: -5px 0 15px;
+  color: #8e948f;
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
+.coach-account-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid #383b39;
+  border-radius: 7px;
+  background: #1d1f1e;
+  color: #c4c9c5;
+  font-size: .7rem;
+}
+
+.coach-account-line svg { width:14px;height:14px;flex:0 0 auto;color:#4fdd91; }
+.coach-account-line span { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+
+.coach-password-field { display:grid;grid-template-columns:minmax(0,1fr) 38px; }
+.coach-password-field input { min-width:0;border-radius:7px 0 0 7px !important; }
+.coach-password-field button { display:grid;place-items:center;border:1px solid #3a3d3b;border-left:0;border-radius:0 7px 7px 0;background:#282b29;color:#939994;cursor:pointer; }
+.coach-password-field button:hover { color:#e7eae8; }
+.coach-password-field svg { width:15px;height:15px; }
+.coach-access-status { display:block;min-height:17px;margin-top:7px;color:#7f8581;font-size:.6rem; }
+.coach-access-status.error { color:#f18b96; }
+.coach-access-status.working { color:#76adff; }
+.coach-access-actions { display:flex;gap:8px;margin-top:18px; }
+.coach-access-actions .btn { flex:1; }
+
+@media (max-width: 1050px) {
+  .coach-monitor-layout,
+  .coach-analysis-layout,
+  .coach-planning-layout,
+  .coach-maps-layout,
+  .coach-guidelines-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .coach-monitor-side { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  #page-coach { min-height: calc(100dvh - 95px - env(safe-area-inset-top, 0px)); }
+
+  .coach-page-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 13px;
+    min-height: 0;
+    padding: 15px 11px;
+  }
+
+  .coach-page-head h1 { font-size:1.35rem; }
+  .coach-head-actions { width:100%; }
+  .coach-identity { flex:1;max-width:none; }
+  .coach-exit-button span { display:none; }
+  .coach-exit-button { width:34px;justify-content:center;padding:0; }
+  .coach-content { padding:10px 8px 88px !important; }
+  .coach-command-shell { border-radius:9px; }
+  .coach-tabs { min-height:46px;overflow-x:auto;grid-template-columns:repeat(5, minmax(82px,1fr)); }
+  .coach-tab { min-height:46px;flex-direction:column;gap:2px;padding:5px 6px;font-size:.52rem; }
+  .coach-tab svg { width:14px;height:14px; }
+  .coach-tab.active::after { right:9px;left:9px; }
+  .coach-workspace { min-height:480px;padding:11px; }
+  .coach-view-head { align-items:flex-start;flex-direction:column;gap:9px;margin-bottom:12px; }
+  .coach-date-chip { align-self:flex-start; }
+  .coach-metric-strip { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .coach-metric:nth-child(2) { border-right:0; }
+  .coach-metric:nth-child(-n + 2) { border-bottom:1px solid #373a38; }
+  .coach-monitor-side { grid-template-columns:1fr; }
+  .coach-analysis-evidence { grid-template-columns:1fr; }
+  .coach-analysis-evidence > div,
+  .coach-analysis-evidence > div:nth-child(2n) { border-right:0;border-bottom:1px solid #353736; }
+  .coach-analysis-evidence > div:last-child { border-bottom:0; }
+  .coach-form-grid { grid-template-columns:1fr; }
+  .coach-form-grid .wide { grid-column:auto; }
+  .coach-form-footer { align-items:stretch;flex-direction:column; }
+  .coach-form-footer .btn { width:100%; }
+  .coach-map-stage { min-height:0;padding:14px; }
+  .coach-map-visual { grid-template-columns:1fr;gap:10px;min-height:0; }
+  .coach-map-central { grid-column:auto;width:auto;min-height:57px; }
+  .coach-map-stage::before { display:none; }
+  .coach-coverage-item,
+  .coach-coverage-item:nth-child(2n) { border-right:0;border-bottom:1px solid #343735; }
+  .coach-coverage-item:last-child { border-bottom:0; }
+}
+
+/* ── SEGUIMIENTO DIARIO ─────────────────────────────── */
+#page-daily-tracking {
+  background: #1d1f1e;
+}
+
+#page-daily-tracking .page-head {
+  min-height: 92px;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid #353735;
+  background: #202321;
+}
+
+.daily-tracking-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.daily-tracking-head h1 {
+  margin: 4px 0 4px;
+  color: #f0f3f0;
+  font-size: 1.18rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.daily-tracking-head p {
+  margin: 0;
+  color: #8e9690;
+  font-size: .68rem;
+}
+
+.daily-tracking-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #60dfa0;
+  font-size: .57rem;
+  font-weight: 750;
+  letter-spacing: .095em;
+  text-transform: uppercase;
+}
+
+.daily-tracking-kicker svg { width: 13px; height: 13px; }
+
+.daily-tracking-date-tools {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.daily-tracking-date-button,
+.daily-tracking-date-current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  border: 1px solid #393d3a;
+  border-radius: 7px;
+  background: #1b1d1c;
+  color: #cbd1cc;
+  cursor: pointer;
+}
+
+.daily-tracking-date-button { width: 34px; }
+.daily-tracking-date-button:hover,
+.daily-tracking-date-current:hover { border-color: #557367; background: #252a27; color: #f0f3f0; }
+.daily-tracking-date-button svg { width: 16px; height: 16px; }
+
+.daily-tracking-date-current {
+  gap: 7px;
+  min-width: 154px;
+  padding: 0 11px;
+  color: #e9edea;
+  font-size: .68rem;
+  font-weight: 650;
+}
+
+.daily-tracking-date-current svg { width: 14px; height: 14px; color: #55df9a; }
+
+.daily-tracking-content { padding-top: 16px !important; padding-bottom: 92px !important; }
+
+.daily-tracking-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 13px;
+  overflow: hidden;
+  border: 1px solid #383b39;
+  border-radius: 9px;
+  background: #242725;
+}
+
+.daily-tracking-metric {
+  position: relative;
+  min-height: 108px;
+  padding: 16px;
+  border-right: 1px solid #383b39;
+}
+
+.daily-tracking-metric:last-child { border-right: 0; }
+.daily-tracking-metric::before { position: absolute; top: 0; right: 16px; left: 16px; height: 2px; border-radius: 999px; background: #5f85bb; content: ''; }
+.daily-tracking-metric.training::before { background: #4fdd91; }
+.daily-tracking-metric.duration::before { background: #76adff; }
+.daily-tracking-metric.volume::before { background: #f0b652; }
+.daily-tracking-metric.exercises::before { background: #bd9bfd; }
+.daily-tracking-metric > span { display: block; color: #919892; font-size: .57rem; font-weight: 750; letter-spacing: .065em; text-transform: uppercase; }
+.daily-tracking-metric strong { display: block; margin-top: 13px; color: #f0f3f0; font-size: 1.35rem; line-height: 1; }
+.daily-tracking-metric strong small { margin-left: 3px; color: #a0a8a2; font-size: .62rem; font-weight: 600; }
+.daily-tracking-metric em { display: block; margin-top: 8px; color: #848c86; font-size: .61rem; font-style: normal; line-height: 1.35; }
+
+.daily-tracking-grid { display: grid; grid-template-columns: minmax(0, 1.24fr) minmax(310px, .76fr); gap: 13px; margin-bottom: 13px; }
+.daily-tracking-panel { overflow: hidden; border: 1px solid #383b39; border-radius: 9px; background: #242725; }
+.daily-tracking-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 63px; padding: 13px 15px; border-bottom: 1px solid #383b39; }
+.daily-tracking-panel-head > div > span { display: block; margin-bottom: 3px; color: #929994; font-size: .56rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }
+.daily-tracking-panel-head h2 { margin: 0; color: #edf0ed; font-size: .83rem; font-weight: 700; }
+.daily-tracking-link { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: #80aafa; cursor: pointer; font-size: .61rem; font-weight: 650; }
+.daily-tracking-link:hover { color: #b8d0ff; }
+.daily-tracking-link svg { width: 13px; height: 13px; }
+
+.daily-training-list { display: grid; gap: 9px; padding: 13px; }
+.daily-training-session { padding: 11px; border: 1px solid #383d39; border-radius: 7px; background: #1d1f1e; }
+.daily-training-session-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.daily-training-session-title { color: #e9edea; font-size: .72rem; font-weight: 700; }
+.daily-training-session-sub { display: block; margin-top: 3px; color: #808881; font-size: .59rem; }
+.daily-training-session-meta { color: #8da8cb; font-size: .6rem; white-space: nowrap; }
+.daily-exercise-list { display: grid; gap: 7px; }
+.daily-exercise-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(128px, 1.08fr) minmax(102px, .78fr); gap: 10px; align-items: center; padding: 10px; border-radius: 6px; background: #272b28; }
+.daily-exercise-row strong { display: block; color: #ebeeeb; font-size: .67rem; font-weight: 650; }
+.daily-exercise-row small { display: block; margin-top: 4px; color: #858d87; font-size: .57rem; line-height: 1.35; }
+.daily-exercise-sets { color: #c9cfca; font-size: .61rem; line-height: 1.45; }
+.daily-exercise-volume { color: #f1bd65; font-size: .66rem; font-weight: 700; text-align: right; }
+.daily-exercise-volume small { color: #8c938e; font-weight: 500; text-align: right; }
+
+.daily-empty { display: grid; min-height: 170px; place-items: center; padding: 25px; color: #848b86; font-size: .68rem; text-align: center; }
+.daily-empty strong { display: block; color: #c4c9c5; font-size: .74rem; }
+.daily-empty span { display: block; max-width: 300px; margin-top: 6px; line-height: 1.5; }
+
+.daily-nutrition-body { display: grid; gap: 12px; padding: 14px; }
+.daily-nutrition-calories { display: flex; align-items: end; justify-content: space-between; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid #383b39; }
+.daily-nutrition-calories span { display: block; color: #919892; font-size: .57rem; font-weight: 750; letter-spacing: .065em; text-transform: uppercase; }
+.daily-nutrition-calories strong { display: block; margin-top: 6px; color: #f2f4f2; font-size: 1.55rem; line-height: 1; }
+.daily-nutrition-calories strong small { color: #a4aca6; font-size: .63rem; font-weight: 600; }
+.daily-nutrition-calories em { color: #8d948f; font-size: .6rem; font-style: normal; }
+.daily-nutrition-progress { display: grid; gap: 10px; }
+.daily-nutrition-line { display: grid; gap: 5px; }
+.daily-nutrition-line > div { display: flex; justify-content: space-between; gap: 8px; color: #cfd4d0; font-size: .62rem; }
+.daily-nutrition-line > div span:last-child { color: #919892; }
+.daily-nutrition-track { height: 6px; overflow: hidden; border-radius: 999px; background: #161817; }
+.daily-nutrition-track i { display: block; height: 100%; border-radius: inherit; background: #61a2ff; }
+.daily-nutrition-line.carbs i { background: #edb254; }
+.daily-nutrition-line.fats i { background: #4fdd91; }
+
+.daily-progression-panel { margin-bottom: 13px; }
+.daily-tracking-exercise-control select { max-width: 230px; min-height: 33px; border: 1px solid #3b403c; border-radius: 7px; background: #1c1e1d; color: #dce1dd; font: inherit; font-size: .64rem; }
+.daily-progression-body { padding: 13px; }
+.daily-progression-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-bottom: 13px; }
+.daily-progression-summary > div { padding: 10px; border: 1px solid #393d3a; border-radius: 7px; background: #1d1f1e; }
+.daily-progression-summary span { display: block; color: #8c938e; font-size: .55rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.daily-progression-summary strong { display: block; margin-top: 7px; color: #e9edea; font-size: .78rem; }
+.daily-progression-summary small { display: block; margin-top: 3px; color: #79817b; font-size: .56rem; line-height: 1.35; }
+.daily-progression-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.daily-chart-card { min-height: 218px; padding: 12px; border: 1px solid #393d3a; border-radius: 7px; background: #1d1f1e; }
+.daily-chart-card h3 { margin: 0 0 10px; color: #dce1dd; font-size: .67rem; font-weight: 700; }
+.daily-chart-card canvas { width: 100% !important; height: 180px !important; }
+
+.daily-habits-panel { margin-bottom: 13px; }
+.daily-tracking-habits { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.daily-habit { min-height: 116px; padding: 14px; border-right: 1px solid #383b39; }
+.daily-habit:last-child { border-right: 0; }
+.daily-habit > span { display: flex; align-items: center; gap: 6px; color: #929994; font-size: .57rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.daily-habit > span svg { width: 13px; height: 13px; color: #7faafb; }
+.daily-habit strong { display: block; margin-top: 14px; color: #edf0ed; font-size: 1.05rem; }
+.daily-habit strong small { margin-left: 3px; color: #9aa29c; font-size: .59rem; font-weight: 600; }
+.daily-habit em { display: block; margin-top: 7px; color: #7e8680; font-size: .59rem; font-style: normal; line-height: 1.4; }
+
+.daily-tracking-source-note { display: flex; align-items: flex-start; gap: 9px; padding: 12px 14px; border: 1px solid #383b39; border-radius: 8px; background: #202321; color: #858d87; }
+.daily-tracking-source-note > i { width: 16px; height: 16px; margin-top: 1px; color: #55df9a; }
+.daily-tracking-source-note strong { display: block; color: #cbd1cc; font-size: .62rem; }
+.daily-tracking-source-note span { display: block; margin-top: 4px; font-size: .59rem; line-height: 1.45; }
+
+@media (max-width: 980px) {
+  .daily-tracking-grid { grid-template-columns: 1fr; }
+  .daily-tracking-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .daily-tracking-metric:nth-child(2) { border-right: 0; }
+  .daily-tracking-metric:nth-child(-n + 2) { border-bottom: 1px solid #383b39; }
+}
+
+@media (max-width: 700px) {
+  #page-daily-tracking .page-head { padding: 14px 11px; }
+  .daily-tracking-head { align-items: flex-start; flex-direction: column; }
+  .daily-tracking-date-tools { width: 100%; justify-content: flex-start; }
+  .daily-tracking-date-current { flex: 1; min-width: 0; }
+  .daily-tracking-content { padding: 10px 8px 88px !important; }
+  .daily-exercise-row { grid-template-columns: 1fr; gap: 5px; }
+  .daily-exercise-volume { text-align: left; }
+  .daily-exercise-volume small { text-align: left; }
+  .daily-progression-summary { grid-template-columns: 1fr; }
+  .daily-progression-charts { grid-template-columns: 1fr; }
+  .daily-tracking-habits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .daily-habit:nth-child(2) { border-right: 0; }
+  .daily-habit:nth-child(-n + 2) { border-bottom: 1px solid #383b39; }
+  .daily-tracking-panel-head { align-items: flex-start; }
+  .daily-tracking-link { padding-top: 3px; text-align: right; }
+  .daily-tracking-exercise-control { width: 100%; }
+  .daily-tracking-exercise-control select { width: 100%; max-width: none; }
+  .daily-progression-panel .daily-tracking-panel-head { flex-direction: column; }
+}
+
 
 </style>
 </head>
@@ -14130,6 +15305,8 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('training')"><i data-lucide="dumbbell"></i><span>Entrenamiento</span></button>
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
+    <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
 </div>
 
@@ -14145,6 +15322,8 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('training')"><i data-lucide="dumbbell"></i><span>Entrenamiento</span></button>
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
+    <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
   <!-- Usuario -->
   <div id="sidebar-user-area">
@@ -14580,6 +15759,95 @@ body.calendar-dragging .aa-calendar-drop-zone {
           </div>
         </section>
       </div>
+    </div>
+  </div>
+
+  <!-- MODO COACH -->
+  <div id="page-coach" class="page">
+    <div class="coach-page-head">
+      <div>
+        <span class="coach-eyebrow"><i data-lucide="shield-check" aria-hidden="true"></i>Acceso verificado</span>
+        <h1>Modo Coach</h1>
+        <p>Monitorea, analiza y organiza el proceso desde una sola lectura.</p>
+      </div>
+      <div class="coach-head-actions">
+        <div class="coach-identity"><i data-lucide="lock-keyhole" aria-hidden="true"></i><span id="coach-user-email">Cuenta protegida</span></div>
+        <button class="coach-exit-button" type="button" onclick="exitCoachMode()"><i data-lucide="lock" aria-hidden="true"></i><span>Salir del modo Coach</span></button>
+      </div>
+    </div>
+    <div class="content coach-content">
+      <div class="coach-command-shell">
+        <nav class="coach-tabs" aria-label="Herramientas de Modo Coach" role="tablist">
+          <button class="coach-tab active" type="button" data-coach-view="monitor" role="tab" aria-selected="true" onclick="setCoachView('monitor')"><i data-lucide="radar"></i><span>Monitorear</span></button>
+          <button class="coach-tab" type="button" data-coach-view="analysis" role="tab" aria-selected="false" onclick="setCoachView('analysis')"><i data-lucide="scan-search"></i><span>Analizar</span></button>
+          <button class="coach-tab" type="button" data-coach-view="planning" role="tab" aria-selected="false" onclick="setCoachView('planning')"><i data-lucide="calendar-check-2"></i><span>Planificar</span></button>
+          <button class="coach-tab" type="button" data-coach-view="maps" role="tab" aria-selected="false" onclick="setCoachView('maps')"><i data-lucide="git-fork"></i><span>Mapas</span></button>
+          <button class="coach-tab" type="button" data-coach-view="guidelines" role="tab" aria-selected="false" onclick="setCoachView('guidelines')"><i data-lucide="list-checks"></i><span>Pautas</span></button>
+        </nav>
+        <section id="coach-workspace" class="coach-workspace" aria-live="polite"></section>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGUIMIENTO DIARIO -->
+  <div id="page-daily-tracking" class="page">
+    <div class="page-head daily-tracking-head">
+      <div>
+        <span class="daily-tracking-kicker"><i data-lucide="activity" aria-hidden="true"></i>Lectura del día</span>
+        <h1>Seguimiento diario</h1>
+        <p id="daily-tracking-day-summary">Cargando la información registrada para este día.</p>
+      </div>
+      <div class="daily-tracking-date-tools" aria-label="Controles de fecha">
+        <button class="daily-tracking-date-button" type="button" onclick="moveDailyTrackingDate(-1)" aria-label="Día anterior" title="Día anterior"><i data-lucide="chevron-left"></i></button>
+        <button class="daily-tracking-date-current" id="daily-tracking-date" type="button" onclick="focusDailyTrackingDate()"><i data-lucide="calendar-days"></i><span>Fecha seleccionada</span></button>
+        <button class="daily-tracking-date-button" type="button" onclick="moveDailyTrackingDate(1)" aria-label="Día siguiente" title="Día siguiente"><i data-lucide="chevron-right"></i></button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="goDailyTrackingToday()">Hoy</button>
+      </div>
+    </div>
+    <div class="content daily-tracking-content">
+      <section id="daily-tracking-summary" class="daily-tracking-metrics" aria-live="polite"></section>
+
+      <div class="daily-tracking-grid">
+        <section class="daily-tracking-panel daily-training-panel">
+          <div class="daily-tracking-panel-head">
+            <div><span>Entrenamiento</span><h2>Sesión del día</h2></div>
+            <button class="daily-tracking-link" type="button" onclick="go('training')">Abrir entrenamiento <i data-lucide="arrow-up-right"></i></button>
+          </div>
+          <div id="daily-tracking-training"></div>
+        </section>
+
+        <section class="daily-tracking-panel daily-nutrition-panel">
+          <div class="daily-tracking-panel-head">
+            <div><span>Nutrición</span><h2>Objetivos y consumo</h2></div>
+            <button class="daily-tracking-link" type="button" onclick="go('nutrition')">Abrir nutrición <i data-lucide="arrow-up-right"></i></button>
+          </div>
+          <div id="daily-tracking-nutrition"></div>
+        </section>
+      </div>
+
+      <section class="daily-tracking-panel daily-progression-panel">
+        <div class="daily-tracking-panel-head">
+          <div><span>Progresión</span><h2>Evolución por ejercicio</h2></div>
+          <div class="daily-tracking-exercise-control">
+            <label class="sr-only" for="daily-tracking-exercise-select">Ejercicio</label>
+            <select id="daily-tracking-exercise-select" onchange="renderDailyTrackingProgression()"></select>
+          </div>
+        </div>
+        <div id="daily-tracking-progression"></div>
+      </section>
+
+      <section class="daily-tracking-panel daily-habits-panel">
+        <div class="daily-tracking-panel-head">
+          <div><span>Hábitos y actividad</span><h2>Registros disponibles</h2></div>
+          <button class="daily-tracking-link" type="button" onclick="go('today')">Registrar hoy <i data-lucide="arrow-up-right"></i></button>
+        </div>
+        <div id="daily-tracking-habits" class="daily-tracking-habits"></div>
+      </section>
+
+      <section class="daily-tracking-source-note">
+        <i data-lucide="database"></i>
+        <div><strong>Fuente actual: registros de AA Follow</strong><span>La vista usa tus sesiones guardadas. Su adaptador interno queda listo para sumar Hevy cuando conectes su API oficial, sin crear una segunda base de entrenamientos.</span></div>
+      </section>
     </div>
   </div>
 
@@ -15510,6 +16778,33 @@ body.calendar-dragging .aa-calendar-drop-zone {
   </div>
 </div>
 
+<!-- Acceso protegido a Modo Coach -->
+<div id="modal-coach-access" class="overlay">
+  <div class="modal coach-access-modal" role="dialog" aria-modal="true" aria-labelledby="coach-access-title">
+    <div class="modal-head">
+      <div>
+        <span class="coach-access-kicker"><i data-lucide="shield-check" aria-hidden="true"></i>Área protegida</span>
+        <h3 id="coach-access-title">Entrar a Modo Coach</h3>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="hideModal('modal-coach-access')" aria-label="Cerrar">✕</button>
+    </div>
+    <p class="coach-access-copy">Confirma la contraseña de tu cuenta para abrir las herramientas de seguimiento y planificación.</p>
+    <div class="coach-account-line"><i data-lucide="mail" aria-hidden="true"></i><span id="coach-access-email">Cuenta no disponible</span></div>
+    <div class="form-row">
+      <label class="form-label" for="coach-access-password">Contraseña de tu cuenta</label>
+      <div class="coach-password-field">
+        <input id="coach-access-password" type="password" autocomplete="current-password" placeholder="Escribe tu contraseña" onkeydown="if(event.key === 'Enter') confirmCoachAccess()">
+        <button type="button" onclick="toggleCoachPasswordVisibility()" aria-label="Mostrar contraseña" title="Mostrar contraseña"><i data-lucide="eye"></i></button>
+      </div>
+      <small id="coach-access-status" class="coach-access-status">La contraseña no se guarda en la app.</small>
+    </div>
+    <div class="coach-access-actions">
+      <button class="btn btn-ghost" type="button" onclick="hideModal('modal-coach-access')">Cancelar</button>
+      <button class="btn btn-primary" id="coach-access-submit" type="button" onclick="confirmCoachAccess()"><i data-lucide="unlock-keyhole"></i><span>Validar y entrar</span></button>
+    </div>
+  </div>
+</div>
+
 <!-- Exportación profesional -->
 <div id="modal-export" class="overlay">
   <div class="modal professional-export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
@@ -15576,7 +16871,8 @@ let cloudRestoreActive = false;
 const SAFETY_COLLECTIONS = new Set([
   'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals', 'notes',
   'checking_cardio', 'checking_goals', 'supplements', 'progress_photos',
-  'week_plans', 'reminders', 'calendar_events', 'checking_reviews', 'preparation_plans'
+  'week_plans', 'reminders', 'calendar_events', 'checking_reviews', 'preparation_plans',
+  'coach_plans', 'coach_maps', 'coach_guidelines', 'coach_assessments'
 ]);
 
 const SAFETY_COLLECTION_LABELS = {
@@ -15584,7 +16880,8 @@ const SAFETY_COLLECTION_LABELS = {
   meal_templates: 'Favorito', goals: 'Objetivo', notes: 'Nota',
   checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
   progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio',
-  calendar_events: 'Evento', checking_reviews: 'Revisión semanal', preparation_plans: 'Fase de preparación'
+  calendar_events: 'Evento', checking_reviews: 'Revisión semanal', preparation_plans: 'Fase de preparación',
+  coach_plans: 'Plan de coach', coach_maps: 'Mapa conceptual', coach_guidelines: 'Pauta', coach_assessments: 'Análisis de coach'
 };
 
 function safetyId() {
@@ -15743,13 +17040,17 @@ function initSidebarToggle() {
 // NAVEGACIÓN
 // ═══════════════════════════════════════════════════
 function go(page) {
+  if (page === 'coach' && !coachModeUnlocked) {
+    openCoachMode();
+    return;
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking };
   loaders[page]?.();
   closeMobileMenu();
   refreshInterfaceIcons();
@@ -15789,7 +17090,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
   loaders[activePage]?.();
 }
 
@@ -26573,6 +27874,886 @@ function createPreparationRoutine(planId) {
   toast('Copia ajustada de la rutina creada');
   fillLiveRoutines();
   renderRoutinesList();
+}
+
+// ── SEGUIMIENTO DIARIO ───────────────────────────────
+// Esta capa concentra el formato de sesiones locales. Cuando se conecte Hevy,
+// solo se agrega otro proveedor aquí, sin alterar la vista ni los registros actuales.
+let dailyTrackingLoadChart = null;
+let dailyTrackingVolumeChart = null;
+
+function dailyTrackingNumber(value, maximumFractionDigits = 0) {
+  return Number(value || 0).toLocaleString('es-AR', { maximumFractionDigits });
+}
+
+function dailyTrackingDateLabel(date = selectedDate()) {
+  const text = new Intl.DateTimeFormat('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(localDate(date));
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function dailyTrackingShortDate(date) {
+  return new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: 'short' }).format(localDate(date)).replace('.', '');
+}
+
+function dailyTrackingSetName(set) {
+  return String(set?.exercise_name || set?.exercise || set?.name || '').trim();
+}
+
+function dailyTrackingNormalizeSet(set) {
+  return {
+    exercise: dailyTrackingSetName(set),
+    reps: Math.max(0, +(set?.reps ?? set?.achievedReps) || 0),
+    weight: Math.max(0, +(set?.weight ?? set?.kg) || 0),
+    setNumber: +(set?.set_number ?? set?.setNumber) || 0
+  };
+}
+
+function dailyTrackingNormalizeSession(session) {
+  const sets = (Array.isArray(session?.sets) ? session.sets : [])
+    .map(dailyTrackingNormalizeSet)
+    .filter(set => set.exercise);
+  return {
+    id: session?.id || uid(),
+    date: session?.date || '',
+    title: session?.day_name || session?.routine_name || 'Sesión sin nombre',
+    routine: session?.routine_name || '',
+    duration: Math.max(0, +session?.duration || 0),
+    notes: session?.notes || '',
+    sets,
+    source: 'aa-follow'
+  };
+}
+
+function dailyTrackingTrainingSource(date = selectedDate()) {
+  return (DB.get('sessions') || [])
+    .filter(session => session?.date === date)
+    .map(dailyTrackingNormalizeSession);
+}
+
+function dailyTrackingTrainingHistory(untilDate = selectedDate()) {
+  return (DB.get('sessions') || [])
+    .filter(session => session?.date && session.date <= untilDate)
+    .map(dailyTrackingNormalizeSession)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function dailyTrackingExercises(sessions) {
+  const byExercise = new Map();
+  sessions.forEach(session => session.sets.forEach(set => {
+    if (!byExercise.has(set.exercise)) byExercise.set(set.exercise, { name: set.exercise, sets: [], volume: 0, bestWeight: 0, bestReps: 0 });
+    const item = byExercise.get(set.exercise);
+    item.sets.push(set);
+    item.volume += set.weight * set.reps;
+    if (set.weight > item.bestWeight || (set.weight === item.bestWeight && set.reps > item.bestReps)) {
+      item.bestWeight = set.weight;
+      item.bestReps = set.reps;
+    }
+  }));
+  return [...byExercise.values()];
+}
+
+function dailyTrackingExerciseHistory(name, untilDate = selectedDate()) {
+  const grouped = new Map();
+  dailyTrackingTrainingHistory(untilDate).forEach(session => {
+    const sets = session.sets.filter(set => set.exercise === name);
+    if (!sets.length) return;
+    if (!grouped.has(session.date)) grouped.set(session.date, { date: session.date, sets: [], volume: 0, maxWeight: 0, maxReps: 0 });
+    const entry = grouped.get(session.date);
+    sets.forEach(set => {
+      entry.sets.push(set);
+      entry.volume += set.weight * set.reps;
+      if (set.weight > entry.maxWeight || (set.weight === entry.maxWeight && set.reps > entry.maxReps)) {
+        entry.maxWeight = set.weight;
+        entry.maxReps = set.reps;
+      }
+    });
+  });
+  return [...grouped.values()].sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function dailyTrackingExercisePrevious(name, date = selectedDate()) {
+  const previousDate = addDays(date, -1);
+  const history = dailyTrackingExerciseHistory(name, previousDate);
+  return history[history.length - 1] || null;
+}
+
+function dailyTrackingSessionMetrics(sessions) {
+  const exercises = dailyTrackingExercises(sessions);
+  const durationEntries = sessions.filter(session => session.duration > 0);
+  return {
+    sessions: sessions.length,
+    duration: durationEntries.reduce((total, session) => total + session.duration, 0),
+    hasDuration: durationEntries.length > 0,
+    volume: exercises.reduce((total, exercise) => total + exercise.volume, 0),
+    exercises: exercises.length,
+    sets: exercises.reduce((total, exercise) => total + exercise.sets.length, 0)
+  };
+}
+
+function dailyTrackingHabitData(date = selectedDate()) {
+  const waterMap = DB.get('daily_water') || {};
+  const hasWater = Object.prototype.hasOwnProperty.call(waterMap, date);
+  const activity = (DB.get('checking_cardio') || []).filter(item => item?.date === date);
+  const hasSteps = activity.some(item => item.type === 'steps');
+  const steps = activity.filter(item => item.type === 'steps').reduce((total, item) => total + (+item.value || 0), 0);
+  const wellness = (DB.get('daily_wellness') || {})[date] || {};
+  const hasSleep = wellness.sleep !== '' && wellness.sleep != null && Number.isFinite(+wellness.sleep);
+  const body = (DB.get('bodylogs') || []).find(item => item?.date === date && item.weight != null && item.weight !== '');
+  return {
+    body,
+    water: hasWater ? +waterMap[date] || 0 : null,
+    hasWater,
+    steps: hasSteps ? steps : null,
+    hasSteps,
+    sleep: hasSleep ? +wellness.sleep : null,
+    hasSleep
+  };
+}
+
+function dailyTrackingData(date = selectedDate()) {
+  const sessions = dailyTrackingTrainingSource(date);
+  const training = dailyTrackingSessionMetrics(sessions);
+  const nutrition = nutritionForDate(date);
+  const habits = dailyTrackingHabitData(date);
+  const areas = [training.sessions > 0, nutrition.meals.length > 0, habits.body, habits.hasWater, habits.hasSteps, habits.hasSleep].filter(Boolean).length;
+  return { date, sessions, training, nutrition, habits, areas };
+}
+
+function moveDailyTrackingDate(offset) {
+  changeGlobalDate(addDays(selectedDate(), offset));
+}
+
+function goDailyTrackingToday() {
+  changeGlobalDate(today());
+}
+
+function focusDailyTrackingDate() {
+  const input = document.getElementById('global-date');
+  if (!input) return;
+  input.focus();
+  if (typeof input.showPicker === 'function') input.showPicker();
+}
+
+function dailyTrackingPercent(value, target) {
+  if (!target) return 0;
+  return Math.min(100, Math.round((Math.max(0, value) / target) * 100));
+}
+
+function dailyTrackingEmpty(title, copy) {
+  return `<div class="daily-empty"><div><strong>${esc(title)}</strong><span>${esc(copy)}</span></div></div>`;
+}
+
+function renderDailyTrackingSummary(data) {
+  const metrics = data.training;
+  const target = document.getElementById('daily-tracking-summary');
+  if (!target) return;
+  const cards = [
+    { tone: 'training', label: 'Entrenamiento realizado', value: metrics.sessions || '—', unit: metrics.sessions ? 'sesión' + (metrics.sessions === 1 ? '' : 'es') : '', sub: metrics.sessions ? `${metrics.sets} series registradas` : 'Sin sesión registrada' },
+    { tone: 'duration', label: 'Duración total', value: metrics.hasDuration ? metrics.duration : '—', unit: metrics.hasDuration ? 'min' : '', sub: metrics.hasDuration ? `${metrics.sessions} sesión(es) con duración` : 'Sin duración registrada' },
+    { tone: 'volume', label: 'Volumen total', value: metrics.volume ? dailyTrackingNumber(metrics.volume) : '—', unit: metrics.volume ? 'kg' : '', sub: metrics.volume ? 'Carga x repeticiones' : 'Sin volumen registrado' },
+    { tone: 'exercises', label: 'Ejercicios', value: metrics.exercises || '—', unit: metrics.exercises ? 'distintos' : '', sub: metrics.exercises ? `${metrics.sets} series en total` : 'Sin ejercicios registrados' }
+  ];
+  target.innerHTML = cards.map(card => `<article class="daily-tracking-metric ${card.tone}"><span>${card.label}</span><strong>${card.value}${card.unit ? `<small>${card.unit}</small>` : ''}</strong><em>${card.sub}</em></article>`).join('');
+}
+
+function dailyTrackingExerciseComparison(name, date) {
+  const previous = dailyTrackingExercisePrevious(name, date);
+  if (!previous) return 'Sin sesión equivalente anterior';
+  const best = previous.maxWeight ? `${dailyTrackingNumber(previous.maxWeight, 1)} kg x ${dailyTrackingNumber(previous.maxReps)}` : `${previous.sets.length} series`;
+  return `Última: ${best} · ${dailyTrackingNumber(previous.volume)} kg`;
+}
+
+function renderDailyTrackingTraining(data) {
+  const target = document.getElementById('daily-tracking-training');
+  if (!target) return;
+  if (!data.sessions.length) {
+    target.innerHTML = dailyTrackingEmpty('No hay una sesión registrada', 'Cuando guardes un entrenamiento para este día, aquí aparecerán sus ejercicios, series, cargas y comparación con la sesión anterior.');
+    return;
+  }
+  target.innerHTML = `<div class="daily-training-list">${data.sessions.map(session => {
+    const exercises = dailyTrackingExercises([session]);
+    return `<article class="daily-training-session"><div class="daily-training-session-head"><div><strong class="daily-training-session-title">${esc(session.title)}</strong><span class="daily-training-session-sub">${session.routine ? `${esc(session.routine)} · ` : ''}${session.sets.length} series${session.notes ? ` · ${esc(session.notes)}` : ''}</span></div><span class="daily-training-session-meta">${session.duration ? `${dailyTrackingNumber(session.duration)} min` : 'Duración no registrada'}</span></div><div class="daily-exercise-list">${exercises.map(exercise => `<div class="daily-exercise-row"><div><strong>${esc(exercise.name)}</strong><small>${dailyTrackingExerciseComparison(exercise.name, data.date)}</small></div><div class="daily-exercise-sets">${exercise.sets.map(set => `${set.reps || 0} reps x ${dailyTrackingNumber(set.weight, 1)} kg`).join(' · ')}</div><div class="daily-exercise-volume">${dailyTrackingNumber(exercise.volume)} kg<small>${exercise.sets.length} series · mejor ${exercise.bestWeight ? `${dailyTrackingNumber(exercise.bestWeight, 1)} kg x ${dailyTrackingNumber(exercise.bestReps)}` : 'sin carga'}</small></div></div>`).join('')}</div></article>`;
+  }).join('')}</div>`;
+}
+
+function dailyTrackingNutritionLine(label, actual, target, tone) {
+  const percent = dailyTrackingPercent(actual, target);
+  return `<div class="daily-nutrition-line ${tone}"><div><span>${label}</span><span>${dailyTrackingNumber(actual, 1)} g / ${dailyTrackingNumber(target, 1)} g · ${percent}%</span></div><div class="daily-nutrition-track"><i style="width:${percent}%"></i></div></div>`;
+}
+
+function renderDailyTrackingNutrition(data) {
+  const target = document.getElementById('daily-tracking-nutrition');
+  if (!target) return;
+  const { cfg, totals, meals } = data.nutrition;
+  const caloriesPercent = dailyTrackingPercent(totals.cal, cfg.calories);
+  target.innerHTML = `<div class="daily-nutrition-body"><div class="daily-nutrition-calories"><div><span>Calorías consumidas</span><strong>${dailyTrackingNumber(totals.cal)}<small>kcal</small></strong></div><em>${dailyTrackingNumber(totals.cal)} / ${dailyTrackingNumber(cfg.calories)} kcal · ${caloriesPercent}%<br>${meals.length ? `${meals.length} comida(s) registrada(s)` : 'Sin alimentos registrados'}</em></div><div class="daily-nutrition-progress">${dailyTrackingNutritionLine('Proteínas', totals.p, cfg.protein, 'protein')}${dailyTrackingNutritionLine('Carbohidratos', totals.c, cfg.carbs, 'carbs')}${dailyTrackingNutritionLine('Grasas', totals.f, cfg.fat, 'fats')}</div></div>`;
+}
+
+function renderDailyTrackingHabits(data) {
+  const target = document.getElementById('daily-tracking-habits');
+  if (!target) return;
+  const habits = data.habits;
+  const items = [
+    { icon: 'scale', label: 'Peso corporal', value: habits.body ? dailyTrackingNumber(habits.body.weight, 1) : '—', unit: habits.body ? 'kg' : '', copy: habits.body ? 'Registro de este día' : 'Sin peso registrado' },
+    { icon: 'droplets', label: 'Agua', value: habits.hasWater ? dailyTrackingNumber(habits.water) : '—', unit: habits.hasWater ? 'ml' : '', copy: habits.hasWater ? `${dailyTrackingPercent(habits.water, 2500)}% de 2500 ml` : 'Sin agua registrada' },
+    { icon: 'footprints', label: 'Pasos', value: habits.hasSteps ? dailyTrackingNumber(habits.steps) : '—', unit: habits.hasSteps ? 'pasos' : '', copy: habits.hasSteps ? 'Actividad del día' : 'Sin pasos registrados' },
+    { icon: 'moon', label: 'Sueño', value: habits.hasSleep ? dailyTrackingNumber(habits.sleep, 1) : '—', unit: habits.hasSleep ? 'h' : '', copy: habits.hasSleep ? 'Registro de recuperación' : 'Sin sueño registrado' }
+  ];
+  target.innerHTML = items.map(item => `<article class="daily-habit"><span><i data-lucide="${item.icon}"></i>${item.label}</span><strong>${item.value}${item.unit ? `<small>${item.unit}</small>` : ''}</strong><em>${item.copy}</em></article>`).join('');
+}
+
+function dailyTrackingAvailableExercises(date = selectedDate()) {
+  return [...new Set(dailyTrackingTrainingHistory(date).flatMap(session => session.sets.map(set => set.exercise)).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+}
+
+function loadDailyTrackingExerciseSelector(date = selectedDate()) {
+  const select = document.getElementById('daily-tracking-exercise-select');
+  if (!select) return;
+  const selected = select.value;
+  const exercises = dailyTrackingAvailableExercises(date);
+  if (!exercises.length) {
+    select.disabled = true;
+    select.innerHTML = '<option value="">Sin ejercicios registrados</option>';
+    return;
+  }
+  select.disabled = false;
+  select.innerHTML = exercises.map(name => `<option value="${esc(name)}" ${name === selected ? 'selected' : ''}>${esc(name)}</option>`).join('');
+  if (!exercises.includes(selected)) select.value = exercises[0];
+}
+
+function destroyDailyTrackingCharts() {
+  if (dailyTrackingLoadChart) { dailyTrackingLoadChart.destroy(); dailyTrackingLoadChart = null; }
+  if (dailyTrackingVolumeChart) { dailyTrackingVolumeChart.destroy(); dailyTrackingVolumeChart = null; }
+}
+
+function dailyTrackingChartOptions(yTitle, color) {
+  const root = getComputedStyle(document.documentElement);
+  const muted = root.getPropertyValue('--muted').trim() || '#8d948f';
+  const grid = root.getPropertyValue('--grid').trim() || 'rgba(255,255,255,.09)';
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { displayColors: false } },
+    scales: {
+      x: { ticks: { color: muted, font: { size: 10, family: 'Inter' } }, grid: { display: false } },
+      y: { beginAtZero: true, ticks: { color: muted, font: { size: 10, family: 'Inter' } }, grid: { color: grid }, title: { display: true, text: yTitle, color: muted, font: { size: 10 } } }
+    },
+    elements: { line: { borderColor: color }, point: { backgroundColor: color } }
+  };
+}
+
+function renderDailyTrackingProgression() {
+  const target = document.getElementById('daily-tracking-progression');
+  const select = document.getElementById('daily-tracking-exercise-select');
+  if (!target || !select) return;
+  destroyDailyTrackingCharts();
+  const name = select.value;
+  if (!name) {
+    target.innerHTML = dailyTrackingEmpty('Aún no hay progresión para mostrar', 'Registra una sesión con ejercicios para poder comparar cargas, repeticiones y volumen.');
+    return;
+  }
+  const history = dailyTrackingExerciseHistory(name);
+  const latest = history[history.length - 1];
+  const first = history[0];
+  const best = history.reduce((bestEntry, entry) => (!bestEntry || entry.maxWeight > bestEntry.maxWeight || (entry.maxWeight === bestEntry.maxWeight && entry.maxReps > bestEntry.maxReps) ? entry : bestEntry), null);
+  const loadDelta = history.length >= 2 ? latest.maxWeight - first.maxWeight : null;
+  const cards = `<div class="daily-progression-summary"><div><span>Mejor serie</span><strong>${best?.maxWeight ? `${dailyTrackingNumber(best.maxWeight, 1)} kg x ${dailyTrackingNumber(best.maxReps)}` : 'Sin carga'}</strong><small>${best ? dailyTrackingShortDate(best.date) : 'Sin referencia'}</small></div><div><span>Último volumen</span><strong>${latest ? `${dailyTrackingNumber(latest.volume)} kg` : '—'}</strong><small>${latest ? `${latest.sets.length} series registradas` : 'Sin referencia'}</small></div><div><span>Comparación inicial</span><strong>${loadDelta == null ? 'Sin comparación' : `${loadDelta >= 0 ? '+' : ''}${dailyTrackingNumber(loadDelta, 1)} kg`}</strong><small>${history.length >= 2 ? `${dailyTrackingShortDate(first.date)} a ${dailyTrackingShortDate(latest.date)}` : 'Se necesitan dos sesiones'}</small></div></div>`;
+  if (history.length < 2) {
+    target.innerHTML = `${cards}${dailyTrackingEmpty('Hace falta otra sesión equivalente', 'Cuando este ejercicio tenga al menos dos sesiones registradas, aparecerán los gráficos de carga y volumen.')}`;
+    return;
+  }
+  target.innerHTML = `${cards}<div class="daily-progression-charts"><article class="daily-chart-card"><h3>Carga máxima por sesión (kg)</h3><canvas id="daily-tracking-load-chart"></canvas></article><article class="daily-chart-card"><h3>Volumen por sesión (kg)</h3><canvas id="daily-tracking-volume-chart"></canvas></article></div>`;
+  if (typeof Chart === 'undefined') {
+    target.insertAdjacentHTML('beforeend', dailyTrackingEmpty('Gráficos no disponibles', 'La biblioteca de gráficos no está cargada en este momento.'));
+    return;
+  }
+  const labels = history.map(entry => dailyTrackingShortDate(entry.date));
+  const loadCanvas = document.getElementById('daily-tracking-load-chart');
+  const volumeCanvas = document.getElementById('daily-tracking-volume-chart');
+  if (loadCanvas) {
+    dailyTrackingLoadChart = new Chart(loadCanvas.getContext('2d'), {
+      type: 'line', data: { labels, datasets: [{ data: history.map(entry => entry.maxWeight), borderColor: '#69a6ff', backgroundColor: 'rgba(105,166,255,.14)', fill: true, tension: .3, pointRadius: 3, borderWidth: 2 }] }, options: dailyTrackingChartOptions('kg', '#69a6ff')
+    });
+  }
+  if (volumeCanvas) {
+    dailyTrackingVolumeChart = new Chart(volumeCanvas.getContext('2d'), {
+      type: 'bar', data: { labels, datasets: [{ data: history.map(entry => entry.volume), backgroundColor: '#4fdd91', borderRadius: 4, maxBarThickness: 34 }] }, options: dailyTrackingChartOptions('kg', '#4fdd91')
+    });
+  }
+}
+
+function loadDailyTracking() {
+  window.scrollTo(0, 0);
+  const data = dailyTrackingData();
+  const date = document.getElementById('daily-tracking-date');
+  const summary = document.getElementById('daily-tracking-day-summary');
+  if (date) date.querySelector('span').textContent = dailyTrackingDateLabel(data.date);
+  if (summary) summary.textContent = data.areas
+    ? `${data.areas} área(s) con registros en esta fecha. La lectura utiliza únicamente información guardada.`
+    : 'No hay actividad registrada para esta fecha. Puedes navegar a otro día o empezar a cargar tus registros.';
+  renderDailyTrackingSummary(data);
+  renderDailyTrackingTraining(data);
+  renderDailyTrackingNutrition(data);
+  renderDailyTrackingHabits(data);
+  loadDailyTrackingExerciseSelector(data.date);
+  renderDailyTrackingProgression();
+  refreshInterfaceIcons();
+}
+
+// ── MODO COACH ───────────────────────────────────────
+const COACH_VIEWS = ['monitor', 'analysis', 'planning', 'maps', 'guidelines'];
+let coachModeUnlocked = false;
+let coachActiveView = 'monitor';
+let coachSelectedMapId = '';
+
+function coachArray(key) {
+  const value = DB.get(key);
+  return Array.isArray(value) ? value : [];
+}
+
+function coachAccessStatus(message, tone = '') {
+  const status = document.getElementById('coach-access-status');
+  if (!status) return;
+  status.textContent = message;
+  status.className = `coach-access-status ${tone}`.trim();
+}
+
+async function openCoachMode() {
+  if (!cloudClient) return toast('Modo Coach requiere la conexión segura de tu cuenta', 'err');
+  const user = await cloudCurrentUser();
+  if (!user?.email) return toast('Primero entra con tu cuenta para abrir Modo Coach', 'err');
+  const email = document.getElementById('coach-access-email');
+  const password = document.getElementById('coach-access-password');
+  const submit = document.getElementById('coach-access-submit');
+  if (email) email.textContent = user.email;
+  if (password) {
+    password.value = '';
+    password.type = 'password';
+  }
+  if (submit) {
+    submit.disabled = false;
+    submit.innerHTML = '<i data-lucide="unlock-keyhole"></i><span>Validar y entrar</span>';
+  }
+  coachAccessStatus('La contraseña no se guarda en la app.');
+  showModal('modal-coach-access');
+  refreshInterfaceIcons();
+  setTimeout(() => password?.focus(), 40);
+}
+
+function toggleCoachPasswordVisibility() {
+  const input = document.getElementById('coach-access-password');
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+async function confirmCoachAccess() {
+  if (!cloudClient) return coachAccessStatus('No se pudo acceder a la cuenta.', 'error');
+  const passwordInput = document.getElementById('coach-access-password');
+  const submit = document.getElementById('coach-access-submit');
+  const password = passwordInput?.value || '';
+  if (!password) {
+    passwordInput?.focus();
+    return coachAccessStatus('Escribe la contraseña de tu cuenta.', 'error');
+  }
+  const user = await cloudCurrentUser();
+  if (!user?.email) return coachAccessStatus('La sesión de tu cuenta expiró. Vuelve a entrar a la app.', 'error');
+  if (submit) {
+    submit.disabled = true;
+    submit.innerHTML = '<i data-lucide="loader-circle"></i><span>Validando...</span>';
+    refreshInterfaceIcons();
+  }
+  coachAccessStatus('Confirmando acceso seguro...', 'working');
+  try {
+    const { data, error } = await cloudClient.auth.signInWithPassword({ email: user.email, password });
+    if (error || !data?.user?.email) throw new Error('No se pudo validar la contraseña.');
+    coachModeUnlocked = true;
+    if (passwordInput) passwordInput.value = '';
+    hideModal('modal-coach-access');
+    go('coach');
+    toast('Modo Coach abierto');
+  } catch (error) {
+    coachAccessStatus('La contraseña no coincide con esta cuenta. Intenta nuevamente.', 'error');
+    passwordInput?.focus();
+  } finally {
+    if (submit) {
+      submit.disabled = false;
+      submit.innerHTML = '<i data-lucide="unlock-keyhole"></i><span>Validar y entrar</span>';
+      refreshInterfaceIcons();
+    }
+  }
+}
+
+function exitCoachMode() {
+  coachModeUnlocked = false;
+  coachActiveView = 'monitor';
+  coachSelectedMapId = '';
+  go('dashboard');
+  toast('Modo Coach cerrado');
+}
+
+function coachDateText(date = selectedDate()) {
+  const text = new Intl.DateTimeFormat('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(localDate(date));
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function coachWeekText(week = weekValueFromDate(selectedDate())) {
+  const dates = getWeekDates(week);
+  return calendarWeekRangeTitle(dates);
+}
+
+function coachNumber(value, maximumFractionDigits = 0) {
+  return Number(value || 0).toLocaleString('es-AR', { maximumFractionDigits });
+}
+
+function coachLatestWeightInfo(referenceDate = selectedDate()) {
+  const rows = coachArray('bodylogs')
+    .filter(item => item?.date && item.date <= referenceDate && Number.isFinite(+item.weight) && +item.weight > 0)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const latest = rows[rows.length - 1] || null;
+  if (!latest) return { latest: null, change: null, entries: 0 };
+  const startDate = addDays(referenceDate, -20);
+  const recent = rows.filter(item => item.date >= startDate);
+  const first = recent[0] || latest;
+  return { latest, change: recent.length >= 2 ? (+latest.weight - +first.weight) : null, entries: recent.length };
+}
+
+function coachPhaseInfo(referenceDate = selectedDate()) {
+  const plan = typeof preparationActivePlan === 'function' ? preparationActivePlan() : null;
+  if (!plan?.cycles?.length) return { name: 'Sin fase activa', detail: 'Crea una fase cuando quieras comparar registros con una referencia personal.' };
+  const index = typeof preparationCurrentCycleIndex === 'function' ? preparationCurrentCycleIndex(plan, referenceDate) : 0;
+  const cycle = plan.cycles[index] || plan.cycles[0];
+  const objective = PREPARATION_OBJECTIVES?.[plan.objective]?.label || 'Fase activa';
+  return {
+    name: `${objective} · ${cycle?.name || 'Seguimiento'}`,
+    detail: cycle?.meaning || 'Referencia activa para leer los registros.'
+  };
+}
+
+function coachMetrics(referenceDate = selectedDate()) {
+  const week = weekValueFromDate(referenceDate);
+  const current = weekSummary(week);
+  const previous = weekSummary(weekValueFromDate(addDays(referenceDate, -7)));
+  const config = DB.get('nutconfig') || { calories: 2000, protein: 150, carbs: 200, fat: 70 };
+  const mealDates = new Set(current.meals.map(item => item.date));
+  const activeDays = current.dates.filter(date => !isFreeDay(date) || mealDates.has(date));
+  const proteinDays = activeDays.filter(date => nutritionForDate(date).totals.p >= (+config.protein || 0)).length;
+  const water = DB.get('daily_water') || {};
+  const wellness = DB.get('daily_wellness') || {};
+  const waterDays = activeDays.filter(date => (+water[date] || 0) >= 2500).length;
+  const sleepValues = current.dates.map(date => +wellness[date]?.sleep || 0).filter(Boolean);
+  const energyValues = current.dates.map(date => +wellness[date]?.energy || 0).filter(Boolean);
+  const weight = coachLatestWeightInfo(referenceDate);
+  const goals = coachArray('goals').filter(goal => goal?.status === 'active');
+  const doneGoals = goals.filter(goal => goalProgress(goal).done).length;
+  const nutritionDays = new Set(current.meals.map(item => item.date)).size;
+  const nutritionCoverage = activeDays.length ? Math.round((nutritionDays / activeDays.length) * 100) : 0;
+  const proteinCoverage = activeDays.length ? Math.round((proteinDays / activeDays.length) * 100) : 0;
+  const plan = coachPhaseInfo(referenceDate);
+  return {
+    referenceDate,
+    week,
+    current,
+    previous,
+    config,
+    weight,
+    goals,
+    doneGoals,
+    nutritionDays,
+    nutritionCoverage,
+    proteinDays,
+    proteinCoverage,
+    waterDays,
+    sleepAverage: sleepValues.length ? sleepValues.reduce((sum, value) => sum + value, 0) / sleepValues.length : null,
+    energyAverage: energyValues.length ? energyValues.reduce((sum, value) => sum + value, 0) / energyValues.length : null,
+    trainingDelta: current.sessions.length - previous.sessions.length,
+    volumeDelta: previous.volume ? ((current.volume - previous.volume) / previous.volume) * 100 : null,
+    plan
+  };
+}
+
+function coachSignalRows(metrics) {
+  const signals = [];
+  if (!metrics.weight.latest) {
+    signals.push({ tone: 'info', title: 'Falta referencia corporal', copy: 'No hay un peso registrado para la lectura actual.', tag: 'Cuerpo' });
+  } else {
+    const change = metrics.weight.change == null ? 'una sola referencia reciente' : `${metrics.weight.change >= 0 ? '+' : ''}${coachNumber(metrics.weight.change, 1)} kg en 21 días`;
+    signals.push({ tone: 'good', title: `${coachNumber(metrics.weight.latest.weight, 1)} kg actual`, copy: `Peso registrado el ${metrics.weight.latest.date}. ${change}.`, tag: 'Cuerpo' });
+  }
+  if (!metrics.current.sessions.length) {
+    signals.push({ tone: 'attention', title: 'Sin entrenamientos en esta semana', copy: 'Aún no hay sesiones para evaluar volumen o rendimiento.', tag: 'Entreno' });
+  } else {
+    const delta = metrics.trainingDelta === 0 ? 'Mismo número que la semana previa' : `${metrics.trainingDelta > 0 ? '+' : ''}${metrics.trainingDelta} vs. semana previa`;
+    signals.push({ tone: metrics.trainingDelta < 0 ? 'warn' : 'good', title: `${metrics.current.sessions.length} sesiones · ${coachNumber(metrics.current.volume)} kg`, copy: delta, tag: 'Entreno' });
+  }
+  const nutritionTone = metrics.nutritionCoverage >= 70 ? 'good' : metrics.nutritionCoverage >= 40 ? 'warn' : 'attention';
+  signals.push({ tone: nutritionTone, title: `${metrics.nutritionCoverage}% de días con nutrición`, copy: `${metrics.nutritionDays} día(s) con comidas y ${metrics.proteinDays} con proteína objetivo.`, tag: 'Nutrición' });
+  const recoveryTone = metrics.sleepAverage == null ? 'info' : metrics.sleepAverage >= 7 ? 'good' : 'warn';
+  const recoveryCopy = metrics.sleepAverage == null
+    ? 'Aún no hay horas de sueño registradas esta semana.'
+    : `${coachNumber(metrics.sleepAverage, 1)} h de sueño promedio${metrics.energyAverage != null ? ` · energía ${coachNumber(metrics.energyAverage, 1)}/5` : ''}.`;
+  signals.push({ tone: recoveryTone, title: `${metrics.waterDays} día(s) cumpliendo agua`, copy: recoveryCopy, tag: 'Recuperación' });
+  return signals;
+}
+
+function coachBuildAnalysis(metrics) {
+  const dataPoints = [metrics.weight.latest, metrics.current.sessions.length, metrics.nutritionDays, metrics.sleepAverage != null].filter(Boolean).length;
+  const positives = [];
+  const concerns = [];
+  const watch = [];
+  if (metrics.current.sessions.length) positives.push(`${metrics.current.sessions.length} sesión(es) de entrenamiento registrada(s) esta semana.`);
+  else concerns.push('No hay sesiones registradas en la semana seleccionada.');
+  if (metrics.nutritionCoverage >= 70) positives.push(`La nutrición tiene ${metrics.nutritionCoverage}% de cobertura semanal.`);
+  else concerns.push(`La nutrición solo tiene ${metrics.nutritionCoverage}% de cobertura semanal.`);
+  if (metrics.proteinCoverage >= 60) positives.push(`${metrics.proteinDays} día(s) alcanzaron la proteína de referencia.`);
+  else watch.push('Registrar proteína diaria para poder comparar adherencia, no solo calorías.');
+  if (metrics.weight.latest && metrics.weight.change != null) positives.push(`El peso tiene una referencia de 21 días: ${metrics.weight.change >= 0 ? '+' : ''}${coachNumber(metrics.weight.change, 1)} kg.`);
+  else watch.push('Registrar al menos dos pesajes separados para leer una tendencia corporal.');
+  if (metrics.sleepAverage == null) watch.push('Agregar sueño y energía para completar la lectura de recuperación.');
+  else if (metrics.sleepAverage < 7) concerns.push(`El sueño promedio es ${coachNumber(metrics.sleepAverage, 1)} h, por debajo de una referencia de recuperación sólida.`);
+  const status = dataPoints < 2 ? 'info' : concerns.length >= 2 ? 'attention' : concerns.length ? 'warn' : 'good';
+  const label = status === 'good' ? 'En observación estable' : status === 'warn' ? 'Hay puntos a vigilar' : status === 'attention' ? 'Prioridad de registro' : 'Datos insuficientes';
+  const headline = status === 'good'
+    ? 'Los registros permiten seguir el proceso sin señales abiertas fuertes.'
+    : status === 'warn'
+      ? 'Hay información útil, pero conviene reforzar una o dos áreas antes de sacar conclusiones grandes.'
+      : status === 'attention'
+        ? 'La lectura está limitada por brechas de registro o de adherencia durante la semana.'
+        : 'Todavía no hay suficientes referencias cruzadas para evaluar el proceso con criterio.';
+  const evidence = [
+    { label: 'Entrenamiento', value: `${metrics.current.sessions.length} sesiones`, detail: metrics.current.volume ? `${coachNumber(metrics.current.volume)} kg de volumen` : 'Sin volumen registrado' },
+    { label: 'Nutrición', value: `${metrics.nutritionCoverage}% cobertura`, detail: `${metrics.proteinDays} día(s) con proteína objetivo` },
+    { label: 'Cuerpo', value: metrics.weight.latest ? `${coachNumber(metrics.weight.latest.weight, 1)} kg` : 'Sin peso', detail: metrics.weight.change == null ? 'Faltan dos referencias recientes' : `${metrics.weight.change >= 0 ? '+' : ''}${coachNumber(metrics.weight.change, 1)} kg / 21 días` },
+    { label: 'Recuperación', value: metrics.sleepAverage == null ? 'Sin sueño' : `${coachNumber(metrics.sleepAverage, 1)} h`, detail: metrics.energyAverage == null ? 'Sin energía registrada' : `Energía ${coachNumber(metrics.energyAverage, 1)}/5` }
+  ];
+  return { status, label, headline, positives, concerns, watch, evidence };
+}
+
+function coachStatusClass(status) {
+  return ['good', 'warn', 'attention', 'info'].includes(status) ? status : 'info';
+}
+
+function coachPlans() { return coachArray('coach_plans').sort((a, b) => String(b.updated_at || '').localeCompare(String(a.updated_at || ''))); }
+function coachMaps() { return coachArray('coach_maps').sort((a, b) => String(b.updated_at || '').localeCompare(String(a.updated_at || ''))); }
+function coachGuidelines() { return coachArray('coach_guidelines').sort((a, b) => Number(b.active !== false) - Number(a.active !== false) || String(b.updated_at || '').localeCompare(String(a.updated_at || ''))); }
+
+function coachViewHead(kicker, title, copy, date = true) {
+  return `<div class="coach-view-head"><div><span class="coach-view-kicker">${esc(kicker)}</span><h2>${esc(title)}</h2><p>${esc(copy)}</p></div>${date ? `<span class="coach-date-chip"><i data-lucide="calendar-days"></i>${esc(coachDateText())}</span>` : ''}</div>`;
+}
+
+function renderCoachTabs() {
+  document.querySelectorAll('.coach-tab').forEach(button => {
+    const active = button.dataset.coachView === coachActiveView;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', String(active));
+  });
+}
+
+function loadCoach() {
+  if (!coachModeUnlocked) return openCoachMode();
+  const email = DB.get('activeUser') || 'Cuenta protegida';
+  const identity = document.getElementById('coach-user-email');
+  if (identity) identity.textContent = email;
+  renderCoachTabs();
+  renderCoachWorkspace();
+}
+
+function setCoachView(view) {
+  if (!COACH_VIEWS.includes(view)) return;
+  coachActiveView = view;
+  renderCoachTabs();
+  renderCoachWorkspace();
+}
+
+function renderCoachWorkspace() {
+  const workspace = document.getElementById('coach-workspace');
+  if (!workspace || !coachModeUnlocked) return;
+  const renderers = {
+    monitor: renderCoachMonitor,
+    analysis: renderCoachAnalysis,
+    planning: renderCoachPlanning,
+    maps: renderCoachMaps,
+    guidelines: renderCoachGuidelines
+  };
+  workspace.innerHTML = (renderers[coachActiveView] || renderCoachMonitor)();
+  refreshInterfaceIcons();
+}
+
+function renderCoachMonitor() {
+  const metrics = coachMetrics();
+  const signals = coachSignalRows(metrics);
+  return `${coachViewHead('Lectura operativa', 'Monitoreo de la semana', 'Datos reales de entrenamiento, nutrición, cuerpo y recuperación.')}
+    <div class="coach-monitor-layout">
+      <div class="coach-monitor-main">
+        <div class="coach-metric-strip">
+          <div class="coach-metric tone-green"><span>Entrenamientos</span><strong>${metrics.current.sessions.length}</strong><small>${metrics.trainingDelta >= 0 ? '+' : ''}${metrics.trainingDelta} vs. semana previa</small></div>
+          <div class="coach-metric tone-blue"><span>Volumen semanal</span><strong>${coachNumber(metrics.current.volume)}</strong><small>${metrics.current.volume ? 'kg registrados' : 'Sin volumen todavía'}</small></div>
+          <div class="coach-metric tone-amber"><span>Nutrición</span><strong>${metrics.nutritionCoverage}%</strong><small>${metrics.nutritionDays} día(s) con comidas</small></div>
+          <div class="coach-metric tone-violet"><span>Peso actual</span><strong>${metrics.weight.latest ? `${coachNumber(metrics.weight.latest.weight, 1)} kg` : '—'}</strong><small>${metrics.weight.change == null ? 'Sin tendencia reciente' : `${metrics.weight.change >= 0 ? '+' : ''}${coachNumber(metrics.weight.change, 1)} kg en 21 días`}</small></div>
+        </div>
+        <section class="coach-panel">
+          <div class="coach-panel-head"><div><span class="coach-section-label">Señales principales</span><h3 class="coach-panel-title">Qué está pasando ahora</h3></div><span class="coach-date-chip"><i data-lucide="calendar-range"></i>${esc(coachWeekText(metrics.week))}</span></div>
+          <div class="coach-status-list">${signals.map(signal => `<div class="coach-status-row ${signal.tone}"><i></i><div><strong>${esc(signal.title)}</strong><span>${esc(signal.copy)}</span></div><em>${esc(signal.tag)}</em></div>`).join('')}</div>
+        </section>
+      </div>
+      <aside class="coach-monitor-side">
+        <section class="coach-panel">
+          <div class="coach-panel-head"><div><span class="coach-section-label">Cobertura</span><h3 class="coach-panel-title">Calidad de datos</h3></div></div>
+          <div class="coach-coverage-grid">
+            <div class="coach-coverage-item"><span>Proteína</span><strong>${metrics.proteinCoverage}% de días</strong></div>
+            <div class="coach-coverage-item"><span>Agua</span><strong>${metrics.waterDays} día(s)</strong></div>
+            <div class="coach-coverage-item"><span>Check-in</span><strong>${metrics.current.checking.rate}%</strong></div>
+            <div class="coach-coverage-item"><span>Objetivos</span><strong>${metrics.doneGoals}/${metrics.goals.length} logrados</strong></div>
+          </div>
+        </section>
+        <section class="coach-panel">
+          <div class="coach-panel-head"><div><span class="coach-section-label">Marco actual</span><h3 class="coach-panel-title">Fase de preparación</h3></div><button class="coach-delete-icon" type="button" onclick="go('preparation')" title="Abrir fase" aria-label="Abrir fase"><i data-lucide="arrow-up-right"></i></button></div>
+          <div class="coach-phase-note"><i data-lucide="route"></i><div><strong>${esc(metrics.plan.name)}</strong><span>${esc(metrics.plan.detail)}</span></div></div>
+        </section>
+      </aside>
+    </div>`;
+}
+
+function renderCoachAnalysis() {
+  const metrics = coachMetrics();
+  const analysis = coachBuildAnalysis(metrics);
+  const snapshot = coachArray('coach_assessments')[0];
+  return `${coachViewHead('Criterio de seguimiento', 'Análisis de proceso', 'Una lectura estructurada de los registros, sin modificar tus objetivos ni tu fase.')}
+    <div class="coach-analysis-layout">
+      <div class="coach-panel">
+        <section class="coach-analysis-verdict"><span class="coach-analysis-status ${coachStatusClass(analysis.status)}"><i data-lucide="scan-search"></i>${esc(analysis.label)}</span><h3>${esc(analysis.headline)}</h3><p>La lectura compara solo lo registrado durante ${esc(coachWeekText(metrics.week))}. No reemplaza tu configuración manual ni crea cambios automáticos.</p></section>
+        <div class="coach-analysis-evidence">${analysis.evidence.map(item => `<div><span>${esc(item.label)}</span><strong>${esc(item.value)}</strong><p>${esc(item.detail)}</p></div>`).join('')}</div>
+        <div class="coach-analysis-actions"><button class="btn btn-ghost" type="button" onclick="setCoachView('monitor')"><i data-lucide="radar"></i>Ver datos</button><button class="btn btn-primary" type="button" onclick="saveCoachAssessment()"><i data-lucide="bookmark-check"></i>Guardar lectura</button></div>
+      </div>
+      <aside class="coach-monitor-side">
+        <section class="coach-panel coach-list-panel good"><span class="coach-section-label">A favor</span><h3 class="coach-panel-title">Señales utilizables</h3><ul class="coach-bullet-list">${(analysis.positives.length ? analysis.positives : ['Aún no hay una señal sólida con los datos disponibles.']).map(item => `<li>${esc(item)}</li>`).join('')}</ul></section>
+        <section class="coach-panel coach-list-panel warn"><span class="coach-section-label">A observar</span><h3 class="coach-panel-title">Antes de ajustar</h3><ul class="coach-bullet-list">${[...analysis.concerns, ...analysis.watch].slice(0, 5).map(item => `<li>${esc(item)}</li>`).join('') || '<li>No hay observaciones pendientes.</li>'}</ul>${snapshot ? `<p class="coach-panel-subcopy">Última lectura guardada: ${esc(String(snapshot.created_at || '').slice(0, 10))}.</p>` : ''}</section>
+      </aside>
+    </div>`;
+}
+
+function saveCoachAssessment() {
+  const metrics = coachMetrics();
+  const analysis = coachBuildAnalysis(metrics);
+  DB.push('coach_assessments', {
+    id: uid(),
+    date: selectedDate(),
+    week: metrics.week,
+    status: analysis.status,
+    label: analysis.label,
+    headline: analysis.headline,
+    evidence: analysis.evidence,
+    positives: analysis.positives,
+    concerns: analysis.concerns,
+    watch: analysis.watch,
+    created_at: new Date().toISOString()
+  });
+  toast('Lectura de coach guardada');
+  renderCoachWorkspace();
+}
+
+function coachPlanForWeek(week = weekValueFromDate(selectedDate())) {
+  return coachPlans().find(item => item.week === week) || null;
+}
+
+function renderCoachPlanning() {
+  const week = weekValueFromDate(selectedDate());
+  const plan = coachPlanForWeek(week);
+  const plans = coachPlans().slice(0, 5);
+  return `${coachViewHead('Plan de acción', 'Planificar la semana', 'Crea una guía manual de entrenamiento, nutrición y recuperación. Nada se aplica automáticamente a tus registros.', false)}
+    <div class="coach-planning-layout">
+      <section class="coach-panel">
+        <div class="coach-panel-head"><div><span class="coach-section-label">${plan ? 'Plan guardado' : 'Nuevo plan'}</span><h3 class="coach-panel-title">${plan ? 'Actualizar la semana activa' : 'Construir un plan semanal'}</h3></div><span class="coach-date-chip"><i data-lucide="calendar-range"></i>${esc(coachWeekText(week))}</span></div>
+        <form class="coach-plan-form" onsubmit="event.preventDefault(); saveCoachPlan();">
+          <div class="coach-form-grid">
+            <label>Semana<input id="coach-plan-week" type="week" value="${esc(plan?.week || week)}" required></label>
+            <label>Foco de la semana<input id="coach-plan-focus" maxlength="120" value="${esc(plan?.focus || '')}" placeholder="Ej: Consolidar técnica y adherencia"></label>
+            <label class="wide">Entrenamiento<textarea id="coach-plan-training" maxlength="1500" placeholder="Sesiones clave, ejercicios prioritarios, intensidad y ajustes manuales.">${esc(plan?.training || '')}</textarea></label>
+            <label class="wide">Nutrición<textarea id="coach-plan-nutrition" maxlength="1500" placeholder="Objetivos de adherencia, macros o comidas relevantes.">${esc(plan?.nutrition || '')}</textarea></label>
+            <label>Recuperación<textarea id="coach-plan-recovery" maxlength="900" placeholder="Sueño, actividad, descansos o estrés.">${esc(plan?.recovery || '')}</textarea></label>
+            <label>Revisión<textarea id="coach-plan-review" maxlength="900" placeholder="Qué observarás al cerrar la semana.">${esc(plan?.review || '')}</textarea></label>
+          </div>
+          <div class="coach-form-footer"><small>Este plan es una nota operativa de Coach. Tus objetivos, rutinas y macros no se reemplazan.</small><button class="btn btn-primary" type="submit"><i data-lucide="save"></i>${plan ? 'Guardar cambios' : 'Crear plan'}</button></div>
+        </form>
+      </section>
+      <aside class="coach-monitor-side">
+        <section class="coach-panel">
+          <div class="coach-panel-head"><div><span class="coach-section-label">Historial</span><h3 class="coach-panel-title">Planes recientes</h3></div></div>
+          <div class="coach-plan-list">${plans.length ? plans.map(item => `<div class="coach-plan-item"><i></i><div><strong>${esc(item.focus || 'Semana sin foco')}</strong><span>${esc(item.week || 'Sin semana')} · ${esc(String(item.updated_at || '').slice(0, 10) || 'sin fecha')}</span></div><button class="coach-delete-icon" type="button" onclick="deleteCoachPlan('${item.id}')" aria-label="Eliminar plan" title="Eliminar plan"><i data-lucide="trash-2"></i></button></div>`).join('') : '<div class="coach-empty"><div><strong>Sin planes todavía</strong><span>El primer plan que guardes quedará disponible aquí.</span></div></div>'}</div>
+        </section>
+      </aside>
+    </div>`;
+}
+
+function saveCoachPlan() {
+  const get = id => document.getElementById(id)?.value.trim() || '';
+  const week = get('coach-plan-week');
+  const focus = get('coach-plan-focus');
+  if (!week) return toast('Elige la semana del plan', 'err');
+  if (!focus) return toast('Escribe el foco principal de la semana', 'err');
+  const plans = coachArray('coach_plans');
+  const existingIndex = plans.findIndex(item => item.week === week);
+  const entry = {
+    id: existingIndex >= 0 ? plans[existingIndex].id : uid(),
+    week,
+    focus,
+    training: get('coach-plan-training'),
+    nutrition: get('coach-plan-nutrition'),
+    recovery: get('coach-plan-recovery'),
+    review: get('coach-plan-review'),
+    created_at: existingIndex >= 0 ? plans[existingIndex].created_at : new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  if (existingIndex >= 0) plans[existingIndex] = entry;
+  else plans.unshift(entry);
+  DB.set('coach_plans', plans);
+  toast(existingIndex >= 0 ? 'Plan semanal actualizado' : 'Plan semanal creado');
+  renderCoachWorkspace();
+}
+
+function deleteCoachPlan(id) {
+  const plan = coachPlans().find(item => item.id === id);
+  if (!plan || !window.confirm(`¿Eliminar el plan de ${plan.week}?`)) return;
+  DB.del('coach_plans', id);
+  toast('Plan eliminado');
+  renderCoachWorkspace();
+}
+
+function coachSuggestedMapBranches() {
+  const metrics = coachMetrics();
+  return [
+    `${metrics.current.sessions.length} sesión(es) de entrenamiento`,
+    `${metrics.nutritionCoverage}% de cobertura nutricional`,
+    metrics.sleepAverage == null ? 'Completar sueño y energía' : `${coachNumber(metrics.sleepAverage, 1)} h de sueño promedio`,
+    metrics.goals.length ? `${metrics.doneGoals}/${metrics.goals.length} objetivos completados` : 'Definir un objetivo medible'
+  ];
+}
+
+function renderCoachMaps() {
+  const maps = coachMaps();
+  const selected = maps.find(item => item.id === coachSelectedMapId) || maps[0] || null;
+  if (selected) coachSelectedMapId = selected.id;
+  const branches = selected?.branches?.filter(Boolean) || [];
+  return `${coachViewHead('Relaciones de proceso', 'Mapas conceptuales', 'Ordena los factores que quieres observar sin alterar tus registros.')}
+    <div class="coach-maps-layout">
+      <section class="coach-panel coach-map-stage">
+        ${selected ? `<div class="coach-map-title-line"><div><h3>${esc(selected.title || 'Mapa sin título')}</h3><span>Actualizado ${esc(String(selected.updated_at || selected.created_at || '').slice(0, 10) || 'sin fecha')}</span></div><button class="coach-delete-icon" type="button" onclick="deleteCoachMap('${selected.id}')" aria-label="Eliminar mapa" title="Eliminar mapa"><i data-lucide="trash-2"></i></button></div><div class="coach-map-visual"><div class="coach-map-central">${esc(selected.central || 'Idea central')}</div>${branches.map((branch, index) => `<div class="coach-map-node"><span>Conexión ${index + 1}</span><strong title="${esc(branch)}">${esc(branch)}</strong></div>`).join('')}</div>` : '<div class="coach-map-empty"><div><strong>Sin mapa conceptual</strong><br>Define una idea central y sus conexiones para verlo aquí.</div></div>'}
+      </section>
+      <section class="coach-panel">
+        <div class="coach-panel-head"><div><span class="coach-section-label">Constructor</span><h3 class="coach-panel-title">Nuevo mapa</h3></div></div>
+        <form class="coach-map-form" onsubmit="event.preventDefault(); saveCoachMap();">
+          <div class="coach-form-grid">
+            <label class="wide">Título<input id="coach-map-title" maxlength="100" placeholder="Ej: Semana de adaptación"></label>
+            <label class="wide">Idea central<input id="coach-map-central" maxlength="160" placeholder="Ej: Prioridad de la semana"></label>
+          </div>
+          <div class="coach-map-branches">${[0, 1, 2, 3].map(index => `<div class="coach-map-branch"><i>${index + 1}</i><label>Conexión ${index + 1}<input id="coach-map-branch-${index}" maxlength="180" placeholder="Factor, decisión o señal"></label></div>`).join('')}</div>
+          <div class="coach-form-footer"><button class="btn btn-ghost" type="button" onclick="fillCoachSuggestedMap()"><i data-lucide="sparkles"></i>Usar datos actuales</button><button class="btn btn-primary" type="submit"><i data-lucide="save"></i>Guardar mapa</button></div>
+        </form>
+        ${maps.length ? `<div class="coach-map-select-row"><select class="coach-map-select" onchange="setCoachSelectedMap(this.value)" aria-label="Mapas guardados">${maps.map(item => `<option value="${item.id}" ${item.id === coachSelectedMapId ? 'selected' : ''}>${esc(item.title || 'Mapa sin título')}</option>`).join('')}</select></div>` : ''}
+      </section>
+    </div>`;
+}
+
+function fillCoachSuggestedMap() {
+  const metrics = coachMetrics();
+  const central = document.getElementById('coach-map-central');
+  const title = document.getElementById('coach-map-title');
+  if (title && !title.value) title.value = `Mapa · ${metrics.plan.name === 'Sin fase activa' ? 'semana actual' : metrics.plan.name}`;
+  if (central && !central.value) central.value = metrics.plan.name === 'Sin fase activa' ? 'Proceso de la semana' : metrics.plan.name;
+  coachSuggestedMapBranches().forEach((value, index) => {
+    const input = document.getElementById(`coach-map-branch-${index}`);
+    if (input && !input.value) input.value = value;
+  });
+}
+
+function saveCoachMap() {
+  const get = id => document.getElementById(id)?.value.trim() || '';
+  const title = get('coach-map-title');
+  const central = get('coach-map-central');
+  const branches = [0, 1, 2, 3].map(index => get(`coach-map-branch-${index}`)).filter(Boolean);
+  if (!title || !central) return toast('Agrega un título y una idea central', 'err');
+  if (branches.length < 2) return toast('Agrega al menos dos conexiones al mapa', 'err');
+  const entry = { id: uid(), title, central, branches, created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+  DB.push('coach_maps', entry);
+  coachSelectedMapId = entry.id;
+  toast('Mapa conceptual guardado');
+  renderCoachWorkspace();
+}
+
+function setCoachSelectedMap(id) {
+  coachSelectedMapId = id;
+  renderCoachWorkspace();
+}
+
+function deleteCoachMap(id) {
+  const map = coachMaps().find(item => item.id === id);
+  if (!map || !window.confirm(`¿Eliminar el mapa “${map.title}”?`)) return;
+  DB.del('coach_maps', id);
+  coachSelectedMapId = '';
+  toast('Mapa eliminado');
+  renderCoachWorkspace();
+}
+
+function coachGuidelineAreaLabel(area) {
+  return ({ general: 'General', training: 'Entrenamiento', nutrition: 'Nutrición', recovery: 'Recuperación', habits: 'Hábitos' })[area] || 'General';
+}
+
+function renderCoachGuidelines() {
+  const guidelines = coachGuidelines();
+  return `${coachViewHead('Criterios de acción', 'Pautas de Coach', 'Guarda reglas y recordatorios que quieras tener presentes durante el proceso.')}
+    <div class="coach-guidelines-layout">
+      <section class="coach-panel">
+        <div class="coach-panel-head"><div><span class="coach-section-label">Nueva pauta</span><h3 class="coach-panel-title">Definir una referencia</h3></div></div>
+        <form class="coach-guideline-form" onsubmit="event.preventDefault(); saveCoachGuideline();">
+          <div class="coach-form-grid">
+            <label>Área<select id="coach-guideline-area"><option value="general">General</option><option value="training">Entrenamiento</option><option value="nutrition">Nutrición</option><option value="recovery">Recuperación</option><option value="habits">Hábitos</option></select></label>
+            <label>Título<input id="coach-guideline-title" maxlength="100" placeholder="Ej: Prioridad de proteína"></label>
+            <label class="wide">Pauta<textarea id="coach-guideline-copy" maxlength="1200" placeholder="Escribe la regla, decisión o instrucción a seguir."></textarea></label>
+            <label class="wide">Cuándo usarla<input id="coach-guideline-condition" maxlength="180" placeholder="Ej: Si hay entrenamiento y la proteína queda baja"></label>
+          </div>
+          <div class="coach-form-footer"><small>Las pautas son notas de trabajo. No cambian macros, rutinas ni objetivos automáticamente.</small><button class="btn btn-primary" type="submit"><i data-lucide="plus"></i>Guardar pauta</button></div>
+        </form>
+      </section>
+      <section class="coach-panel">
+        <div class="coach-panel-head"><div><span class="coach-section-label">Biblioteca</span><h3 class="coach-panel-title">Pautas guardadas</h3></div><span class="coach-date-chip">${guidelines.filter(item => item.active !== false).length} activas</span></div>
+        <div class="coach-guideline-list">${guidelines.length ? guidelines.map(item => `<article class="coach-guideline-card ${esc(item.area || 'general')} ${item.active === false ? 'inactive' : ''}"><i></i><div><strong>${esc(item.title || 'Pauta sin título')}</strong><p>${esc(item.copy || '')}</p>${item.condition ? `<small>${esc(item.condition)}</small>` : ''}</div><div class="coach-guideline-actions"><button class="coach-guideline-toggle ${item.active !== false ? 'active' : ''}" type="button" onclick="toggleCoachGuideline('${item.id}')" aria-label="${item.active !== false ? 'Desactivar' : 'Activar'} pauta" title="${item.active !== false ? 'Desactivar' : 'Activar'} pauta"><i data-lucide="${item.active !== false ? 'check' : 'minus'}"></i></button><button class="coach-delete-icon" type="button" onclick="deleteCoachGuideline('${item.id}')" aria-label="Eliminar pauta" title="Eliminar pauta"><i data-lucide="trash-2"></i></button></div></article>`).join('') : '<div class="coach-empty"><div><strong>Aún no hay pautas</strong><span>Guarda una pauta para consultarla durante tu seguimiento.</span></div></div>'}</div>
+      </section>
+    </div>`;
+}
+
+function saveCoachGuideline() {
+  const get = id => document.getElementById(id)?.value.trim() || '';
+  const title = get('coach-guideline-title');
+  const copy = get('coach-guideline-copy');
+  if (!title || !copy) return toast('Completa el título y la pauta', 'err');
+  DB.push('coach_guidelines', {
+    id: uid(),
+    area: get('coach-guideline-area') || 'general',
+    title,
+    copy,
+    condition: get('coach-guideline-condition'),
+    active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  });
+  toast('Pauta guardada');
+  renderCoachWorkspace();
+}
+
+function toggleCoachGuideline(id) {
+  const guidelines = coachArray('coach_guidelines');
+  const index = guidelines.findIndex(item => item.id === id);
+  if (index < 0) return;
+  guidelines[index] = { ...guidelines[index], active: guidelines[index].active === false, updated_at: new Date().toISOString() };
+  DB.set('coach_guidelines', guidelines);
+  renderCoachWorkspace();
+}
+
+function deleteCoachGuideline(id) {
+  const guideline = coachGuidelines().find(item => item.id === id);
+  if (!guideline || !window.confirm(`¿Eliminar la pauta “${guideline.title}”?`)) return;
+  DB.del('coach_guidelines', id);
+  toast('Pauta eliminada');
+  renderCoachWorkspace();
 }
 
 // ── INITIALIZATION ─────────────────────────────────
