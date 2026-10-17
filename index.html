@@ -7873,6 +7873,11 @@ tr:hover td {
   to { transform: rotate(360deg); }
 }
 
+.spin-animation {
+  animation: app-ai-spin 0.75s linear infinite !important;
+  display: inline-block;
+}
+
 .app-ai-success-state {
   flex-direction: row;
   text-align: left;
@@ -15306,6 +15311,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
 </div>
@@ -15323,6 +15329,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('nutrition')"><i data-lucide="utensils"></i><span>Nutrición</span></button>
     <button class="nav-btn" onclick="go('calendar')"><i data-lucide="calendar-range"></i><span>Calendario</span></button>
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
+    <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
   <!-- Usuario -->
@@ -15422,6 +15429,27 @@ body.calendar-dragging .aa-calendar-drop-zone {
           <div class="metric-sub">Esta semana</div>
         </div>
       </div>
+      <!-- HEVY DASHBOARD CARD -->
+      <div class="card mb" id="hevy-dashboard-card">
+        <div class="flex jb ai-c flex-wrap gap-2" style="margin-bottom:10px">
+          <div class="flex ai-c gap-2">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:7px; background:#ff4500; color:#fff; font-weight:800; font-size:0.85rem; box-shadow:0 2px 8px rgba(255,69,0,0.3)">H</span>
+            <div>
+              <div style="font-weight:700; font-size:1rem; color:var(--text); line-height:1.2">Hevy · Sincronización en tiempo real</div>
+              <div class="mini-muted" id="hevy-dash-status">Comprobando estado...</div>
+            </div>
+          </div>
+          <div class="flex gap-2 ai-c">
+            <span class="badge" id="hevy-dash-badge">Sin conectar</span>
+            <button class="btn btn-ghost btn-sm" id="hevy-dash-sync-btn" onclick="syncHevyWorkouts({ showToast: true })">
+              <i data-lucide="refresh-cw" style="width:13px;height:13px;display:inline-block;vertical-align:-2px"></i> Sincronizar
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="go('hevy')">Configurar</button>
+          </div>
+        </div>
+        <div id="hevy-dash-recent" class="mini-muted">Sin entrenamientos recientes sincronizados de Hevy.</div>
+      </div>
+
       <div class="card mb">
         <div class="card-title">Nube - borrador</div>
         <div class="btn-row">
@@ -15894,6 +15922,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <div class="page-head flex jb ai-c">
       <div><h1>Entrenamiento</h1><p>Rutinas estructuradas y registro de sesiones</p></div>
       <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" onclick="syncHevyWorkouts({ showToast: true })"><i data-lucide="zap" style="width:13px;height:13px;display:inline-block;vertical-align:-2px"></i> Hevy Sync</button>
         <button class="btn btn-ghost btn-sm" onclick="showModal('modal-routine')">+ Rutina</button>
         <button class="btn btn-primary btn-sm" onclick="showModal('modal-session')">Entrenar</button>
       </div>
@@ -15984,6 +16013,114 @@ body.calendar-dragging .aa-calendar-drop-zone {
               <tbody id="records-table"></tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+  <!-- HEVY INTEGRATION -->
+  <div id="page-hevy" class="page">
+    <div class="page-head flex jb ai-c flex-wrap gap-3">
+      <div class="flex ai-c gap-3">
+        <div style="width:42px; height:42px; border-radius:10px; background:#ff4500; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.35rem; font-weight:900; box-shadow:0 4px 14px rgba(255,69,0,0.35); flex-shrink:0">
+          H
+        </div>
+        <div>
+          <h1 style="font-size:1.4rem; margin-bottom:2px">Hevy · Sincronización en tiempo real</h1>
+          <p style="color:var(--muted); font-size:0.85rem">Conecta tu cuenta de Hevy para importar rutinas, series, repeticiones y pesos en vivo</p>
+        </div>
+      </div>
+      <div class="flex gap-2 ai-c">
+        <button class="btn btn-ghost btn-sm" onclick="showHevyHelpModal()">
+          <i data-lucide="help-circle" style="width:14px;height:14px;display:inline-block;vertical-align:-2px"></i> Ayuda
+        </button>
+        <button class="btn btn-primary btn-sm" id="hevy-sync-main-btn" onclick="syncHevyWorkouts({ showToast: true })">
+          <i data-lucide="refresh-cw" style="width:14px;height:14px;display:inline-block;vertical-align:-2px"></i> Sincronizar ahora
+        </button>
+      </div>
+    </div>
+    <div class="content">
+      <!-- Configuración de API Key y Estado -->
+      <div class="card mb">
+        <div class="flex jb ai-c mb-2">
+          <div class="card-title" style="margin-bottom:0">Conexión con Hevy API</div>
+          <div id="hevy-connection-status" class="flex ai-c gap-2 mini-muted">
+            <span class="badge" id="hevy-status-badge">Sin verificar</span>
+          </div>
+        </div>
+        <p class="mini-muted mb-3" id="hevy-status-text">
+          Obtén tu API Key desde la web de Hevy en <a href="https://hevy.com/settings?developer" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline">hevy.com/settings?developer</a> (requiere cuenta Pro).
+        </p>
+        
+        <div class="form-grid fg2 mb-3">
+          <div class="form-row">
+            <label class="form-label">API Key de Hevy</label>
+            <div class="flex gap-2">
+              <input type="password" id="hevy-api-key" placeholder="Pega aquí tu API key de Hevy..." style="font-family:monospace; font-size:0.9rem">
+              <button class="btn btn-ghost btn-sm" type="button" onclick="toggleHevyKeyVisibility()">Ver</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="form-label">Frecuencia de sincronización automática</label>
+            <select id="hevy-sync-interval" onchange="updateHevyInterval(this.value)">
+              <option value="30">Cada 30 segundos (En tiempo real)</option>
+              <option value="60" selected>Cada 1 minuto (Recomendado)</option>
+              <option value="120">Cada 2 minutos</option>
+              <option value="300">Cada 5 minutos</option>
+              <option value="0">Solo manual / Al abrir la app</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary btn-sm" onclick="saveHevySettingsAndTest()">Guardar y Probar Conexión</button>
+          <button class="btn btn-ghost btn-sm" onclick="importHevyWorkoutsFullHistory()">Importar Historial Completo</button>
+          <button class="btn btn-ghost btn-sm" onclick="importHevyRoutines()">Importar Rutinas</button>
+        </div>
+      </div>
+
+      <!-- Métricas rápidas de sincronización -->
+      <div class="g4 mb">
+        <div class="metric c-accent">
+          <div class="metric-label">Entrenamientos Hevy</div>
+          <div class="metric-val" id="hevy-count-synced">0</div>
+          <div class="metric-sub">En AA Follow App</div>
+        </div>
+        <div class="metric c-green">
+          <div class="metric-label">Total en cuenta Hevy</div>
+          <div class="metric-val" id="hevy-count-remote">—</div>
+          <div class="metric-sub">Registrados en la nube</div>
+        </div>
+        <div class="metric c-amber">
+          <div class="metric-label">Última sincronización</div>
+          <div class="metric-val" id="hevy-last-sync-time" style="font-size:1.15rem">Nunca</div>
+          <div class="metric-sub" id="hevy-last-sync-detail">Esperando primera sincronización</div>
+        </div>
+        <div class="metric c-blue">
+          <div class="metric-label">Estado en tiempo real</div>
+          <div class="metric-val" id="hevy-realtime-status" style="font-size:1.15rem">Inactivo</div>
+          <div class="metric-sub" id="hevy-realtime-sub">Auto-sync al entrenar</div>
+        </div>
+      </div>
+
+      <!-- Guía de Webhook en tiempo real -->
+      <div class="card mb">
+        <div class="card-title">Webhook para notificación instantánea (Opcional)</div>
+        <p style="font-size:0.85rem; color:var(--muted); line-height:1.5; margin-bottom:12px">
+          Si configuras esta URL en <strong>hevy.com/settings?developer</strong> en el apartado de Webhook, Hevy notificará automáticamente a AA Follow App apenas toques "Finalizar entrenamiento" en tu app móvil:
+        </p>
+        <div class="flex gap-2 ai-c">
+          <input type="text" id="hevy-webhook-url" readonly style="font-family:monospace; font-size:0.85rem; background:var(--elevated)" value="">
+          <button class="btn btn-ghost btn-sm" onclick="copyHevyWebhookUrl()">Copiar URL</button>
+        </div>
+      </div>
+
+      <!-- Listado de entrenamientos sincronizados -->
+      <div class="card mb">
+        <div class="flex jb ai-c mb-3">
+          <div class="card-title" style="margin-bottom:0">Historial de entrenamientos sincronizados desde Hevy</div>
+          <span class="mini-muted" id="hevy-sync-counter-label"></span>
+        </div>
+        <div id="hevy-workouts-list">
+          <div class="empty">Sin entrenamientos sincronizados aún. Toca "Sincronizar ahora" para cargar tus entrenamientos de Hevy.</div>
         </div>
       </div>
     </div>
@@ -16859,6 +16996,40 @@ body.calendar-dragging .aa-calendar-drop-zone {
   </div>
 </div>
 
+<!-- Modal Ayuda Hevy -->
+<div id="modal-hevy-help" class="overlay">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:540px">
+    <div class="modal-head">
+      <div class="flex ai-c gap-2">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; background:#ff4500; color:#fff; font-weight:800; font-size:0.8rem">H</span>
+        <h3 style="margin:0">Cómo funciona la integración con Hevy</h3>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="hideModal('modal-hevy-help')">✕</button>
+    </div>
+    <div style="font-size:0.88rem; color:var(--text); line-height:1.6; display:grid; gap:12px; margin-top:8px">
+      <p>
+        <strong>1. ¿Qué es Hevy?</strong><br>
+        Hevy es una app móvil para registrar tus rutinas, pesos y repeticiones mientras estás en el gimnasio.
+      </p>
+      <p>
+        <strong>2. ¿Cómo obtener tu API Key?</strong><br>
+        Inicia sesión en la web de Hevy (<a href="https://hevy.com/settings?developer" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline">hevy.com/settings?developer</a>). En la sección de desarrolladores, genera o copia tu <em>API Key</em> y pégala en la app. (Requiere suscripción Hevy Pro).
+      </p>
+      <p>
+        <strong>3. Sincronización en tiempo real</strong><br>
+        AA Follow App comprueba automáticamente si has terminado o actualizado un entrenamiento cada minuto y cada vez que abres o vuelves a la aplicación.
+      </p>
+      <p>
+        <strong>4. Cuidado total de tus datos</strong><br>
+        Tus entrenamientos importados de Hevy se integran de forma segura en tu historial de sesiones y se detectan récords de peso (PR) automáticamente, sin borrar tus entrenamientos manuales ni duplicar registros.
+      </p>
+    </div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-primary" style="flex:1" onclick="hideModal('modal-hevy-help')">Entendido</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════════
 // STORAGE — todo persiste en localStorage
@@ -17050,7 +17221,7 @@ function go(page) {
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, hevy: loadHevy };
   loaders[page]?.();
   closeMobileMenu();
   refreshInterfaceIcons();
@@ -17090,7 +17261,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, goals: loadGoals, stats: loadStats, checking: loadChecking };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, hevy: loadHevy };
   loaders[activePage]?.();
 }
 
@@ -19112,6 +19283,7 @@ function loadDashboard() {
   renderWellnessToday();
   renderWaterToday();
   refreshCloudStatus();
+  renderHevyDashboardCard();
 }
 
 function todayDateLabel(date = selectedDate()) {
@@ -25373,6 +25545,8 @@ function deleteSession(id) {
   loadGoals();
   renderDayEditor();
   refreshTodayIfActive();
+  renderHevyPage();
+  renderHevyDashboardCard();
 }
 
 function loadRecords() {
@@ -25385,6 +25559,818 @@ function loadRecords() {
       <td>${r.reps}</td>
       <td style="color:var(--muted)">${r.date}</td>
     </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:32px">Tus mejores marcas personales se listarán aquí automáticamente</td></tr>';
+}
+
+// ═══════════════════════════════════════════════════
+// HEVY INTEGRATION LOGIC
+// ═══════════════════════════════════════════════════
+let isHevySyncing = false;
+let lastHevySyncTimestamp = 0;
+let hevyAutoSyncTimer = null;
+let hevyAutoSyncListenersInstalled = false;
+
+function getHevyConfig() {
+  const defaults = {
+    apiKey: '',
+    autoSync: true,
+    intervalSeconds: 60,
+    lastSync: null,
+    lastSyncStatus: null,
+    lastSyncMessage: '',
+    totalRemoteWorkouts: null
+  };
+  try {
+    const raw = localStorage.getItem('ft_hevy_config');
+    if (!raw) return defaults;
+    const parsed = JSON.parse(raw);
+    return { ...defaults, ...(parsed || {}) };
+  } catch {
+    return defaults;
+  }
+}
+
+function saveHevyConfig(patch = {}) {
+  const current = getHevyConfig();
+  const next = { ...current, ...patch };
+  try {
+    localStorage.setItem('ft_hevy_config', JSON.stringify(next));
+  } catch (err) {
+    console.error('Error saving ft_hevy_config:', err);
+  }
+  return next;
+}
+
+function hevyDateToLocalYMD(iso) {
+  if (!iso) return today();
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return today();
+    return dateKey(d);
+  } catch {
+    return today();
+  }
+}
+
+function hevyWorkoutDuration(workout) {
+  if (!workout) return null;
+  if (workout.duration_minutes) return Math.round(+workout.duration_minutes);
+  if (workout.duration_seconds) return Math.round(+workout.duration_seconds / 60);
+  if (workout.start_time && workout.end_time) {
+    const start = new Date(workout.start_time).getTime();
+    const end = new Date(workout.end_time).getTime();
+    if (end > start) return Math.round((end - start) / 60000);
+  }
+  return null;
+}
+
+function mapHevyWorkoutToSession(workout) {
+  if (!workout) return null;
+  const date = hevyDateToLocalYMD(workout.start_time || workout.end_time || workout.created_at);
+  const duration = hevyWorkoutDuration(workout);
+  const routineName = workout.routine_title || workout.title || 'Entrenamiento Hevy';
+  const dayName = workout.title || 'Sesión Hevy';
+  const notes = workout.description || '';
+
+  const sets = [];
+  const exercises = workout.exercises || [];
+
+  exercises.forEach((exObj, exIdx) => {
+    const exName = (exObj.title || exObj.exercise_template?.title || exObj.name || `Ejercicio ${exIdx + 1}`).trim();
+    const exSets = exObj.sets || [];
+    exSets.forEach((setObj, setIdx) => {
+      const sn = (setObj.index !== undefined ? setObj.index + 1 : setIdx + 1);
+      const reps = Math.max(0, parseInt(setObj.reps, 10) || 0);
+      const weight = Math.max(0, parseFloat(setObj.weight_kg ?? setObj.weight ?? 0) || 0);
+      const rpe = setObj.rpe != null && setObj.rpe !== '' ? parseFloat(setObj.rpe) : null;
+      const type = setObj.set_type || 'normal';
+
+      sets.push({
+        exercise_name: exName,
+        set_number: sn,
+        target_sets: exSets.length,
+        target_reps: reps,
+        reps,
+        weight,
+        rpe,
+        type
+      });
+    });
+  });
+
+  return {
+    id: 'hevy_' + workout.id,
+    hevy_workout_id: String(workout.id),
+    hevy_updated_at: workout.updated_at || workout.start_time || new Date().toISOString(),
+    source: 'hevy',
+    date,
+    routine_name: routineName,
+    day_name: dayName,
+    duration,
+    notes,
+    sets
+  };
+}
+
+async function testHevyConnection(customKey) {
+  const cfg = getHevyConfig();
+  const key = (customKey !== undefined ? customKey : cfg.apiKey || '').trim();
+  if (!key) {
+    return { ok: false, error: 'Ingresa tu API Key de Hevy antes de probar la conexión' };
+  }
+
+  try {
+    const res = await fetch('/api/hevy?action=test', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': key
+      }
+    });
+
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data?.ok) {
+      return {
+        ok: false,
+        error: data?.error || `Error ${res.status}: no se pudo conectar con Hevy`
+      };
+    }
+
+    return {
+      ok: true,
+      workout_count: data.workout_count,
+      user: data.user,
+      message: data.message || 'Conexión exitosa'
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: 'Error de red al conectar con el servidor proxy de Hevy: ' + err.message
+    };
+  }
+}
+
+async function saveHevySettingsAndTest() {
+  const keyInput = document.getElementById('hevy-api-key');
+  const intervalSelect = document.getElementById('hevy-sync-interval');
+
+  const apiKey = (keyInput ? keyInput.value : '').trim();
+  const intervalSeconds = intervalSelect ? parseInt(intervalSelect.value, 10) : 60;
+
+  if (!apiKey) {
+    saveHevyConfig({ apiKey: '', autoSync: false });
+    toast('API Key eliminada. Hevy desactivado.', 'warn');
+    renderHevyPage();
+    renderHevyDashboardCard();
+    initHevyAutoSync();
+    return;
+  }
+
+  toast('Verificando API Key con Hevy...');
+  const testRes = await testHevyConnection(apiKey);
+
+  if (!testRes.ok) {
+    saveHevyConfig({
+      apiKey,
+      intervalSeconds,
+      autoSync: intervalSeconds > 0,
+      lastSyncStatus: 'error',
+      lastSyncMessage: testRes.error
+    });
+    toast(testRes.error, 'err');
+    renderHevyPage();
+    renderHevyDashboardCard();
+    return;
+  }
+
+  saveHevyConfig({
+    apiKey,
+    intervalSeconds,
+    autoSync: intervalSeconds > 0,
+    totalRemoteWorkouts: testRes.workout_count != null ? testRes.workout_count : undefined,
+    lastSyncStatus: 'success',
+    lastSyncMessage: `Conexión verificada (${testRes.workout_count != null ? testRes.workout_count + ' entrenamientos en Hevy' : 'cuenta activa'})`
+  });
+
+  toast(`✓ Conexión exitosa con Hevy${testRes.workout_count != null ? ` (${testRes.workout_count} entrenamientos)` : ''}`);
+  initHevyAutoSync();
+  renderHevyPage();
+  renderHevyDashboardCard();
+
+  syncHevyWorkouts({ showToast: true });
+}
+
+async function syncHevyWorkouts(options = {}) {
+  const showToast = !!options.showToast;
+  if (isHevySyncing) return;
+
+  const cfg = getHevyConfig();
+  if (!cfg.apiKey) {
+    if (showToast) toast('Configura tu API Key de Hevy para sincronizar', 'warn');
+    return;
+  }
+
+  isHevySyncing = true;
+  updateHevySyncIndicators(true);
+
+  try {
+    const res = await fetch('/api/hevy?action=workouts&page=1&pageSize=15', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': cfg.apiKey
+      }
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data?.ok) {
+      const errMsg = data?.error || `Error ${res.status} al sincronizar Hevy`;
+      saveHevyConfig({
+        lastSyncStatus: 'error',
+        lastSyncMessage: errMsg
+      });
+      if (showToast) toast(errMsg, 'err');
+      renderHevyPage();
+      renderHevyDashboardCard();
+      return;
+    }
+
+    const workouts = data.workouts || [];
+    const sessions = DB.get('sessions') || [];
+    const prs = DB.get('records') || {};
+
+    let newCount = 0;
+    let updatedCount = 0;
+    let newPRCount = 0;
+
+    for (const workout of workouts) {
+      if (!workout || !workout.id) continue;
+      const mapped = mapHevyWorkoutToSession(workout);
+      if (!mapped) continue;
+
+      mapped.sets.forEach(s => {
+        if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+          prs[s.exercise_name] = {
+            exercise_name: s.exercise_name,
+            weight: s.weight,
+            reps: s.reps,
+            date: mapped.date
+          };
+          s.is_pr = true;
+          newPRCount++;
+        }
+      });
+
+      mapped.comparison = compareWorkoutSession(mapped);
+
+      const existingIdx = sessions.findIndex(
+        s => s.hevy_workout_id === workout.id || s.id === 'hevy_' + workout.id
+      );
+
+      if (existingIdx >= 0) {
+        const existing = sessions[existingIdx];
+        if (existing.hevy_updated_at !== workout.updated_at) {
+          sessions[existingIdx] = { ...mapped, id: existing.id };
+          updatedCount++;
+        }
+      } else {
+        sessions.push(mapped);
+        newCount++;
+      }
+    }
+
+    if (newCount > 0 || updatedCount > 0) {
+      sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      DB.set('sessions', sessions);
+      if (newPRCount > 0) DB.set('records', prs);
+
+      renderSessionsList();
+      renderTrainingProgress();
+      renderProgressionIntelligence();
+      renderExerciseHistoryDraft();
+      loadToday();
+      loadDashboard();
+      loadGoals();
+    }
+
+    lastHevySyncTimestamp = Date.now();
+    saveHevyConfig({
+      lastSync: new Date().toISOString(),
+      lastSyncStatus: 'success',
+      lastSyncMessage: `Sincronización al día (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`
+    });
+
+    renderHevyPage();
+    renderHevyDashboardCard();
+
+    if (showToast) {
+      if (newCount > 0) {
+        toast(`Sincronizados ${newCount} nuevos entrenamientos de Hevy${newPRCount > 0 ? ` · ¡${newPRCount} PR batido!` : ''}`);
+      } else if (updatedCount > 0) {
+        toast(`Actualizados ${updatedCount} entrenamientos de Hevy`);
+      } else {
+        toast('Entrenamientos de Hevy al día');
+      }
+    }
+  } catch (err) {
+    saveHevyConfig({
+      lastSyncStatus: 'error',
+      lastSyncMessage: 'Error de red: ' + err.message
+    });
+    if (showToast) toast('Error de conexión al sincronizar con Hevy', 'err');
+    renderHevyPage();
+    renderHevyDashboardCard();
+  } finally {
+    isHevySyncing = false;
+    updateHevySyncIndicators(false);
+  }
+}
+
+async function importHevyWorkoutsFullHistory() {
+  const cfg = getHevyConfig();
+  if (!cfg.apiKey) return toast('Configura tu API Key de Hevy primero', 'warn');
+
+  if (!confirm('Esto descargará todo tu historial de entrenamientos desde Hevy a AA Follow App. ¿Deseas continuar?')) return;
+
+  toast('Iniciando importación completa de Hevy...');
+  let page = 1;
+  const pageSize = 10;
+  let totalImported = 0;
+  let totalNewPRs = 0;
+  const maxPages = 20;
+
+  try {
+    while (page <= maxPages) {
+      toast(`Descargando página ${page} de Hevy...`);
+      const res = await fetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
+        headers: { 'api-key': cfg.apiKey }
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.ok) {
+        toast(data?.error || `Error en página ${page}`, 'err');
+        break;
+      }
+
+      const workouts = data.workouts || [];
+      if (!workouts.length) break;
+
+      const sessions = DB.get('sessions') || [];
+      const prs = DB.get('records') || {};
+      let pageChanges = 0;
+
+      for (const workout of workouts) {
+        if (!workout?.id) continue;
+        const mapped = mapHevyWorkoutToSession(workout);
+        if (!mapped) continue;
+
+        mapped.sets.forEach(s => {
+          if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+            prs[s.exercise_name] = {
+              exercise_name: s.exercise_name,
+              weight: s.weight,
+              reps: s.reps,
+              date: mapped.date
+            };
+            s.is_pr = true;
+            totalNewPRs++;
+          }
+        });
+        mapped.comparison = compareWorkoutSession(mapped);
+
+        const existingIdx = sessions.findIndex(
+          s => s.hevy_workout_id === workout.id || s.id === 'hevy_' + workout.id
+        );
+
+        if (existingIdx >= 0) {
+          sessions[existingIdx] = { ...mapped, id: sessions[existingIdx].id };
+        } else {
+          sessions.push(mapped);
+          totalImported++;
+        }
+        pageChanges++;
+      }
+
+      if (pageChanges > 0) {
+        sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+        DB.set('sessions', sessions);
+        DB.set('records', prs);
+      }
+
+      if (page >= (data.page_count || 1)) break;
+      page++;
+    }
+
+    toast(`✓ Importación completada: ${totalImported} entrenamientos sincronizados${totalNewPRs > 0 ? ` y ${totalNewPRs} PRs` : ''}`);
+    renderSessionsList();
+    renderTrainingProgress();
+    loadDashboard();
+    renderHevyPage();
+    renderHevyDashboardCard();
+  } catch (err) {
+    toast('Error durante la importación: ' + err.message, 'err');
+  }
+}
+
+async function importHevyRoutines() {
+  const cfg = getHevyConfig();
+  if (!cfg.apiKey) return toast('Configura tu API Key de Hevy primero', 'warn');
+
+  toast('Importando rutinas de Hevy...');
+  try {
+    const res = await fetch('/api/hevy?action=routines&page=1&pageSize=20', {
+      headers: { 'api-key': cfg.apiKey }
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data?.ok) {
+      return toast(data?.error || 'Error al obtener rutinas de Hevy', 'err');
+    }
+
+    const hevyRoutines = data.routines || [];
+    if (!hevyRoutines.length) {
+      return toast('No se encontraron rutinas en tu cuenta de Hevy', 'warn');
+    }
+
+    const currentRoutines = DB.get('routines') || [];
+    let addedCount = 0;
+
+    hevyRoutines.forEach(hr => {
+      const existingIdx = currentRoutines.findIndex(
+        r => r.hevy_routine_id === hr.id || r.id === 'hevy_' + hr.id
+      );
+
+      const exercises = (hr.exercises || []).map(ex => ({
+        name: ex.title || ex.exercise_template?.title || ex.name || 'Ejercicio',
+        target_sets: ex.sets?.length || 3,
+        reps: ex.sets?.[0]?.reps || 10
+      }));
+
+      const routineObj = {
+        id: existingIdx >= 0 ? currentRoutines[existingIdx].id : 'hevy_' + hr.id,
+        hevy_routine_id: hr.id,
+        source: 'hevy',
+        name: hr.title || 'Rutina Hevy',
+        days: [
+          {
+            id: uid(),
+            name: hr.title || 'Día 1',
+            exercises
+          }
+        ],
+        created: today()
+      };
+
+      if (existingIdx >= 0) {
+        currentRoutines[existingIdx] = routineObj;
+      } else {
+        currentRoutines.unshift(routineObj);
+        addedCount++;
+      }
+    });
+
+    DB.set('routines', currentRoutines);
+    renderRoutinesList();
+    fillLiveRoutines();
+    toast(`✓ Se importaron ${addedCount} rutinas de Hevy correctamente`);
+  } catch (err) {
+    toast('Error al importar rutinas: ' + err.message, 'err');
+  }
+}
+
+function renderHevyPage() {
+  const page = document.getElementById('page-hevy');
+  if (!page) return;
+  const cfg = getHevyConfig();
+
+  const keyInput = document.getElementById('hevy-api-key');
+  if (keyInput && !keyInput.value) {
+    keyInput.value = cfg.apiKey || '';
+  }
+
+  const intervalSelect = document.getElementById('hevy-sync-interval');
+  if (intervalSelect) {
+    intervalSelect.value = String(cfg.intervalSeconds ?? 60);
+  }
+
+  const webhookInput = document.getElementById('hevy-webhook-url');
+  if (webhookInput) {
+    webhookInput.value = `${window.location.origin}/api/hevy-webhook`;
+  }
+
+  const badge = document.getElementById('hevy-status-badge');
+  const statusText = document.getElementById('hevy-status-text');
+  if (badge) {
+    if (!cfg.apiKey) {
+      badge.className = 'badge';
+      badge.textContent = 'Sin verificar';
+    } else if (cfg.lastSyncStatus === 'success') {
+      badge.className = 'badge b-green';
+      badge.textContent = 'Conectado';
+    } else if (cfg.lastSyncStatus === 'error') {
+      badge.className = 'badge b-red';
+      badge.textContent = 'Error';
+    } else {
+      badge.className = 'badge b-blue';
+      badge.textContent = 'Clave guardada';
+    }
+  }
+
+  if (statusText) {
+    if (cfg.lastSyncMessage) {
+      statusText.innerHTML = esc(cfg.lastSyncMessage);
+    } else if (!cfg.apiKey) {
+      statusText.innerHTML = 'Obtén tu API Key desde la web de Hevy en <a href="https://hevy.com/settings?developer" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline">hevy.com/settings?developer</a> (requiere cuenta Pro).';
+    }
+  }
+
+  const hevySessions = (DB.get('sessions') || []).filter(s => s.source === 'hevy' || s.hevy_workout_id);
+  const countSyncedEl = document.getElementById('hevy-count-synced');
+  if (countSyncedEl) countSyncedEl.textContent = hevySessions.length;
+
+  const countRemoteEl = document.getElementById('hevy-count-remote');
+  if (countRemoteEl) {
+    countRemoteEl.textContent = cfg.totalRemoteWorkouts != null ? cfg.totalRemoteWorkouts : '—';
+  }
+
+  const lastSyncTimeEl = document.getElementById('hevy-last-sync-time');
+  const lastSyncDetailEl = document.getElementById('hevy-last-sync-detail');
+  if (lastSyncTimeEl) {
+    if (cfg.lastSync) {
+      const d = new Date(cfg.lastSync);
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const dateStr = d.toLocaleDateString([], { day: 'numeric', month: 'short' });
+      lastSyncTimeEl.textContent = `${dateStr}, ${timeStr}`;
+    } else {
+      lastSyncTimeEl.textContent = 'Nunca';
+    }
+  }
+  if (lastSyncDetailEl) {
+    if (cfg.lastSyncStatus === 'success') {
+      lastSyncDetailEl.textContent = 'Última sincronización exitosa';
+      lastSyncDetailEl.style.color = 'var(--green)';
+    } else if (cfg.lastSyncStatus === 'error') {
+      lastSyncDetailEl.textContent = 'Error en última sincronización';
+      lastSyncDetailEl.style.color = 'var(--red)';
+    } else {
+      lastSyncDetailEl.textContent = 'Esperando primera sincronización';
+      lastSyncDetailEl.style.color = 'var(--muted)';
+    }
+  }
+
+  const realtimeEl = document.getElementById('hevy-realtime-status');
+  const realtimeSubEl = document.getElementById('hevy-realtime-sub');
+  if (realtimeEl) {
+    if (!cfg.apiKey) {
+      realtimeEl.textContent = 'Inactivo';
+      if (realtimeSubEl) realtimeSubEl.textContent = 'Requiere API Key';
+    } else if (isHevySyncing) {
+      realtimeEl.textContent = 'Sincronizando';
+      if (realtimeSubEl) realtimeSubEl.textContent = 'Obteniendo datos...';
+    } else if (cfg.intervalSeconds > 0) {
+      realtimeEl.textContent = `Activo (${cfg.intervalSeconds}s)`;
+      if (realtimeSubEl) realtimeSubEl.textContent = `Auto-sync cada ${cfg.intervalSeconds} segundos`;
+    } else {
+      realtimeEl.textContent = 'Manual';
+      if (realtimeSubEl) realtimeSubEl.textContent = 'Auto-sync desactivado';
+    }
+  }
+
+  const counterLabel = document.getElementById('hevy-sync-counter-label');
+  if (counterLabel) {
+    counterLabel.textContent = `${hevySessions.length} entrenamiento${hevySessions.length === 1 ? '' : 's'} guardado${hevySessions.length === 1 ? '' : 's'}`;
+  }
+
+  renderHevyWorkoutsList();
+  refreshInterfaceIcons();
+}
+
+function renderHevyWorkoutsList() {
+  const container = document.getElementById('hevy-workouts-list');
+  if (!container) return;
+
+  const hevySessions = (DB.get('sessions') || [])
+    .filter(s => s.source === 'hevy' || s.hevy_workout_id)
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  if (!hevySessions.length) {
+    container.innerHTML = '<div class="empty">Sin entrenamientos sincronizados aún. Toca "Sincronizar ahora" para cargar tus entrenamientos de Hevy.</div>';
+    return;
+  }
+
+  container.innerHTML = hevySessions.map(s => {
+    const exMap = {};
+    (s.sets || []).forEach(set => {
+      const name = set.exercise_name || 'Ejercicio';
+      if (!exMap[name]) exMap[name] = [];
+      exMap[name].push(set);
+    });
+
+    const exList = Object.entries(exMap);
+    const prCount = (s.sets || []).filter(set => set.is_pr).length;
+
+    return `
+      <div class="card mb" style="background:var(--elevated); border:1px solid var(--border)">
+        <div class="flex jb ai-c flex-wrap gap-2" style="margin-bottom:12px">
+          <div>
+            <div style="font-weight:700; font-size:1.05rem; color:var(--text)">
+              ${esc(s.routine_name || s.day_name || 'Entrenamiento Hevy')}
+            </div>
+            <div class="flex gap-2 ai-c flex-wrap" style="margin-top:4px">
+              <span class="mini-muted">${s.date}</span>
+              ${s.duration ? `<span class="badge b-accent">${s.duration} min</span>` : ''}
+              <span class="badge b-accent">${s.sets?.length || 0} series</span>
+              <span class="badge" style="background:rgba(255,69,0,0.15); color:#ff6b3d; border:1px solid rgba(255,69,0,0.3)">Hevy</span>
+              ${prCount > 0 ? `<span class="badge b-amber">★ ${prCount} PR Récord</span>` : ''}
+            </div>
+          </div>
+          <div class="flex gap-2 ai-c">
+            <button class="btn btn-ghost btn-sm" onclick="changeGlobalDate('${s.date}'); go('training')">
+              Ver en Entrenamientos →
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteSession('${s.id}')" title="Eliminar sesión">✕</button>
+          </div>
+        </div>
+
+        ${s.notes ? `<div style="font-size:0.82rem; color:var(--muted); font-style:italic; margin-bottom:12px">"${esc(s.notes)}"</div>` : ''}
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:10px">
+          ${exList.map(([exName, sets]) => `
+            <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px">
+              <div style="font-weight:600; font-size:0.85rem; color:var(--text); margin-bottom:6px">
+                ${esc(exName)} <span class="mini-muted">(${sets.length} series)</span>
+              </div>
+              <div class="flex flex-wrap gap-1" style="font-size:0.78rem">
+                ${sets.map(st => `
+                  <span style="display:inline-block; padding:2px 6px; border-radius:4px; background:var(--elevated); border:1px solid var(--border); color:${st.is_pr ? 'var(--amber)' : 'var(--text)'}; font-weight:${st.is_pr ? '700' : '500'}">
+                    ${st.weight > 0 ? `${st.weight}kg × ` : ''}${st.reps} reps${st.rpe ? ` @${st.rpe}` : ''}${st.is_pr ? ' ★' : ''}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderHevyDashboardCard() {
+  const card = document.getElementById('hevy-dashboard-card');
+  if (!card) return;
+  const cfg = getHevyConfig();
+  const statusEl = document.getElementById('hevy-dash-status');
+  const badgeEl = document.getElementById('hevy-dash-badge');
+  const recentEl = document.getElementById('hevy-dash-recent');
+
+  const hevySessions = (DB.get('sessions') || [])
+    .filter(s => s.source === 'hevy' || s.hevy_workout_id)
+    .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  const latestHevy = hevySessions[0];
+
+  if (!cfg.apiKey) {
+    if (badgeEl) {
+      badgeEl.className = 'badge b-amber';
+      badgeEl.textContent = 'Sin conectar';
+    }
+    if (statusEl) statusEl.textContent = 'Añade tu API Key de Hevy para sincronizar en vivo';
+    if (recentEl) recentEl.innerHTML = '<span style="color:var(--muted)">Conecta tu cuenta para ver aquí tus entrenamientos terminados en Hevy al instante.</span>';
+    return;
+  }
+
+  if (badgeEl) {
+    if (isHevySyncing) {
+      badgeEl.className = 'badge b-blue';
+      badgeEl.textContent = 'Sincronizando...';
+    } else if (cfg.lastSyncStatus === 'error') {
+      badgeEl.className = 'badge b-red';
+      badgeEl.textContent = 'Error';
+    } else {
+      badgeEl.className = 'badge b-green';
+      badgeEl.textContent = 'En vivo';
+    }
+  }
+
+  if (statusEl) {
+    if (cfg.lastSync) {
+      const diffSecs = Math.round((Date.now() - new Date(cfg.lastSync).getTime()) / 1000);
+      let timeText = 'Hace unos segundos';
+      if (diffSecs >= 3600) timeText = `Hace ${Math.floor(diffSecs / 3600)} h`;
+      else if (diffSecs >= 60) timeText = `Hace ${Math.floor(diffSecs / 60)} min`;
+      statusEl.textContent = `Sincronizado ${timeText} · Auto-sync ${cfg.intervalSeconds ? `cada ${cfg.intervalSeconds}s` : 'manual'}`;
+    } else {
+      statusEl.textContent = 'API Key guardada. Listo para sincronizar.';
+    }
+  }
+
+  if (recentEl) {
+    if (latestHevy) {
+      const prCount = (latestHevy.sets || []).filter(s => s.is_pr).length;
+      recentEl.innerHTML = `
+        <div class="flex jb ai-c flex-wrap gap-2" style="padding-top:4px; border-top:1px solid var(--border); margin-top:8px">
+          <div>
+            <span style="font-weight:600; color:var(--text)">Último entreno: ${esc(latestHevy.routine_name || latestHevy.day_name || 'Entrenamiento')}</span>
+            <span class="mini-muted"> (${latestHevy.date}${latestHevy.duration ? ` · ${latestHevy.duration} min` : ''})</span>
+          </div>
+          <div class="flex gap-2 ai-c">
+            <span class="badge b-accent">${latestHevy.sets?.length || 0} series</span>
+            ${prCount > 0 ? `<span class="badge b-amber">★ ${prCount} PR</span>` : ''}
+            <button class="btn btn-ghost btn-sm" style="padding:2px 8px; font-size:0.75rem" onclick="changeGlobalDate('${latestHevy.date}'); go('training')">Ver detalles →</button>
+          </div>
+        </div>
+      `;
+    } else {
+      recentEl.innerHTML = '<span style="color:var(--muted)">Sin entrenamientos sincronizados aún. Toca "Sincronizar" para importar tus entrenamientos.</span>';
+    }
+  }
+}
+
+function initHevyAutoSync() {
+  if (hevyAutoSyncTimer) {
+    clearInterval(hevyAutoSyncTimer);
+    hevyAutoSyncTimer = null;
+  }
+
+  const cfg = getHevyConfig();
+  const intervalSeconds = cfg.intervalSeconds !== undefined ? cfg.intervalSeconds : 60;
+
+  if (cfg.apiKey && intervalSeconds > 0) {
+    hevyAutoSyncTimer = setInterval(() => {
+      syncHevyWorkouts({ showToast: false });
+    }, intervalSeconds * 1000);
+  }
+
+  if (!hevyAutoSyncListenersInstalled) {
+    hevyAutoSyncListenersInstalled = true;
+
+    const handleFocusSync = () => {
+      const currentCfg = getHevyConfig();
+      if (!currentCfg.apiKey) return;
+      const elapsed = Date.now() - lastHevySyncTimestamp;
+      if (elapsed >= 35000) {
+        syncHevyWorkouts({ showToast: false });
+      }
+    };
+
+    window.addEventListener('focus', handleFocusSync);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        handleFocusSync();
+      }
+    });
+  }
+}
+
+function updateHevyInterval(val) {
+  const seconds = parseInt(val, 10);
+  saveHevyConfig({ intervalSeconds: seconds, autoSync: seconds > 0 });
+  initHevyAutoSync();
+  renderHevyPage();
+  renderHevyDashboardCard();
+  toast(seconds > 0 ? `Auto-sync configurado cada ${seconds}s` : 'Auto-sync desactivado (modo manual)');
+}
+
+function updateHevySyncIndicators(isSyncing) {
+  const mainBtn = document.getElementById('hevy-sync-main-btn');
+  const dashBtn = document.getElementById('hevy-dash-sync-btn');
+  [mainBtn, dashBtn].forEach(btn => {
+    if (!btn) return;
+    const icon = btn.querySelector('[data-lucide="refresh-cw"]');
+    if (icon) {
+      if (isSyncing) icon.classList.add('spin-animation');
+      else icon.classList.remove('spin-animation');
+    }
+    btn.disabled = isSyncing;
+  });
+
+  const realtimeEl = document.getElementById('hevy-realtime-status');
+  if (realtimeEl && isSyncing) {
+    realtimeEl.textContent = 'Sincronizando...';
+  }
+}
+
+function toggleHevyKeyVisibility() {
+  const input = document.getElementById('hevy-api-key');
+  if (!input) return;
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function copyHevyWebhookUrl() {
+  const input = document.getElementById('hevy-webhook-url');
+  if (!input || !input.value) return;
+  navigator.clipboard.writeText(input.value)
+    .then(() => toast('URL del Webhook copiada al portapapeles'))
+    .catch(() => toast('No se pudo copiar la URL', 'err'));
+}
+
+function showHevyHelpModal() {
+  showModal('modal-hevy-help');
+}
+
+function loadHevy() {
+  renderHevyPage();
+  const cfg = getHevyConfig();
+  if (cfg.apiKey && (!cfg.lastSync || Date.now() - new Date(cfg.lastSync).getTime() > 60000)) {
+    syncHevyWorkouts({ showToast: false });
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -28917,6 +29903,8 @@ function enterApp(name, animate) {
   }
   loadDashboard();
   startCloudAutoSync();
+  initHevyAutoSync();
+  renderHevyDashboardCard();
 }
 
 async function logoutUser() {
@@ -28931,6 +29919,7 @@ async function logoutUser() {
 initSidebarToggle();
 refreshInterfaceIcons();
 installReminderSystem();
+initHevyAutoSync();
 initAuth();
 </script>
 </body>
