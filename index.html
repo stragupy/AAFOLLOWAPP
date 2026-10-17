@@ -26213,28 +26213,14 @@ async function importHevyRoutines() {
         r => r.hevy_routine_id === hr.id || r.id === 'hevy_' + hr.id
       );
 
-      const exerciseMap = new Map();
-      (hr.exercises || []).forEach(ex => {
+      const exercises = (hr.exercises || []).map(ex => {
         const name = String(ex.title || ex.exercise_template?.title || ex.name || 'Ejercicio').trim();
-        if (!name) return;
+        if (!name) return null;
         const sets = Array.isArray(ex.sets) ? ex.sets.filter(Boolean) : [];
         const setCount = Math.max(1, Number(sets.length || ex.set_count || ex.target_sets || 1) || 1);
         const reps = Math.max(1, Number(sets[0]?.reps || ex.reps || ex.target_reps || 10) || 10);
-        const existing = exerciseMap.get(name);
-        if (!existing) {
-          exerciseMap.set(name, { name, target_sets: setCount, reps });
-        } else {
-          existing.target_sets = Math.max(existing.target_sets, setCount);
-          existing.reps = Math.max(existing.reps, reps);
-        }
-      });
-
-      const exercises = Array.from(exerciseMap.values()).map(ex => ({
-        name: ex.name,
-        target_sets: ex.target_sets,
-        reps: ex.reps,
-        weight: 0
-      }));
+        return { name, target_sets: setCount, reps, weight: 0 };
+      }).filter(Boolean);
 
       const routineObj = {
         id: existingIdx >= 0 ? currentRoutines[existingIdx].id : 'hevy_' + hr.id,
@@ -26248,7 +26234,11 @@ async function importHevyRoutines() {
             exercises
           }
         ],
-        created: today()
+        created: existingIdx >= 0 ? currentRoutines[existingIdx].created || today() : today(),
+        ...(existingIdx >= 0 ? {
+          lastHevyVolume: currentRoutines[existingIdx].lastHevyVolume,
+          lastHevyTrend: currentRoutines[existingIdx].lastHevyTrend
+        } : {})
       };
 
       if (existingIdx >= 0) {
@@ -26648,83 +26638,26 @@ function syncHevyImportedRoutine(sessionLike) {
   const label = sessionLike?.routine_name || sessionLike?.day_name || 'Entrenamiento Hevy';
   const routineKey = String(sessionLike.hevy_routine_id).trim();
   const existingIdx = routines.findIndex(r => r.source === 'hevy' && r.hevy_routine_id && String(r.hevy_routine_id) === routineKey);
+  if (existingIdx < 0) return;
 
-  const exerciseMap = new Map();
-  (sessionLike?.sets || []).forEach(set => {
-    const name = set.exercise_name || 'Ejercicio';
-    if (!exerciseMap.has(name)) {
-      exerciseMap.set(name, {
-        name,
-        target_sets: Math.max(Number(set.target_sets || set.set_number || 1), 1),
-        reps: Math.max(Number(set.target_reps || set.reps || 10), 1),
-        weight: Number(set.weight || 0) || 0
-      });
-      return;
-    }
-    const current = exerciseMap.get(name);
-    const target = Number(set.target_sets || set.set_number || 1) || 1;
-    const reps = Number(set.target_reps || set.reps || current.reps || 10) || 10;
-    const weight = Number(set.weight || current.weight || 0) || 0;
-    current.target_sets = Math.max(current.target_sets, target);
-    current.reps = Math.max(current.reps, reps);
-    current.weight = Math.max(current.weight, weight);
-  });
-
-  const incomingExercises = Array.from(exerciseMap.values()).map(ex => ({
-    name: ex.name,
-    target_sets: Math.max(1, Number(ex.target_sets) || 1),
-    reps: Math.max(1, Number(ex.reps) || 10),
-    weight: Number(ex.weight) || 0
-  }));
-
-  const incomingDay = {
-    id: existingIdx >= 0 ? (Array.isArray(routines[existingIdx].days) && routines[existingIdx].days[0]?.id) || uid() : uid(),
-    name: sessionLike?.day_name || label || 'Día importado',
-    exercises: incomingExercises
-  };
-
-  if (existingIdx >= 0) {
-    const existing = routines[existingIdx];
-    const previousVolume = Number(existing.lastHevyVolume || 0) || 0;
-    const currentVolume = routineVolumeFromExercises(incomingExercises);
-    if (previousVolume > 0 && currentVolume > previousVolume) {
-      existing.lastHevyTrend = 'progreso';
-      existing.lastHevyVolume = currentVolume;
-      toast(`Rutina "${label}" — Progresó respecto al último import`, 'ok');
-    } else if (previousVolume > 0 && currentVolume < previousVolume) {
-      existing.lastHevyTrend = 'disminucion';
-      existing.lastHevyVolume = currentVolume;
-      toast(`Rutina "${label}" — Disminuyó respecto al último import`, 'warn');
-    } else {
-      existing.lastHevyTrend = previousVolume > 0 ? 'igual' : 'nuevo';
-      existing.lastHevyVolume = currentVolume || previousVolume;
-    }
-
-    const currentDays = [incomingDay];
-    existing.id = existing.id || uid();
-    existing.hevy_routine_id = routineKey;
-    existing.source = 'hevy';
-    existing.name = label;
-    existing.days = currentDays;
-    existing.created = existing.created || today();
-    routines[existingIdx] = existing;
-  } else {
-    routines.unshift({
-      id: uid(),
-      hevy_routine_id: routineKey,
-      source: 'hevy',
-      name: label,
-      days: [incomingDay],
-      created: today(),
-      lastHevyVolume: routineVolumeFromExercises(incomingExercises),
-      lastHevyTrend: 'nuevo'
-    });
+  const existing = routines[existingIdx];
+  const previousVolume = Number(existing.lastHevyVolume || 0) || 0;
+  const currentVolume = (sessionLike.sets || []).reduce((sum, set) => {
+    return sum + (Number(set.weight) || 0) * (Number(set.reps) || 0);
+  }, 0);
+  if (previousVolume > 0 && currentVolume > previousVolume) {
+    existing.lastHevyTrend = 'progreso';
+    existing.lastHevyVolume = currentVolume;
+    toast(`Rutina "${label}" — Progresó respecto al último import`, 'ok');
+  } else if (previousVolume > 0 && currentVolume < previousVolume) {
+    existing.lastHevyTrend = 'disminucion';
+    existing.lastHevyVolume = currentVolume;
+    toast(`Rutina "${label}" — Disminuyó respecto al último import`, 'warn');
+  } else if (!previousVolume && currentVolume > 0) {
+    existing.lastHevyTrend = 'nuevo';
+    existing.lastHevyVolume = currentVolume;
   }
-
   DB.set('routines', routines);
-  fillLiveRoutines();
-  fillSessionRoutines();
-  renderRoutinesList();
 }
 
 function refreshHevyImportedViews() {
