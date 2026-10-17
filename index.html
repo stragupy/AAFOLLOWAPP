@@ -24777,7 +24777,7 @@ function saveRoutine() {
 }
 
 function renderRoutinesList() {
-  const routines = DB.get('routines') || [];
+  const routines = sanitizeStoredRoutines();
   const el = document.getElementById('routines-list');
   if (!routines.length) { el.innerHTML = '<div class="empty">Crea tu primera rutina de entrenamiento</div>'; return; }
   el.innerHTML = `<div class="g2">${routines.map(r => {
@@ -25255,11 +25255,20 @@ function installWorkoutDraftAutosave() {
   window.addEventListener('pagehide', () => saveWorkoutDraftsNow('both'));
 }
 
+function sanitizeStoredRoutines() {
+  const routines = DB.get('routines') || [];
+  const cleaned = routines.filter(r => !(r.source === 'hevy' && !r.hevy_routine_id));
+  if (cleaned.length !== routines.length) {
+    DB.set('routines', cleaned);
+  }
+  return cleaned;
+}
+
 function fillLiveRoutines() {
   const sel = document.getElementById('live-routine');
   if (!sel) return;
   const current = sel.value;
-  const routines = DB.get('routines') || [];
+  const routines = sanitizeStoredRoutines();
   sel.innerHTML = '<option value="">Sin rutina</option>' + routines.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
   if (current) sel.value = current;
   fillLiveDays();
@@ -25438,7 +25447,7 @@ function saveLiveWorkout() {
 // ── Sesiones de Entrenamiento ──
 function fillSessionRoutines() {
   const sel = document.getElementById('s-routine');
-  const routines = DB.get('routines') || [];
+  const routines = sanitizeStoredRoutines();
   sel.innerHTML = '<option value="">Sin rutina asignada</option>' + routines.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
   fillSessionDays();
 }
@@ -26034,7 +26043,9 @@ async function syncHevyWorkouts(options = {}) {
         newCount++;
       }
 
-      syncHevyImportedRoutine(mapped);
+      if (workout?.routine_id) {
+        syncHevyImportedRoutine({ ...mapped, hevy_routine_id: String(workout.routine_id).trim() || undefined });
+      }
     }
 
     if (newCount > 0 || updatedCount > 0) {
@@ -26147,7 +26158,9 @@ async function importHevyWorkoutsFullHistory() {
           totalImported++;
         }
 
-        syncHevyImportedRoutine(mapped);
+        if (workout?.routine_id) {
+          syncHevyImportedRoutine({ ...mapped, hevy_routine_id: String(workout.routine_id).trim() || undefined });
+        }
         pageChanges++;
       }
 
@@ -26200,10 +26213,27 @@ async function importHevyRoutines() {
         r => r.hevy_routine_id === hr.id || r.id === 'hevy_' + hr.id
       );
 
-      const exercises = (hr.exercises || []).map(ex => ({
-        name: ex.title || ex.exercise_template?.title || ex.name || 'Ejercicio',
-        target_sets: ex.sets?.length || 3,
-        reps: ex.sets?.[0]?.reps || 10
+      const exerciseMap = new Map();
+      (hr.exercises || []).forEach(ex => {
+        const name = String(ex.title || ex.exercise_template?.title || ex.name || 'Ejercicio').trim();
+        if (!name) return;
+        const sets = Array.isArray(ex.sets) ? ex.sets.filter(Boolean) : [];
+        const setCount = Math.max(1, Number(sets.length || ex.set_count || ex.target_sets || 1) || 1);
+        const reps = Math.max(1, Number(sets[0]?.reps || ex.reps || ex.target_reps || 10) || 10);
+        const existing = exerciseMap.get(name);
+        if (!existing) {
+          exerciseMap.set(name, { name, target_sets: setCount, reps });
+        } else {
+          existing.target_sets = Math.max(existing.target_sets, setCount);
+          existing.reps = Math.max(existing.reps, reps);
+        }
+      });
+
+      const exercises = Array.from(exerciseMap.values()).map(ex => ({
+        name: ex.name,
+        target_sets: ex.target_sets,
+        reps: ex.reps,
+        weight: 0
       }));
 
       const routineObj = {
@@ -26612,13 +26642,12 @@ function routineVolumeFromExercises(exercises) {
 }
 
 function syncHevyImportedRoutine(sessionLike) {
+  if (!sessionLike || !sessionLike.hevy_routine_id) return;
+
   const routines = DB.get('routines') || [];
   const label = sessionLike?.routine_name || sessionLike?.day_name || 'Entrenamiento Hevy';
-  const routineKey = String(sessionLike?.hevy_routine_id || sessionLike?.routine_name || sessionLike?.day_name || label || 'hevy-routine').trim();
-  const existingIdx = routines.findIndex(r => r.source === 'hevy' && (
-    (r.hevy_routine_id && String(r.hevy_routine_id) === routineKey) ||
-    (r.name && r.name.toLowerCase() === label.toLowerCase())
-  ));
+  const routineKey = String(sessionLike.hevy_routine_id).trim();
+  const existingIdx = routines.findIndex(r => r.source === 'hevy' && r.hevy_routine_id && String(r.hevy_routine_id) === routineKey);
 
   const exerciseMap = new Map();
   (sessionLike?.sets || []).forEach(set => {
@@ -26649,7 +26678,7 @@ function syncHevyImportedRoutine(sessionLike) {
   }));
 
   const incomingDay = {
-    id: uid(),
+    id: existingIdx >= 0 ? (Array.isArray(routines[existingIdx].days) && routines[existingIdx].days[0]?.id) || uid() : uid(),
     name: sessionLike?.day_name || label || 'Día importado',
     exercises: incomingExercises
   };
@@ -26671,33 +26700,11 @@ function syncHevyImportedRoutine(sessionLike) {
       existing.lastHevyVolume = currentVolume || previousVolume;
     }
 
-    const dayName = incomingDay.name;
-    const currentDays = Array.isArray(existing.days) ? existing.days : [];
-    const dayIdx = currentDays.findIndex(day => day.name && day.name.toLowerCase() === dayName.toLowerCase());
-
-    if (dayIdx >= 0) {
-      currentDays[dayIdx].exercises = currentDays[dayIdx].exercises || [];
-      const mergedByName = new Map();
-      [...(currentDays[dayIdx].exercises || []), ...incomingDay.exercises].forEach(ex => {
-        const key = (ex.name || 'Ejercicio').toLowerCase();
-        if (!mergedByName.has(key)) {
-          mergedByName.set(key, { ...ex });
-        } else {
-          const current = mergedByName.get(key);
-          current.target_sets = Math.max(Number(current.target_sets) || 1, Number(ex.target_sets) || 1);
-          current.reps = Math.max(Number(current.reps) || 1, Number(ex.reps) || 1);
-          current.weight = Math.max(Number(current.weight) || 0, Number(ex.weight) || 0);
-        }
-      });
-      currentDays[dayIdx].exercises = Array.from(mergedByName.values());
-    } else {
-      currentDays.push(incomingDay);
-    }
-
+    const currentDays = [incomingDay];
     existing.id = existing.id || uid();
-    existing.hevy_routine_id = existing.hevy_routine_id || routineKey;
+    existing.hevy_routine_id = routineKey;
     existing.source = 'hevy';
-    existing.name = existing.name || label;
+    existing.name = label;
     existing.days = currentDays;
     existing.created = existing.created || today();
     routines[existingIdx] = existing;
