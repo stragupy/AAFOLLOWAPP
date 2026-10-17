@@ -25296,6 +25296,65 @@ function fillLiveDays() {
   scheduleWorkoutDraftSave('live');
 }
 
+function latestSessionForRoutineDay(routine, day) {
+  const sessions = (DB.get('sessions') || []).filter(session => Array.isArray(session.sets) && session.sets.length);
+  const normalize = value => String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  const routineId = String(routine?.hevy_routine_id || '');
+  const matchingId = routineId
+    ? sessions.filter(session => String(session.hevy_routine_id || '') === routineId)
+    : [];
+  const matchingName = sessions.filter(session => normalize(session.routine_name) === normalize(routine?.name));
+  const candidates = matchingId.length ? matchingId : matchingName;
+  const matchingDay = candidates.filter(session => normalize(session.day_name) === normalize(day?.name));
+  const dayCandidates = matchingDay.length || (routine?.days || []).length > 1 ? matchingDay : candidates;
+  return dayCandidates.reduce((latest, session) => {
+    if (!latest) return session;
+    const sessionDate = String(session.date || '');
+    const latestDate = String(latest.date || '');
+    if (sessionDate !== latestDate) return sessionDate > latestDate ? session : latest;
+    const sessionTime = String(session.hevy_updated_at || session.start_time || session.created_at || '');
+    const latestTime = String(latest.hevy_updated_at || latest.start_time || latest.created_at || '');
+    return sessionTime > latestTime ? session : latest;
+  }, null);
+}
+
+function workoutSetPrefills(routine, day) {
+  const latest = latestSessionForRoutineDay(routine, day);
+  if (latest) {
+    const setCounts = new Map();
+    (latest.sets || []).forEach(set => {
+      const name = set.exercise_name || set.exercise || '';
+      const key = exerciseGroupKey(name);
+      if (key) setCounts.set(key, (setCounts.get(key) || 0) + 1);
+    });
+    return latest.sets.map((set, index) => {
+      const exercise = set.exercise_name || set.exercise || '';
+      return {
+        exercise,
+        setNumber: Number(set.set_number) || index + 1,
+        targetSets: setCounts.get(exerciseGroupKey(exercise)) || 1,
+        targetReps: set.target_reps ?? set.reps ?? '',
+        achievedReps: set.reps ?? '',
+        weight: set.weight ?? '',
+        rir: set.rir ?? '',
+        rpe: set.rpe ?? ''
+      };
+    }).filter(set => set.exercise);
+  }
+
+  return (day?.exercises || []).flatMap(exercise => {
+    const targetSets = Math.max(+(exercise.target_sets || exercise.sets || 1), 1);
+    const targetReps = Math.max(+(exercise.reps || exercise.target_reps || 1), 1);
+    return Array.from({ length: targetSets }, (_, index) => ({
+      exercise: exercise.name,
+      setNumber: index + 1,
+      targetSets,
+      targetReps,
+      achievedReps: targetReps
+    }));
+  });
+}
+
 function loadLiveDay() {
   const routineId = document.getElementById('live-routine')?.value;
   const dayId = document.getElementById('live-day')?.value;
@@ -25308,12 +25367,8 @@ function loadLiveDay() {
   gymExerciseIndex = 0;
   gymSkipRest();
   if (!day) return;
-  (day.exercises || []).forEach(ex => {
-    const targetSets = Math.max(+(ex.target_sets || ex.sets || 1), 1);
-    const targetReps = Math.max(+(ex.reps || ex.target_reps || 1), 1);
-    for (let setNumber = 1; setNumber <= targetSets; setNumber++) {
-      addLiveSet({ exercise: ex.name, setNumber, targetSets, targetReps, achievedReps: '' });
-    }
+  workoutSetPrefills(routine, day).forEach(prefill => {
+    addLiveSet({ ...prefill, achievedReps: prefill.achievedReps, completed: false, manualTouched: false });
   });
   document.getElementById('live-label').textContent = day.name + ' - objetivos cargados';
   renderMobileGymDraft();
@@ -25492,20 +25547,13 @@ function loadDayIntoSession() {
   setCount = 0;
   if (!day) return;
 
-  (day.exercises || []).forEach(ex => {
-    const targetSets = Math.max(+(ex.target_sets || ex.sets || 1), 1);
-    const targetReps = Math.max(+(ex.reps || ex.target_reps || 1), 1);
-    for (let setNumber = 1; setNumber <= targetSets; setNumber++) {
-      addSet({
-        exercise: ex.name,
-        setNumber,
-        targetSets,
-        targetReps,
-        achievedReps: targetReps
-      });
-    }
+  workoutSetPrefills(routine, day).forEach(prefill => {
+    addSet(prefill);
   });
-  document.getElementById('s-sets-label').textContent = day.name + ' — objetivos cargados';
+  const latestSession = latestSessionForRoutineDay(routine, day);
+  document.getElementById('s-sets-label').textContent = latestSession
+    ? day.name + ' — última sesión cargada'
+    : day.name + ' — objetivos cargados';
   scheduleWorkoutDraftSave('session');
 }
 
@@ -25844,6 +25892,7 @@ function mapHevyWorkoutToSession(workout) {
   return {
     id: 'hevy_' + workout.id,
     hevy_workout_id: String(workout.id),
+    hevy_routine_id: workout.routine_id ? String(workout.routine_id) : undefined,
     hevy_updated_at: workout.updated_at || workout.start_time || new Date().toISOString(),
     source: 'hevy',
     date,
