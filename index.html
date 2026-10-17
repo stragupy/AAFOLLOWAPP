@@ -25930,6 +25930,8 @@ async function syncHevyWorkouts(options = {}) {
         sessions.push(mapped);
         newCount++;
       }
+
+      syncHevyImportedRoutine(mapped);
     }
 
     if (newCount > 0 || updatedCount > 0) {
@@ -25944,6 +25946,7 @@ async function syncHevyWorkouts(options = {}) {
       loadToday();
       loadDashboard();
       loadGoals();
+      loadCalendar({ preserveCursor: true });
     }
 
     lastHevySyncTimestamp = Date.now();
@@ -26040,6 +26043,8 @@ async function importHevyWorkoutsFullHistory() {
           sessions.push(mapped);
           totalImported++;
         }
+
+        syncHevyImportedRoutine(mapped);
         pageChanges++;
       }
 
@@ -26047,6 +26052,7 @@ async function importHevyWorkoutsFullHistory() {
         sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
         DB.set('sessions', sessions);
         DB.set('records', prs);
+        loadCalendar({ preserveCursor: true });
       }
 
       if (page >= (data.page_count || 1)) break;
@@ -26492,7 +26498,75 @@ function switchHevyTab(btn, tabId) {
   btn.classList.add('active');
 }
 
-// ── HEVY CSV IMPORT ────────────────────────────────────
+// ── HEVY IMPORT HELPERS ─────────────────────────────────
+function syncHevyImportedRoutine(sessionLike) {
+  const routines = DB.get('routines') || [];
+  const label = sessionLike?.routine_name || sessionLike?.day_name || 'Entrenamiento Hevy';
+  const key = sessionLike?.hevy_workout_id || sessionLike?.id || label;
+  const existingIdx = routines.findIndex(r => r.source === 'hevy' && (r.hevy_routine_id === key || r.name === label));
+
+  const exerciseMap = new Map();
+  (sessionLike?.sets || []).forEach(set => {
+    const name = set.exercise_name || 'Ejercicio';
+    if (!exerciseMap.has(name)) {
+      exerciseMap.set(name, {
+        name,
+        target_sets: Math.max(Number(set.target_sets || set.set_number || 1), 1),
+        reps: Math.max(Number(set.target_reps || set.reps || 10), 1)
+      });
+      return;
+    }
+    const current = exerciseMap.get(name);
+    const target = Number(set.target_sets || set.set_number || 1) || 1;
+    const reps = Number(set.target_reps || set.reps || current.reps || 10) || 10;
+    current.target_sets = Math.max(current.target_sets, target);
+    current.reps = Math.max(current.reps, reps);
+  });
+
+  const exercises = Array.from(exerciseMap.values()).map(ex => ({
+    name: ex.name,
+    target_sets: Math.max(1, Number(ex.target_sets) || 1),
+    reps: Math.max(1, Number(ex.reps) || 10)
+  }));
+
+  const routineObj = {
+    id: existingIdx >= 0 ? routines[existingIdx].id : uid(),
+    hevy_routine_id: key,
+    source: 'hevy',
+    name: label,
+    days: [{
+      id: uid(),
+      name: sessionLike?.day_name || label || 'Día importado',
+      exercises
+    }],
+    created: today()
+  };
+
+  if (existingIdx >= 0) {
+    routines[existingIdx] = routineObj;
+  } else {
+    routines.unshift(routineObj);
+  }
+
+  DB.set('routines', routines);
+  fillLiveRoutines();
+  fillSessionRoutines();
+  renderRoutinesList();
+}
+
+function refreshHevyImportedViews() {
+  loadCalendar({ preserveCursor: true });
+  renderSessionsList();
+  renderTrainingProgress();
+  renderProgressionIntelligence();
+  renderExerciseHistoryDraft();
+  renderHevyPage();
+  renderHevyDashboardCard();
+  loadToday();
+  loadDashboard();
+  loadGoals();
+}
+
 function hevyParseCsvRaw(text) {
   const lines = [];
   let row = [''];
@@ -26649,7 +26723,6 @@ function importHevyCsvFile() {
       workouts.forEach(workout => {
         const sessionId = 'hevy_csv_' + workout.key.replace(/\s/g, '_').slice(0, 40);
 
-        // PR detection
         workout.sets.forEach(s => {
           if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
             prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date: workout.date };
@@ -26679,6 +26752,8 @@ function importHevyCsvFile() {
           sessions.push(mapped);
           newCount++;
         }
+
+        syncHevyImportedRoutine(mapped);
       });
 
       sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
@@ -26691,11 +26766,7 @@ function importHevyCsvFile() {
         lastSyncMessage: `CSV importado: ${newCount} nuevos, ${updatedCount} actualizados`
       });
 
-      renderSessionsList();
-      renderTrainingProgress();
-      renderHevyPage();
-      renderHevyDashboardCard();
-      loadDashboard();
+      refreshHevyImportedViews();
 
       const previewEl = document.getElementById('hevy-csv-preview');
       if (previewEl) previewEl.style.display = 'none';
@@ -26847,6 +26918,8 @@ function importHevyPastedText() {
   DB.set('sessions', sessions);
   if (newPRCount > 0) DB.set('records', prs);
 
+  syncHevyImportedRoutine(mapped);
+
   saveHevyConfig({
     lastSync: new Date().toISOString(),
     lastSyncStatus: 'success',
@@ -26857,11 +26930,7 @@ function importHevyPastedText() {
   const previewEl = document.getElementById('hevy-paste-preview');
   if (previewEl) previewEl.style.display = 'none';
 
-  renderSessionsList();
-  renderTrainingProgress();
-  renderHevyPage();
-  renderHevyDashboardCard();
-  loadDashboard();
+  refreshHevyImportedViews();
 
   toast(`✓ Entreno "${parsed.title}" importado: ${sets.length} series${newPRCount > 0 ? ` · ¡${newPRCount} PR!` : ''}`);
 }
