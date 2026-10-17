@@ -16026,60 +16026,163 @@ body.calendar-dragging .aa-calendar-drop-zone {
           H
         </div>
         <div>
-          <h1 style="font-size:1.4rem; margin-bottom:2px">Hevy · Sincronización en tiempo real</h1>
-          <p style="color:var(--muted); font-size:0.85rem">Conecta tu cuenta de Hevy para importar rutinas, series, repeticiones y pesos en vivo</p>
+          <h1 style="font-size:1.4rem; margin-bottom:2px">Hevy &middot; Importar entrenamientos</h1>
+          <p style="color:var(--muted); font-size:0.85rem">Importa tus entrenamientos de Hevy gratis &mdash; sin necesitar cuenta Pro</p>
         </div>
       </div>
       <div class="flex gap-2 ai-c">
         <button class="btn btn-ghost btn-sm" onclick="showHevyHelpModal()">
           <i data-lucide="help-circle" style="width:14px;height:14px;display:inline-block;vertical-align:-2px"></i> Ayuda
         </button>
-        <button class="btn btn-primary btn-sm" id="hevy-sync-main-btn" onclick="syncHevyWorkouts({ showToast: true })">
+        <button class="btn btn-primary btn-sm" id="hevy-sync-main-btn" onclick="syncHevyWorkouts({ showToast: true })" style="display:none">
           <i data-lucide="refresh-cw" style="width:14px;height:14px;display:inline-block;vertical-align:-2px"></i> Sincronizar ahora
         </button>
       </div>
     </div>
     <div class="content">
-      <!-- Configuración de API Key y Estado -->
-      <div class="card mb">
-        <div class="flex jb ai-c mb-2">
-          <div class="card-title" style="margin-bottom:0">Conexión con Hevy API</div>
-          <div id="hevy-connection-status" class="flex ai-c gap-2 mini-muted">
-            <span class="badge" id="hevy-status-badge">Sin verificar</span>
-          </div>
-        </div>
-        <p class="mini-muted mb-3" id="hevy-status-text">
-          Obtén tu API Key desde la web de Hevy en <a href="https://hevy.com/settings?developer" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline">hevy.com/settings?developer</a> (requiere cuenta Pro).
-        </p>
-        
-        <div class="form-grid fg2 mb-3">
-          <div class="form-row">
-            <label class="form-label">API Key de Hevy</label>
-            <div class="flex gap-2">
-              <input type="password" id="hevy-api-key" placeholder="Pega aquí tu API key de Hevy..." style="font-family:monospace; font-size:0.9rem">
-              <button class="btn btn-ghost btn-sm" type="button" onclick="toggleHevyKeyVisibility()">Ver</button>
-            </div>
-          </div>
-          <div class="form-row">
-            <label class="form-label">Frecuencia de sincronización automática</label>
-            <select id="hevy-sync-interval" onchange="updateHevyInterval(this.value)">
-              <option value="30">Cada 30 segundos (En tiempo real)</option>
-              <option value="60" selected>Cada 1 minuto (Recomendado)</option>
-              <option value="120">Cada 2 minutos</option>
-              <option value="300">Cada 5 minutos</option>
-              <option value="0">Solo manual / Al abrir la app</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="btn-row">
-          <button class="btn btn-primary btn-sm" onclick="saveHevySettingsAndTest()">Guardar y Probar Conexión</button>
-          <button class="btn btn-ghost btn-sm" onclick="importHevyWorkoutsFullHistory()">Importar Historial Completo</button>
-          <button class="btn btn-ghost btn-sm" onclick="importHevyRoutines()">Importar Rutinas</button>
+      <!-- BANNER GRATIS -->
+      <div style="background:linear-gradient(135deg,rgba(255,69,0,0.12),rgba(255,69,0,0.04)); border:1px solid rgba(255,69,0,0.25); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:18px; display:flex; gap:14px; align-items:flex-start">
+        <span style="font-size:1.6rem; flex-shrink:0">&#127881;</span>
+        <div>
+          <div style="font-weight:700; color:var(--text); margin-bottom:4px">Sin costo &mdash; dos formas gratuitas de importar desde Hevy</div>
+          <div style="font-size:0.83rem; color:var(--muted); line-height:1.5">
+            La API oficial de Hevy requiere cuenta Pro. Pero pods importar todo tu historial <strong>gratis</strong> de dos maneras:
+            <strong>CSV masivo</strong> (todos tus entrenos de golpe) o <strong>pegar el texto</strong> de cada entreno que termines.
+            La opcion de API queda disponible si en algun momento actualizas tu cuenta.
+          </div>
         </div>
       </div>
 
-      <!-- Métricas rápidas de sincronización -->
+      <!-- TABS -->
+      <div class="tabs mb">
+        <button class="tab active" onclick="switchHevyTab(this,'hevy-tab-csv')">
+          &#128194; CSV Masivo (Gratis)
+        </button>
+        <button class="tab" onclick="switchHevyTab(this,'hevy-tab-paste')">
+          &#128203; Pegar Texto (Gratis)
+        </button>
+        <button class="tab" onclick="switchHevyTab(this,'hevy-tab-api')">
+          &#128273; API Key (Pro)
+        </button>
+      </div>
+
+      <!-- TAB 1: CSV -->
+      <div id="hevy-tab-csv">
+        <div class="card mb">
+          <div class="card-title">&#128194; Importar historial completo con CSV</div>
+          <div style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:14px">
+            Exporta todos tus entrenamientos desde la app de Hevy y subi el archivo aqui. Es <strong>gratis</strong>, sin limites y trae todo tu historial de una sola vez.
+          </div>
+          <div style="background:var(--elevated); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:14px; border:1px solid var(--border)">
+            <div style="font-weight:600; font-size:0.85rem; color:var(--text); margin-bottom:8px">&#128241; Como exportar en Hevy:</div>
+            <ol style="font-size:0.83rem; color:var(--muted); line-height:1.8; margin:0; padding-left:18px">
+              <li>Abri Hevy y toca tu <strong>Perfil</strong> (icono de persona abajo)</li>
+              <li>Toca el icono de <strong>Ajustes &#9881;</strong> (arriba a la derecha)</li>
+              <li>Selecciona <strong>"Exportar e importar datos"</strong></li>
+              <li>Toca <strong>"Exportar datos"</strong> &rarr; <strong>"Exportar Workouts"</strong></li>
+              <li>Guarda el archivo <code>.csv</code> y subilo aca abajo</li>
+            </ol>
+          </div>
+          <div class="form-row mb-3">
+            <label class="form-label">Archivo CSV de Hevy</label>
+            <input type="file" id="hevy-csv-file" accept=".csv,text/csv" style="font-size:0.88rem; padding:8px; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); width:100%; cursor:pointer">
+          </div>
+          <div id="hevy-csv-preview" style="display:none; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:12px; font-size:0.82rem; color:var(--muted)"></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="importHevyCsvFile()">Importar CSV</button>
+            <button class="btn btn-ghost btn-sm" onclick="previewHevyCsvFile()">Vista previa</button>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('hevy-csv-file').value=''; document.getElementById('hevy-csv-preview').style.display='none'">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Paste text -->
+      <div id="hevy-tab-paste" style="display:none">
+        <div class="card mb">
+          <div class="card-title">&#128203; Pegar texto de un entreno</div>
+          <div style="font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:14px">
+            Terminas un entreno en Hevy, tocas <strong>Compartir &rarr; Copiar texto</strong>, y pegas ese texto aqui. AA Follow App detecta automaticamente los ejercicios, series, kilos y repeticiones.
+          </div>
+          <div style="background:var(--elevated); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:14px; border:1px solid var(--border)">
+            <div style="font-weight:600; font-size:0.85rem; color:var(--text); margin-bottom:8px">&#128241; Como copiar el texto en Hevy:</div>
+            <ol style="font-size:0.83rem; color:var(--muted); line-height:1.8; margin:0; padding-left:18px">
+              <li>Abri Hevy y abri un entreno completado</li>
+              <li>Toca el icono de <strong>Compartir</strong> (flecha hacia arriba)</li>
+              <li>En el menu selecciona <strong>"Copiar texto"</strong></li>
+              <li>Volve a AA Follow App y pega el texto abajo</li>
+            </ol>
+          </div>
+          <div class="form-row mb-2">
+            <label class="form-label">Fecha del entreno</label>
+            <input type="date" id="hevy-paste-date" style="width:auto">
+          </div>
+          <div class="form-row mb-3">
+            <label class="form-label">Pega el texto del entreno de Hevy</label>
+            <textarea id="hevy-paste-text" rows="9" placeholder="Push Day&#10;Duration: 55m | Volume: 6,400 kg | Sets: 6&#10;&#10;Barbell Bench Press&#10;Set 1: 80 kg x 10&#10;Set 2: 90 kg x 8&#10;&#10;Incline Dumbbell Press&#10;Set 1: 30 kg x 10" style="font-family:monospace; font-size:0.82rem; line-height:1.5; resize:vertical"></textarea>
+          </div>
+          <div id="hevy-paste-preview" style="display:none; background:var(--elevated); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:12px; font-size:0.82rem; color:var(--muted)"></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="importHevyPastedText()">Importar Entreno</button>
+            <button class="btn btn-ghost btn-sm" onclick="previewHevyPastedText()">Vista previa</button>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('hevy-paste-text').value=''; document.getElementById('hevy-paste-preview').style.display='none'">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: API Key (Pro) -->
+      <div id="hevy-tab-api" style="display:none">
+        <div class="card mb" style="border:1px solid rgba(255,165,0,0.3)">
+          <div style="background:rgba(255,165,0,0.1); border-radius:var(--radius-sm); padding:8px 12px; margin-bottom:12px; font-size:0.82rem; color:var(--amber)">
+            &#9888; Esta funcion requiere <strong>Hevy Pro</strong> (~$5 USD/mes). Si tenes cuenta gratuita, usa las opciones CSV o Pegar Texto de arriba.
+          </div>
+          <div class="flex jb ai-c mb-2">
+            <div class="card-title" style="margin-bottom:0">Conexion con Hevy API (Pro)</div>
+            <div id="hevy-connection-status" class="flex ai-c gap-2 mini-muted">
+              <span class="badge" id="hevy-status-badge">Sin verificar</span>
+            </div>
+          </div>
+          <p class="mini-muted mb-3" id="hevy-status-text">
+            Obten tu API Key en <a href="https://hevy.com/settings?developer" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline">hevy.com/settings?developer</a> (requiere cuenta Pro).
+          </p>
+          <div class="form-grid fg2 mb-3">
+            <div class="form-row">
+              <label class="form-label">API Key de Hevy</label>
+              <div class="flex gap-2">
+                <input type="password" id="hevy-api-key" placeholder="Pega aqui tu API key de Hevy..." style="font-family:monospace; font-size:0.9rem">
+                <button class="btn btn-ghost btn-sm" type="button" onclick="toggleHevyKeyVisibility()">Ver</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label">Frecuencia de sincronizacion automatica</label>
+              <select id="hevy-sync-interval" onchange="updateHevyInterval(this.value)">
+                <option value="30">Cada 30 segundos (En tiempo real)</option>
+                <option value="60" selected>Cada 1 minuto (Recomendado)</option>
+                <option value="120">Cada 2 minutos</option>
+                <option value="300">Cada 5 minutos</option>
+                <option value="0">Solo manual / Al abrir la app</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" onclick="saveHevySettingsAndTest()">Guardar y Probar Conexion</button>
+            <button class="btn btn-ghost btn-sm" onclick="importHevyWorkoutsFullHistory()">Importar Historial Completo</button>
+            <button class="btn btn-ghost btn-sm" onclick="importHevyRoutines()">Importar Rutinas</button>
+          </div>
+        </div>
+        <div class="card mb">
+          <div class="card-title">Webhook instantaneo (Pro)</div>
+          <p style="font-size:0.85rem; color:var(--muted); line-height:1.5; margin-bottom:12px">
+            Si configuras esta URL en <strong>hevy.com/settings?developer</strong>, Hevy notificara a AA Follow App al instante al finalizar un entreno:
+          </p>
+          <div class="flex gap-2 ai-c">
+            <input type="text" id="hevy-webhook-url" readonly style="font-family:monospace; font-size:0.85rem; background:var(--elevated)" value="">
+            <button class="btn btn-ghost btn-sm" onclick="copyHevyWebhookUrl()">Copiar URL</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metricas -->
       <div class="g4 mb">
         <div class="metric c-accent">
           <div class="metric-label">Entrenamientos Hevy</div>
@@ -16088,41 +16191,29 @@ body.calendar-dragging .aa-calendar-drop-zone {
         </div>
         <div class="metric c-green">
           <div class="metric-label">Total en cuenta Hevy</div>
-          <div class="metric-val" id="hevy-count-remote">—</div>
+          <div class="metric-val" id="hevy-count-remote">&mdash;</div>
           <div class="metric-sub">Registrados en la nube</div>
         </div>
         <div class="metric c-amber">
-          <div class="metric-label">Última sincronización</div>
+          <div class="metric-label">Ultima importacion</div>
           <div class="metric-val" id="hevy-last-sync-time" style="font-size:1.15rem">Nunca</div>
-          <div class="metric-sub" id="hevy-last-sync-detail">Esperando primera sincronización</div>
+          <div class="metric-sub" id="hevy-last-sync-detail">Sin importaciones aun</div>
         </div>
         <div class="metric c-blue">
-          <div class="metric-label">Estado en tiempo real</div>
-          <div class="metric-val" id="hevy-realtime-status" style="font-size:1.15rem">Inactivo</div>
-          <div class="metric-sub" id="hevy-realtime-sub">Auto-sync al entrenar</div>
+          <div class="metric-label">Estado</div>
+          <div class="metric-val" id="hevy-realtime-status" style="font-size:1.15rem">Listo</div>
+          <div class="metric-sub" id="hevy-realtime-sub">Importacion manual o auto (Pro)</div>
         </div>
       </div>
 
-      <!-- Guía de Webhook en tiempo real -->
-      <div class="card mb">
-        <div class="card-title">Webhook para notificación instantánea (Opcional)</div>
-        <p style="font-size:0.85rem; color:var(--muted); line-height:1.5; margin-bottom:12px">
-          Si configuras esta URL en <strong>hevy.com/settings?developer</strong> en el apartado de Webhook, Hevy notificará automáticamente a AA Follow App apenas toques "Finalizar entrenamiento" en tu app móvil:
-        </p>
-        <div class="flex gap-2 ai-c">
-          <input type="text" id="hevy-webhook-url" readonly style="font-family:monospace; font-size:0.85rem; background:var(--elevated)" value="">
-          <button class="btn btn-ghost btn-sm" onclick="copyHevyWebhookUrl()">Copiar URL</button>
-        </div>
-      </div>
-
-      <!-- Listado de entrenamientos sincronizados -->
+      <!-- Historial -->
       <div class="card mb">
         <div class="flex jb ai-c mb-3">
-          <div class="card-title" style="margin-bottom:0">Historial de entrenamientos sincronizados desde Hevy</div>
+          <div class="card-title" style="margin-bottom:0">Historial de entrenamientos importados desde Hevy</div>
           <span class="mini-muted" id="hevy-sync-counter-label"></span>
         </div>
         <div id="hevy-workouts-list">
-          <div class="empty">Sin entrenamientos sincronizados aún. Toca "Sincronizar ahora" para cargar tus entrenamientos de Hevy.</div>
+          <div class="empty">Sin entrenamientos importados aun. Usa CSV o Pegar Texto para importar tus entrenos de Hevy.</div>
         </div>
       </div>
     </div>
@@ -26368,11 +26459,411 @@ function showHevyHelpModal() {
 }
 
 function loadHevy() {
+  // Init paste date to today if not set
+  const pasteDate = document.getElementById('hevy-paste-date');
+  if (pasteDate && !pasteDate.value) pasteDate.value = today();
+
   renderHevyPage();
+
+  // Auto-show correct tab
   const cfg = getHevyConfig();
-  if (cfg.apiKey && (!cfg.lastSync || Date.now() - new Date(cfg.lastSync).getTime() > 60000)) {
-    syncHevyWorkouts({ showToast: false });
+  if (cfg.apiKey) {
+    // User has Pro — show API tab active
+    const apiTabBtn = document.querySelector('#page-hevy .tabs .tab:nth-child(3)');
+    if (apiTabBtn) switchHevyTab(apiTabBtn, 'hevy-tab-api');
+    // Update sync button visibility
+    const mainBtn = document.getElementById('hevy-sync-main-btn');
+    if (mainBtn) mainBtn.style.display = '';
+    if (!cfg.lastSync || Date.now() - new Date(cfg.lastSync).getTime() > 60000) {
+      syncHevyWorkouts({ showToast: false });
+    }
   }
+}
+
+// ── HEVY TAB SWITCHER ──────────────────────────────────
+function switchHevyTab(btn, tabId) {
+  const tabs = ['hevy-tab-csv', 'hevy-tab-paste', 'hevy-tab-api'];
+  tabs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = id === tabId ? '' : 'none';
+  });
+  const tabBtns = btn.closest('.tabs')?.querySelectorAll('.tab') || [];
+  tabBtns.forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── HEVY CSV IMPORT ────────────────────────────────────
+function hevyParseCsvRaw(text) {
+  const lines = [];
+  let row = [''];
+  let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    const next = text[i + 1];
+    if (c === '"') {
+      if (inQ && next === '"') { row[row.length - 1] += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === ',' && !inQ) {
+      row.push('');
+    } else if ((c === '\r' || c === '\n') && !inQ) {
+      if (c === '\r' && next === '\n') i++;
+      lines.push(row);
+      row = [''];
+    } else {
+      row[row.length - 1] += c;
+    }
+  }
+  if (row.length > 1 || row[0] !== '') lines.push(row);
+  return lines;
+}
+
+function hevyParseDateStr(str) {
+  if (!str) return null;
+  str = str.trim();
+  let d = new Date(str);
+  if (!isNaN(d.getTime())) return d;
+  const months = {
+    ene: 0, jan: 0, feb: 1, mar: 2, abr: 3, apr: 3, may: 4, jun: 5,
+    jul: 6, ago: 7, aug: 7, sep: 8, set: 8, oct: 9, nov: 10, dic: 11, dec: 11
+  };
+  const m = str.match(/(\d{1,2})\s+([a-zA-Z]{3,4})\.?\s+(\d{4})(?:[,\s]+(\d{1,2}):(\d{2}))?/i);
+  if (m) {
+    const day = parseInt(m[1], 10);
+    const monKey = m[2].toLowerCase().slice(0, 3);
+    const month = months[monKey] !== undefined ? months[monKey] : 0;
+    const year = parseInt(m[3], 10);
+    const hour = m[4] ? parseInt(m[4], 10) : 12;
+    const min = m[5] ? parseInt(m[5], 10) : 0;
+    return new Date(year, month, day, hour, min);
+  }
+  return null;
+}
+
+function hevyCsvToWorkouts(csvText) {
+  const table = hevyParseCsvRaw(csvText);
+  if (!table.length) throw new Error('El archivo CSV está vacío');
+
+  const rawHeaders = table[0].map(h => h.trim().toLowerCase());
+  const col = name => rawHeaders.findIndex(h => h === name || h.includes(name));
+
+  const idxTitle = col('title') >= 0 ? col('title') : col('workout name');
+  const idxStart = col('start_time') >= 0 ? col('start_time') : col('date');
+  const idxEnd = col('end_time');
+  const idxDesc = col('description') >= 0 ? col('description') : col('workout notes');
+  const idxEx = col('exercise_title') >= 0 ? col('exercise_title') : col('exercise name');
+  const idxSetIndex = col('set_index') >= 0 ? col('set_index') : col('set order');
+  const idxSetType = col('set_type') >= 0 ? col('set_type') : -1;
+  const idxWeightKg = col('weight_kg') >= 0 ? col('weight_kg') : col('weight');
+  const idxReps = col('reps');
+  const idxRpe = col('rpe');
+
+  if (idxTitle < 0 || idxEx < 0) {
+    throw new Error('Formato CSV de Hevy no reconocido. ¿Exportaste desde Hevy correctamente?');
+  }
+
+  const workoutMap = new Map();
+
+  for (let i = 1; i < table.length; i++) {
+    const row = table[i];
+    if (!row || row.length < 2) continue;
+
+    const title = (row[idxTitle] || 'Entrenamiento Hevy').trim();
+    const rawStart = row[idxStart] || '';
+    const startDate = hevyParseDateStr(rawStart) || new Date();
+    const ymd = dateKey(startDate);
+    const rawEnd = idxEnd >= 0 ? row[idxEnd] : '';
+    const endDate = hevyParseDateStr(rawEnd);
+    const desc = idxDesc >= 0 ? (row[idxDesc] || '').trim() : '';
+
+    const duration = (startDate && endDate && endDate > startDate)
+      ? Math.round((endDate.getTime() - startDate.getTime()) / 60000)
+      : null;
+
+    const workoutKey = `${ymd}_${rawStart.trim()}_${title}`;
+
+    if (!workoutMap.has(workoutKey)) {
+      workoutMap.set(workoutKey, {
+        key: workoutKey,
+        title,
+        date: ymd,
+        duration,
+        notes: desc,
+        sets: []
+      });
+    }
+
+    const workout = workoutMap.get(workoutKey);
+    const exName = (row[idxEx] || 'Ejercicio').trim();
+    if (!exName) continue;
+
+    const rawSetIdx = idxSetIndex >= 0 ? parseInt(row[idxSetIndex], 10) : NaN;
+    const setNum = !isNaN(rawSetIdx) ? rawSetIdx + 1 : workout.sets.filter(s => s.exercise_name === exName).length + 1;
+    const weight = idxWeightKg >= 0 ? Math.max(0, parseFloat(row[idxWeightKg]) || 0) : 0;
+    const reps = idxReps >= 0 ? Math.max(0, parseInt(row[idxReps], 10) || 0) : 0;
+    const rpe = idxRpe >= 0 && row[idxRpe] ? parseFloat(row[idxRpe]) : null;
+    const setType = idxSetType >= 0 ? (row[idxSetType] || 'normal').toLowerCase() : 'normal';
+
+    workout.sets.push({ exercise_name: exName, set_number: setNum, target_sets: 3, target_reps: reps, reps, weight, rpe, type: setType });
+  }
+
+  return Array.from(workoutMap.values());
+}
+
+function previewHevyCsvFile() {
+  const fileInput = document.getElementById('hevy-csv-file');
+  const preview = document.getElementById('hevy-csv-preview');
+  if (!fileInput?.files?.length) return toast('Primero seleccioná un archivo CSV', 'warn');
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const workouts = hevyCsvToWorkouts(e.target.result);
+      preview.style.display = '';
+      preview.innerHTML = `<strong>Vista previa:</strong> Se detectaron <strong>${workouts.length}</strong> entrenamientos en el archivo.<br>
+        Primeros: ${workouts.slice(0, 3).map(w => `${esc(w.title)} (${w.date}, ${w.sets.length} series)`).join('; ')}${workouts.length > 3 ? '...' : ''}`;
+    } catch (err) {
+      toast(err.message, 'err');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function importHevyCsvFile() {
+  const fileInput = document.getElementById('hevy-csv-file');
+  if (!fileInput?.files?.length) return toast('Primero seleccioná un archivo CSV de Hevy', 'warn');
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const workouts = hevyCsvToWorkouts(e.target.result);
+      if (!workouts.length) return toast('No se encontraron entrenamientos en el CSV', 'warn');
+
+      const sessions = DB.get('sessions') || [];
+      const prs = DB.get('records') || {};
+      let newCount = 0;
+      let updatedCount = 0;
+      let newPRCount = 0;
+
+      workouts.forEach(workout => {
+        const sessionId = 'hevy_csv_' + workout.key.replace(/\s/g, '_').slice(0, 40);
+
+        // PR detection
+        workout.sets.forEach(s => {
+          if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+            prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date: workout.date };
+            s.is_pr = true;
+            newPRCount++;
+          }
+        });
+
+        const mapped = {
+          id: sessionId,
+          hevy_workout_id: workout.key,
+          source: 'hevy',
+          date: workout.date,
+          routine_name: workout.title,
+          day_name: workout.title,
+          duration: workout.duration,
+          notes: workout.notes,
+          sets: workout.sets
+        };
+        mapped.comparison = compareWorkoutSession(mapped);
+
+        const existingIdx = sessions.findIndex(s => s.hevy_workout_id === workout.key || s.id === sessionId);
+        if (existingIdx >= 0) {
+          sessions[existingIdx] = { ...mapped, id: sessions[existingIdx].id };
+          updatedCount++;
+        } else {
+          sessions.push(mapped);
+          newCount++;
+        }
+      });
+
+      sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      DB.set('sessions', sessions);
+      if (newPRCount > 0) DB.set('records', prs);
+
+      saveHevyConfig({
+        lastSync: new Date().toISOString(),
+        lastSyncStatus: 'success',
+        lastSyncMessage: `CSV importado: ${newCount} nuevos, ${updatedCount} actualizados`
+      });
+
+      renderSessionsList();
+      renderTrainingProgress();
+      renderHevyPage();
+      renderHevyDashboardCard();
+      loadDashboard();
+
+      const previewEl = document.getElementById('hevy-csv-preview');
+      if (previewEl) previewEl.style.display = 'none';
+      fileInput.value = '';
+
+      toast(`✓ CSV importado: ${newCount} nuevos entrenamientos${newPRCount > 0 ? ` · ¡${newPRCount} PR batido!` : ''}`);
+    } catch (err) {
+      toast(err.message || 'Error al procesar el CSV', 'err');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// ── HEVY PASTE TEXT IMPORT ─────────────────────────────
+function parseHevySharedText(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!lines.length) return null;
+
+  let title = lines[0].replace(/^[#*_\s]+|[#*_\s]+$/g, '').trim() || 'Entrenamiento Hevy';
+  let duration = null;
+
+  const exercises = [];
+  let currentExercise = null;
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Skip promo/footer lines
+    if (/hevy\.(com|me|app)/i.test(line)) continue;
+
+    // Duration line e.g. "Duration: 55m" or "⏱️ Duration: 55m | Volume: ..."
+    const durMatch = line.match(/(?:Duration|Duración|Duraci.n)\s*:\s*(\d+)\s*(?:m|min)/i);
+    if (durMatch && !duration) {
+      duration = parseInt(durMatch[1], 10);
+      continue;
+    }
+
+    // Skip volume/sets metadata lines
+    if (/^(Volume|Volumen|Sets|Series)\s*:/i.test(line)) continue;
+    if (/^\S.*?\|\s*(Volume|Volumen|Sets)/i.test(line)) continue; // "55m | Volume: ..." line
+
+    // Match a set line: "Set 1: 80 kg × 10" or "1: 80kg x 10 @8" or "Serie 1: 80 kg x 10"
+    const setMatch = line.match(/^(?:(?:Set|Serie)\s*)?(\d+)\s*:\s*(?:(\d+(?:[.,]\d+)?)\s*(?:kg|lbs|lb)\s*[x×*]\s*)?(\d+)\s*(?:reps?)?(?:\s*[@](\d+(?:[.,]\d+)?))?/i);
+    if (setMatch && currentExercise) {
+      const setNum = parseInt(setMatch[1], 10);
+      const weight = setMatch[2] ? parseFloat(setMatch[2].replace(',', '.')) : 0;
+      const reps = parseInt(setMatch[3], 10) || 0;
+      const rpe = setMatch[4] ? parseFloat(setMatch[4].replace(',', '.')) : null;
+      currentExercise.sets.push({ set_number: setNum, weight, reps, rpe });
+      continue;
+    }
+
+    // Bodyweight set: "Set 1: 12 reps"
+    const bwMatch = line.match(/^(?:(?:Set|Serie)\s*)?(\d+)\s*:\s*(\d+)\s*reps?/i);
+    if (bwMatch && currentExercise) {
+      currentExercise.sets.push({ set_number: parseInt(bwMatch[1], 10), weight: 0, reps: parseInt(bwMatch[2], 10), rpe: null });
+      continue;
+    }
+
+    // Otherwise it's an exercise title
+    const cleanName = line.replace(/^[#*_\s]+|[#*_\s]+$/g, '').trim();
+    if (cleanName && !/^(volume|volumen|sets|series|logge?d?|—)/i.test(cleanName)) {
+      currentExercise = { name: cleanName, sets: [] };
+      exercises.push(currentExercise);
+    }
+  }
+
+  return { title, duration, exercises: exercises.filter(e => e.sets.length > 0) };
+}
+
+function previewHevyPastedText() {
+  const textEl = document.getElementById('hevy-paste-text');
+  const preview = document.getElementById('hevy-paste-preview');
+  const text = textEl?.value?.trim();
+  if (!text) return toast('Primero pegá el texto de un entreno de Hevy', 'warn');
+
+  try {
+    const parsed = parseHevySharedText(text);
+    if (!parsed || !parsed.exercises.length) {
+      return toast('No se pudieron detectar ejercicios en el texto. ¿Es el formato correcto?', 'warn');
+    }
+    preview.style.display = '';
+    const totalSets = parsed.exercises.reduce((sum, e) => sum + e.sets.length, 0);
+    preview.innerHTML = `<strong>Vista previa:</strong> "${esc(parsed.title)}" · ${parsed.duration ? parsed.duration + ' min · ' : ''}${parsed.exercises.length} ejercicios · ${totalSets} series<br>
+      <span style="color:var(--text)">${parsed.exercises.map(e => `${esc(e.name)} (${e.sets.length} series)`).join(', ')}</span>`;
+  } catch (err) {
+    toast('Error al interpretar el texto: ' + err.message, 'err');
+  }
+}
+
+function importHevyPastedText() {
+  const textEl = document.getElementById('hevy-paste-text');
+  const dateEl = document.getElementById('hevy-paste-date');
+  const text = textEl?.value?.trim();
+
+  if (!text) return toast('Primero pegá el texto de un entreno de Hevy', 'warn');
+
+  const parsed = parseHevySharedText(text);
+  if (!parsed || !parsed.exercises.length) {
+    return toast('No se pudieron detectar ejercicios. Asegurate de copiar con "Copiar texto" en Hevy.', 'warn');
+  }
+
+  const date = (dateEl?.value) || today();
+  const sessionId = 'hevy_paste_' + Date.now();
+
+  const sets = [];
+  parsed.exercises.forEach(ex => {
+    ex.sets.forEach(setObj => {
+      sets.push({
+        exercise_name: ex.name,
+        set_number: setObj.set_number,
+        target_sets: ex.sets.length,
+        target_reps: setObj.reps,
+        reps: setObj.reps,
+        weight: setObj.weight,
+        rpe: setObj.rpe,
+        type: 'normal'
+      });
+    });
+  });
+
+  const sessions = DB.get('sessions') || [];
+  const prs = DB.get('records') || {};
+  let newPRCount = 0;
+
+  sets.forEach(s => {
+    if (s.weight > 0 && (!prs[s.exercise_name] || s.weight > prs[s.exercise_name].weight)) {
+      prs[s.exercise_name] = { exercise_name: s.exercise_name, weight: s.weight, reps: s.reps, date };
+      s.is_pr = true;
+      newPRCount++;
+    }
+  });
+
+  const mapped = {
+    id: sessionId,
+    hevy_workout_id: sessionId,
+    source: 'hevy',
+    date,
+    routine_name: parsed.title,
+    day_name: parsed.title,
+    duration: parsed.duration,
+    notes: '',
+    sets
+  };
+  mapped.comparison = compareWorkoutSession(mapped);
+
+  sessions.unshift(mapped);
+  sessions.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  DB.set('sessions', sessions);
+  if (newPRCount > 0) DB.set('records', prs);
+
+  saveHevyConfig({
+    lastSync: new Date().toISOString(),
+    lastSyncStatus: 'success',
+    lastSyncMessage: `Texto pegado: "${parsed.title}" (${date})`
+  });
+
+  textEl.value = '';
+  const previewEl = document.getElementById('hevy-paste-preview');
+  if (previewEl) previewEl.style.display = 'none';
+
+  renderSessionsList();
+  renderTrainingProgress();
+  renderHevyPage();
+  renderHevyDashboardCard();
+  loadDashboard();
+
+  toast(`✓ Entreno "${parsed.title}" importado: ${sets.length} series${newPRCount > 0 ? ` · ¡${newPRCount} PR!` : ''}`);
 }
 
 // ═══════════════════════════════════════════════════
