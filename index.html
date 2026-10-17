@@ -25754,34 +25754,38 @@ function hevyWorkoutDuration(workout) {
 function normalizeHevyExerciseEntries(workout) {
   if (!workout || typeof workout !== 'object') return [];
 
-  const candidates = [];
-  if (Array.isArray(workout.exercises)) candidates.push(...workout.exercises);
-  if (Array.isArray(workout.exercise_entries)) candidates.push(...workout.exercise_entries);
-  if (Array.isArray(workout.sets)) {
-    const exerciseName = workout.exercise_name || workout.title || 'Ejercicio';
-    candidates.push({ title: exerciseName, name: exerciseName, sets: workout.sets });
-  }
+  const exerciseSources = [];
+  if (Array.isArray(workout.exercises) && workout.exercises.length) exerciseSources.push(...workout.exercises);
+  if (Array.isArray(workout.exercise_entries) && workout.exercise_entries.length) exerciseSources.push(...workout.exercise_entries);
 
   const flat = [];
-  candidates.forEach((entry, idx) => {
+  const seen = new Set();
+
+  const pushEntry = (entry, fallbackName) => {
     if (!entry || typeof entry !== 'object') return;
-    const sets = Array.isArray(entry.sets) ? entry.sets : [];
-    if (sets.length) {
+    const name = entry.title || entry.name || entry.exercise_template?.title || entry.exercise_name || fallbackName || 'Ejercicio';
+    const trimmedName = String(name).trim();
+    if (!trimmedName) return;
+    const key = `${trimmedName}|${Array.isArray(entry.sets) ? entry.sets.length : 0}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+
+    const sets = Array.isArray(entry.sets) ? entry.sets.filter(setObj => setObj && typeof setObj === 'object') : [];
+    if (sets.length || entry.weight_kg != null || entry.reps != null || entry.exercise_name) {
       flat.push({
-        title: entry.title || entry.name || entry.exercise_template?.title || `Ejercicio ${idx + 1}`,
-        name: entry.name || entry.title || entry.exercise_template?.title || `Ejercicio ${idx + 1}`,
-        sets
-      });
-      return;
-    }
-    if (entry.weight_kg != null || entry.reps != null || entry.exercise_name) {
-      flat.push({
-        title: entry.title || entry.exercise_name || entry.name || `Ejercicio ${idx + 1}`,
-        name: entry.name || entry.title || entry.exercise_name || `Ejercicio ${idx + 1}`,
-        sets: [entry]
+        title: trimmedName,
+        name: trimmedName,
+        sets: sets.length ? sets : [entry]
       });
     }
-  });
+  };
+
+  exerciseSources.forEach((entry, idx) => pushEntry(entry, `Ejercicio ${idx + 1}`));
+
+  if (!flat.length && Array.isArray(workout.sets) && workout.sets.length) {
+    const fallbackName = workout.exercise_name || workout.title || 'Ejercicio';
+    pushEntry({ title: fallbackName, name: fallbackName, sets: workout.sets }, fallbackName);
+  }
 
   return flat;
 }
@@ -25800,17 +25804,25 @@ function mapHevyWorkoutToSession(workout) {
   exercises.forEach((exObj, exIdx) => {
     const exName = (exObj.title || exObj.exercise_template?.title || exObj.name || `Ejercicio ${exIdx + 1}`).trim();
     const exSets = Array.isArray(exObj.sets) ? exObj.sets : [];
+    const seenSetKeys = new Set();
+
     exSets.forEach((setObj, setIdx) => {
-      const sn = (setObj.index !== undefined ? setObj.index + 1 : setIdx + 1);
-      const reps = Math.max(0, parseInt(setObj.reps ?? setObj.target_reps ?? setObj.rep_count, 10) || 0);
-      const weight = Math.max(0, parseFloat(setObj.weight_kg ?? setObj.weight ?? setObj.weight_kg_value ?? 0) || 0);
+      if (!setObj || typeof setObj !== 'object') return;
+
+      const setNumber = Number(setObj.set_number ?? setObj.index ?? setObj.setIndex ?? setObj.order ?? setObj.set_index ?? setIdx + 1) || setIdx + 1;
+      const setKey = `${exName}|${setNumber}|${setObj.id || setObj.name || setObj.type || setIdx}`;
+      if (seenSetKeys.has(setKey)) return;
+      seenSetKeys.add(setKey);
+
+      const reps = Math.max(0, parseInt(setObj.reps ?? setObj.target_reps ?? setObj.rep_count ?? setObj.target_reps_value ?? 0, 10) || 0);
+      const weight = Math.max(0, parseFloat(setObj.weight_kg ?? setObj.weight ?? setObj.weight_kg_value ?? setObj.kg ?? 0) || 0);
       const rpe = setObj.rpe != null && setObj.rpe !== '' ? parseFloat(setObj.rpe) : null;
-      const type = setObj.set_type || 'normal';
+      const type = setObj.set_type || setObj.type || 'normal';
 
       sets.push({
         exercise_name: exName,
-        set_number: sn,
-        target_sets: exSets.length,
+        set_number: setNumber,
+        target_sets: Math.max(1, exSets.length),
         target_reps: reps,
         reps,
         weight,
