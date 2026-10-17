@@ -26502,8 +26502,11 @@ function switchHevyTab(btn, tabId) {
 function syncHevyImportedRoutine(sessionLike) {
   const routines = DB.get('routines') || [];
   const label = sessionLike?.routine_name || sessionLike?.day_name || 'Entrenamiento Hevy';
-  const key = sessionLike?.hevy_workout_id || sessionLike?.id || label;
-  const existingIdx = routines.findIndex(r => r.source === 'hevy' && (r.hevy_routine_id === key || r.name === label));
+  const routineKey = String(sessionLike?.hevy_routine_id || sessionLike?.routine_name || sessionLike?.day_name || label || 'hevy-routine').trim();
+  const existingIdx = routines.findIndex(r => r.source === 'hevy' && (
+    (r.hevy_routine_id && String(r.hevy_routine_id) === routineKey) ||
+    (r.name && r.name.toLowerCase() === label.toLowerCase())
+  ));
 
   const exerciseMap = new Map();
   (sessionLike?.sets || []).forEach(set => {
@@ -26523,29 +26526,58 @@ function syncHevyImportedRoutine(sessionLike) {
     current.reps = Math.max(current.reps, reps);
   });
 
-  const exercises = Array.from(exerciseMap.values()).map(ex => ({
+  const incomingExercises = Array.from(exerciseMap.values()).map(ex => ({
     name: ex.name,
     target_sets: Math.max(1, Number(ex.target_sets) || 1),
     reps: Math.max(1, Number(ex.reps) || 10)
   }));
 
-  const routineObj = {
-    id: existingIdx >= 0 ? routines[existingIdx].id : uid(),
-    hevy_routine_id: key,
-    source: 'hevy',
-    name: label,
-    days: [{
-      id: uid(),
-      name: sessionLike?.day_name || label || 'Día importado',
-      exercises
-    }],
-    created: today()
+  const incomingDay = {
+    id: uid(),
+    name: sessionLike?.day_name || label || 'Día importado',
+    exercises: incomingExercises
   };
 
   if (existingIdx >= 0) {
-    routines[existingIdx] = routineObj;
+    const existing = routines[existingIdx];
+    const dayName = incomingDay.name;
+    const currentDays = Array.isArray(existing.days) ? existing.days : [];
+    const dayIdx = currentDays.findIndex(day => day.name && day.name.toLowerCase() === dayName.toLowerCase());
+
+    if (dayIdx >= 0) {
+      currentDays[dayIdx].exercises = currentDays[dayIdx].exercises || [];
+      const mergedByName = new Map();
+      [...(currentDays[dayIdx].exercises || []), ...incomingDay.exercises].forEach(ex => {
+        const key = (ex.name || 'Ejercicio').toLowerCase();
+        if (!mergedByName.has(key)) {
+          mergedByName.set(key, { ...ex });
+        } else {
+          const current = mergedByName.get(key);
+          current.target_sets = Math.max(Number(current.target_sets) || 1, Number(ex.target_sets) || 1);
+          current.reps = Math.max(Number(current.reps) || 1, Number(ex.reps) || 1);
+        }
+      });
+      currentDays[dayIdx].exercises = Array.from(mergedByName.values());
+    } else {
+      currentDays.push(incomingDay);
+    }
+
+    existing.id = existing.id || uid();
+    existing.hevy_routine_id = existing.hevy_routine_id || routineKey;
+    existing.source = 'hevy';
+    existing.name = existing.name || label;
+    existing.days = currentDays;
+    existing.created = existing.created || today();
+    routines[existingIdx] = existing;
   } else {
-    routines.unshift(routineObj);
+    routines.unshift({
+      id: uid(),
+      hevy_routine_id: routineKey,
+      source: 'hevy',
+      name: label,
+      days: [incomingDay],
+      created: today()
+    });
   }
 
   DB.set('routines', routines);
