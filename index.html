@@ -25751,24 +25751,59 @@ function hevyWorkoutDuration(workout) {
   return null;
 }
 
+function normalizeHevyExerciseEntries(workout) {
+  if (!workout || typeof workout !== 'object') return [];
+
+  const candidates = [];
+  if (Array.isArray(workout.exercises)) candidates.push(...workout.exercises);
+  if (Array.isArray(workout.exercise_entries)) candidates.push(...workout.exercise_entries);
+  if (Array.isArray(workout.sets)) {
+    const exerciseName = workout.exercise_name || workout.title || 'Ejercicio';
+    candidates.push({ title: exerciseName, name: exerciseName, sets: workout.sets });
+  }
+
+  const flat = [];
+  candidates.forEach((entry, idx) => {
+    if (!entry || typeof entry !== 'object') return;
+    const sets = Array.isArray(entry.sets) ? entry.sets : [];
+    if (sets.length) {
+      flat.push({
+        title: entry.title || entry.name || entry.exercise_template?.title || `Ejercicio ${idx + 1}`,
+        name: entry.name || entry.title || entry.exercise_template?.title || `Ejercicio ${idx + 1}`,
+        sets
+      });
+      return;
+    }
+    if (entry.weight_kg != null || entry.reps != null || entry.exercise_name) {
+      flat.push({
+        title: entry.title || entry.exercise_name || entry.name || `Ejercicio ${idx + 1}`,
+        name: entry.name || entry.title || entry.exercise_name || `Ejercicio ${idx + 1}`,
+        sets: [entry]
+      });
+    }
+  });
+
+  return flat;
+}
+
 function mapHevyWorkoutToSession(workout) {
   if (!workout) return null;
   const date = hevyDateToLocalYMD(workout.start_time || workout.end_time || workout.created_at);
   const duration = hevyWorkoutDuration(workout);
-  const routineName = workout.routine_title || workout.title || 'Entrenamiento Hevy';
-  const dayName = workout.title || 'Sesión Hevy';
+  const routineName = workout.routine_title || workout.routine_name || workout.title || 'Entrenamiento Hevy';
+  const dayName = workout.title || workout.day_name || 'Sesión Hevy';
   const notes = workout.description || '';
 
   const sets = [];
-  const exercises = workout.exercises || [];
+  const exercises = normalizeHevyExerciseEntries(workout);
 
   exercises.forEach((exObj, exIdx) => {
     const exName = (exObj.title || exObj.exercise_template?.title || exObj.name || `Ejercicio ${exIdx + 1}`).trim();
-    const exSets = exObj.sets || [];
+    const exSets = Array.isArray(exObj.sets) ? exObj.sets : [];
     exSets.forEach((setObj, setIdx) => {
       const sn = (setObj.index !== undefined ? setObj.index + 1 : setIdx + 1);
-      const reps = Math.max(0, parseInt(setObj.reps, 10) || 0);
-      const weight = Math.max(0, parseFloat(setObj.weight_kg ?? setObj.weight ?? 0) || 0);
+      const reps = Math.max(0, parseInt(setObj.reps ?? setObj.target_reps ?? setObj.rep_count, 10) || 0);
+      const weight = Math.max(0, parseFloat(setObj.weight_kg ?? setObj.weight ?? setObj.weight_kg_value ?? 0) || 0);
       const rpe = setObj.rpe != null && setObj.rpe !== '' ? parseFloat(setObj.rpe) : null;
       const type = setObj.set_type || 'normal';
 
@@ -25901,29 +25936,50 @@ async function syncHevyWorkouts(options = {}) {
   updateHevySyncIndicators(true);
 
   try {
-    const res = await fetch('/api/hevy?action=workouts&page=1&pageSize=15', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': cfg.apiKey
-      }
-    });
+    const pageSize = 20;
+    const pageLimit = 20;
+    let page = 1;
+    let totalPages = 1;
+    let allWorkouts = [];
+    const seenHevyIds = new Set();
 
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok || !data?.ok) {
-      const errMsg = data?.error || `Error ${res.status} al sincronizar Hevy`;
-      saveHevyConfig({
-        lastSyncStatus: 'error',
-        lastSyncMessage: errMsg
+    while (page <= totalPages && page <= pageLimit) {
+      const res = await fetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': cfg.apiKey
+        }
       });
-      if (showToast) toast(errMsg, 'err');
-      renderHevyPage();
-      renderHevyDashboardCard();
-      return;
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.ok) {
+        const errMsg = data?.error || `Error ${res.status} al sincronizar Hevy`;
+        saveHevyConfig({
+          lastSyncStatus: 'error',
+          lastSyncMessage: errMsg
+        });
+        if (showToast) toast(errMsg, 'err');
+        renderHevyPage();
+        renderHevyDashboardCard();
+        return;
+      }
+
+      const workouts = Array.isArray(data.workouts) ? data.workouts : [];
+      if (!workouts.length) break;
+
+      for (const workout of workouts) {
+        if (!workout || !workout.id || seenHevyIds.has(String(workout.id))) continue;
+        seenHevyIds.add(String(workout.id));
+        allWorkouts.push(workout);
+      }
+
+      totalPages = Math.max(1, Number(data.page_count || totalPages || 1));
+      if (page >= totalPages) break;
+      page++;
     }
 
-    const workouts = data.workouts || [];
     const sessions = DB.get('sessions') || [];
     const prs = DB.get('records') || {};
 
@@ -25931,7 +25987,7 @@ async function syncHevyWorkouts(options = {}) {
     let updatedCount = 0;
     let newPRCount = 0;
 
-    for (const workout of workouts) {
+    for (const workout of allWorkouts) {
       if (!workout || !workout.id) continue;
       const mapped = mapHevyWorkoutToSession(workout);
       if (!mapped) continue;
