@@ -16259,6 +16259,19 @@ body.calendar-dragging .aa-calendar-drop-zone {
         <input type="date" id="nut-date" style="width:auto" onchange="loadMeals(); renderSupplements()">
         <button class="btn btn-ghost btn-sm" onclick="setNutToday()">Hoy</button>
       </div>
+      <div class="card mb" id="fatsecret-sync-panel">
+        <div class="flex jb ai-c gap-2" style="margin-bottom:8px">
+          <div class="card-title" style="margin:0">Diario de FatSecret</div>
+          <span class="badge b-amber" id="fatsecret-connection-badge">Desconectado</span>
+        </div>
+        <div class="mini-muted" id="fatsecret-connection-message" aria-live="polite">Conecta tu cuenta para importar las comidas registradas en FatSecret.</div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-primary btn-sm" id="fatsecret-connect-btn" type="button" onclick="connectFatSecretDiary()"><i data-lucide="link-2"></i> Conectar FatSecret</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-day-btn" type="button" onclick="syncFatSecretDiary(1)" hidden><i data-lucide="refresh-cw"></i> Sincronizar día</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-week-btn" type="button" onclick="syncFatSecretDiary(7)" hidden><i data-lucide="calendar-sync"></i> Últimos 7 días</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-disconnect-btn" type="button" onclick="disconnectFatSecretDiary()" hidden><i data-lucide="unlink"></i> Desconectar</button>
+        </div>
+      </div>
       <div class="card mb">
         <div class="flex jb ai-c" style="margin-bottom:14px">
           <div class="card-title" style="margin:0">Analizar comida con IA</div>
@@ -27093,7 +27106,141 @@ function importHevyPastedText() {
 // ═══════════════════════════════════════════════════
 // NUTRICIÓN LOGIC
 // ═══════════════════════════════════════════════════
+let fatSecretRequestBusy = false;
+
+function consumeFatSecretCallbackStatus() {
+  const url = new URL(window.location.href);
+  const status = url.searchParams.get('fatsecret');
+  if (!status) return;
+  url.searchParams.delete('fatsecret');
+  window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+  if (status === 'connected') toast('FatSecret conectado. Ya puedes sincronizar tu diario.');
+  else if (status === 'error') toast('No se pudo completar la conexión con FatSecret. Inténtalo de nuevo.', 'err');
+}
+
+async function fatSecretDiaryRequest(action, method = 'GET', body = null) {
+  if (!cloudClient) throw new Error('Supabase no está disponible para validar tu cuenta');
+  const { data, error } = await cloudClient.auth.getSession();
+  const accessToken = data?.session?.access_token;
+  if (error || !accessToken) throw new Error('Inicia sesión en AA Follow para conectar FatSecret');
+
+  const response = await fetch(`/api/fatsecret?action=${encodeURIComponent(action)}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      ...(body ? { 'Content-Type': 'application/json' } : {})
+    },
+    ...(body ? { body: JSON.stringify(body) } : {})
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || !result.ok) throw new Error(result.error || `FatSecret respondió con error ${response.status}`);
+  return result;
+}
+
+function renderFatSecretConnection(connected, details = {}) {
+  const badge = document.getElementById('fatsecret-connection-badge');
+  const message = document.getElementById('fatsecret-connection-message');
+  const connect = document.getElementById('fatsecret-connect-btn');
+  const syncDay = document.getElementById('fatsecret-sync-day-btn');
+  const syncWeek = document.getElementById('fatsecret-sync-week-btn');
+  const disconnect = document.getElementById('fatsecret-disconnect-btn');
+  if (badge) {
+    badge.className = connected ? 'badge b-green' : 'badge b-amber';
+    badge.textContent = connected ? 'Conectado' : 'Desconectado';
+  }
+  if (message) {
+    const lastSync = details.last_sync_at ? new Date(details.last_sync_at).toLocaleString() : '';
+    message.textContent = connected
+      ? lastSync ? `Cuenta vinculada · Última sincronización: ${lastSync}` : 'Cuenta vinculada. Elige el día o importa los últimos 7 días.'
+      : 'Conecta tu cuenta para importar las comidas registradas en FatSecret.';
+  }
+  if (connect) connect.hidden = connected;
+  [syncDay, syncWeek, disconnect].forEach(button => { if (button) button.hidden = !connected; });
+}
+
+async function loadFatSecretConnectionStatus(options = {}) {
+  try {
+    const status = await fatSecretDiaryRequest('status');
+    renderFatSecretConnection(status.connected, status);
+    return status.connected;
+  } catch (error) {
+    renderFatSecretConnection(false);
+    const message = document.getElementById('fatsecret-connection-message');
+    if (message) message.textContent = error.message;
+    if (!options.silent) toast(error.message, 'err');
+    return false;
+  }
+}
+
+async function connectFatSecretDiary() {
+  if (fatSecretRequestBusy) return;
+  fatSecretRequestBusy = true;
+  try {
+    const result = await fatSecretDiaryRequest('connect', 'POST');
+    if (!result.authorization_url) throw new Error('FatSecret no devolvió el enlace de autorización');
+    window.location.assign(result.authorization_url);
+  } catch (error) {
+    toast(error.message, 'err');
+  } finally {
+    fatSecretRequestBusy = false;
+  }
+}
+
+async function syncFatSecretDiary(days = 1) {
+  if (fatSecretRequestBusy) return;
+  fatSecretRequestBusy = true;
+  const buttons = ['fatsecret-sync-day-btn', 'fatsecret-sync-week-btn'];
+  buttons.forEach(id => { const button = document.getElementById(id); if (button) button.disabled = true; });
+  try {
+    const date = document.getElementById('nut-date')?.value || selectedDate();
+    const result = await fatSecretDiaryRequest('sync', 'POST', { date, days });
+    const meals = DB.get('meals') || [];
+    let added = 0;
+    let updated = 0;
+    (result.meals || []).forEach(imported => {
+      const remoteId = String(imported.fatsecret_entry_id || '').trim();
+      if (!remoteId) return;
+      const existingIndex = meals.findIndex(meal => String(meal.fatsecret_entry_id || '') === remoteId);
+      if (existingIndex >= 0) {
+        meals[existingIndex] = { ...meals[existingIndex], ...imported, id: meals[existingIndex].id };
+        updated++;
+      } else {
+        meals.unshift(imported);
+        added++;
+      }
+    });
+    DB.set('meals', meals);
+    loadMeals();
+    renderDayEditor();
+    loadDashboard();
+    refreshTodayIfActive();
+    await loadFatSecretConnectionStatus({ silent: true });
+    toast(`FatSecret: ${added} comidas nuevas${updated ? `, ${updated} actualizadas` : ''}`);
+  } catch (error) {
+    toast(error.message, 'err');
+  } finally {
+    fatSecretRequestBusy = false;
+    buttons.forEach(id => { const button = document.getElementById(id); if (button) button.disabled = false; });
+  }
+}
+
+async function disconnectFatSecretDiary() {
+  if (fatSecretRequestBusy || !confirm('¿Desconectar FatSecret? Las comidas ya importadas se conservarán en Nutrición.')) return;
+  fatSecretRequestBusy = true;
+  try {
+    await fatSecretDiaryRequest('disconnect', 'POST');
+    renderFatSecretConnection(false);
+    toast('FatSecret desconectado. Las comidas importadas se conservaron.');
+  } catch (error) {
+    toast(error.message, 'err');
+  } finally {
+    fatSecretRequestBusy = false;
+  }
+}
+
 function loadNutrition() {
+  consumeFatSecretCallbackStatus();
+  loadFatSecretConnectionStatus({ silent: true });
   document.getElementById('nut-date').value = selectedDate();
   loadMeals();
   renderMealTemplates();
