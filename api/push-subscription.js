@@ -94,10 +94,17 @@ function normalizeSubscription(body) {
 }
 
 module.exports = async function handler(req, res) {
+  const requestUrl = new URL(req.url || '/', 'http://localhost');
+  const action = String(req.query?.action || requestUrl.searchParams.get('action') || '').toLowerCase();
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Methods', 'POST, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
     return sendJson(res, 200, { ok: true });
+  }
+  if (req.method === 'GET' && action === 'config') {
+    const publicKey = String(process.env.VAPID_PUBLIC_KEY || '').trim();
+    if (!publicKey) return sendJson(res, 503, { error: 'Falta VAPID_PUBLIC_KEY en Vercel' });
+    return sendJson(res, 200, { publicKey });
   }
   if (!['POST', 'DELETE'].includes(req.method)) return sendJson(res, 405, { error: 'Metodo no permitido' });
   const cfg = config();
