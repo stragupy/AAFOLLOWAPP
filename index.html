@@ -14,7 +14,6 @@
 <meta name="theme-color" content="#202221">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.2/html5-qrcode.min.js"></script>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -16259,19 +16258,6 @@ body.calendar-dragging .aa-calendar-drop-zone {
         <input type="date" id="nut-date" style="width:auto" onchange="loadMeals(); renderSupplements()">
         <button class="btn btn-ghost btn-sm" onclick="setNutToday()">Hoy</button>
       </div>
-      <div class="card mb" id="fatsecret-sync-panel">
-        <div class="flex jb ai-c gap-2" style="margin-bottom:8px">
-          <div class="card-title" style="margin:0">Diario de FatSecret</div>
-          <span class="badge b-amber" id="fatsecret-connection-badge">Desconectado</span>
-        </div>
-        <div class="mini-muted" id="fatsecret-connection-message" aria-live="polite">Conecta tu cuenta para importar las comidas registradas en FatSecret.</div>
-        <div class="btn-row" style="margin-top:12px">
-          <button class="btn btn-primary btn-sm" id="fatsecret-connect-btn" type="button" onclick="connectFatSecretDiary()"><i data-lucide="link-2"></i> Conectar FatSecret</button>
-          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-day-btn" type="button" onclick="syncFatSecretDiary(1)" hidden><i data-lucide="refresh-cw"></i> Sincronizar día</button>
-          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-week-btn" type="button" onclick="syncFatSecretDiary(7)" hidden><i data-lucide="calendar-sync"></i> Últimos 7 días</button>
-          <button class="btn btn-ghost btn-sm" id="fatsecret-disconnect-btn" type="button" onclick="disconnectFatSecretDiary()" hidden><i data-lucide="unlink"></i> Desconectar</button>
-        </div>
-      </div>
       <div class="card mb">
         <div class="flex jb ai-c" style="margin-bottom:14px">
           <div class="card-title" style="margin:0">Analizar comida con IA</div>
@@ -16294,35 +16280,18 @@ body.calendar-dragging .aa-calendar-drop-zone {
         </div>
         <div id="food-ai-result" class="mt-3"><div class="empty">Sube fotos, describe la comida, o usa ambas cosas para estimar macros antes de guardar.</div></div>
       </div>
-      <div class="card mb">
-        <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
-          <div class="card-title" style="margin:0">Código de barras</div>
-          <button class="btn btn-ghost btn-sm" id="barcode-scan-button" onclick="toggleBarcodeScanner()">Escanear</button>
+      <div class="card mb" id="fatsecret-sync-panel">
+        <div class="flex jb ai-c gap-2" style="margin-bottom:8px">
+          <div class="card-title" style="margin:0">Diario de FatSecret</div>
+          <span class="badge b-amber" id="fatsecret-connection-badge">Desconectado</span>
         </div>
-        <div class="form-grid fg2">
-          <div class="form-row">
-            <label class="form-label">Código EAN o UPC</label>
-            <input id="barcode-code" inputmode="numeric" autocomplete="off" placeholder="Escanea o escribe el código">
-          </div>
-          <div class="form-row">
-            <label class="form-label">Consulta</label>
-            <button class="btn btn-primary" type="button" onclick="lookupBarcode()">Buscar producto</button>
-          </div>
+        <div class="mini-muted" id="fatsecret-connection-message" aria-live="polite">Conecta tu cuenta para importar las comidas registradas en FatSecret.</div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn btn-primary btn-sm" id="fatsecret-connect-btn" type="button" onclick="connectFatSecretDiary()"><i data-lucide="link-2"></i> Conectar FatSecret</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-day-btn" type="button" onclick="syncFatSecretDiary(1)" hidden><i data-lucide="refresh-cw"></i> Sincronizar día</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-sync-week-btn" type="button" onclick="syncFatSecretDiary(7)" hidden><i data-lucide="calendar-sync"></i> Últimos 7 días</button>
+          <button class="btn btn-ghost btn-sm" id="fatsecret-disconnect-btn" type="button" onclick="disconnectFatSecretDiary()" hidden><i data-lucide="unlink"></i> Desconectar</button>
         </div>
-        <div class="form-grid fg2 mt-3">
-          <div class="form-row">
-            <label class="form-label">Buscar por alimento o marca</label>
-            <input id="food-database-query" autocomplete="off" placeholder="Ej: Soprole, Colun, avena o huevo revuelto" onkeydown="if(event.key==='Enter') searchFoodDatabase()">
-          </div>
-          <div class="form-row">
-            <label class="form-label">Base regional</label>
-            <button class="btn btn-ghost" type="button" onclick="searchFoodDatabase()">Buscar alimento</button>
-          </div>
-        </div>
-        <div id="food-database-results" class="food-db-results"></div>
-        <div id="barcode-reader" style="display:none; width:100%; max-width:520px; min-height:280px; margin:16px auto 0; overflow:hidden; border:1px solid var(--border); border-radius:var(--radius-md); background:#0f1117"></div>
-        <div id="barcode-result" class="mt-3"><div class="empty">Sin producto consultado.</div></div>
-        <div class="fatsecret-attribution"><a href="https://platform.fatsecret.com">Powered by fatsecret Platform API</a><span aria-hidden="true"> · </span><a href="https://cl.openfoodfacts.org">Productos chilenos: Open Food Facts</a></div>
       </div>
       <div class="card mb favorite-foods-panel">
         <div class="flex jb ai-c gap-2" style="margin-bottom:14px">
@@ -19834,7 +19803,7 @@ async function enablePushNotifications() {
     const registration = await registerReminderServiceWorker();
     if (!registration) throw new Error('No se pudo registrar el servicio de avisos');
     await navigator.serviceWorker.ready;
-    const configResponse = await fetch('/api/push-config', { cache: 'no-store' });
+    const configResponse = await fetch('/api/push-subscription?action=config', { cache: 'no-store' });
     const configData = await configResponse.json().catch(() => ({}));
     if (!configResponse.ok || !configData.publicKey) throw new Error(configData.error || 'Web Push no está configurado en Vercel');
     let subscription = await registration.pushManager.getSubscription();
