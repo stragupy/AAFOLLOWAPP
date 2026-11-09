@@ -1,3 +1,5 @@
+const { resolveAiAccess, geminiFetch } = require('../lib/account-access');
+
 const MAX_TOTAL_IMAGE_CHARS = 9_000_000;
 const MAX_NOTES_CHARS = 1600;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -12,6 +14,7 @@ class HttpError extends Error {
 function sendJson(res, status, data) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.end(JSON.stringify(data));
 }
 
@@ -113,18 +116,17 @@ function numberValue(value) {
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-AA-AI-Connection');
     return sendJson(res, 200, { ok: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
 
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
       route: '/api/analyze-food',
-      has_key: Boolean(apiKey),
+      requires_personal_connection: true,
       message: 'API lista. Envia fotos, texto, o ambos por POST.'
     });
   }
@@ -133,11 +135,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
-  }
 
   try {
+    const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
     const images = Array.isArray(body.images) ? body.images : [body.image].filter(Boolean);
     const notes = String(body.notes || body.description || '').trim().slice(0, MAX_NOTES_CHARS);
@@ -166,17 +166,13 @@ module.exports = async function handler(req, res) {
       }))
     ];
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const geminiRes = await geminiFetch(apiKey, {
         contents: [{ role: 'user', parts }],
         generationConfig: {
           temperature: 0.2,
           maxOutputTokens: 600,
           responseMimeType: 'application/json'
         }
-      })
     });
 
     const payload = await geminiRes.json().catch(() => ({}));
@@ -205,6 +201,6 @@ module.exports = async function handler(req, res) {
       notes: parsed.notes || 'Estimacion aproximada. Confirma porciones antes de guardar.'
     });
   } catch (err) {
-    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando comida con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando comida con Gemini', code: err.code });
   }
 };

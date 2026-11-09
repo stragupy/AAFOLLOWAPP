@@ -1,3 +1,5 @@
+const { resolveAiAccess, geminiFetch } = require('../lib/account-access');
+
 const MAX_BODY_CHARS = 18_000;
 
 class HttpError extends Error {
@@ -10,6 +12,7 @@ class HttpError extends Error {
 function sendJson(res, status, data) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.end(JSON.stringify(data));
 }
 
@@ -138,18 +141,17 @@ function normalizeResponse(parsed, fallbackMeal) {
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-AA-AI-Connection');
     return sendJson(res, 200, { ok: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
 
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
       route: '/api/suggest-meal',
-      has_key: Boolean(apiKey),
+      requires_personal_connection: true,
       message: 'API lista. Envia objetivos, comida del dia y tipo de comida por POST.'
     });
   }
@@ -158,11 +160,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
-  }
 
   try {
+    const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
     const mealName = cleanString(body.meal_name || body.mealName || 'Almuerzo', 40) || 'Almuerzo';
     const preferences = cleanString(body.preferences, 1000);
@@ -174,17 +174,13 @@ module.exports = async function handler(req, res) {
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
 {"summary":"lectura breve","suggestions":[{"title":"nombre de la opcion","meal_name":"${mealName}","food_item":"descripcion breve para guardar","portion":"porcion sugerida","calories":0,"protein":0,"carbs":0,"fat":0,"reason":"por que encaja con los objetivos","prep":"preparacion corta"}]}`;
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const geminiRes = await geminiFetch(apiKey, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: 0.35,
           maxOutputTokens: 1600,
           responseMimeType: 'application/json'
         }
-      })
     });
 
     const payload = await geminiRes.json().catch(() => ({}));
@@ -205,6 +201,6 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
     }
     return sendJson(res, 200, data);
   } catch (err) {
-    return sendJson(res, err.status || 500, { error: err.message || 'Error sugiriendo comidas con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error sugiriendo comidas con Gemini', code: err.code });
   }
 };

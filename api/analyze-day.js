@@ -1,3 +1,5 @@
+const { resolveAiAccess, geminiFetch } = require('../lib/account-access');
+
 const MAX_BODY_CHARS = 24_000;
 
 class HttpError extends Error {
@@ -10,6 +12,7 @@ class HttpError extends Error {
 function sendJson(res, status, data) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.end(JSON.stringify(data));
 }
 
@@ -193,18 +196,17 @@ function normalizeDraft(parsed, fallbackDate) {
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-AA-AI-Connection');
     return sendJson(res, 200, { ok: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
 
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
       route: '/api/analyze-day',
-      has_key: Boolean(apiKey),
+      requires_personal_connection: true,
       message: 'API lista. Envia una descripcion del dia por POST.'
     });
   }
@@ -213,11 +215,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
-  }
 
   try {
+    const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
     const description = cleanString(body.description, 8000);
     const date = /^\d{4}-\d{2}-\d{2}$/.test(body.date || '') ? body.date : new Date().toISOString().slice(0, 10);
@@ -233,17 +233,13 @@ module.exports = async function handler(req, res) {
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
 {"date":"${date}","summary":"resumen corto","meals":[{"meal_name":"Desayuno","food_item":"alimento o plato","calories":0,"protein":0,"carbs":0,"fat":0}],"bodylog":{"weight":null,"body_fat":null,"arm":null,"chest":null,"waist":null,"thigh":null,"calf":null,"notes":""},"sessions":[{"routine_name":"","day_name":"","duration":0,"notes":"","sets":[{"exercise_name":"Press banca","set_number":1,"target_sets":null,"target_reps":null,"reps":0,"weight":0,"rir":null,"rpe":null}]}],"cardio":[{"type":"steps","value":0}],"supplements":[{"name":"Creatina","dose":"","taken":true}],"wellness":{"sleep":null,"energy":null,"mood":""},"water_ml":null,"note":{"title":"Resumen del dia","content":"","mood":3}}`;
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const geminiRes = await geminiFetch(apiKey, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: 0.15,
           maxOutputTokens: 1800,
           responseMimeType: 'application/json'
         }
-      })
     });
 
     const payload = await geminiRes.json().catch(() => ({}));
@@ -260,6 +256,6 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
     const parsed = parseModelJson(extractGeminiText(payload));
     return sendJson(res, 200, normalizeDraft(parsed, date));
   } catch (err) {
-    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando el dia con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando el dia con Gemini', code: err.code });
   }
 };

@@ -1,3 +1,5 @@
+const { resolveAiAccess, geminiFetch, handleAccount } = require('../lib/account-access');
+
 const MAX_BODY_CHARS = 100_000;
 const MAX_REQUEST_CHARS = 4_000;
 const MAX_CONTEXT_CHARS = 72_000;
@@ -57,6 +59,7 @@ class HttpError extends Error {
 function sendJson(res, status, data) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.end(JSON.stringify(data));
 }
 
@@ -417,41 +420,37 @@ Responde solo JSON válido con esta forma exacta:
 }
 
 module.exports = async function handler(req, res) {
+  if (await handleAccount(req, res)) return;
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-AA-AI-Connection');
     return sendJson(res, 200, { ok: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
       route: '/api/app-assistant',
-      has_key: Boolean(apiKey)
+      requires_personal_connection: true
     });
   }
   if (req.method !== 'POST') return sendJson(res, 405, { error: 'Metodo no permitido' });
-  if (!apiKey) return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
 
   try {
+    const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
     const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 
     if (body.mode === 'preparation_review') {
       const input = sanitizePreparationInput(body);
-      const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const geminiRes = await geminiFetch(apiKey, {
           contents: [{ role: 'user', parts: [{ text: preparationPrompt(input) }] }],
           generationConfig: {
             temperature: 0.15,
             maxOutputTokens: 1800,
             responseMimeType: 'application/json'
           }
-        })
       });
 
       const payload = await geminiRes.json().catch(() => ({}));
@@ -475,17 +474,13 @@ module.exports = async function handler(req, res) {
       return sendJson(res, 413, { error: 'Hay demasiados registros en el contexto. Intenta nuevamente.' });
     }
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const geminiRes = await geminiFetch(apiKey, {
         contents: [{ role: 'user', parts: [{ text: assistantPrompt(request, contextText) }] }],
         generationConfig: {
           temperature: 0.1,
           maxOutputTokens: 4_500,
           responseMimeType: 'application/json'
         }
-      })
     });
 
     const payload = await geminiRes.json().catch(() => ({}));
@@ -500,6 +495,6 @@ module.exports = async function handler(req, res) {
     const parsed = parseModelJson(extractGeminiText(payload));
     return sendJson(res, 200, normalizeResponse(parsed, request, context));
   } catch (error) {
-    return sendJson(res, error.status || 500, { error: error.message || 'Error preparando cambios con Gemini' });
+    return sendJson(res, error.status || 500, { error: error.message || 'Error preparando cambios con Gemini', code: error.code });
   }
 };

@@ -1,3 +1,4 @@
+const { requireUser, isFounder } = require('../lib/account-access');
 const HEVY_API_BASE = 'https://api.hevyapp.com/v1';
 const REQUEST_TIMEOUT_MS = 12000;
 
@@ -66,13 +67,14 @@ module.exports = async function handler(req, res) {
   const requestUrl = new URL(req.url || '/', 'http://localhost');
   const action = String(req.query?.action || requestUrl.searchParams.get('action') || 'test').toLowerCase();
 
+  let user;
+  try { user = await requireUser(req); }
+  catch (error) { return sendJson(res, error.status || 401, { ok: false, error: error.message }); }
+
   const apiKey = (
     req.headers['api-key'] ||
     req.headers['x-hevy-api-key'] ||
-    req.query?.apiKey ||
-    requestUrl.searchParams.get('apiKey') ||
-    process.env.HEVY_API_KEY ||
-    process.env.hevy_api_key ||
+    (isFounder(user) ? process.env.HEVY_API_KEY || process.env.hevy_api_key : '') ||
     ''
   ).trim();
 

@@ -1,3 +1,5 @@
+const { resolveAiAccess, geminiFetch } = require('../lib/account-access');
+
 const MAX_BODY_CHARS = 36_000;
 
 class HttpError extends Error {
@@ -10,6 +12,7 @@ class HttpError extends Error {
 function sendJson(res, status, data) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.end(JSON.stringify(data));
 }
 
@@ -158,18 +161,17 @@ function normalizeReport(parsed, week) {
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-AA-AI-Connection');
     return sendJson(res, 200, { ok: true });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_api_key;
 
   if (req.method === 'GET') {
     return sendJson(res, 200, {
       ok: true,
       provider: 'gemini',
       route: '/api/analyze-week',
-      has_key: Boolean(apiKey),
+      requires_personal_connection: true,
       message: 'API lista. Envia un resumen semanal por POST.'
     });
   }
@@ -178,11 +180,9 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 405, { error: 'Metodo no permitido' });
   }
 
-  if (!apiKey) {
-    return sendJson(res, 500, { error: 'Falta GEMINI_API_KEY o gemini_api_key en Vercel' });
-  }
 
   try {
+    const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
     const week = /^\d{4}-W\d{2}$/.test(body.week || '') ? body.week : 'semana actual';
     const summary = JSON.stringify(body.summary || {}).slice(0, 24_000);
@@ -198,17 +198,13 @@ module.exports = async function handler(req, res) {
 Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
 {"headline":"lectura principal en una frase","score":0,"wins":["logro concreto"],"risks":["riesgo o hueco de seguimiento"],"priorities":[{"title":"prioridad","detail":"accion concreta"}],"next_week_plan":{"training":"plan de entrenamiento","nutrition":"plan de nutricion","recovery":"plan de recuperacion","tracking":"que registrar mejor"},"suggested_goals":[{"title":"objetivo semanal sugerido","type":"training_count","target":"4","unit":"sesiones"}],"closing_note":"cierre breve"}`;
 
-    const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const geminiRes = await geminiFetch(apiKey, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: 0.25,
           maxOutputTokens: 1800,
           responseMimeType: 'application/json'
         }
-      })
     });
 
     const payload = await geminiRes.json().catch(() => ({}));
@@ -225,6 +221,6 @@ Devuelve un unico objeto JSON valido, sin markdown, con esta forma exacta:
     const parsed = parseModelJson(extractGeminiText(payload));
     return sendJson(res, 200, normalizeReport(parsed, week));
   } catch (err) {
-    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando la semana con Gemini' });
+    return sendJson(res, err.status || 500, { error: err.message || 'Error analizando la semana con Gemini', code: err.code });
   }
 };
