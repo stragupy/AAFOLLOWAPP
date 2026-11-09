@@ -15286,6 +15286,9 @@ body.calendar-dragging .aa-calendar-drop-zone {
 
 
 </style>
+<link rel="stylesheet" href="coach-pro.css">
+<link rel="stylesheet" href="training-pro.css">
+<link rel="stylesheet" href="account-access.css">
 </head>
 <body>
 
@@ -15312,6 +15315,12 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
     <button class="nav-btn" onclick="go('profile')"><i data-lucide="user-circle"></i><span>Perfil</span></button>
     <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
+    <div class="nav-label">Herramientas</div>
+    <button class="nav-btn" onclick="go('today')"><i data-lucide="database"></i><span>Datos</span></button>
+    <button class="nav-btn" onclick="go('goals')"><i data-lucide="target"></i><span>Objetivos</span></button>
+    <button class="nav-btn" onclick="go('preparation')"><i data-lucide="route"></i><span>Fase</span></button>
+    <button class="nav-btn" onclick="go('stats')"><i data-lucide="chart-column"></i><span>Estadísticas</span></button>
+    <button class="nav-btn" onclick="go('assistant')"><i data-lucide="sparkles"></i><span>Crear con IA</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
 </div>
@@ -15331,6 +15340,12 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <button class="nav-btn" onclick="go('daily-tracking')"><i data-lucide="chart-line"></i><span>Seguimiento diario</span></button>
     <button class="nav-btn" onclick="go('profile')"><i data-lucide="user-circle"></i><span>Perfil</span></button>
     <button class="nav-btn" onclick="go('hevy')"><i data-lucide="zap"></i><span>Hevy Sync</span></button>
+    <div class="nav-label">Herramientas</div>
+    <button class="nav-btn" onclick="go('today')"><i data-lucide="database"></i><span>Datos</span></button>
+    <button class="nav-btn" onclick="go('goals')"><i data-lucide="target"></i><span>Objetivos</span></button>
+    <button class="nav-btn" onclick="go('preparation')"><i data-lucide="route"></i><span>Fase</span></button>
+    <button class="nav-btn" onclick="go('stats')"><i data-lucide="chart-column"></i><span>Estadísticas</span></button>
+    <button class="nav-btn" onclick="go('assistant')"><i data-lucide="sparkles"></i><span>Crear con IA</span></button>
     <button class="nav-btn coach-nav-btn" type="button" onclick="openCoachMode()"><i data-lucide="shield-check"></i><span>Modo Coach</span></button>
   </nav>
   <!-- Usuario -->
@@ -15391,7 +15406,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
   <div class="global-date-bar">
     <div class="workspace-identity">
       <strong id="workspace-owner-name">AA Follow</strong>
-      <span>Control personal</span>
+      <span id="workspace-account-role">Control personal</span>
     </div>
     <div class="workspace-date-controls">
       <label for="global-date"><i data-lucide="calendar-days"></i><span>Día seleccionado</span></label>
@@ -15635,13 +15650,6 @@ body.calendar-dragging .aa-calendar-drop-zone {
             </div>
           </section>
 
-          <section class="today-panel today-checking-panel">
-            <div class="today-section-head">
-              <div><span>Semana activa</span><h2>Objetivos y check-in</h2></div>
-              <button class="today-section-action" type="button" onclick="go('checking')">Abrir check-in</button>
-            </div>
-            <div id="today-checking"><div class="today-panel-empty">Sin objetivos semanales.</div></div>
-          </section>
         </main>
 
         <aside class="today-secondary-column">
@@ -15705,7 +15713,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
             <div id="today-reminder-form" class="today-reminder-form" style="display:none">
               <input id="reminder-label" placeholder="Nombre del recordatorio" aria-label="Recordatorio">
               <div class="today-reminder-grid">
-                <select id="reminder-type" aria-label="Tipo"><option value="training">Entreno</option><option value="meal">Comida</option><option value="water">Agua</option><option value="supplement">Suplemento</option><option value="checkin">Check-in</option><option value="personal">Personal</option></select>
+                <select id="reminder-type" aria-label="Tipo"><option value="training">Entreno</option><option value="meal">Comida</option><option value="water">Agua</option><option value="supplement">Suplemento</option><option value="personal">Personal</option></select>
                 <input type="time" id="reminder-time" aria-label="Hora">
                 <select id="reminder-repeat" aria-label="Repetición" onchange="syncTodayReminderDateVisibility()"><option value="daily">Todos los días</option><option value="weekdays">Lunes a viernes</option><option value="weekends">Fin de semana</option><option value="once">Una vez</option></select>
                 <input type="date" id="reminder-date" aria-label="Fecha para una vez">
@@ -15812,6 +15820,12 @@ body.calendar-dragging .aa-calendar-drop-zone {
           <button class="coach-tab" type="button" data-coach-view="planning" role="tab" aria-selected="false" onclick="setCoachView('planning')"><i data-lucide="calendar-check-2"></i><span>Planificar</span></button>
           <button class="coach-tab" type="button" data-coach-view="maps" role="tab" aria-selected="false" onclick="setCoachView('maps')"><i data-lucide="git-fork"></i><span>Mapas</span></button>
           <button class="coach-tab" type="button" data-coach-view="guidelines" role="tab" aria-selected="false" onclick="setCoachView('guidelines')"><i data-lucide="list-checks"></i><span>Pautas</span></button>
+          <button class="coach-tab" type="button" data-coach-view="journal" role="tab" aria-selected="false" onclick="setCoachView('journal')"><i data-lucide="notebook-pen"></i><span>Bitácora</span></button>
+          <button class="coach-tab" type="button" data-coach-view="history" role="tab" aria-selected="false" onclick="setCoachView('history')"><i data-lucide="history"></i><span>Fases</span></button>
+          <button class="coach-tab" type="button" data-coach-view="report" role="tab" aria-selected="false" onclick="setCoachView('report')"><i data-lucide="file-chart-column"></i><span>Informe</span></button>
+          <button class="coach-tab" type="button" data-coach-view="blocks" role="tab" aria-selected="false" onclick="setCoachView('blocks')"><i data-lucide="layers"></i><span>Bloques</span></button>
+          <button class="coach-tab" type="button" data-coach-view="exercise-library" role="tab" aria-selected="false" onclick="setCoachView('exercise-library')"><i data-lucide="library"></i><span>Ejercicios</span></button>
+          <button class="coach-tab" type="button" data-coach-view="training-rules" role="tab" aria-selected="false" onclick="setCoachView('training-rules')"><i data-lucide="trending-up"></i><span>Reglas</span></button>
         </nav>
         <section id="coach-workspace" class="coach-workspace" aria-live="polite"></section>
       </div>
@@ -15939,6 +15953,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
         </div>
         <div class="btn-row"><button class="btn btn-primary" onclick="saveProfileDetails()">Guardar perfil</button></div>
       </div>
+      <div id="account-access" class="account-access" aria-live="polite"></div>
     </div>
   </div>
 
@@ -15953,6 +15968,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
       </div>
     </div>
     <div class="content">
+      <section id="training-pro-hub" class="tp cp" aria-live="polite"></section>
       <div class="card mb">
         <div class="card-title">Entreno en vivo - borrador</div>
         <div class="form-grid fg3" style="margin-bottom:14px">
@@ -16365,6 +16381,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
             <button id="calendar-next-btn" class="aa-calendar-arrow" type="button" onclick="moveCalendarPeriod(1)" aria-label="Período siguiente" title="Período siguiente"><i data-lucide="chevron-right"></i></button>
           </div>
           <div class="aa-calendar-toolbar-end">
+            <button id="tp-bulk-toggle" class="btn btn-ghost btn-sm" type="button" onclick="TrainingPro.toggleBulk()"><i data-lucide="list-checks"></i><span>Seleccionar días</span></button>
             <label class="aa-calendar-week-picker">
               <span id="calendar-period-picker-label">Ir a semana</span>
               <input type="week" id="calendar-week" onchange="calendarPeriodChanged()" aria-label="Ir a semana">
@@ -16374,6 +16391,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
           </div>
         </header>
 
+        <div id="tp-bulk-toolbar" class="tp cp" hidden></div>
         <div class="aa-calendar-workspace">
           <aside class="aa-calendar-sidebar">
             <div class="aa-calendar-agenda-head">
@@ -16405,10 +16423,9 @@ body.calendar-dragging .aa-calendar-drop-zone {
             <p>Entrenamiento, nutrición y cumplimiento de la semana elegida</p>
           </div>
         </div>
-        <div class="g3" id="calendar-summary">
+        <div class="g2" id="calendar-summary">
           <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">0</div><div class="stat-sub">esta semana</div></div>
           <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">0</div><div class="stat-sub">promedio diario</div></div>
-          <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">0%</div><div class="stat-sub">cumplimiento semanal</div></div>
         </div>
         <div class="week-grid" id="calendar-grid"></div>
       </section>
@@ -16566,122 +16583,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     </div>
   </div>
 
-  <!-- CHECK-IN -->
-  <div id="page-checking" class="page">
-    <div class="page-head flex jb ai-c checking-pro-head">
-      <div>
-        <h1>Check-in semanal</h1>
-        <p>Objetivos medibles, revisión de desempeño y decisiones para la próxima semana</p>
-      </div>
-      <div class="checking-week-navigation">
-        <button class="checking-current-week" type="button" onclick="checkingGoCurrentWeek()">Esta semana</button>
-        <button class="checking-week-arrow" type="button" onclick="moveCheckingWeek(-1)" aria-label="Semana anterior" title="Semana anterior">&#8249;</button>
-        <input type="week" id="c-week" onchange="loadChecking()" aria-label="Semana del check-in">
-        <button class="checking-week-arrow" type="button" onclick="moveCheckingWeek(1)" aria-label="Semana siguiente" title="Semana siguiente">&#8250;</button>
-        <button class="btn btn-primary checking-new-goal" type="button" onclick="openCheckingGoalModal()">+ Nuevo objetivo</button>
-      </div>
-    </div>
-    <div class="content checking-pro-content">
-      <section class="checking-overview">
-        <div class="checking-score-panel">
-          <div class="checking-score-ring" id="checking-score-ring" style="--checking-score:0deg">
-            <div><strong id="checking-score-value">0%</strong><span>cumplimiento</span></div>
-          </div>
-          <div class="checking-score-copy">
-            <span class="checking-eyebrow">Estado de la semana</span>
-            <h2 id="checking-score-title">Sin objetivos cargados</h2>
-            <p id="checking-insight">Crea objetivos medibles para obtener una lectura semanal útil.</p>
-          </div>
-        </div>
-        <div class="checking-summary-grid" id="checking-summary">
-          <div class="checking-kpi"><span>Objetivos</span><strong>0</strong><small>esta semana</small></div>
-          <div class="checking-kpi success"><span>Cumplidos</span><strong>0</strong><small>logrados</small></div>
-          <div class="checking-kpi warning"><span>En curso</span><strong>0</strong><small>pendientes</small></div>
-          <div class="checking-kpi danger"><span>Revisar</span><strong>0</strong><small>fallados</small></div>
-        </div>
-      </section>
-
-      <div class="checking-workspace">
-        <section class="checking-goals-panel">
-          <div class="checking-section-head">
-            <div>
-              <span class="checking-eyebrow">Plan semanal</span>
-              <h2>Objetivos y progreso</h2>
-            </div>
-            <button class="checking-carry-btn" type="button" onclick="carryCheckingGoals()">Pasar pendientes</button>
-          </div>
-          <div class="checking-filters" role="tablist" aria-label="Filtrar objetivos">
-            <button class="checking-filter-btn active" type="button" data-checking-filter="all" onclick="setCheckingGoalFilter('all')">Todos</button>
-            <button class="checking-filter-btn" type="button" data-checking-filter="pending" onclick="setCheckingGoalFilter('pending')">En curso</button>
-            <button class="checking-filter-btn" type="button" data-checking-filter="done" onclick="setCheckingGoalFilter('done')">Cumplidos</button>
-            <button class="checking-filter-btn" type="button" data-checking-filter="missed" onclick="setCheckingGoalFilter('missed')">Revisar</button>
-          </div>
-          <div id="checking-list" class="checking-goal-list">
-            <div class="checking-empty">Agrega tu primer objetivo semanal.</div>
-          </div>
-        </section>
-
-        <aside class="checking-review-panel">
-          <div class="checking-section-head">
-            <div>
-              <span class="checking-eyebrow">Cierre semanal</span>
-              <h2>Revisión de desempeño</h2>
-            </div>
-            <span id="checking-review-status" class="checking-review-status">Sin guardar</span>
-          </div>
-
-          <div class="checking-review-field">
-            <div class="checking-review-label"><label for="c-review-adherence">Adherencia percibida</label><output id="c-review-adherence-value">7/10</output></div>
-            <input type="range" id="c-review-adherence" min="0" max="10" step="1" value="7" oninput="updateCheckingAdherenceLabel()">
-          </div>
-
-          <div class="checking-review-field">
-            <div class="checking-review-label"><span>Energía general</span><output id="c-review-energy-value">3/5</output></div>
-            <input type="hidden" id="c-review-energy" value="3">
-            <div class="checking-energy-control" role="group" aria-label="Energía general">
-              <button type="button" data-checking-energy="1" onclick="selectCheckingEnergy(1)">1</button>
-              <button type="button" data-checking-energy="2" onclick="selectCheckingEnergy(2)">2</button>
-              <button type="button" class="active" data-checking-energy="3" onclick="selectCheckingEnergy(3)">3</button>
-              <button type="button" data-checking-energy="4" onclick="selectCheckingEnergy(4)">4</button>
-              <button type="button" data-checking-energy="5" onclick="selectCheckingEnergy(5)">5</button>
-            </div>
-          </div>
-
-          <div class="form-row checking-review-field">
-            <label class="form-label" for="c-review-win">Principal logro</label>
-            <textarea id="c-review-win" rows="2" maxlength="400" placeholder="Qué salió especialmente bien esta semana..." oninput="markCheckingReviewUnsaved()"></textarea>
-          </div>
-          <div class="form-row checking-review-field">
-            <label class="form-label" for="c-review-obstacle">Principal obstáculo</label>
-            <textarea id="c-review-obstacle" rows="2" maxlength="400" placeholder="Qué te frenó o hizo más difícil cumplir..." oninput="markCheckingReviewUnsaved()"></textarea>
-          </div>
-          <div class="form-row checking-review-field">
-            <label class="form-label" for="c-review-focus">Próximo enfoque</label>
-            <textarea id="c-review-focus" rows="2" maxlength="400" placeholder="Qué decisión concreta llevarás a la próxima semana..." oninput="markCheckingReviewUnsaved()"></textarea>
-          </div>
-
-          <button class="btn btn-primary checking-save-review" type="button" onclick="saveCheckingReview()">Guardar revisión semanal</button>
-
-          <div class="checking-trend-block">
-            <div class="checking-trend-head"><span>Tendencia</span><small>últimas 6 semanas</small></div>
-            <div id="checking-trend" class="checking-trend"><div class="checking-trend-empty">Sin historial suficiente.</div></div>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </div>
-
 </div><!-- /main -->
-
-<!-- BOTTOM NAV (mobile) -->
-<nav id="bottom-nav">
-  <button class="bnav-btn" onclick="go('today')"><i data-lucide="database"></i><span>Datos</span></button>
-  <button class="bnav-btn" onclick="go('goals')"><i data-lucide="target"></i><span>Objetivos</span></button>
-  <button class="bnav-btn" onclick="go('preparation')"><i data-lucide="route"></i><span>Fase</span></button>
-  <button class="bnav-btn" onclick="go('stats')"><i data-lucide="chart-column"></i><span>Estadísticas</span></button>
-  <button class="bnav-btn" onclick="go('checking')"><i data-lucide="clipboard-check"></i><span>Check-in</span></button>
-  <button class="bnav-btn" onclick="go('assistant')"><i data-lucide="sparkles"></i><span>Crear con IA</span></button>
-</nav>
 
 <!-- TOASTS -->
 <div id="toast"></div>
@@ -16808,7 +16710,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <div class="form-grid fg2" style="margin-bottom:16px">
       <div class="form-row" style="grid-column:1/-1"><label class="form-label">Título</label><input id="g-title" placeholder="Llegar a 80kg..."></div>
       <div class="form-row"><label class="form-label">Tipo</label>
-        <select id="g-type"><option value="weight">Peso</option><option value="fat">Grasa corporal</option><option value="strength">Fuerza</option><option value="cardio_steps">Pasos</option><option value="cardio_minutes">Min de cardio</option><option value="training_count">Entrenos semanales</option><option value="checking_rate">Check-in semanal</option><option value="other">Otro</option></select>
+        <select id="g-type"><option value="weight">Peso</option><option value="fat">Grasa corporal</option><option value="strength">Fuerza</option><option value="cardio_steps">Pasos</option><option value="cardio_minutes">Min de cardio</option><option value="training_count">Entrenos semanales</option><option value="other">Otro</option></select>
       </div>
       <div class="form-row"><label class="form-label">Unidad</label><input id="g-unit" placeholder="kg, %, reps..."></div>
       <div class="form-row"><label class="form-label">Valor actual</label><input type="number" id="g-current" placeholder="85"></div>
@@ -17131,6 +17033,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
   </div>
 </div>
 
+<script src="account-storage.js"></script>
 <script>
 // ═══════════════════════════════════════════════════
 // STORAGE — todo persiste en localStorage
@@ -17144,7 +17047,9 @@ const SAFETY_COLLECTIONS = new Set([
   'bodylogs', 'routines', 'sessions', 'meals', 'meal_templates', 'goals', 'notes',
   'checking_cardio', 'checking_goals', 'supplements', 'progress_photos',
   'week_plans', 'reminders', 'calendar_events', 'checking_reviews', 'preparation_plans',
-  'coach_plans', 'coach_maps', 'coach_guidelines', 'coach_assessments'
+  'coach_plans', 'coach_maps', 'coach_guidelines', 'coach_assessments',
+  'coach_journal', 'coach_phase_history', 'coach_reports',
+  'training_blocks', 'exercise_profiles', 'exercise_alternatives', 'exercise_techniques', 'training_progression_rules'
 ]);
 
 const SAFETY_COLLECTION_LABELS = {
@@ -17153,7 +17058,9 @@ const SAFETY_COLLECTION_LABELS = {
   checking_cardio: 'Cardio', checking_goals: 'Check-in', supplements: 'Suplemento',
   progress_photos: 'Foto', week_plans: 'Plan semanal', reminders: 'Recordatorio',
   calendar_events: 'Evento', checking_reviews: 'Revisión semanal', preparation_plans: 'Fase de preparación',
-  coach_plans: 'Plan de coach', coach_maps: 'Mapa conceptual', coach_guidelines: 'Pauta', coach_assessments: 'Análisis de coach'
+  coach_plans: 'Plan de coach', coach_maps: 'Mapa conceptual', coach_guidelines: 'Pauta', coach_assessments: 'Análisis de coach',
+  coach_journal: 'Bitácora de coach', coach_phase_history: 'Historial de fase', coach_reports: 'Informe de coach',
+  training_blocks: 'Bloque de entrenamiento', exercise_profiles: 'Ficha de ejercicio', exercise_alternatives: 'Alternativa de ejercicio', exercise_techniques: 'Referencia de técnica', training_progression_rules: 'Regla de progresión'
 };
 
 function safetyId() {
@@ -17162,7 +17069,7 @@ function safetyId() {
 
 function safetyRead(key, fallback) {
   try {
-    const value = JSON.parse(localStorage.getItem('ft_' + key) || 'null');
+    const value = JSON.parse(localStorage.getItem(accountStorageKey(key)) || 'null');
     return value == null ? fallback : value;
   } catch {
     return fallback;
@@ -17187,9 +17094,9 @@ function appendChangeHistory(action, collection, item, detail = '') {
     changed_at: new Date().toISOString()
   });
   try {
-    localStorage.setItem('ft_change_history', JSON.stringify(history.slice(0, 160)));
+    localStorage.setItem(accountStorageKey('change_history'), JSON.stringify(history.slice(0, 160)));
   } catch {
-    try { localStorage.setItem('ft_change_history', JSON.stringify(history.slice(0, 60))); } catch {}
+    try { localStorage.setItem(accountStorageKey('change_history'), JSON.stringify(history.slice(0, 60))); } catch {}
   }
   scheduleCloudAutoUpload('change_history');
 }
@@ -17205,7 +17112,7 @@ function appendTrashItems(collection, items) {
     item,
     deleted_at: deletedAt
   }));
-  localStorage.setItem('ft_trash', JSON.stringify(entries.concat(trash)));
+  localStorage.setItem(accountStorageKey('trash'), JSON.stringify(entries.concat(trash)));
   scheduleCloudAutoUpload('trash');
 }
 
@@ -17222,9 +17129,9 @@ function safetyArrayChanges(collection, previous, next) {
 }
 
 const DB = {
-  get: k => JSON.parse(localStorage.getItem('ft_' + k) || 'null'),
+  get: k => JSON.parse(localStorage.getItem(accountStorageKey(k)) || 'null'),
   set: (k, v, options = {}) => {
-    const storageKey = 'ft_' + k;
+    const storageKey = accountStorageKey(k);
     const previousRaw = localStorage.getItem(storageKey);
     const previous = previousRaw == null ? null : JSON.parse(previousRaw);
     const changes = !options.skipAudit && !cloudRestoreActive ? safetyArrayChanges(k, previous || [], v || []) : null;
@@ -17257,6 +17164,21 @@ const DB = {
 const SUPABASE_URL = 'https://fqydbdssmmfvkrzefspq.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_HigCZOqLwj1zwO6mNiDwZg_uN9Y2MTt';
 const cloudClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+async function accountFetch(url, options = {}) {
+  if (!cloudClient) throw new Error('Inicia sesión para usar esta conexión.');
+  const { data, error } = await cloudClient.auth.getSession();
+  if (error || !data?.session?.access_token) throw new Error('Tu sesión expiró. Vuelve a entrar.');
+  if (!AccountStorage.owns(data.session.user?.id)) throw new Error('La cuenta cambió. Vuelve a entrar antes de continuar.');
+  const headers = new Headers(options.headers || {});
+  headers.set('Authorization', `Bearer ${data.session.access_token}`);
+  const path = new URL(url, location.href).pathname;
+  if (['/api/app-assistant', '/api/analyze-food', '/api/analyze-day', '/api/analyze-week', '/api/analyze-week-fill', '/api/suggest-meal'].includes(path)) {
+    const connection = window.AccountAccess?.connectionToken(data.session.user.id);
+    if (connection) headers.set('X-AA-AI-Connection', connection);
+  }
+  return fetch(url, { ...options, headers });
+}
 
 const V1_DATA_KEYS = ['profiles','activeUser','bodylogs','routines','sessions','records','nutconfig','meals','goals','notes','checking_goals'];
 function preserveV1DataSnapshot() {
@@ -17316,13 +17238,15 @@ function go(page) {
     openCoachMode();
     return;
   }
+  const targetPage = document.getElementById('page-' + page);
+  if (!targetPage) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+  targetPage.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll(`[onclick="go('${page}')"]`).forEach(b => b.classList.add('active'));
+  if (page === 'coach') document.querySelectorAll('.coach-nav-btn').forEach(button => button.classList.add('active'));
 
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, profile: loadProfile, hevy: loadHevy };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, profile: loadProfile, hevy: loadHevy };
   loaders[page]?.();
   closeMobileMenu();
   refreshInterfaceIcons();
@@ -17345,7 +17269,6 @@ function syncDateControls(date = selectedDate()) {
   });
   const week = weekValueFromDate(date);
   const calendarWeek = document.getElementById('calendar-week');
-  const checkingWeek = document.getElementById('c-week');
   if (calendarWeek) {
     calendarWeek.value = calendarViewMode === 'day'
       ? date
@@ -17353,7 +17276,6 @@ function syncDateControls(date = selectedDate()) {
         ? date.slice(0, 7)
         : week;
   }
-  if (checkingWeek) checkingWeek.value = week;
   renderFreeDayStatus(date);
 }
 
@@ -17362,7 +17284,7 @@ function changeGlobalDate(date) {
   document.getElementById('global-date').value = date;
   syncDateControls(date);
   const activePage = document.querySelector('.page.active')?.id?.replace('page-', '') || 'dashboard';
-  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, checking: loadChecking, profile: loadProfile, hevy: loadHevy };
+  const loaders = { dashboard: loadDashboard, today: loadToday, assistant: loadAppAssistant, coach: loadCoach, 'daily-tracking': loadDailyTracking, body: loadBody, training: loadTraining, nutrition: loadNutrition, calendar: loadCalendar, preparation: loadPreparation, goals: loadGoals, stats: loadStats, profile: loadProfile, hevy: loadHevy };
   loaders[activePage]?.();
 }
 
@@ -17702,7 +17624,6 @@ function weeklyHistory(limit = 6) {
 function dailyAlerts(date = selectedDate()) {
   const { cfg, totals } = nutritionForDate(date);
   const sessions = sessionsForDate(date);
-  const check = checkingStats(weekValueFromDate(date));
   const cardioToday = (DB.get('checking_cardio') || []).filter(c => c.date === date);
   const steps = cardioToday.filter(c => c.type === 'steps').reduce((a, c) => a + (+c.value || 0), 0);
   const minutes = cardioToday.filter(c => c.type === 'minutes').reduce((a, c) => a + (+c.value || 0), 0);
@@ -17718,7 +17639,6 @@ function dailyAlerts(date = selectedDate()) {
   else alerts.push({ type: 'good', title: 'Entreno registrado', copy: `${sessions.length} sesión guardada hoy. Buen material para medir progreso.` });
   if (totals.cal < cfg.calories * 0.55) alerts.push({ type: 'warn', title: 'Calorías bajas', copy: `Vas en ${totals.cal} kcal de ${cfg.calories}. Puede faltar energía para cerrar el día.` });
   if (totals.p < cfg.protein * 0.5) alerts.push({ type: 'warn', title: 'Proteína por completar', copy: `Llevas ${Math.round(totals.p)}g de ${cfg.protein}g. Conviene asegurar una comida fuerte en proteína.` });
-  if (check.total && check.pending) alerts.push({ type: 'warn', title: 'Check-in abierto', copy: `${check.pending} objetivo semanal sigue pendiente.` });
   const phase = preparationActivePlan();
   if (phase?.status === 'active' && phase.cycles?.length) {
     const phaseEnd = addDays(phase.start_date, preparationPlanWeeks(phase) * 7 - 1);
@@ -17753,11 +17673,9 @@ function smartInsight(date = selectedDate()) {
     return 'Día libre activo: no se exige comida, entreno ni cardio. Si cargas algo, sí entrará en la lectura.';
   }
   const week = weekSummary(weekValueFromDate(date));
-  const check = checkingStats(weekValueFromDate(date));
   if (!sessionsToday && totals.cal < cfg.calories * 0.35) return 'Hoy todavía está muy abierto: faltan comida registrada y entrenamiento. Prioridad simple: registra una comida real y deja lista la sesión si toca entrenar.';
   if (!sessionsToday) return `La nutrición ya tiene ${totals.cal} kcal registradas. El siguiente movimiento útil es entrenar o dejar claro el descanso.`;
   if (totals.p < cfg.protein * 0.65) return `Entreno registrado. Ahora protege recuperación: vas en ${Math.round(totals.p)}g de proteína de ${cfg.protein}g.`;
-  if (check.total && check.pending) return `Buen ritmo. Te quedan ${check.pending} objetivo(s) semanales por cerrar en Check-in.`;
   return `Semana sólida: ${week.sessions.length} entreno(s), ${week.avgCalories} kcal promedio y ${activityStreak()} día(s) seguidos con registro.`;
 }
 
@@ -17774,7 +17692,6 @@ function renderWeeklyDraftSummary() {
       <div class="quick-card"><div class="quick-label">Proteína</div><div class="quick-value">${Math.round(protein / divisor)}</div><div class="quick-sub">g/día</div></div>
       <div class="quick-card"><div class="quick-label">Pasos</div><div class="quick-value">${week.steps.toLocaleString('es-CL')}</div><div class="quick-sub">total</div></div>
       <div class="quick-card"><div class="quick-label">Cardio</div><div class="quick-value">${week.cardioMinutes}</div><div class="quick-sub">minutos</div></div>
-      <div class="quick-card"><div class="quick-label">Check-in</div><div class="quick-value">${week.checking.rate}%</div><div class="quick-sub">${week.checking.done}/${week.checking.total || 0}</div></div>
     </div>
     ${week.freeDates.length ? `<div class="mini-muted mt-3">${week.freeDates.length} día(s) libre(s): se evalúa solo lo registrado (${week.freeDates.map(d => d.slice(5)).join(', ')}).</div>` : ''}`;
 }
@@ -17791,7 +17708,6 @@ function internalReminderItems(date = selectedDate()) {
   if (totals.p < cfg.protein * 0.75) reminders.push({ type: 'warn', title: 'Proteína', copy: `Te faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)}g para el objetivo del día.` });
   if (!cardioToday.length) reminders.push({ type: 'warn', title: 'Cardio', copy: 'Aún no registraste pasos o minutos de cardio hoy.' });
   if (supps.length && supps.some(s => !suppChecks[s.id])) reminders.push({ type: 'warn', title: 'Suplementos', copy: 'Quedan suplementos sin marcar como cumplidos.' });
-  if (week.checking.total && week.checking.pending) reminders.push({ type: 'warn', title: 'Check-in', copy: `${week.checking.pending} objetivo(s) semanales siguen pendientes.` });
   if (!reminders.length) reminders.push({ type: 'good', title: 'Todo claro', copy: 'No hay recordatorios pendientes para el día seleccionado.' });
   return reminders.slice(0, 5);
 }
@@ -17950,7 +17866,7 @@ function renderMobileGymDraft() {
           <div class="gym-pro-kicker">Ejercicio ${gymExerciseIndex + 1} de ${groups.length}</div>
           <div class="gym-pro-title">${esc(ex)}</div>
         </div>
-        <span class="badge ${complete ? 'b-green' : 'b-accent'}">${groupDone}/${group.rows.length} series</span>
+        <div class="tp-gym-tools"><span class="badge ${complete ? 'b-green' : 'b-accent'}">${groupDone}/${group.rows.length} series</span><button class="btn btn-ghost btn-sm" type="button" onclick="TrainingPro.openExerciseTools(liveGymGroups()[gymExerciseIndex].element)" title="Alternativas y técnica" aria-label="Alternativas y técnica"><i data-lucide="book-open"></i></button></div>
       </div>
       <div class="gym-progress-line">
         <div class="prog-wrap"><div class="prog-fill" style="width:${Math.round((done / Math.max(allRows.length, 1)) * 100)}%;background:var(--accent)"></div></div>
@@ -18652,6 +18568,7 @@ function calendarWeekColumnHtml(date, index, bodyLogs, cardioLogs) {
     </header>
     <div class="aa-calendar-column-body">
       ${calendarFreeCardHtml(date)}
+      ${window.TrainingPro?.calendarPlanHtml(date) || ''}
       ${events.map(calendarEventChipHtml).join('')}
       ${sessions.map(session => calendarSessionCardHtml(session, date)).join('')}
       ${nutrition.meals.length ? calendarNutritionCardHtml(date, nutrition) : ''}
@@ -18775,6 +18692,7 @@ function renderCalendarDayView() {
   const trackingCard = calendarTrackingCardHtml(date, body, cardio);
   const recorded = [
     calendarFreeCardHtml(date),
+    window.TrainingPro?.calendarPlanHtml(date) || '',
     ...sessions.map(session => calendarSessionCardHtml(session, date)),
     nutrition.meals.length ? calendarNutritionCardHtml(date, nutrition) : '',
     trackingCard
@@ -18868,6 +18786,7 @@ function renderCalendarMonthView() {
       </header>
       <div class="aa-calendar-month-items">
         ${calendarMonthFreeHtml(date)}
+        ${window.TrainingPro?.calendarPlanHtml(date, true) || ''}
         ${events.map(calendarMonthEventHtml).join('')}
         ${sessions.map(session => calendarMonthSessionHtml(session, date)).join('')}
         ${nutrition.meals.length ? calendarMonthNutritionHtml(date, nutrition) : ''}
@@ -18970,13 +18889,11 @@ function personalRankingItems() {
   const history = weeklyHistory(12);
   const bestTraining = [...history].sort((a, b) => b.sessions.length - a.sessions.length)[0];
   const bestVolume = [...history].sort((a, b) => b.volume - a.volume)[0];
-  const bestCheck = [...history].sort((a, b) => b.checking.rate - a.checking.rate)[0];
   const records = Object.values(effectiveRecords());
   const bestRecord = records.sort((a, b) => (+b.weight || 0) - (+a.weight || 0))[0];
   return [
     { title: 'Mejor semana de entreno', value: `${bestTraining?.sessions.length || 0} sesiones`, sub: bestTraining?.week || '-' },
     { title: 'Mayor volumen semanal', value: `${Math.round(bestVolume?.volume || 0)} kg`, sub: bestVolume?.week || '-' },
-    { title: 'Mejor check-in', value: `${bestCheck?.checking.rate || 0}%`, sub: bestCheck?.week || '-' },
     { title: 'Mejor marca de fuerza', value: bestRecord ? `${bestRecord.weight} kg` : '0 kg', sub: bestRecord ? bestRecord.exercise_name : '-' },
     { title: 'Racha actual', value: `${activityStreak()} días`, sub: 'registro diario' }
   ];
@@ -19051,16 +18968,15 @@ function scheduleCloudAutoUpload(key) {
 
 function cloudLocalData() {
   const data = {};
-  Object.keys(localStorage).filter(k => k.startsWith('ft_')).forEach(k => {
-    data[k.replace(/^ft_/, '')] = JSON.parse(localStorage.getItem(k) || 'null');
-  });
+  AccountStorage.entries().forEach(([key, raw]) => { data[key] = JSON.parse(raw || 'null'); });
   return data;
 }
 
 function cloudRestoreData(data) {
   cloudRestoreActive = true;
-  Object.entries(data || {}).forEach(([key, value]) => DB.set(key, value));
-  cloudRestoreActive = false;
+  try {
+    Object.entries(data || {}).forEach(([key, value]) => DB.set(key, value));
+  } finally { cloudRestoreActive = false; }
 }
 
 async function cloudCurrentUser() {
@@ -19082,8 +18998,12 @@ async function cloudSignUp() {
   const email = document.getElementById('cloud-email').value.trim();
   const password = document.getElementById('cloud-password').value;
   if (!email || !password) return toast('Completa correo y contraseña', 'err');
-  const { error } = await cloudClient.auth.signUp({ email, password });
+  const { data, error } = await cloudClient.auth.signUp({ email, password });
   if (error) return toast(error.message, 'err');
+  if (data?.session) {
+    if (!AccountStorage.activate(data.user)) return;
+    await startCloudAutoSync();
+  }
   toast('Cuenta creada. Si Supabase lo pide, confirma el correo.');
   refreshCloudStatus();
 }
@@ -19093,17 +19013,23 @@ async function cloudSignIn() {
   const email = document.getElementById('cloud-email').value.trim();
   const password = document.getElementById('cloud-password').value;
   if (!email || !password) return toast('Completa correo y contraseña', 'err');
-  const { error } = await cloudClient.auth.signInWithPassword({ email, password });
+  const { data, error } = await cloudClient.auth.signInWithPassword({ email, password });
   if (error) return toast(error.message, 'err');
+  if (!AccountStorage.activate(data.user)) return;
+  await startCloudAutoSync();
   toast('Sesión de nube iniciada');
   refreshCloudStatus();
 }
 
 async function cloudSignOut() {
   if (!cloudClient) return;
+  cloudAutoSyncReady = false;
+  clearTimeout(cloudAutoSyncTimer);
+  window.AccountAccess?.reset();
   await disablePushNotifications({ silent: true });
   await cloudClient.auth.signOut();
   toast('Sesión de nube cerrada');
+  document.getElementById('login-screen').classList.add('show');
   refreshCloudStatus();
 }
 
@@ -19111,6 +19037,7 @@ async function cloudUploadData() {
   if (!cloudClient) return toast('Supabase no está disponible', 'err');
   const user = await cloudCurrentUser();
   if (!user) return toast('Primero entra a tu cuenta de nube', 'err');
+  if (!AccountStorage.owns(user.id)) return toast('La cuenta cambió. Vuelve a entrar antes de sincronizar.', 'err');
   const payload = cloudLocalData();
   const existing = await cloudClient.from('aa_follow_data').select('id').eq('user_id', user.id).limit(1).maybeSingle();
   const result = existing.data?.id
@@ -19124,7 +19051,7 @@ async function cloudUploadData() {
 async function cloudAutoUploadData() {
   if (cloudAutoSyncBusy || !cloudClient) return;
   const user = await cloudCurrentUser();
-  if (!user) return;
+  if (!user || !cloudAutoSyncReady || !AccountStorage.owns(user.id)) return;
   cloudAutoSyncBusy = true;
   const payload = cloudLocalData();
   const existing = await cloudClient.from('aa_follow_data').select('id').eq('user_id', user.id).limit(1).maybeSingle();
@@ -19149,7 +19076,9 @@ async function cloudDownloadData(options = {}) {
     if (!options.silent) toast('Primero entra a tu cuenta de nube', 'err');
     return false;
   }
+  if (!AccountStorage.owns(user.id)) return false;
   const { data, error } = await cloudClient.from('aa_follow_data').select('data, updated_at').eq('user_id', user.id).order('updated_at', { ascending: false }).limit(1).maybeSingle();
+  if (!AccountStorage.owns(user.id)) return false;
   if (error) {
     if (!options.silent) toast(error.message, 'err');
     return false;
@@ -19597,7 +19526,6 @@ function loadToday() {
   const date = selectedDate();
   const { cfg, meals, totals } = nutritionForDate(date);
   const sessions = sessionsForDate(date);
-  const check = checkingStats(weekValueFromDate(date));
   const movement = todayMovement(date);
   const wellness = (DB.get('daily_wellness') || {})[date] || {};
   const water = +(DB.get('daily_water') || {})[date] || 0;
@@ -19621,7 +19549,7 @@ function loadToday() {
   renderTodayCoverage(date);
 
   const routines = DB.get('routines') || [];
-  let action = { title: 'Día bajo control', copy: 'Los registros principales están cubiertos. Revisa las señales y cierra lo pendiente cuando corresponda.', label: 'Abrir check-in', onclick: "go('checking')", tone: 'good' };
+  let action = { title: 'Día bajo control', copy: 'Los registros principales están cubiertos. Revisa tus datos cuando quieras.', label: 'Ver datos', onclick: "go('today')", tone: 'good' };
   if (free) {
     action = { title: 'Día libre activo', copy: 'Solo se evalúan los datos que decidas registrar; las áreas vacías no cuentan en contra.', label: 'Quitar día libre', onclick: 'toggleFreeDay()', tone: 'good' };
   } else if (!meals.length) {
@@ -19632,22 +19560,10 @@ function loadToday() {
     action = { title: 'Completar recuperación', copy: 'El entrenamiento ya está registrado. Añade sueño y energía para interpretar mejor tu rendimiento.', label: 'Registrar recuperación', onclick: "document.getElementById('today-sleep-hours')?.focus()", tone: 'warn' };
   } else if (totals.p < cfg.protein) {
     action = { title: 'Proteína por completar', copy: `Faltan ${Math.max(Math.round(cfg.protein - totals.p), 0)} g para alcanzar la referencia diaria.`, label: 'Registrar alimento', onclick: "showModal('modal-meal')", tone: 'warn' };
-  } else if (check.total && check.pending) {
-    action = { title: 'Check-in abierto', copy: `${check.pending} objetivo${check.pending === 1 ? '' : 's'} semanal${check.pending === 1 ? '' : 'es'} siguen pendientes.`, label: 'Abrir check-in', onclick: "go('checking')", tone: 'warn' };
   }
   document.getElementById('today-next-action').innerHTML = `<div class="today-priority ${action.tone}"><div><strong>${esc(action.title)}</strong><span>${esc(action.copy)}</span></div><button type="button" onclick="${action.onclick}">${esc(action.label)}</button></div>`;
 
   renderAlerts('today-alerts', dailyAlerts(date));
-  const checkingEl = document.getElementById('today-checking');
-  checkingEl.innerHTML = check.goals.length ? `<div class="today-checking-list">${check.goals.slice(0, 5).map(goal => {
-    const status = checkingStatus(goal);
-    const progress = checkingGoalProgress(goal);
-    return `<div class="today-checking-row">
-      <div><strong>${esc(goal.title)}</strong><small>${esc(progress.current)} de ${esc(progress.target)} ${esc(progress.unit || '')}</small></div>
-      <div class="today-checking-progress"><i style="width:${progress.percent}%"></i></div>
-      <span class="today-checking-status ${status}">${esc(checkLabel(goal))}</span>
-    </div>`;
-  }).join('')}</div>` : '<div class="today-panel-empty">Sin objetivos semanales configurados.</div>';
   renderTodayRecovery(date);
   renderTodayLedger(date);
   renderReminders();
@@ -19659,7 +19575,7 @@ function loadToday() {
 // ═══════════════════════════════════════════════════
 const REMINDER_TYPE_LABELS = {
   training: 'Entreno', meal: 'Comida', water: 'Agua', supplement: 'Suplemento',
-  checkin: 'Check-in', personal: 'Personal'
+  checkin: 'Personal', personal: 'Personal'
 };
 const REMINDER_REPEAT_LABELS = {
   daily: 'Todos los días', weekdays: 'Lunes a viernes', weekends: 'Fin de semana', once: 'Una vez'
@@ -20575,7 +20491,7 @@ async function requestAppAssistant() {
   const result = document.getElementById('app-ai-result');
   if (result) result.innerHTML = '<div class="app-ai-loading"><span></span><strong>Preparando una propuesta segura...</strong></div>';
   try {
-    const response = await fetch('/api/app-assistant', {
+    const response = await accountFetch('/api/app-assistant', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ request, context: appAssistantContext() })
@@ -20797,13 +20713,13 @@ function appAiBuildMutationPlan(operations) {
 function appAiCommitMutationPlan(staged) {
   const collections = [...staged.keys()];
   const rollbackKeys = [...new Set([...collections, 'trash', 'change_history'])];
-  const snapshots = new Map(rollbackKeys.map(key => [key, localStorage.getItem('ft_' + key)]));
+  const snapshots = new Map(rollbackKeys.map(key => [key, localStorage.getItem(accountStorageKey(key))]));
   try {
     collections.forEach(collection => DB.set(collection, staged.get(collection)));
   } catch (error) {
     snapshots.forEach((raw, key) => {
-      if (raw == null) localStorage.removeItem('ft_' + key);
-      else localStorage.setItem('ft_' + key, raw);
+      if (raw == null) localStorage.removeItem(accountStorageKey(key));
+      else localStorage.setItem(accountStorageKey(key), raw);
     });
     throw error;
   }
@@ -20986,7 +20902,7 @@ async function analyzeVoiceDay() {
   if (button) button.disabled = true;
   if (result) result.innerHTML = '<div class="empty">Interpretando el registro...</div>';
   try {
-    const response = await fetch('/api/analyze-day', {
+    const response = await accountFetch('/api/analyze-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date, description, context: dayAiContext() })
@@ -21046,7 +20962,7 @@ async function analyzeDayDescription() {
   }
   if (result) result.innerHTML = '<div class="empty">Analizando tu dia...</div>';
   try {
-    const res = await fetch('/api/analyze-day', {
+    const res = await accountFetch('/api/analyze-day', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ date, description, context: dayAiContext() })
@@ -21088,7 +21004,7 @@ async function analyzeWeekFillDescription() {
   }
   if (result) result.innerHTML = '<div class="empty">Analizando tu semana...</div>';
   try {
-    const res = await fetch('/api/analyze-week-fill', {
+    const res = await accountFetch('/api/analyze-week-fill', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ week, dates: weekFillDates(week), description, context: dayAiContext() })
@@ -21824,7 +21740,7 @@ async function analyzeWeekCoach() {
   if (result) result.innerHTML = '<div class="empty">Analizando la semana...</div>';
 
   try {
-    const res = await fetch('/api/analyze-week', {
+    const res = await accountFetch('/api/analyze-week', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ week, summary, user_note: note })
@@ -22043,8 +21959,7 @@ function loadCalendar(options = {}) {
   const summary = weekSummary(weekValueFromDate(calendarSelectedDay || selectedDate()));
   document.getElementById('calendar-summary').innerHTML = `
     <div class="stat-tile"><div class="stat-label">Entrenos</div><div class="stat-value">${summary.sessions.length}</div><div class="stat-sub">esta semana</div></div>
-    <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">${summary.avgCalories}</div><div class="stat-sub">promedio diario</div></div>
-    <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">${summary.checking.rate}%</div><div class="stat-sub">${summary.checking.done}/${summary.checking.total || 0} cumplidos</div></div>`;
+    <div class="stat-tile"><div class="stat-label">Calorías</div><div class="stat-value">${summary.avgCalories}</div><div class="stat-sub">promedio diario</div></div>`;
 
   document.getElementById('calendar-grid').innerHTML = summary.dates.map((date, i) => {
     const free = isFreeDay(date);
@@ -22065,6 +21980,7 @@ function loadCalendar(options = {}) {
     </div>`;
   }).join('');
   renderCalendarMonthDraft();
+  window.TrainingPro?.mountCalendar();
 }
 
 function loadProgress() {
@@ -22073,8 +21989,7 @@ function loadProgress() {
   const previous = history[1];
   document.getElementById('progress-streaks').innerHTML = `
     <div class="stat-tile"><div class="stat-label">Racha diaria</div><div class="stat-value">${activityStreak()}</div><div class="stat-sub">días con registro</div></div>
-    <div class="stat-tile"><div class="stat-label">Racha entreno</div><div class="stat-value">${trainingWeekStreak()}</div><div class="stat-sub">semanas con sesión</div></div>
-    <div class="stat-tile"><div class="stat-label">Check-in</div><div class="stat-value">${checkingStats().rate}%</div><div class="stat-sub">cumplimiento actual</div></div>`;
+    <div class="stat-tile"><div class="stat-label">Racha entreno</div><div class="stat-value">${trainingWeekStreak()}</div><div class="stat-sub">semanas con sesión</div></div>`;
 
   const diffSessions = previous ? current.sessions.length - previous.sessions.length : 0;
   const diffCalories = previous ? current.avgCalories - previous.avgCalories : 0;
@@ -22271,8 +22186,8 @@ function restoreTrashItem(trashId) {
     return toast('Ese registro ya existe en sus datos', 'err');
   }
 
-  const trashKey = 'ft_trash';
-  const collectionKey = 'ft_' + entry.collection;
+  const trashKey = accountStorageKey('trash');
+  const collectionKey = accountStorageKey(entry.collection);
   const oldTrash = localStorage.getItem(trashKey);
   const oldCollection = localStorage.getItem(collectionKey);
   try {
@@ -22295,7 +22210,7 @@ function deleteTrashItemPermanently(trashId) {
   const entry = trash.find(item => item.id === trashId);
   if (!entry) return;
   if (!confirm('¿Eliminar definitivamente este registro? Esta acción no se puede deshacer.')) return;
-  localStorage.setItem('ft_trash', JSON.stringify(trash.filter(item => item.id !== trashId)));
+  localStorage.setItem(accountStorageKey('trash'), JSON.stringify(trash.filter(item => item.id !== trashId)));
   appendChangeHistory('permanently_deleted', entry.collection, entry.item);
   scheduleCloudAutoUpload('trash');
   renderDataSafety();
@@ -22303,10 +22218,7 @@ function deleteTrashItemPermanently(trashId) {
 }
 
 function exportAllData() {
-  const data = {};
-  Object.keys(localStorage).filter(k => k.startsWith('ft_')).forEach(k => {
-    data[k.replace(/^ft_/, '')] = JSON.parse(localStorage.getItem(k) || 'null');
-  });
+  const data = cloudLocalData();
   const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), app: 'AA Follow App', data }, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -24689,6 +24601,7 @@ function loadTraining() {
   renderExerciseHistoryDraft();
   renderCheckinCardio();
   renderMobileGymDraft();
+  window.TrainingPro?.renderHub();
 }
 
 // ── Rutinas ──
@@ -25040,10 +24953,11 @@ function draftRowsFrom(containerSelector, exerciseClass, classes) {
       targetReps: +row.querySelector(`.${classes.targetReps}`)?.value || null,
       reps: +row.querySelector(`.${classes.reps}`)?.value || 0,
       weight: +row.querySelector(`.${classes.kg}`)?.value || 0,
-      rir: classes.rir ? (+row.querySelector(`.${classes.rir}`)?.value || null) : null,
-      rpe: classes.rpe ? (+row.querySelector(`.${classes.rpe}`)?.value || null) : null,
+      rir: classes.rir && row.querySelector(`.${classes.rir}`)?.value !== '' ? Number(row.querySelector(`.${classes.rir}`)?.value) : null,
+      rpe: classes.rpe && row.querySelector(`.${classes.rpe}`)?.value !== '' ? Number(row.querySelector(`.${classes.rpe}`)?.value) : null,
       completed: row.dataset.completed === 'true',
-      manualTouched: row.dataset.manualTouched === 'true'
+      manualTouched: row.dataset.manualTouched === 'true',
+      type: row.dataset.setType || 'normal'
     }))
   })).filter(group => group.exercise || group.sets.length);
 }
@@ -25166,6 +25080,7 @@ function restoreLiveWorkoutDraft() {
       weight: set.weight,
       rir: set.rir,
       rpe: set.rpe,
+      type: set.type,
       completed: typeof set.completed === 'boolean'
         ? set.completed
         : (+set.weight > 0 || (+set.reps > 0 && +set.reps !== +set.targetReps)),
@@ -25203,7 +25118,9 @@ function restoreSessionWorkoutDraft() {
       targetSets: set.targetSets,
       targetReps: set.targetReps,
       achievedReps: set.reps,
-      weight: set.weight
+      weight: set.weight,
+      manualTouched: set.manualTouched,
+      type: set.type
     }));
   });
   restoringWorkoutDraft = false;
@@ -25319,7 +25236,8 @@ function workoutSetPrefills(routine, day) {
         achievedReps: set.reps ?? '',
         weight: set.weight ?? '',
         rir: set.rir ?? '',
-        rpe: set.rpe ?? ''
+        rpe: set.rpe ?? '',
+        type: set.type || 'normal'
       };
     }).filter(set => set.exercise);
   }
@@ -25374,6 +25292,7 @@ function getOrCreateExerciseGroup(list, exerciseName, mode) {
   group.innerHTML = `
     <div class="exercise-group-head">
       <label class="set-field" style="flex:1"><span>Ejercicio</span><input placeholder="Ejercicio..." class="${inputClass}" value="${esc(exerciseName || '')}"></label>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="TrainingPro.openExerciseTools(this.closest('.exercise-group'))" title="Alternativas y técnica" aria-label="Alternativas y técnica"><i data-lucide="book-open"></i></button>
       <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-group').remove(); ${removeAction}; scheduleWorkoutDraftSave('${mode}')">x</button>
     </div>
     <div class="exercise-series-list"></div>`;
@@ -25393,6 +25312,7 @@ function addLiveSet(prefill = {}) {
   const div = document.createElement('div');
   div.className = 'exercise-series-row';
   div.dataset.completed = prefill.completed === true ? 'true' : 'false';
+  div.dataset.setType = prefill.type || 'normal';
   div.dataset.manualTouched = prefill.manualTouched === true ? 'true' : 'false';
   const targetText = prefill.targetReps ? `${prefill.setNumber || 1}/${prefill.targetSets || '?'} x ${prefill.targetReps}` : 'Libre';
   div.innerHTML = `
@@ -25416,14 +25336,16 @@ function addLiveSet(prefill = {}) {
   scheduleWorkoutDraftSave('live');
 }
 
-function saveLiveWorkout() {
+function saveLiveWorkout(options = {}) {
+  if (!options.reviewed && window.TrainingPro) return TrainingPro.reviewWorkout('live');
   const date = document.getElementById('live-date').value || selectedDate();
   const routineId = document.getElementById('live-routine').value;
   const dayId = document.getElementById('live-day').value;
   const routine = (DB.get('routines') || []).find(r => r.id === routineId);
   const day = routine?.days?.find(d => d.id === dayId);
-  const sets = [];
+  const sets = options.reviewed ? options.sets.map(set => ({ ...set })) : [];
   document.querySelectorAll('#live-sets .exercise-series-row').forEach(row => {
+    if (options.reviewed) return;
     const group = row.closest('.exercise-group');
     const ex = group?.querySelector('.live-ex')?.value.trim();
     if (!ex) return;
@@ -25448,19 +25370,20 @@ function saveLiveWorkout() {
       s.is_pr = true;
     }
   });
-  DB.set('records', prs);
   const session = {
-    id: uid(),
+    id: options.session_id || uid(),
     date,
     routine_name: routine?.name || '',
     day_name: day?.name || '',
     duration: +document.getElementById('live-duration').value || null,
     notes: document.getElementById('live-notes').value,
-    sets
+    sets,
+    ...(options.reviewed ? { coach_review: options.coach_review, closure: options.closure } : {})
   };
   const comparison = compareWorkoutSession(session);
   session.comparison = comparison;
-  DB.push('sessions', session);
+  if (window.TrainingPro) TrainingPro.persistSession(session, prs);
+  else { DB.set('records', prs); DB.push('sessions', session); }
   clearWorkoutDraft(LIVE_WORKOUT_DRAFT_KEY);
   toast('Entreno en vivo guardado');
   renderWorkoutComparison(comparison);
@@ -25479,6 +25402,8 @@ function saveLiveWorkout() {
   loadToday();
   loadDashboard();
   loadGoals();
+  window.TrainingPro?.afterWorkoutSaved(session);
+  return session;
 }
 
 // ── Sesiones de Entrenamiento ──
@@ -25547,6 +25472,8 @@ function addSet(prefill = {}) {
   const group = getOrCreateExerciseGroup(list, prefill.exercise || '', 'set');
   const div = document.createElement('div');
   div.className = 'exercise-series-row';
+  div.dataset.manualTouched = prefill.manualTouched === true ? 'true' : 'false';
+  div.dataset.setType = prefill.type || 'normal';
   const snVal = prefill.setNumber || 1;
   const targetSetsVal = prefill.targetSets || '';
   const targetRepsVal = prefill.targetReps || '';
@@ -25563,11 +25490,15 @@ function addSet(prefill = {}) {
     <label class="set-field"><span>Peso kg</span><input type="number" placeholder="0" class="set-kg" value="${weight}" min="0" step="0.5" style="text-align:center"></label>
     <button class="btn btn-ghost btn-sm set-remove" onclick="this.closest('.exercise-series-row').remove(); scheduleWorkoutDraftSave('session')">x</button>`;
   group.querySelector('.exercise-series-list').appendChild(div);
-  ['input', 'change'].forEach(evt => div.addEventListener(evt, () => scheduleWorkoutDraftSave('session')));
+  ['input', 'change'].forEach(evt => div.addEventListener(evt, event => {
+    if (event.target.matches('.set-reps, .set-kg')) div.dataset.manualTouched = 'true';
+    scheduleWorkoutDraftSave('session');
+  }));
   scheduleWorkoutDraftSave('session');
 }
 
-function saveSession() {
+function saveSession(options = {}) {
+  if (!options.reviewed && window.TrainingPro) return TrainingPro.reviewWorkout('session');
   const date = document.getElementById('s-date').value;
   if (!date) return toast('Indica la fecha', 'err');
   const routineId = document.getElementById('s-routine').value;
@@ -25576,8 +25507,9 @@ function saveSession() {
   const routine = routines.find(r => r.id === routineId);
   const day = routine?.days?.find(d => d.id === dayId);
 
-  const sets = [];
+  const sets = options.reviewed ? options.sets.map(set => ({ ...set })) : [];
   document.querySelectorAll('#s-sets .exercise-series-row').forEach(row => {
+    if (options.reviewed) return;
     const group = row.closest('.exercise-group');
     const ex = group?.querySelector('.set-ex')?.value.trim();
     const sn = +row.querySelector('.set-sn')?.value || 1;
@@ -25605,19 +25537,19 @@ function saveSession() {
       s.is_pr = true;
     }
   });
-  DB.set('records', prs);
-
   const session = {
-    id: uid(), date,
+    id: options.session_id || uid(), date,
     routine_name: routine?.name || '',
     day_name: day?.name || '',
     duration: +document.getElementById('s-dur').value || null,
     notes: document.getElementById('s-notes').value,
-    sets
+    sets,
+    ...(options.reviewed ? { coach_review: options.coach_review, closure: options.closure } : {})
   };
   const comparison = compareWorkoutSession(session);
   session.comparison = comparison;
-  DB.push('sessions', session);
+  if (window.TrainingPro) TrainingPro.persistSession(session, prs);
+  else { DB.set('records', prs); DB.push('sessions', session); }
   clearWorkoutDraft(SESSION_WORKOUT_DRAFT_KEY);
   const newPRs = sets.filter(s => s.is_pr);
   toast(`Sesión registrada correctamente ${newPRs.length ? ` · Récord ${newPRs.length} PR maximo superado!` : ''}`);
@@ -25636,6 +25568,8 @@ function saveSession() {
   loadToday();
   loadDashboard();
   loadGoals();
+  window.TrainingPro?.afterWorkoutSaved(session);
+  return session;
 }
 
 function renderSessionsList() {
@@ -25652,6 +25586,7 @@ function renderSessionsList() {
           <div class="flex gap-2" style="margin-top:6px">
             ${s.duration ? `<span class="badge b-accent">${s.duration} min</span>` : ''}
             <span class="badge b-accent">${s.sets?.length || 0} series realizada</span>
+            <button class="btn btn-ghost btn-sm" type="button" onclick="CoachPro.openEffort('${s.id}')"><i data-lucide="activity"></i>Esfuerzo y molestias</button>
             ${s.sets?.some(x => x.is_pr) ? '<span class="badge b-amber">Récord PR</span>' : ''}
           </div>
         </div>
@@ -25747,7 +25682,7 @@ function getHevyConfig() {
     totalRemoteWorkouts: null
   };
   try {
-    const raw = localStorage.getItem('ft_hevy_config');
+    const raw = localStorage.getItem(accountStorageKey('hevy_config'));
     if (!raw) return defaults;
     const parsed = JSON.parse(raw);
     return { ...defaults, ...(parsed || {}) };
@@ -25760,7 +25695,7 @@ function saveHevyConfig(patch = {}) {
   const current = getHevyConfig();
   const next = { ...current, ...patch };
   try {
-    localStorage.setItem('ft_hevy_config', JSON.stringify(next));
+    localStorage.setItem(accountStorageKey('hevy_config'), JSON.stringify(next));
   } catch (err) {
     console.error('Error saving ft_hevy_config:', err);
   }
@@ -25894,7 +25829,7 @@ async function testHevyConnection(customKey) {
   }
 
   try {
-    const res = await fetch('/api/hevy?action=test', {
+    const res = await accountFetch('/api/hevy?action=test', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -25996,7 +25931,7 @@ async function syncHevyWorkouts(options = {}) {
     const seenHevyIds = new Set();
 
     while (page <= totalPages && page <= pageLimit) {
-      const res = await fetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
+      const res = await accountFetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -26143,7 +26078,7 @@ async function importHevyWorkoutsFullHistory() {
   try {
     while (page <= maxPages) {
       toast(`Descargando página ${page} de Hevy...`);
-      const res = await fetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
+      const res = await accountFetch(`/api/hevy?action=workouts&page=${page}&pageSize=${pageSize}`, {
         headers: { 'api-key': cfg.apiKey }
       });
       const data = await res.json().catch(() => null);
@@ -26223,7 +26158,7 @@ async function importHevyRoutines() {
 
   toast('Importando rutinas de Hevy...');
   try {
-    const res = await fetch('/api/hevy?action=routines&page=1&pageSize=20', {
+    const res = await accountFetch('/api/hevy?action=routines&page=1&pageSize=20', {
       headers: { 'api-key': cfg.apiKey }
     });
     const data = await res.json().catch(() => null);
@@ -27689,7 +27624,7 @@ async function analyzeFoodPhoto() {
   if (result) result.innerHTML = `<div class="empty">Analizando ${files.length ? 'comida' : 'descripcion'}...</div>`;
   try {
     const images = await Promise.all(files.map(file => resizeFoodImage(file)));
-    const res = await fetch('/api/analyze-food', {
+    const res = await accountFetch('/api/analyze-food', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -27807,7 +27742,7 @@ async function suggestMealOptions() {
   }
   if (result) result.innerHTML = '<div class="empty">Pensando opciones ajustadas a tus macros...</div>';
   try {
-    const res = await fetch('/api/suggest-meal', {
+    const res = await accountFetch('/api/suggest-meal', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -28151,7 +28086,7 @@ function renderWeeklyHistory(targetId) {
   const el = document.getElementById(targetId);
   if (!el) return;
   const history = weeklyHistory(6);
-  const useful = history.filter(w => w.sessions.length || w.meals.length || w.bodylogs.length || w.checking.total);
+  const useful = history.filter(w => w.sessions.length || w.meals.length || w.bodylogs.length);
   if (!useful.length) {
     el.innerHTML = '<div class="empty">Registra algunos días para ver el historial semanal.</div>';
     return;
@@ -28163,7 +28098,6 @@ function renderWeeklyHistory(targetId) {
         <div class="mini-muted">${w.dates[0].slice(5)} a ${w.dates[6].slice(5)}</div>
       </div>
       <div><span class="badge b-accent">${w.sessions.length} entrenos</span></div>
-      <div><span class="badge ${w.checking.rate >= 70 ? 'b-green' : w.checking.rate ? 'b-amber' : 'b-accent'}">${w.checking.rate}% check</span></div>
     </div>`).join('')}</div>`;
 }
 
@@ -29120,6 +29054,7 @@ function preparationSavePlan(plan, message = 'Fase guardada') {
   const plans = preparationPlans();
   const index = plans.findIndex(item => item.id === plan.id);
   const source = index >= 0 ? 'phase_edit' : 'phase_create';
+  window.CoachPro?.recordPhase(plan, index >= 0 ? plans[index] : null, source);
   plan.updated_at = new Date().toISOString();
   if (index >= 0) plans[index] = plan;
   else plans.unshift(plan);
@@ -29418,7 +29353,7 @@ async function requestPreparationReview(planId) {
     refreshInterfaceIcons();
   }
   try {
-    const response = await fetch('/api/app-assistant', {
+    const response = await accountFetch('/api/app-assistant', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(preparationReviewPayload(plan))
@@ -29597,10 +29532,16 @@ function togglePreparationPlanStatus(id) {
   if (!plan) return;
   const activate = plan.status !== 'active';
   if (activate && !confirm(`¿Activar la fase "${plan.name}"? Sus kcal y macros se aplicarán a Nutrición; tus comidas y tu rutina no se modificarán.`)) return;
+  const before = JSON.parse(JSON.stringify(plan));
   plans.forEach(item => {
-    if (item.id !== id && item.status === 'active') item.status = 'paused';
+    if (item.id !== id && item.status === 'active') {
+      const previous = JSON.parse(JSON.stringify(item));
+      item.status = 'paused';
+      window.CoachPro?.recordPhase(item, previous, 'phase_pause');
+    }
   });
   plan.status = activate ? 'active' : 'paused';
+  window.CoachPro?.recordPhase(plan, before, activate ? 'phase_activation' : 'phase_pause');
   plan.updated_at = new Date().toISOString();
   DB.set('preparation_plans', plans);
   DB.set('preparation_active_id', id);
@@ -29612,7 +29553,9 @@ function togglePreparationPlanStatus(id) {
 function archivePreparationPlan(id) {
   const plan = preparationPlans().find(item => item.id === id);
   if (!plan || !confirm(`¿Archivar "${plan.name}"? Sus datos quedarán guardados en el historial.`)) return;
+  const before = JSON.parse(JSON.stringify(plan));
   plan.status = 'archived';
+  window.CoachPro?.recordPhase(plan, before, 'phase_archive');
   plan.updated_at = new Date().toISOString();
   const plans = preparationPlans();
   const index = plans.findIndex(item => item.id === id);
@@ -30020,7 +29963,7 @@ function loadDailyTracking() {
 }
 
 // ── MODO COACH ───────────────────────────────────────
-const COACH_VIEWS = ['monitor', 'analysis', 'planning', 'maps', 'guidelines'];
+const COACH_VIEWS = ['monitor', 'analysis', 'planning', 'maps', 'guidelines', 'journal', 'history', 'report', 'blocks', 'exercise-library', 'training-rules'];
 let coachModeUnlocked = false;
 let coachActiveView = 'monitor';
 let coachSelectedMapId = '';
@@ -30274,6 +30217,7 @@ function loadCoach() {
   if (identity) identity.textContent = email;
   renderCoachTabs();
   renderCoachWorkspace();
+  window.scrollTo(0, 0);
 }
 
 function setCoachView(view) {
@@ -30281,6 +30225,8 @@ function setCoachView(view) {
   coachActiveView = view;
   renderCoachTabs();
   renderCoachWorkspace();
+  document.querySelector('.coach-tab.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  window.scrollTo(0, 0);
 }
 
 function renderCoachWorkspace() {
@@ -30293,7 +30239,9 @@ function renderCoachWorkspace() {
     maps: renderCoachMaps,
     guidelines: renderCoachGuidelines
   };
-  workspace.innerHTML = (renderers[coachActiveView] || renderCoachMonitor)();
+  workspace.innerHTML = window.TrainingPro?.renderCoach(coachActiveView) ?? window.CoachPro?.render(coachActiveView) ?? (renderers[coachActiveView] || renderCoachMonitor)();
+  window.CoachPro?.mount(coachActiveView);
+  window.TrainingPro?.mountCoach(coachActiveView);
   refreshInterfaceIcons();
 }
 
@@ -30320,7 +30268,6 @@ function renderCoachMonitor() {
           <div class="coach-coverage-grid">
             <div class="coach-coverage-item"><span>Proteína</span><strong>${metrics.proteinCoverage}% de días</strong></div>
             <div class="coach-coverage-item"><span>Agua</span><strong>${metrics.waterDays} día(s)</strong></div>
-            <div class="coach-coverage-item"><span>Check-in</span><strong>${metrics.current.checking.rate}%</strong></div>
             <div class="coach-coverage-item"><span>Objetivos</span><strong>${metrics.doneGoals}/${metrics.goals.length} logrados</strong></div>
           </div>
         </section>
@@ -30592,10 +30539,15 @@ async function initAuth() {
   renderSavedLogin(active);
   const user = await cloudCurrentUser();
   if (user?.email) {
+    if (!AccountStorage.activate(user)) return;
     saveProfile(user.email);
     document.getElementById('login-email-input').value = user.email;
     renderSavedLogin(user.email);
     setLoginStatus('Cuenta recordada. Aprieta Entrar para continuar.');
+    if (sessionStorage.getItem('aa_resume_account') === user.id) {
+      sessionStorage.removeItem('aa_resume_account');
+      enterApp(user.email, false);
+    }
     return;
   }
   if (active && String(active).includes('@')) {
@@ -30656,6 +30608,7 @@ async function doLogin() {
     return;
   }
   const account = data.user?.email || email;
+  if (!AccountStorage.activate(data.user)) return;
   saveProfile(account);
   renderSavedLogin(account);
   enterApp(account, true);
@@ -30677,10 +30630,13 @@ async function createLoginAccount() {
     return;
   }
   const account = data.user?.email || email;
-  saveProfile(account);
   setLoginStatus('Cuenta creada. Si Supabase pide confirmar correo, revísalo.');
   renderSavedLogin(account);
-  if (data.session) enterApp(account, true);
+  if (data.session) {
+    if (!AccountStorage.activate(data.user)) return;
+    saveProfile(account);
+    enterApp(account, true);
+  }
 }
 
 async function quickEnterSavedAccount() {
@@ -30690,6 +30646,7 @@ async function quickEnterSavedAccount() {
   }
   const user = await cloudCurrentUser();
   if (user?.email && (!saved || user.email.toLowerCase() === String(saved).toLowerCase())) {
+    if (!AccountStorage.activate(user)) return;
     saveProfile(user.email);
     enterApp(user.email, true);
     return;
@@ -30785,6 +30742,7 @@ function refreshUserProfileDisplay() {
 
 function loadProfile() {
   renderProfilePage();
+  window.AccountAccess?.refresh();
 }
 
 async function startCloudAutoSync() {
@@ -30822,12 +30780,19 @@ function enterApp(name, animate) {
   }
   loadDashboard();
   startCloudAutoSync();
+  window.AccountAccess?.refresh();
   initHevyAutoSync();
   renderHevyDashboardCard();
 }
 
 async function logoutUser() {
   const active = DB.get('activeUser');
+  cloudAutoSyncReady = false;
+  clearTimeout(cloudAutoSyncTimer);
+  clearTimeout(workoutDraftSaveTimer);
+  clearInterval(hevyAutoSyncTimer);
+  coachModeUnlocked = false;
+  window.AccountAccess?.reset();
   await disablePushNotifications({ silent: true });
   if (cloudClient) await cloudClient.auth.signOut();
   DB.set('activeUser', active);
@@ -30840,7 +30805,20 @@ refreshInterfaceIcons();
 installReminderSystem();
 initHevyAutoSync();
 initAuth();
+cloudClient?.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_OUT') {
+    cloudAutoSyncReady = false;
+    clearTimeout(cloudAutoSyncTimer);
+    clearInterval(hevyAutoSyncTimer);
+    coachModeUnlocked = false;
+    window.AccountAccess?.reset();
+    document.getElementById('login-screen').classList.add('show');
+  }
+});
 </script>
+<script src="coach-pro.js"></script>
+<script src="training-pro.js"></script>
+<script src="account-access.js"></script>
 </body>
 </html>
 
