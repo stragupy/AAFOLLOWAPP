@@ -1,4 +1,5 @@
 const { resolveAiAccess, geminiFetch, handleAccount } = require('../lib/account-access');
+const { coachChat } = require('../lib/coach-chat');
 
 const MAX_BODY_CHARS = 100_000;
 const MAX_REQUEST_CHARS = 4_000;
@@ -440,6 +441,7 @@ module.exports = async function handler(req, res) {
   try {
     const { apiKey } = await resolveAiAccess(req);
     const body = await parseBody(req);
+    if (body.mode === 'coach_chat') return sendJson(res, 200, await coachChat(body, apiKey));
     const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 
     if (body.mode === 'preparation_review') {
