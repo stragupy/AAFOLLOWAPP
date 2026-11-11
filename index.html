@@ -15289,6 +15289,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
 <link rel="stylesheet" href="coach-pro.css">
 <link rel="stylesheet" href="training-pro.css">
 <link rel="stylesheet" href="account-access.css">
+<link rel="stylesheet" href="coach-ai.css">
 </head>
 <body>
 
@@ -15815,6 +15816,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     <div class="content coach-content">
       <div class="coach-command-shell">
         <nav class="coach-tabs" aria-label="Herramientas de Modo Coach" role="tablist">
+          <button class="coach-tab" type="button" data-coach-view="chat" role="tab" aria-selected="false" onclick="setCoachView('chat')"><i data-lucide="messages-square"></i><span>Coach IA</span></button>
           <button class="coach-tab active" type="button" data-coach-view="monitor" role="tab" aria-selected="true" onclick="setCoachView('monitor')"><i data-lucide="radar"></i><span>Monitorear</span></button>
           <button class="coach-tab" type="button" data-coach-view="analysis" role="tab" aria-selected="false" onclick="setCoachView('analysis')"><i data-lucide="scan-search"></i><span>Analizar</span></button>
           <button class="coach-tab" type="button" data-coach-view="planning" role="tab" aria-selected="false" onclick="setCoachView('planning')"><i data-lucide="calendar-check-2"></i><span>Planificar</span></button>
@@ -15969,6 +15971,7 @@ body.calendar-dragging .aa-calendar-drop-zone {
     </div>
     <div class="content">
       <section id="training-pro-hub" class="tp cp" aria-live="polite"></section>
+      <div id="coach-ai-training-note"></div>
       <div class="card mb">
         <div class="card-title">Entreno en vivo - borrador</div>
         <div class="form-grid fg3" style="margin-bottom:14px">
@@ -17049,7 +17052,7 @@ const SAFETY_COLLECTIONS = new Set([
   'week_plans', 'reminders', 'calendar_events', 'checking_reviews', 'preparation_plans',
   'coach_plans', 'coach_maps', 'coach_guidelines', 'coach_assessments',
   'coach_journal', 'coach_phase_history', 'coach_reports',
-  'training_blocks', 'exercise_profiles', 'exercise_alternatives', 'exercise_techniques', 'training_progression_rules'
+  'training_blocks', 'exercise_profiles', 'exercise_alternatives', 'exercise_techniques', 'training_progression_rules', 'coach_ai_agreements'
 ]);
 
 const SAFETY_COLLECTION_LABELS = {
@@ -17060,7 +17063,7 @@ const SAFETY_COLLECTION_LABELS = {
   calendar_events: 'Evento', checking_reviews: 'Revisión semanal', preparation_plans: 'Fase de preparación',
   coach_plans: 'Plan de coach', coach_maps: 'Mapa conceptual', coach_guidelines: 'Pauta', coach_assessments: 'Análisis de coach',
   coach_journal: 'Bitácora de coach', coach_phase_history: 'Historial de fase', coach_reports: 'Informe de coach',
-  training_blocks: 'Bloque de entrenamiento', exercise_profiles: 'Ficha de ejercicio', exercise_alternatives: 'Alternativa de ejercicio', exercise_techniques: 'Referencia de técnica', training_progression_rules: 'Regla de progresión'
+  training_blocks: 'Bloque de entrenamiento', exercise_profiles: 'Ficha de ejercicio', exercise_alternatives: 'Alternativa de ejercicio', exercise_techniques: 'Referencia de técnica', training_progression_rules: 'Regla de progresión', coach_ai_agreements: 'Acuerdo Coach IA'
 };
 
 function safetyId() {
@@ -24602,6 +24605,7 @@ function loadTraining() {
   renderCheckinCardio();
   renderMobileGymDraft();
   window.TrainingPro?.renderHub();
+  window.CoachAI?.renderTrainingNote();
 }
 
 // ── Rutinas ──
@@ -24692,7 +24696,7 @@ function renderRoutinesList() {
       ${(r.days || []).map(d => `
         <div style="background:var(--elevated); border-radius:var(--radius-md); padding:10px 12px; margin-bottom:8px; border: 1px solid var(--border)">
           <div style="font-weight:600; font-size:0.85rem; margin-bottom:4px; color:var(--text)">${esc(d.name)}</div>
-          <div style="font-size:0.75rem; color:var(--muted)">${(d.exercises || []).map(e => `${esc(e.name)} (${e.target_sets || e.sets || 1}x${e.reps || e.target_reps || 10})`).join(' · ')}</div>
+          <div style="font-size:0.75rem; color:var(--muted)">${(d.exercises || []).map(e => { const target = e.coach_prescriptions?.length ? window.CoachAI?.targetState(e, selectedDate()) : null; return `${esc(e.name)} (${target?.sets ?? (e.target_sets || e.sets || 1)}x${target?.reps ?? (e.reps || e.target_reps || 10)})`; }).join(' · ')}</div>
         </div>`).join('')}
     </div>`;
   }).join('')}</div>`;
@@ -25217,7 +25221,7 @@ function latestSessionForRoutineDay(routine, day) {
   }, null);
 }
 
-function workoutSetPrefills(routine, day) {
+function workoutSetPrefills(routine, day, date = selectedDate()) {
   const latest = latestSessionForRoutineDay(routine, day);
   if (latest) {
     const setCounts = new Map();
@@ -25226,7 +25230,7 @@ function workoutSetPrefills(routine, day) {
       const key = exerciseGroupKey(name);
       if (key) setCounts.set(key, (setCounts.get(key) || 0) + 1);
     });
-    return latest.sets.map((set, index) => {
+    const previous = latest.sets.map((set, index) => {
       const exercise = set.exercise_name || set.exercise || '';
       return {
         exercise,
@@ -25240,9 +25244,10 @@ function workoutSetPrefills(routine, day) {
         type: set.type || 'normal'
       };
     }).filter(set => set.exercise);
+    return window.CoachAI?.workoutPrefills(routine, day, previous, date) ?? previous;
   }
 
-  return (day?.exercises || []).flatMap(exercise => {
+  const initial = (day?.exercises || []).flatMap(exercise => {
     const targetSets = Math.max(+(exercise.target_sets || exercise.sets || 1), 1);
     const targetReps = Math.max(+(exercise.reps || exercise.target_reps || 1), 1);
     return Array.from({ length: targetSets }, (_, index) => ({
@@ -25253,6 +25258,7 @@ function workoutSetPrefills(routine, day) {
       achievedReps: targetReps
     }));
   });
+  return window.CoachAI?.workoutPrefills(routine, day, initial, date) ?? initial;
 }
 
 function loadLiveDay() {
@@ -25267,7 +25273,7 @@ function loadLiveDay() {
   gymExerciseIndex = 0;
   gymSkipRest();
   if (!day) return;
-  workoutSetPrefills(routine, day).forEach(prefill => {
+  workoutSetPrefills(routine, day, document.getElementById('live-date')?.value || selectedDate()).forEach(prefill => {
     addLiveSet({ ...prefill, achievedReps: prefill.achievedReps, completed: false, manualTouched: false });
   });
   document.getElementById('live-label').textContent = day.name + ' - objetivos cargados';
@@ -25454,7 +25460,7 @@ function loadDayIntoSession() {
   setCount = 0;
   if (!day) return;
 
-  workoutSetPrefills(routine, day).forEach(prefill => {
+  workoutSetPrefills(routine, day, document.getElementById('s-date')?.value || selectedDate()).forEach(prefill => {
     addSet(prefill);
   });
   const latestSession = latestSessionForRoutineDay(routine, day);
@@ -26208,7 +26214,7 @@ async function importHevyRoutines() {
       };
 
       if (existingIdx >= 0) {
-        currentRoutines[existingIdx] = routineObj;
+        currentRoutines[existingIdx] = window.CoachAI?.preserveImportedTargets(currentRoutines[existingIdx], routineObj) ?? routineObj;
       } else {
         currentRoutines.unshift(routineObj);
         addedCount++;
@@ -29327,6 +29333,7 @@ function preparationRenderAiReview(plan) {
   const evidence = (Array.isArray(review.evidence) ? review.evidence : []).slice(0, 6);
   const generated = String(review.generated_at || '').slice(0, 16).replace('T', ' ');
   return `<div class="phase-review">
+    ${plan.ai_review_stale ? '<p class="phase-review-meta">Lectura anterior al último acuerdo Coach. Conservada como referencia; solicita una nueva lectura para evaluar los valores actuales.</p>' : ''}
     <div class="phase-review-headline">
       <span class="phase-review-status ${status}">${statusLabels[status]}</span>
       <strong>${esc(review.headline || 'Lectura de progreso')}</strong>
@@ -29346,6 +29353,8 @@ function preparationRenderAiReview(plan) {
 async function requestPreparationReview(planId) {
   const plan = preparationPlans().find(item => item.id === planId);
   if (!plan) return;
+  const requestedDate = selectedDate();
+  const reviewInput = preparationReviewPayload(plan);
   const button = document.getElementById('phase-review-btn');
   if (button) {
     button.disabled = true;
@@ -29356,7 +29365,7 @@ async function requestPreparationReview(planId) {
     const response = await accountFetch('/api/app-assistant', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(preparationReviewPayload(plan))
+      body: JSON.stringify(reviewInput)
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.error || 'La IA no pudo analizar el progreso');
@@ -29364,12 +29373,14 @@ async function requestPreparationReview(planId) {
     const plans = preparationPlans();
     const target = plans.find(item => item.id === planId);
     if (!target) return;
+    if (selectedDate() !== requestedDate || JSON.stringify(preparationReviewPayload(target)) !== JSON.stringify(reviewInput)) throw new Error('Los datos cambiaron durante el análisis. Solicita una nueva lectura; la anterior no reemplazó tus datos actuales.');
     target.ai_review = {
       ...data,
       data_as_of: selectedDate(),
       generated_at: data.generated_at || new Date().toISOString()
     };
     target.updated_at = new Date().toISOString();
+    target.ai_review_stale = false;
     DB.set('preparation_plans', plans);
     toast('Lectura de progreso actualizada');
     loadPreparation();
@@ -29963,7 +29974,7 @@ function loadDailyTracking() {
 }
 
 // ── MODO COACH ───────────────────────────────────────
-const COACH_VIEWS = ['monitor', 'analysis', 'planning', 'maps', 'guidelines', 'journal', 'history', 'report', 'blocks', 'exercise-library', 'training-rules'];
+const COACH_VIEWS = ['monitor', 'analysis', 'planning', 'maps', 'guidelines', 'journal', 'history', 'report', 'blocks', 'exercise-library', 'training-rules', 'chat'];
 let coachModeUnlocked = false;
 let coachActiveView = 'monitor';
 let coachSelectedMapId = '';
@@ -30046,6 +30057,7 @@ async function confirmCoachAccess() {
 }
 
 function exitCoachMode() {
+  window.CoachAI?.suspend();
   coachModeUnlocked = false;
   coachActiveView = 'monitor';
   coachSelectedMapId = '';
@@ -30239,9 +30251,10 @@ function renderCoachWorkspace() {
     maps: renderCoachMaps,
     guidelines: renderCoachGuidelines
   };
-  workspace.innerHTML = window.TrainingPro?.renderCoach(coachActiveView) ?? window.CoachPro?.render(coachActiveView) ?? (renderers[coachActiveView] || renderCoachMonitor)();
+  workspace.innerHTML = window.CoachAI?.render(coachActiveView) ?? window.TrainingPro?.renderCoach(coachActiveView) ?? window.CoachPro?.render(coachActiveView) ?? (renderers[coachActiveView] || renderCoachMonitor)();
   window.CoachPro?.mount(coachActiveView);
   window.TrainingPro?.mountCoach(coachActiveView);
+  window.CoachAI?.mount(coachActiveView);
   refreshInterfaceIcons();
 }
 
@@ -30786,6 +30799,7 @@ function enterApp(name, animate) {
 }
 
 async function logoutUser() {
+  window.CoachAI?.suspend();
   const active = DB.get('activeUser');
   cloudAutoSyncReady = false;
   clearTimeout(cloudAutoSyncTimer);
@@ -30807,6 +30821,7 @@ initHevyAutoSync();
 initAuth();
 cloudClient?.auth.onAuthStateChange((event) => {
   if (event === 'SIGNED_OUT') {
+    window.CoachAI?.suspend();
     cloudAutoSyncReady = false;
     clearTimeout(cloudAutoSyncTimer);
     clearInterval(hevyAutoSyncTimer);
@@ -30819,6 +30834,8 @@ cloudClient?.auth.onAuthStateChange((event) => {
 <script src="coach-pro.js"></script>
 <script src="training-pro.js"></script>
 <script src="account-access.js"></script>
+<script src="lib/coach-contract.js"></script>
+<script src="coach-ai.js"></script>
 </body>
 </html>
 
